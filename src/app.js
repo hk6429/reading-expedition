@@ -31,6 +31,11 @@ const store = createLocalStore(window.localStorage, {
   createDeviceId: createAnonymousDeviceId,
 });
 const state = store.load();
+document.documentElement.dataset.readingMode = state.preferences.mode;
+document.documentElement.style.setProperty(
+  "--reading-scale",
+  state.preferences.fontScale,
+);
 store.save(state);
 const session = createReadingSession(state, (next) => store.save(next));
 const syncQueue = createSyncQueue(window.localStorage);
