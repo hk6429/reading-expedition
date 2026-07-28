@@ -44,6 +44,51 @@ export function createReadingRepository(db) {
   }
 
   return Object.freeze({
+    async createTeacherSession(session) {
+      await db
+        .prepare(
+          `INSERT INTO teacher_sessions
+             (id, token_hash, csrf_hash, expires_at, created_at)
+           VALUES (?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          session.id,
+          session.tokenHash,
+          session.csrfHash,
+          session.expiresAt,
+          session.createdAt,
+        )
+        .run();
+    },
+    async getTeacherSession(tokenHash) {
+      const row = await db
+        .prepare(
+          `SELECT id, token_hash, csrf_hash, expires_at, revoked_at
+           FROM teacher_sessions
+           WHERE token_hash = ?
+           LIMIT 1`,
+        )
+        .bind(tokenHash)
+        .first();
+      if (!row) return null;
+      return {
+        id: row.id,
+        tokenHash: row.token_hash,
+        csrfHash: row.csrf_hash,
+        expiresAt: row.expires_at,
+        revokedAt: row.revoked_at,
+      };
+    },
+    async revokeTeacherSession(tokenHash) {
+      await db
+        .prepare(
+          `UPDATE teacher_sessions
+           SET revoked_at = CURRENT_TIMESTAMP
+           WHERE token_hash = ? AND revoked_at IS NULL`,
+        )
+        .bind(tokenHash)
+        .run();
+    },
     async getPublishedDaily(topicDate) {
       const statement = db
         .prepare(

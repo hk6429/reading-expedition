@@ -10,7 +10,11 @@ import {
   taipeiDate,
 } from "./public-content.js";
 
-export function createApi({ repository, clock = () => new Date() }) {
+export function createApi({
+  repository,
+  teacherSessionApi = null,
+  clock = () => new Date(),
+}) {
   if (!repository || typeof repository.getPublishedDaily !== "function") {
     throw new TypeError("repository.getPublishedDaily is required");
   }
@@ -19,6 +23,29 @@ export function createApi({ repository, clock = () => new Date() }) {
     async fetch(request) {
       const traceId = crypto.randomUUID();
       const url = new URL(request.url);
+      if (
+        teacherSessionApi &&
+        url.pathname === "/api/v1/teacher/session" &&
+        request.method === "POST"
+      ) {
+        return teacherSessionApi.login(request);
+      }
+      if (
+        teacherSessionApi &&
+        url.pathname === "/api/v1/teacher/session" &&
+        request.method === "DELETE"
+      ) {
+        return teacherSessionApi.logout(request);
+      }
+      if (
+        teacherSessionApi &&
+        url.pathname.startsWith("/api/v1/teacher/")
+      ) {
+        const authorization = await teacherSessionApi.authorize(request, {
+          requireCsrf: request.method !== "GET",
+        });
+        if (!authorization.ok) return teacherSessionApi.unauthorizedResponse();
+      }
       const submitMatch =
         /^\/api\/v1\/readings\/([a-zA-Z0-9-]+)\/submit$/.exec(url.pathname);
 
