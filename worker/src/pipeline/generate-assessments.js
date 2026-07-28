@@ -41,17 +41,52 @@ function normalizeReasonKey(key, options) {
   return options.includes(normalized) ? normalized : key.trim();
 }
 
+function normalizeReasons(rawReasons, options, correctAnswer) {
+  if (Array.isArray(rawReasons)) {
+    if (rawReasons.length === options.length) {
+      return Object.fromEntries(
+        options
+          .map((option, index) => [option, rawReasons[index]])
+          .filter(([option]) => option !== correctAnswer)
+          .map(([option, reason]) => [
+            option,
+            typeof reason === "string" ? reason.trim() : reason,
+          ]),
+      );
+    }
+    const distractors = options.filter((option) => option !== correctAnswer);
+    if (rawReasons.length === distractors.length) {
+      return Object.fromEntries(
+        distractors.map((option, index) => [
+          option,
+          typeof rawReasons[index] === "string"
+            ? rawReasons[index].trim()
+            : rawReasons[index],
+        ]),
+      );
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(rawReasons ?? {}).map(([option, reason]) => [
+      normalizeReasonKey(option, options),
+      typeof reason === "string" ? reason.trim() : reason,
+    ]),
+  );
+}
+
 function normalizeItem(item, reading) {
   const options = Array.isArray(item?.options)
     ? item.options.map((option) =>
         typeof option === "string" ? option.trim() : option,
       )
     : item?.options;
-  const reasons = Object.fromEntries(
-    Object.entries(item?.distractorReasons ?? {}).map(([option, reason]) => [
-      normalizeReasonKey(option, options ?? []),
-      typeof reason === "string" ? reason.trim() : reason,
-    ]),
+  const correctAnswer = Number.isInteger(item?.correctIndex)
+    ? options?.[item.correctIndex]
+    : normalizeCorrectAnswer(item?.correctAnswer, options ?? []);
+  const reasons = normalizeReasons(
+    item?.distractorReasons,
+    options ?? [],
+    correctAnswer,
   );
   const evidenceText =
     typeof item?.evidenceSpan?.text === "string"
@@ -69,11 +104,12 @@ function normalizeItem(item, reading) {
     paragraph = paragraphText(reading.body[paragraphIndex]);
     start = paragraph?.indexOf(evidenceText) ?? -1;
   }
+  const { correctIndex: _correctIndex, ...normalizedItem } = item ?? {};
   return {
-    ...item,
+    ...normalizedItem,
     prompt: typeof item?.prompt === "string" ? item.prompt.trim() : item?.prompt,
     options,
-    correctAnswer: normalizeCorrectAnswer(item?.correctAnswer, options ?? []),
+    correctAnswer,
     rationale:
       typeof item?.rationale === "string"
         ? item.rationale.trim()
@@ -151,15 +187,15 @@ export async function generateAssessments(provider, reading, factPack = null) {
   const result = await provider.generate(
     createBoundedPrompt({
       task:
-        "為已發布文字產生一組國中教育會考式素養閱讀題。輸出物件為 items 陣列；依序各產生一題 comprehension、inference、evidence。",
+        "為已發布文字產生一組國中教育會考式素養閱讀題。輸出物件為 items 陣列；依序各產生一題 comprehension、inference、evidence。每題用 correctIndex（0 到 3）標示正解；distractorReasons 固定為四格字串陣列，依序對應四個選項，正解位置填空字串。",
       factPack: factPack ?? { id: reading.factPackId },
       reading,
       trustedRequirements: [
         "固定三題，能力依序為擷取與理解、比較統整與推論、文證判讀與評鑑。",
         "每題固定四個選項，只有一個正確或最佳答案。",
-        "correctAnswer 必須逐字複製正確選項的完整文字，不得填 A、B、C、D、甲乙丙丁或選項編號。",
+        "correctIndex 必須是正確選項的零起算位置，不另輸出 correctAnswer。",
         "干擾選項須分別對應常見誤讀、過度推論、局部訊息或因果倒置，不得荒謬到可直接排除。",
-        "distractorReasons 的鍵必須逐字複製各錯誤選項全文，不得只填選項代號；三則理由不可重複。",
+        "distractorReasons 依四個選項順序排列，正解位置填空字串；另外三則理由不可重複。",
         "每題都須提供 rationale、每個錯誤選項的 distractorReasons，以及正文內可逐字對應的 evidenceSpan；文證請摘錄 8 到 30 個連續字元，不得改寫。",
         "不得考來源以外的冷知識，也不得只靠題幹常識作答。",
         "題目語氣參考會考與學測的閱讀歷程，但不得複製歷屆題目文字。",

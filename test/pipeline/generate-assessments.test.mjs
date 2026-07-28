@@ -155,6 +155,41 @@ test("模型以選項代號作為干擾理由鍵時，正規化為完整選項�
   );
 });
 
+test("模型以正解索引與四格理由陣列輸出時，轉為學生題組格式", async () => {
+  const provider = {
+    async generate() {
+      return {
+        items: ["comprehension", "inference", "evidence"].map((type) => {
+          const generated = item(type, `${type}題`, `${type}答案`, {
+            paragraph: 1,
+            start: 0,
+            end: 7,
+            text: "海水受熱會膨脹",
+          });
+          delete generated.correctAnswer;
+          generated.correctIndex = 0;
+          generated.distractorReasons = [
+            "",
+            "只看到局部訊息。",
+            "加入文章沒有的推論。",
+            "倒置正文的因果。",
+          ];
+          return generated;
+        }),
+      };
+    },
+  };
+
+  const items = await generateAssessments(provider, reading);
+
+  assert.equal(items[0].correctAnswer, "comprehension答案");
+  assert.equal("correctIndex" in items[0], false);
+  assert.equal(
+    items[0].distractorReasons.comprehension誤三,
+    "倒置正文的因果。",
+  );
+});
+
 test("空白題幹、空白解析或套版干擾理由會被拒絕", async () => {
   const provider = {
     async generate() {
