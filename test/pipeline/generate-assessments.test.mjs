@@ -125,6 +125,36 @@ test("模型以選項代號回覆正解時，正規化為完整選項文字", as
   assert.equal(items[0].correctAnswer, "comprehension答案");
 });
 
+test("模型以選項代號作為干擾理由鍵時，正規化為完整選項文字", async () => {
+  const provider = {
+    async generate() {
+      return {
+        items: ["comprehension", "inference", "evidence"].map((type) => {
+          const generated = item(type, `${type}題`, `${type}答案`, {
+            paragraph: 1,
+            start: 0,
+            end: 7,
+            text: "海水受熱會膨脹",
+          });
+          generated.distractorReasons = {
+            B: "只看到局部訊息。",
+            C: "加入文章沒有的推論。",
+            D: "倒置正文的因果。",
+          };
+          return generated;
+        }),
+      };
+    },
+  };
+
+  const items = await generateAssessments(provider, reading);
+
+  assert.equal(
+    items[0].distractorReasons.comprehension誤一,
+    "只看到局部訊息。",
+  );
+});
+
 test("空白題幹、空白解析或套版干擾理由會被拒絕", async () => {
   const provider = {
     async generate() {
