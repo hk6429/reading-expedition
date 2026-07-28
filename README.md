@@ -62,6 +62,7 @@ npm run dev:web
 - 中央資料庫：Cloudflare D1，Preview 與 Production 完全分離。
 - 每日排程：台北時間 05:00。
 - 生成模型：Cloudflare Workers AI 的 `llama-3.3-70b-instruct-fp8-fast`；單次輸出上限 2,500 tokens，內容不合格時才各重生一次。
+- 後端部署固定使用 `npm run deploy:worker`；`wrangler.worker.toml` 與 Pages 本機測試設定分離，避免 CI 誤連遠端 AI。
 - 前端一律使用同源 `/api`；平台代理由 `READING_API_ORIGIN` 設定。
 
 ## 測試

@@ -14,7 +14,9 @@
     "test:pipeline": "node --test \"test/pipeline/**/*.test.mjs\"",
     "test:static": "node --test \"test/static/**/*.test.mjs\"",
     "test:e2e": "playwright test",
-    "dev:web": "wrangler pages dev . --port 8788"
+    "dev:web": "wrangler pages dev . --port 8788",
+    "deploy:worker": "wrangler deploy --config wrangler.worker.toml",
+    "deploy:worker:preview": "wrangler deploy --config wrangler.worker.toml --env preview"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",
