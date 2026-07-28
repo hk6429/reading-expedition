@@ -1,4 +1,4 @@
-const VERSION = "reading-expedition-v9";
+const VERSION = "reading-expedition-v10";
 const CACHE_PREFIX = "reading-expedition-";
 const SHELL = [
   "/",

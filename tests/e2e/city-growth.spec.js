@@ -13,7 +13,11 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
     })
     .check();
   await page.getByRole("button", { name: "下一題" }).click();
-  await page.getByRole("radio", { name: "第4段" }).check();
+  await page
+    .getByRole("radio", {
+      name: "當水情、需求或節水成果改變，原先的比例也應重新檢討",
+    })
+    .check();
   await page.getByRole("button", { name: "送出 3 題" }).click();
   await page.getByRole("button", { name: "把知識帶回浮城" }).click();
 
@@ -32,8 +36,13 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("一座城市如何分配有限水源？", { exact: true }),
+    page
+      .locator(".reading-event-log")
+      .getByText("一座城市如何分配有限水源？", { exact: true }),
   ).toBeVisible();
+  await expect(
+    page.locator(".reading-event-log q"),
+  ).toContainText("當水情、需求或節水成果改變");
   await expect(page.getByText("累積 1 點")).toHaveCount(3);
 
   await page.reload();

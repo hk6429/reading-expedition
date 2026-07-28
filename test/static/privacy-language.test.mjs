@@ -18,3 +18,15 @@ test("公開文件清楚說明本機優先與禁收資料", async () => {
   assert.match(readme, /Vercel：https:\/\/reading-expedition\.vercel\.app\//);
   assert.match(readme, /Netlify：https:\/\/reading-expedition\.netlify\.app\//);
 });
+
+test("學生版隱私說明列出匿名統計內容並提供退出開關", async () => {
+  const guide = await readFile(
+    new URL("src/ui/usage-guide.js", projectRoot),
+    "utf8",
+  );
+
+  assert.match(guide, /文章代碼、主題類別、難度、閱讀時間區間與隨機裝置代碼/);
+  assert.match(guide, /不會傳送姓名、學號或答案文字/);
+  assert.match(guide, /允許傳送匿名使用統計/);
+  assert.match(guide, /data-anonymous-statistics/);
+});

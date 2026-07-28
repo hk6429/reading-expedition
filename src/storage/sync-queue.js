@@ -53,6 +53,9 @@ export function createSyncQueue(storage) {
     list() {
       return load();
     },
+    clear() {
+      save([]);
+    },
     async flush(send) {
       const remaining = [];
       for (const event of load()) {

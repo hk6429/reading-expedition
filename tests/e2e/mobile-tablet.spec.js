@@ -44,3 +44,38 @@ test("平板直向正文不會被三欄擠壓，手機工具列不遮住頁首",
   const controls = await page.locator(".reading-controls").boundingBox();
   expect(controls.y).toBeGreaterThan(500);
 });
+
+test("手機與平板的閱讀進度不會蓋住網站導覽", async ({ page }) => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 768, height: 1024 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/#/read/water-sharing-guided-v1");
+
+    const header = await page.locator(".site-header").boundingBox();
+    const progress = await page.locator(".reading-progress").boundingBox();
+    expect(progress.y).toBeGreaterThanOrEqual(header.y + header.height - 1);
+
+    await page.locator(".reading-paragraph").nth(2).scrollIntoViewIfNeeded();
+    const stickyProgress = await page.locator(".reading-progress").boundingBox();
+    expect(stickyProgress.y).toBeGreaterThanOrEqual(0);
+    expect(stickyProgress.y + stickyProgress.height).toBeLessThanOrEqual(
+      viewport.height,
+    );
+  }
+});
+
+test("手機與平板不看說明頁也能分辨導讀與挑戰差異", async ({ page }) => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 768, height: 1024 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+
+    const worldCard = page.locator(".route-card").filter({ hasText: "四海航線" });
+    await expect(worldCard.getByText("有詞語與段落提示")).toBeVisible();
+    await expect(worldCard.getByText("資料較多，練習比較觀點")).toBeVisible();
+  }
+});

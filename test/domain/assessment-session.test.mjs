@@ -11,6 +11,9 @@ const answerKey = [
     id: "q1",
     correctAnswer: "基本需要、影響與節水能力",
     rationale: "第三段直接列出三項條件。",
+    distractorReasons: {
+      只看誰要求得最多: "這只採用需求量，忽略基本需要與實際影響。",
+    },
     evidenceSpan: { paragraph: 3, start: 0, end: 63 },
   },
   {
@@ -21,20 +24,29 @@ const answerKey = [
   },
 ];
 
-test("評分只回傳正誤、理由與文證定位", () => {
+test("答錯只回傳所選錯項診斷與文證，不洩漏正解", () => {
   const result = gradeAssessment(answerKey, {
     q1: "只看誰要求得最多",
     q2: "第2段",
   });
 
   assert.equal(result.results[0].correct, false);
-  assert.equal(result.results[0].rationale, "第三段直接列出三項條件。");
+  assert.equal(
+    result.results[0].diagnostic,
+    "這只採用需求量，忽略基本需要與實際影響。",
+  );
+  assert.equal(result.results[0].rationale, undefined);
+  assert.equal(result.results[0].correctAnswer, undefined);
   assert.deepEqual(result.results[0].evidenceSpan, {
     paragraph: 3,
     start: 0,
     end: 63,
   });
   assert.equal(result.results[1].correct, true);
+  assert.equal(
+    result.results[1].rationale,
+    "第二段比較相同比例與不同處境。",
+  );
 });
 
 test("學生送出後可修正一次，第二次修正會被拒絕", async () => {

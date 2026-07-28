@@ -22,7 +22,7 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
 
   await page.getByRole("button", { name: "前往 3 題問答" }).click();
   await page
-    .getByRole("radio", { name: "只看誰要求得最多" })
+    .getByRole("radio", { name: "以各方目前申報的用水量作為主要依據" })
     .check();
   await page.getByRole("button", { name: "下一題" }).click();
   await page
@@ -31,7 +31,11 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
     })
     .check();
   await page.getByRole("button", { name: "下一題" }).click();
-  await page.getByRole("radio", { name: "第4段" }).check();
+  await page
+    .getByRole("radio", {
+      name: "當水情、需求或節水成果改變，原先的比例也應重新檢討",
+    })
+    .check();
   await page.getByRole("button", { name: "送出 3 題" }).click();
   await expect(
     page.getByRole("button", { name: "查看第3段線索" }),

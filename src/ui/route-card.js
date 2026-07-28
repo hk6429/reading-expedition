@@ -21,16 +21,24 @@ const CATEGORY_COPY = Object.freeze({
   },
 });
 
+const DIFFICULTY_SUPPORT = Object.freeze({
+  guided: "有詞語與段落提示",
+  challenge: "資料較多，練習比較觀點",
+});
+
 function difficultyButton(reading, label) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = `difficulty-button difficulty-${reading.difficulty}`;
+  const support =
+    DIFFICULTY_SUPPORT[reading.difficulty] ?? "依自己的步調閱讀";
   button.setAttribute(
     "aria-label",
-    `${label}，約 ${reading.readingMinutes} 分鐘：${reading.title}`,
+    `${label}，${support}，約 ${reading.readingMinutes} 分鐘：${reading.title}`,
   );
   button.innerHTML = `
     <span>${label}</span>
+    <small class="difficulty-support">${support}</small>
     <small>${reading.textType === "classical" ? "文言" : "白話"}・${reading.readingMinutes} 分鐘</small>
   `;
   button.addEventListener("click", () => {

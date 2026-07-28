@@ -28,7 +28,13 @@ function renderSteps(steps) {
     .join("");
 }
 
-export function renderUsageGuide(container) {
+export function renderUsageGuide(
+  container,
+  {
+    anonymousStatisticsEnabled = true,
+    onAnonymousStatisticsChange = () => {},
+  } = {},
+) {
   container.className = "guide-view";
   container.innerHTML = `
     <section class="guide-hero" aria-labelledby="guide-title">
@@ -43,7 +49,7 @@ export function renderUsageGuide(container) {
         <p class="eyebrow">學生篇</p>
         <h2 id="student-guide-title">一篇、三題、一次修正</h2>
         <ol>${renderSteps(studentSteps)}</ol>
-        <p class="guide-class-note">要加入全班共同地標時，點選頁首「班級共建」，輸入老師提供的 8 碼班級碼即可。</p>
+        <p class="guide-class-note">要參與全班共同地標時，點選頁首「加入班級」，輸入老師提供的 8 碼班級碼即可。</p>
         <a class="guide-action" href="#/">選今天的閱讀航線</a>
       </section>
 
@@ -54,7 +60,7 @@ export function renderUsageGuide(container) {
         <div class="guide-actions">
           <a class="guide-action" href="#/teacher">進入教師校閱</a>
           <a class="guide-action secondary" href="#/teacher/classes">建立匿名班級</a>
-          <a class="guide-action secondary" href="#/class">學生加入班級</a>
+          <a class="guide-action secondary" href="#/class">加入班級</a>
         </div>
       </section>
     </div>
@@ -62,6 +68,25 @@ export function renderUsageGuide(container) {
     <section class="guide-note" aria-labelledby="privacy-guide-title">
       <h2 id="privacy-guide-title">資料留在哪裡？</h2>
       <p>學生的閱讀位置、城市與收藏主要保存在自己的裝置。第一版不要求姓名、學號、Email、學校或班級真名；班級端只使用匿名班級碼與達隱私門檻後的共同成果。</p>
+      <p>若允許匿名使用統計，系統會傳送文章代碼、主題類別、難度、閱讀時間區間與隨機裝置代碼，用來改進閱讀設計；不會傳送姓名、學號或答案文字，也不會用於廣告或個人排名。</p>
+      <label>
+        <input type="checkbox" data-anonymous-statistics ${anonymousStatisticsEnabled ? "checked" : ""}>
+        允許傳送匿名使用統計
+      </label>
+      <p class="form-message" data-anonymous-statistics-status role="status"></p>
     </section>
   `;
+
+  const statisticsToggle = container.querySelector(
+    "[data-anonymous-statistics]",
+  );
+  const statisticsStatus = container.querySelector(
+    "[data-anonymous-statistics-status]",
+  );
+  statisticsToggle.addEventListener("change", () => {
+    onAnonymousStatisticsChange(statisticsToggle.checked);
+    statisticsStatus.textContent = statisticsToggle.checked
+      ? "已允許匿名使用統計。"
+      : "已退出匿名使用統計；之後不會傳送匿名學習事件或載入到訪計數器。";
+  });
 }

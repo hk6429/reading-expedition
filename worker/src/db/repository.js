@@ -845,6 +845,7 @@ export function createReadingRepository(db) {
              ai.id,
              ai.correct_answer,
              ai.rationale,
+             ai.distractor_reasons_json,
              ai.evidence_span_json
            FROM assessment_items ai
            JOIN reading_packages rp ON rp.id = ai.reading_package_id
@@ -866,6 +867,10 @@ export function createReadingRepository(db) {
         id: row.id,
         correctAnswer: row.correct_answer,
         rationale: row.rationale,
+        distractorReasons: parseJsonField(
+          row.distractor_reasons_json,
+          "distractor_reasons_json",
+        ),
         evidenceSpan: parseJsonField(
           row.evidence_span_json,
           "evidence_span_json",

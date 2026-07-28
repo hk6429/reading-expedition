@@ -68,7 +68,12 @@ export function renderCityInvest(
     science: "craftHarbor",
     humanities: "library",
   }[reading?.category];
-  for (const building of buildingCatalog) {
+  const orderedBuildings = [...buildingCatalog].sort(
+    (left, right) =>
+      Number(right.id === recommendedBuilding) -
+      Number(left.id === recommendedBuilding),
+  );
+  for (const building of orderedBuildings) {
     const stage = state.city.buildings[building.id] ?? 0;
     const card = document.createElement("article");
     card.className = `building-card building-stage-${stage}${
@@ -95,7 +100,7 @@ export function renderCityInvest(
     button.type = "button";
     button.className = "building-invest";
     button.textContent = `${
-      building.id === recommendedBuilding ? "推薦・" : ""
+      building.id === recommendedBuilding ? "依內容推薦（可自由選）・" : ""
     }投入${building.name}・5 塊墨磚`;
     button.disabled =
       !canInvestThisCompletion ||
@@ -136,5 +141,6 @@ export function renderCityInvest(
     grid.append(card);
   }
 
-  container.append(header, announcement, grid);
+  container.append(header, announcement);
+  if (rewardType === "building") container.append(grid);
 }

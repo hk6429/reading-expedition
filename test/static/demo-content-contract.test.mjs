@@ -24,6 +24,15 @@ test("安全試讀文證皆為正文內 8 到 30 個連續字元", () => {
         span.end,
       );
       assert.ok(evidence.length >= 8 && evidence.length <= 30);
+      assert.equal(evidence, span.text, item.id);
+      const assessmentItem = reading.assessment.find(
+        ({ id }) => id === item.id,
+      );
+      assert.ok(assessmentItem, item.id);
+      assert.ok(
+        assessmentItem.options.includes(item.correctAnswer),
+        `${item.id} 的正解必須存在於選項`,
+      );
     }
   }
 });

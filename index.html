@@ -21,7 +21,7 @@
         <nav class="site-nav" aria-label="主要功能">
           <a class="teacher-entry" href="#/city" aria-label="查看我的萬卷浮城">我的浮城</a>
           <a class="teacher-entry" href="#/guide" aria-label="師生使用說明">使用說明</a>
-          <a class="teacher-entry" href="#/class" aria-label="學生加入班級">學生加入</a>
+          <a class="teacher-entry" href="#/class" aria-label="加入班級">加入班級</a>
           <a class="teacher-entry" href="#/teacher" aria-label="教師登入與管理">教師登入</a>
         </nav>
       </header>
@@ -42,21 +42,72 @@
       《萬卷浮城》需要 JavaScript 才能保存閱讀進度。你仍可以先記住今天的約定：每天十分鐘，讀懂一件事。
     </noscript>
     <script>
-      if (!["localhost", "127.0.0.1"].includes(window.location.hostname)) {
-        const counterScript = document.createElement("script");
-        counterScript.src =
-          "https://self-learning-orbit.pages.dev/platform-counter.js";
-        counterScript.dataset.site = "reading-expedition";
-        counterScript.addEventListener("load", () => {
-          const counter = document.getElementById("danai-public-counter");
+      {
+        const anonymousStatisticsKey =
+          "reading-expedition.anonymous-statistics";
+        const counterSelector =
+          'script[data-site="reading-expedition"][src*="platform-counter.js"]';
+        const isLocal =
+          ["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+        function removePublicCounter() {
+          document.querySelector(counterSelector)?.remove();
+          document.getElementById("danai-public-counter")?.remove();
+          document.getElementById("mobile-counter-controls")?.remove();
+        }
+
+        function prepareMobileCounter(counter) {
+          if (!window.matchMedia("(max-width: 64rem)").matches) return;
+          counter.style.display = "none";
+          counter.style.transform = "scale(.86)";
+          counter.style.transformOrigin = "right bottom";
+          const controls = document.createElement("div");
+          controls.id = "mobile-counter-controls";
+          controls.className = "mobile-counter-controls";
+          controls.innerHTML = `
+            <a href="https://self-learning-orbit.pages.dev/" aria-label="返回自學星圖">自學星圖</a>
+            <button type="button" aria-expanded="false">到訪統計</button>
+          `;
+          controls.querySelector("button").addEventListener("click", (event) => {
+            const open =
+              event.currentTarget.getAttribute("aria-expanded") !== "true";
+            event.currentTarget.setAttribute("aria-expanded", String(open));
+            event.currentTarget.textContent = open ? "收起統計" : "到訪統計";
+            counter.style.display = open ? "" : "none";
+          });
+          document.body.append(controls);
+        }
+
+        function loadPublicCounter() {
           if (
-            counter &&
-            document.documentElement.dataset.publicCounter === "hide"
+            isLocal ||
+            window.localStorage.getItem(anonymousStatisticsKey) === "off" ||
+            document.querySelector(counterSelector)
           ) {
-            counter.style.display = "none";
+            return;
           }
+          const counterScript = document.createElement("script");
+          counterScript.src =
+            "https://self-learning-orbit.pages.dev/platform-counter.js";
+          counterScript.dataset.site = "reading-expedition";
+          counterScript.addEventListener("load", () => {
+            const counter = document.getElementById("danai-public-counter");
+            if (counter) prepareMobileCounter(counter);
+            if (
+              counter &&
+              document.documentElement.dataset.publicCounter === "hide"
+            ) {
+              counter.style.display = "none";
+            }
+          });
+          document.body.append(counterScript);
+        }
+
+        window.readingExpeditionPublicCounter = Object.freeze({
+          load: loadPublicCounter,
+          remove: removePublicCounter,
         });
-        document.body.append(counterScript);
+        loadPublicCounter();
       }
     </script>
     <script type="module" src="./src/app.js"></script>

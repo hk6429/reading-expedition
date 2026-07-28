@@ -2,6 +2,15 @@ const CATEGORIES = new Set(["world", "science", "humanities"]);
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9-]{1,120}$/;
 
+export function extractEvidenceText(reading, span) {
+  const paragraph = reading?.body?.[Number(span?.paragraph) - 1];
+  const text = typeof paragraph === "string" ? paragraph : paragraph?.text;
+  if (typeof text !== "string") return "";
+  const start = Math.max(0, Math.min(text.length, Number(span?.start) || 0));
+  const end = Math.max(start, Math.min(text.length, Number(span?.end) || start));
+  return text.slice(start, end).trim();
+}
+
 export function hasMainlineRewardForDate(history = [], date) {
   return history.some(
     (event) => event.date === date && event.mainlineReward === true,
@@ -38,6 +47,10 @@ export function appendVerifiedReading(history = [], input) {
     date: input.date,
     category: input.category,
     skill: input.skill,
+    title:
+      typeof input.title === "string" && input.title.trim()
+        ? input.title.trim()
+        : "已完成的讀卷",
     evidence: input.evidence.trim(),
     mainlineReward: !hasMainlineRewardForDate(history, input.date),
   });

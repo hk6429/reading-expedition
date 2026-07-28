@@ -8,7 +8,7 @@ test("答錯會定位原文，學生可修正一次後帶回文證", async ({ pa
   ).toBeVisible();
 
   await page
-    .getByRole("radio", { name: "只看誰要求得最多" })
+    .getByRole("radio", { name: "以各方目前申報的用水量作為主要依據" })
     .check();
   await page.getByRole("button", { name: "下一題" }).click();
   await page
@@ -17,7 +17,11 @@ test("答錯會定位原文，學生可修正一次後帶回文證", async ({ pa
     })
     .check();
   await page.getByRole("button", { name: "下一題" }).click();
-  await page.getByRole("radio", { name: "第4段" }).check();
+  await page
+    .getByRole("radio", {
+      name: "當水情、需求或節水成果改變，原先的比例也應重新檢討",
+    })
+    .check();
   await page.getByRole("button", { name: "送出 3 題" }).click();
 
   await expect(
@@ -44,13 +48,17 @@ test("答錯會定位原文，學生可修正一次後帶回文證", async ({ pa
 test("多題答錯時可逐題修正，文證只突出精準片段", async ({ page }) => {
   await page.goto("/#/quiz/water-sharing-guided-v1");
 
-  await page.getByRole("radio", { name: "只看誰要求得最多" }).check();
-  await page.getByRole("button", { name: "下一題" }).click();
   await page
-    .getByRole("radio", { name: "每一方原本使用的水量必定完全相同" })
+    .getByRole("radio", { name: "以各方目前申報的用水量作為主要依據" })
     .check();
   await page.getByRole("button", { name: "下一題" }).click();
-  await page.getByRole("radio", { name: "第1段" }).check();
+  await page
+    .getByRole("radio", { name: "採用相同比例，便能確保三方承受相近影響" })
+    .check();
+  await page.getByRole("button", { name: "下一題" }).click();
+  await page
+    .getByRole("radio", { name: "家庭、農田與工廠卻仍然同時需要用水" })
+    .check();
   await page.getByRole("button", { name: "送出 3 題" }).click();
 
   await expect(
@@ -70,7 +78,11 @@ test("多題答錯時可逐題修正，文證只突出精準片段", async ({ pa
     })
     .check();
   await page.getByRole("button", { name: "下一題" }).click();
-  await page.getByRole("radio", { name: "第4段" }).check();
+  await page
+    .getByRole("radio", {
+      name: "當水情、需求或節水成果改變，原先的比例也應重新檢討",
+    })
+    .check();
   await page.getByRole("button", { name: "完成修正" }).click();
 
   await expect(page.getByText("文證已帶回")).toBeVisible();

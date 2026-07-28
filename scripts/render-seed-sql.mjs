@@ -1,7 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const cliFiles = process.argv.slice(2);
+const cliArgs = process.argv.slice(2);
+const outputIndex = cliArgs.indexOf("--output");
+const outputFile =
+  outputIndex >= 0 && cliArgs[outputIndex + 1]
+    ? path.resolve(cliArgs[outputIndex + 1])
+    : null;
+const cliFiles = cliArgs.filter(
+  (_argument, index) => index !== outputIndex && index !== outputIndex + 1,
+);
 const fixtures =
   cliFiles.length > 0
     ? cliFiles.map((file) =>
@@ -134,4 +142,10 @@ WHERE id = ${value(fixture.factPack.id)};`);
   }
 }
 
-process.stdout.write(`${rows.join("\n")}\n`);
+const sql = `${rows.join("\n")}\n`;
+if (outputFile) {
+  fs.mkdirSync(path.dirname(outputFile), { recursive: true });
+  fs.writeFileSync(outputFile, sql);
+} else {
+  process.stdout.write(sql);
+}

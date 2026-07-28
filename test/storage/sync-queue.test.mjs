@@ -64,3 +64,17 @@ test("佇列拒絕作答文字、反思、姓名與額外欄位", () => {
     /not allowed/,
   );
 });
+
+test("退出匿名統計時可清空尚未送出的事件", () => {
+  const queue = createSyncQueue(memoryStorage());
+  queue.enqueue({
+    id: "event-1",
+    type: "reading_completed",
+    createdAt: "2026-07-28T08:00:00Z",
+    context: {},
+  });
+
+  queue.clear();
+
+  assert.deepEqual(queue.list(), []);
+});

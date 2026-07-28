@@ -128,15 +128,23 @@ function createGoalPanel(state, saveState) {
   section.className = "weekly-goal paper-panel";
   section.setAttribute("aria-labelledby", "goal-heading");
   const target = state.weeklyGoal?.target ?? 0;
+  const today = new Date();
+  const weekStart = new Date(today);
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  const completedThisWeek = state.readingHistory.filter(
+    ({ date }) => new Date(`${date}T00:00:00`) >= weekStart,
+  ).length;
   section.innerHTML = `
     <p class="eyebrow">無壓力習慣契約</p>
     <h2 id="goal-heading">這週想讀幾篇？</h2>
-    <p>依自己的生活選 3、5 或 7 篇；沒有連續簽到，休息也不扣分。</p>
+    <p>依自己的生活選擇；沒有連續簽到，休息也不扣分。</p>
+    <p class="goal-progress">${target > 0 ? `本週已讀 ${completedThisWeek}／${target} 篇` : `本週已讀 ${completedThisWeek} 篇，尚未設定目標`}</p>
     <div class="goal-options" role="group" aria-label="每週閱讀目標">
-      ${[3, 5, 7]
+      ${[0, 1, 3, 5, 7]
         .map(
           (value) =>
-            `<button type="button" data-goal="${value}" aria-pressed="${String(target === value)}">每週 ${value} 篇</button>`,
+            `<button type="button" data-goal="${value}" aria-pressed="${String(target === value)}">${value === 0 ? "先不設定" : `每週 ${value} 篇`}</button>`,
         )
         .join("")}
     </div>
@@ -150,6 +158,29 @@ function createGoalPanel(state, saveState) {
       }
     });
   }
+  return section;
+}
+
+function createReadingLog(history = []) {
+  const section = document.createElement("section");
+  section.className = "reading-event-log paper-panel";
+  const events = [...history].slice(-8).reverse();
+  section.innerHTML = `
+    <div class="section-heading">
+      <div><p class="eyebrow">閱征事件簿</p><h2>最近帶回的文證</h2></div>
+      <p>同一天多讀的文章也會留在這裡，不會消失。</p>
+    </div>
+    ${
+      events.length
+        ? `<ol>${events
+            .map(
+              (event) =>
+                `<li><time>${escapeHtml(event.date)}</time><strong>${escapeHtml(event.title ?? "已完成的讀卷")}</strong><q>${escapeHtml(event.evidence)}</q></li>`,
+            )
+            .join("")}</ol>`
+        : "<p>完成第一篇閱讀後，文證會出現在這裡。</p>"
+    }
+  `;
   return section;
 }
 
@@ -218,6 +249,7 @@ export function renderCityOverview(
 
   container.append(
     buildings,
+    createReadingLog(state.readingHistory),
     createAbilityPanel(state),
     createJourneyPanel(state),
     chapter,

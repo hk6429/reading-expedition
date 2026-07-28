@@ -3,6 +3,7 @@ import fs from "node:fs";
 import test from "node:test";
 
 import { evaluateContentProfile } from "../../worker/src/pipeline/content-profile.js";
+import { validateAssessmentAnswers } from "../../worker/src/pipeline/answer-validator.js";
 
 const fixtureNames = [
   "seed-reading-package.json",
@@ -49,6 +50,89 @@ test("正式題組依會考閱讀歷程提供三題四選一", () => {
         item.id,
       );
     }
+  }
+});
+
+test("正式題組的文證必須是正文內 8 到 30 字的精準錨點", () => {
+  for (const packageRecord of fixtures.flatMap((fixture) => fixture.packages)) {
+    assert.deepEqual(
+      validateAssessmentAnswers(
+        packageRecord,
+        packageRecord.assessment,
+      ),
+      { ok: true, errors: [] },
+      packageRecord.id,
+    );
+  }
+});
+
+test("找證據題比較引文的支持力，不以段號當作選項", () => {
+  for (const packageRecord of fixtures.flatMap((fixture) => fixture.packages)) {
+    const evidenceItem = packageRecord.assessment.find(
+      ({ type }) => type === "evidence",
+    );
+    assert.ok(evidenceItem, packageRecord.id);
+    assert.ok(
+      evidenceItem.options.every(
+        (option) => !/^第[一二三四五六七八九十\\d]+段$/.test(option),
+      ),
+      packageRecord.id,
+    );
+    assert.ok(
+      evidenceItem.options.every(
+        (option) => option.length >= 8 && option.length <= 32,
+      ),
+      packageRecord.id,
+    );
+  }
+});
+
+test("干擾選項避免用絕對化語氣讓學生直接排除", () => {
+  const absoluteShortcuts =
+    /必然|唯一|永遠|一定|全部|只能|不必|完全相同|只要.+就/;
+  for (const packageRecord of fixtures.flatMap((fixture) => fixture.packages)) {
+    for (const item of packageRecord.assessment) {
+      const distractors = item.options.filter(
+        (option) => option !== item.correctAnswer,
+      );
+      for (const distractor of distractors) {
+        assert.doesNotMatch(distractor, absoluteShortcuts, item.id);
+      }
+    }
+  }
+});
+
+test("登樓卷的推論題以新情境要求跨段整合", () => {
+  for (const packageRecord of fixtures
+    .flatMap((fixture) => fixture.packages)
+    .filter(({ difficulty }) => difficulty === "challenge")) {
+    const inferenceItem = packageRecord.assessment.find(
+      ({ type }) => type === "inference",
+    );
+    assert.ok(inferenceItem, packageRecord.id);
+    assert.match(inferenceItem.prompt, /某|若|發現|面對/, packageRecord.id);
+    assert.ok(
+      packageRecord.body.every((paragraph) => {
+        const text =
+          typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
+        return !text.includes(inferenceItem.correctAnswer);
+      }),
+      `${packageRecord.id} 的正解不應只是單段原句`,
+    );
+  }
+});
+
+test("自編文言讀卷清楚標示正文與參考資料的關係", () => {
+  for (const packageRecord of fixtures
+    .flatMap((fixture) => fixture.packages)
+    .filter(({ textType }) => textType === "classical")) {
+    assert.ok(
+      packageRecord.sourceAttribution.some(
+        ({ relationship, note }) =>
+          relationship === "reference" && /自編/.test(note),
+      ),
+      packageRecord.id,
+    );
   }
 });
 

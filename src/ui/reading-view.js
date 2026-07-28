@@ -19,8 +19,30 @@ const MENTOR_GUIDES = Object.freeze({
   },
 });
 
+const GUIDED_PARAGRAPH_SCAFFOLDS = Object.freeze({
+  world: ["先看情境", "比較影響", "整理做法", "形成判準"],
+  science: ["先看全貌", "追蹤機制", "連起變化", "整理模型"],
+  humanities: ["先看場景", "分清所見", "保留推論", "交叉查證"],
+});
+
 function paragraphText(paragraph) {
   return typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
+}
+
+function createInlineGlossary(items) {
+  const aside = document.createElement("aside");
+  aside.className = "inline-glossary";
+  aside.setAttribute("aria-label", "本段詞語提示");
+  for (const item of items) {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.textContent = item.term;
+    const definition = document.createElement("p");
+    definition.textContent = item.definition;
+    details.append(summary, definition);
+    aside.append(details);
+  }
+  return aside;
 }
 
 export function renderReading(
@@ -87,6 +109,14 @@ export function renderReading(
     <span>${mentor.name}領航</span>
     <p>${mentor.opening}</p>
   `;
+  const midpointCheckpoint = document.createElement("aside");
+  midpointCheckpoint.className = "midpoint-checkpoint";
+  midpointCheckpoint.hidden = true;
+  midpointCheckpoint.setAttribute("role", "status");
+  midpointCheckpoint.innerHTML = `
+    <span>${mentor.name}提醒</span>
+    <p>${mentor.halfway}</p>
+  `;
   if (reading.hookQuestion) {
     const questionLabel = document.createElement("span");
     questionLabel.textContent = "帶著這個問題讀";
@@ -95,16 +125,36 @@ export function renderReading(
   } else {
     header.append(kicker, title);
   }
-  article.append(header, mentorGuide);
+  article.append(header, mentorGuide, midpointCheckpoint);
 
   const paragraphs = document.createElement("div");
   paragraphs.className = "reading-body";
   reading.body.forEach((text, index) => {
+    const block = document.createElement("section");
+    block.className = "reading-block";
+    block.dataset.paragraph = String(index);
+    if (reading.difficulty === "guided") {
+      const scaffold = document.createElement("p");
+      scaffold.className = "paragraph-scaffold";
+      const labels =
+        GUIDED_PARAGRAPH_SCAFFOLDS[reading.category] ??
+        GUIDED_PARAGRAPH_SCAFFOLDS.humanities;
+      scaffold.textContent = labels[index] ?? "繼續找線索";
+      block.append(scaffold);
+    }
     const paragraph = document.createElement("p");
     paragraph.className = "reading-paragraph";
-    paragraph.dataset.paragraph = String(index);
     paragraph.textContent = paragraphText(text);
-    paragraphs.append(paragraph);
+    block.append(paragraph);
+    if (reading.difficulty === "guided") {
+      const nearbyGlossary = reading.glossary.filter(({ term }) =>
+        paragraph.textContent.includes(term),
+      );
+      if (nearbyGlossary.length) {
+        block.append(createInlineGlossary(nearbyGlossary));
+      }
+    }
+    paragraphs.append(block);
   });
   const savedPosition = state.readingProgress[reading.id];
   let resumeChoicePending =
@@ -219,6 +269,8 @@ export function renderReading(
       ) {
         mentorGuide.dataset.halfway = "true";
         mentorGuide.querySelector("p").textContent = mentor.halfway;
+        visible.target.prepend(midpointCheckpoint);
+        midpointCheckpoint.hidden = false;
       }
       if (resumeChoicePending) return;
       session.updatePosition(reading.id, {

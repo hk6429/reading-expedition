@@ -47,7 +47,7 @@ export async function renderClassView(
         </div>
         <section class="class-mission" aria-labelledby="class-mission-title">
           <p class="eyebrow">本週聚義任務</p>
-          <h2 id="class-mission-title">蒐集三路文證，修復聚義橋</h2>
+          <h2 id="class-mission-title">全班累積 10 次有效閱讀，修復聚義橋</h2>
           <div class="class-mission__track" role="progressbar" aria-label="共同地標下一階進度" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${missionProgress}">
             <span style="width:${missionProgress * 10}%"></span>
           </div>
@@ -79,14 +79,14 @@ export async function renderClassView(
     root.innerHTML = `
       <section class="class-shell paper-panel">
         <p class="chapter-label">聚義共建・匿名加入</p>
-        <h1>輸入班級碼</h1>
+        <h1>加入班級</h1>
         <p>班級只共建一座地標，不顯示誰做得多，也不會上傳你的答案文字。</p>
         <form data-class-join>
           <label for="class-code">8 碼班級碼</label>
           <input id="class-code" name="classCode" value="${escapeHtml(value)}" inputmode="text" minlength="8" maxlength="11" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="class-code-help class-join-message" required>
-          <p id="class-code-help" class="class-code-help">可直接貼上，空格與連字號會自動移除。</p>
+          <p id="class-code-help" class="class-code-help">請輸入老師提供的 8 碼班級碼。可直接貼上，空格與連字號會自動移除。</p>
           <p id="class-join-message" class="form-message" data-class-join-message role="status">${escapeHtml(message)}</p>
-          <button class="primary-action" type="submit">加入共同地標</button>
+          <button class="primary-action" type="submit">加入班級</button>
         </form>
       </section>
     `;
@@ -138,7 +138,7 @@ export async function renderClassView(
       } finally {
         if (button.isConnected) {
           button.disabled = false;
-          button.textContent = "加入共同地標";
+          button.textContent = "加入班級";
           form.removeAttribute("aria-busy");
         }
       }

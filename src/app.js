@@ -10,7 +10,10 @@ import {
 import { countHistoryActiveDays } from "./domain/active-days.js";
 import { growReadingAbilities } from "./domain/ability-growth.js";
 import { createAnonymousDeviceId } from "./domain/device-identity.js";
-import { appendVerifiedReading } from "./domain/reading-history.js";
+import {
+  appendVerifiedReading,
+  extractEvidenceText,
+} from "./domain/reading-history.js";
 import { createReadingSession } from "./domain/reading-session.js";
 import { createLocalStore } from "./storage/local-store.js";
 import { createSyncQueue } from "./storage/sync-queue.js";
@@ -45,11 +48,34 @@ const session = createReadingSession(state, (next) => store.save(next));
 const syncQueue = createSyncQueue(window.localStorage);
 const classContributionQueue = createClassContributionQueue(window.localStorage);
 const CLASS_TOKEN_KEY = "reading-expedition.class-token";
+const ANONYMOUS_STATISTICS_KEY =
+  "reading-expedition.anonymous-statistics";
+
+function anonymousStatisticsEnabled() {
+  return window.localStorage.getItem(ANONYMOUS_STATISTICS_KEY) !== "off";
+}
+
+function setAnonymousStatisticsEnabled(enabled) {
+  window.localStorage.setItem(
+    ANONYMOUS_STATISTICS_KEY,
+    enabled ? "on" : "off",
+  );
+  if (enabled) {
+    window.readingExpeditionPublicCounter?.load();
+    return;
+  }
+  syncQueue.clear();
+  window.readingExpeditionPublicCounter?.remove();
+}
 
 function setPublicCounterVisible(visible) {
-  document.documentElement.dataset.publicCounter = visible ? "show" : "hide";
+  const shouldShow = visible && anonymousStatisticsEnabled();
+  document.documentElement.dataset.publicCounter = shouldShow ? "show" : "hide";
   const counter = document.getElementById("danai-public-counter");
-  if (counter) counter.style.display = visible ? "" : "none";
+  const mobileControls = document.getElementById("mobile-counter-controls");
+  if (counter) counter.style.display = shouldShow ? "" : "none";
+  if (mobileControls) mobileControls.style.display = shouldShow ? "" : "none";
+  if (counter && shouldShow && mobileControls) counter.style.display = "none";
 }
 
 function durationBucket(reading) {
@@ -59,6 +85,7 @@ function durationBucket(reading) {
 }
 
 function queueEvent(type, reading) {
+  if (!anonymousStatisticsEnabled()) return;
   syncQueue.enqueue({
     id: crypto.randomUUID(),
     type,
@@ -74,6 +101,10 @@ function queueEvent(type, reading) {
 }
 
 async function flushEvents() {
+  if (!anonymousStatisticsEnabled()) {
+    syncQueue.clear();
+    return;
+  }
   await syncQueue.flush(async ({ id: _id, createdAt, ...event }) => {
     const response = await fetch("/api/v1/events", {
       method: "POST",
@@ -249,12 +280,21 @@ const router = createRouter({
         const revisedCount = firstResults.filter(
           (item, index) => !item.correct && finalResults[index]?.correct,
         ).length;
+        const evidenceResult =
+          finalResults.find((result) => {
+            const item = reading.assessment.find(({ id }) => id === result.id);
+            return item?.type === "evidence";
+          }) ?? finalResults[0];
+        const evidenceText =
+          extractEvidenceText(reading, evidenceResult?.evidenceSpan) ||
+          "已完成文證定位";
         const historyResult = appendVerifiedReading(state.readingHistory, {
           readingId: reading.id,
           date,
           category: reading.category,
           skill: "evidence",
-          evidence: `${reading.title}：已完成文證定位`,
+          title: reading.title,
+          evidence: evidenceText,
         });
         state.readingHistory = historyResult.history;
         const totalActiveDays = countHistoryActiveDays(state.readingHistory);
@@ -306,7 +346,7 @@ const router = createRouter({
           evidenceSubmitted: true,
           category: reading.category,
           skill: "理解與文證",
-          evidence: `${reading.title}：已完成文證定位`,
+          evidence: evidenceText,
         };
         queueEvent("assessment_submitted", reading);
         queueEvent("reading_completed", reading);
@@ -366,7 +406,13 @@ const router = createRouter({
   },
   async onGuide() {
     setPublicCounterVisible(true);
-    renderUsageGuide(main);
+    renderUsageGuide(main, {
+      anonymousStatisticsEnabled: anonymousStatisticsEnabled(),
+      onAnonymousStatisticsChange: (enabled) => {
+        setAnonymousStatisticsEnabled(enabled);
+        setPublicCounterVisible(true);
+      },
+    });
   },
   async onClass() {
     setPublicCounterVisible(false);

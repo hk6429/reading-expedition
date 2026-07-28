@@ -3,8 +3,17 @@ import test from "node:test";
 
 import {
   appendVerifiedReading,
+  extractEvidenceText,
   hasMainlineRewardForDate,
 } from "../../src/domain/reading-history.js";
+
+test("從正式文證座標取出學生實際帶回的原文", () => {
+  const reading = { body: ["前段文字", "降水回到地表後，一部分沿著地面流入溪河。"] };
+  assert.equal(
+    extractEvidenceText(reading, { paragraph: 2, start: 0, end: 15 }),
+    "降水回到地表後，一部分沿著地面",
+  );
+});
 
 test("同篇跨日重讀會保留兩天事件，不覆寫舊活躍日", () => {
   const first = appendVerifiedReading([], {
@@ -13,6 +22,7 @@ test("同篇跨日重讀會保留兩天事件，不覆寫舊活躍日", () => {
     category: "world",
     skill: "evidence",
     evidence: "第一天的文證",
+    title: "水源如何分配",
   });
   const second = appendVerifiedReading(first.history, {
     readingId: "water-sharing-guided-v1",
@@ -23,6 +33,7 @@ test("同篇跨日重讀會保留兩天事件，不覆寫舊活躍日", () => {
   });
 
   assert.equal(first.added, true);
+  assert.equal(first.event.title, "水源如何分配");
   assert.equal(second.added, true);
   assert.deepEqual(
     second.history.map(({ date }) => date),

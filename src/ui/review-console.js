@@ -16,6 +16,7 @@ function loginMarkup(message = "") {
       <p class="chapter-label">梁山校閱臺</p>
       <h1>教師驗證</h1>
       <p>登入最長保留 8 小時；若使用學校共用裝置，離開前請按「安全登出」。</p>
+      <p class="privacy-note">教師管理密鑰只用來驗證校閱與班級管理權限，不會顯示在學生端。請向本網站管理者或校內負責維護的教師索取，請勿貼在群組或共用文件中。</p>
       <form data-review-login>
         <label>教師管理密鑰
           <input name="key" type="password" autocomplete="current-password" required>

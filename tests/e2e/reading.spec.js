@@ -50,3 +50,35 @@ test("從首頁深處開啟文章仍從標題開始", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText("帶著這個問題讀")).toBeVisible();
 });
+
+test("行舟卷用段落鷹架與就近詞語提示支援導讀", async ({ page }) => {
+  await page.goto("/#/read/water-sharing-guided-v1");
+
+  await expect(page.locator(".paragraph-scaffold")).toHaveCount(4);
+  await expect(page.locator(".paragraph-scaffold").first()).toHaveText(
+    "先看情境",
+  );
+  const termBlock = page.locator(".reading-block").filter({ hasText: "分配者" });
+  await expect(termBlock.getByText("分配", { exact: true })).toBeVisible();
+  await expect(termBlock.getByText("把有限資源依照規則分給不同對象。")).toBeHidden();
+  await termBlock.getByText("分配", { exact: true }).click();
+  await expect(termBlock.getByText("把有限資源依照規則分給不同對象。")).toBeVisible();
+
+  await page.goto("/#/read/water-sharing-challenge-v1");
+  await expect(page.locator(".paragraph-scaffold")).toHaveCount(0);
+});
+
+test("讀到一半時領航提示出現在學生當下閱讀位置", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#/read/water-sharing-guided-v1");
+
+  const checkpoint = page.locator(".midpoint-checkpoint");
+  await expect(checkpoint).toBeHidden();
+  await page.locator(".reading-block").nth(2).scrollIntoViewIfNeeded();
+  await expect(checkpoint).toBeVisible();
+
+  const box = await checkpoint.boundingBox();
+  expect(box.y).toBeGreaterThanOrEqual(0);
+  expect(box.y + box.height).toBeLessThanOrEqual(844);
+  await expect(checkpoint).toContainText("已走過一半");
+});

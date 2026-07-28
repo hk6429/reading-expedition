@@ -1,12 +1,24 @@
 export function gradeAssessment(answerKey, answers) {
   return {
-    results: answerKey.map((item) => ({
-      id: item.id,
-      correct: answers[item.id] === item.correctAnswer,
-      rationale: item.rationale,
-      evidenceSpan: item.evidenceSpan,
-      correctAnswer: item.correctAnswer,
-    })),
+    results: answerKey.map((item) => {
+      const selectedAnswer = answers[item.id];
+      const correct = selectedAnswer === item.correctAnswer;
+      return correct
+        ? {
+            id: item.id,
+            correct,
+            rationale: item.rationale,
+            evidenceSpan: item.evidenceSpan,
+          }
+        : {
+            id: item.id,
+            correct,
+            diagnostic:
+              item.distractorReasons?.[selectedAnswer] ??
+              "這個選項和原文線索還有落差，請回到標示段落再比對一次。",
+            evidenceSpan: item.evidenceSpan,
+          };
+    }),
   };
 }
 

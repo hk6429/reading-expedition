@@ -126,8 +126,11 @@ export function renderAssessment(
   const closeEvidence = document.createElement("button");
   closeEvidence.type = "button";
   closeEvidence.textContent = "回到題目";
+  let evidenceTrigger = null;
   closeEvidence.addEventListener("click", () => {
     evidencePanel.hidden = true;
+    evidenceTrigger?.scrollIntoView({ behavior: "smooth", block: "center" });
+    evidenceTrigger?.focus({ preventScroll: true });
   });
   evidencePanel.append(evidenceHeading, evidenceCopy, closeEvidence);
 
@@ -238,7 +241,9 @@ export function renderAssessment(
         const status = document.createElement("strong");
         status.textContent = itemResult.correct ? "文證吻合" : "再找一次";
         const reason = document.createElement("p");
-        reason.textContent = itemResult.rationale;
+        reason.textContent = itemResult.correct
+          ? itemResult.rationale
+          : `這個選項卡在這裡：${itemResult.diagnostic}`;
         const mentor = document.createElement("p");
         mentor.className = "assessment-mentor";
         mentor.textContent =
@@ -250,6 +255,7 @@ export function renderAssessment(
         evidence.className = "evidence-link";
         evidence.textContent = `查看第${itemResult.evidenceSpan.paragraph}段線索`;
         evidence.addEventListener("click", () => {
+          evidenceTrigger = evidence;
           const paragraph =
             reading.body[itemResult.evidenceSpan.paragraph - 1];
           evidenceHeading.textContent = `第 ${itemResult.evidenceSpan.paragraph} 段`;
@@ -260,6 +266,7 @@ export function renderAssessment(
           );
           evidencePanel.hidden = false;
           evidencePanel.scrollIntoView({ behavior: "smooth", block: "center" });
+          closeEvidence.focus({ preventScroll: true });
         });
         feedback.append(status, reason, mentor, evidence);
       });
