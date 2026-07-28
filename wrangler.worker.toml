@@ -9,6 +9,7 @@ GENERATION_MAX_RETRIES = "2"
 
 [ai]
 binding = "AI"
+remote = true
 
 [triggers]
 crons = ["0 21 * * *"]
@@ -18,6 +19,7 @@ binding = "READING_DB"
 database_name = "reading-expedition"
 database_id = "ff4023c1-eee7-4466-9dd7-219cae1e4851"
 migrations_dir = "migrations"
+remote = true
 
 [env.preview]
 name = "reading-expedition-api-preview"
@@ -29,6 +31,7 @@ GENERATION_MAX_RETRIES = "2"
 
 [env.preview.ai]
 binding = "AI"
+remote = true
 
 [env.preview.triggers]
 crons = []
@@ -38,3 +41,4 @@ binding = "READING_DB"
 database_name = "reading-expedition-preview"
 database_id = "f242c594-5932-4d91-9c0e-f788dfcb5c75"
 migrations_dir = "migrations"
+remote = true

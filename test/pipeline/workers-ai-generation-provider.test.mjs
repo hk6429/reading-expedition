@@ -10,7 +10,7 @@ const prompt = Object.freeze({
   data: { factPack: { id: "fact-1" } },
 });
 
-test("Workers AI binding 使用受限輸出與 JSON schema，不需要外部 API key", async () => {
+test("Workers AI binding 使用 JSON object，內容門檻留給確定性驗證器", async () => {
   const calls = [];
   const provider = createWorkersAiGenerationProvider({
     ai: {
@@ -27,14 +27,9 @@ test("Workers AI binding 使用受限輸出與 JSON schema，不需要外部 API
   assert.deepEqual(result, { readings: [] });
   assert.equal(calls.length, 1);
   assert.equal(calls[0].model, "@cf/meta/llama-3.3-70b-instruct-fp8-fast");
-  assert.equal(calls[0].input.max_tokens, 2500);
+  assert.equal(calls[0].input.max_tokens, 4000);
   assert.equal(calls[0].input.stream, false);
-  assert.equal(calls[0].input.response_format.type, "json_schema");
-  const readingSchema =
-    calls[0].input.response_format.json_schema.properties.readings.items.properties;
-  assert.equal(readingSchema.body.minItems, 4);
-  assert.equal(readingSchema.body.items.properties.text.minLength, 110);
-  assert.equal(readingSchema.glossary.maxItems, 0);
+  assert.deepEqual(calls[0].input.response_format, { type: "json_object" });
   assert.equal(calls[0].input.messages[0].role, "system");
   assert.match(calls[0].input.messages[1].content, /untrusted_data/);
 });

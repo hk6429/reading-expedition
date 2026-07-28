@@ -35,6 +35,25 @@ function readingValidationCode(reading, textType) {
   return profile.ok ? null : profile.reasons[0];
 }
 
+function retryPrompt(prompt, readings, validationCode) {
+  const counts = Array.isArray(readings)
+    ? readings
+        .map((reading) => {
+          const profile = evaluateContentProfile(reading);
+          return `${reading?.difficulty ?? "unknown"}=${profile.hanCharacters}個漢字`;
+        })
+        .join("、")
+    : "無法計算";
+  return Object.freeze({
+    ...prompt,
+    system: [
+      prompt.system,
+      `上次輸出未通過 ${validationCode}；實際字數為 ${counts}。`,
+      "請重新完整生成，不可沿用過短版本；白話 guided 以 380 到 430 個漢字、challenge 以 500 到 560 個漢字為安全目標。",
+    ].join("\n"),
+  });
+}
+
 export async function generateReadings(
   provider,
   factPack,
@@ -71,15 +90,18 @@ export async function generateReadings(
             ],
     });
   let lastValidationCode = "reading_collection_invalid";
+  let currentPrompt = prompt;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const result = await provider.generate(prompt);
+    const result = await provider.generate(currentPrompt);
     const readings = result?.readings;
     if (!Array.isArray(readings) || readings.length !== 2) {
       lastValidationCode = "reading_collection_invalid";
+      currentPrompt = retryPrompt(currentPrompt, readings, lastValidationCode);
       continue;
     }
     if (new Set(readings.map(({ difficulty }) => difficulty)).size !== 2) {
       lastValidationCode = "reading_difficulty_pair_invalid";
+      currentPrompt = retryPrompt(currentPrompt, readings, lastValidationCode);
       continue;
     }
     const validationCode = readings
@@ -87,6 +109,7 @@ export async function generateReadings(
       .find(Boolean);
     if (validationCode) {
       lastValidationCode = validationCode;
+      currentPrompt = retryPrompt(currentPrompt, readings, lastValidationCode);
       continue;
     }
     const ordered = [...readings].sort((left, right) => {
@@ -99,6 +122,7 @@ export async function generateReadings(
     });
     if (!compareDifficultyLevels(ordered[0], ordered[1]).ok) {
       lastValidationCode = "reading_level_invalid";
+      currentPrompt = retryPrompt(currentPrompt, ordered, lastValidationCode);
       continue;
     }
     return ordered.map((reading, index) => ({
