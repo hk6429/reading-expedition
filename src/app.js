@@ -1,8 +1,13 @@
+import { demoAnswerKeys } from "./data/demo-answer-key.js";
 import { demoDailyReadings } from "./data/demo-daily.js";
 import { demoReadingsById } from "./data/demo-readings.js";
-import { createReadingSession } from "./domain/reading-session.js";
+import {
+  gradeAssessment,
+} from "./domain/assessment-session.js";
 import { createAnonymousDeviceId } from "./domain/device-identity.js";
+import { createReadingSession } from "./domain/reading-session.js";
 import { createLocalStore } from "./storage/local-store.js";
+import { renderAssessment } from "./ui/assessment-view.js";
 import { renderHome } from "./ui/home-view.js";
 import { renderReading } from "./ui/reading-view.js";
 import { createRouter } from "./ui/router.js";
@@ -37,6 +42,25 @@ async function loadReading(id) {
   }
 }
 
+async function submitAssessment(reading, answers) {
+  try {
+    const response = await fetch(
+      `/api/v1/readings/${reading.id}/submit`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ version: reading.version, answers }),
+      },
+    );
+    if (!response.ok) throw new Error("assessment API unavailable");
+    return await response.json();
+  } catch {
+    const answerKey = demoAnswerKeys[reading.id];
+    if (!answerKey) throw new Error("assessment unavailable");
+    return gradeAssessment(answerKey, answers);
+  }
+}
+
 const router = createRouter({
   async onHome() {
     renderHome(main, await loadDaily());
@@ -61,16 +85,17 @@ const router = createRouter({
     });
   },
   async onQuiz(id) {
-    main.replaceChildren();
-    const panel = document.createElement("section");
-    panel.className = "paper-panel";
-    panel.innerHTML = `
-      <p class="chapter-label">過關問答</p>
-      <h1>帶回兩份文證</h1>
-      <p>讀卷編號：${id}</p>
-      <a href="#/read/${id}">返回文章</a>
-    `;
-    main.append(panel);
+    const reading = await loadReading(id);
+    if (!reading) {
+      window.location.hash = "#/";
+      return;
+    }
+    renderAssessment(main, reading, {
+      submitAnswers: (answers) => submitAssessment(reading, answers),
+      onComplete: () => {
+        window.location.hash = `#/city/invest/${reading.id}`;
+      },
+    });
   },
 });
 

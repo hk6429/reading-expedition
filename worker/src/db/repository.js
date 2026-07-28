@@ -139,5 +139,39 @@ export function createReadingRepository(db) {
         assessment: assessmentRows.map(mapAssessmentItem),
       };
     },
+    async getAssessmentKey(readingId, version) {
+      const statement = db
+        .prepare(
+          `SELECT
+             ai.id,
+             ai.correct_answer,
+             ai.rationale,
+             ai.evidence_span_json
+           FROM assessment_items ai
+           JOIN reading_packages rp ON rp.id = ai.reading_package_id
+           WHERE ai.reading_package_id = ?
+             AND ai.version = ?
+             AND rp.version = ?
+             AND rp.publication_status = 'published'
+           ORDER BY
+             CASE ai.item_type
+               WHEN 'comprehension' THEN 1
+               WHEN 'inference' THEN 2
+               ELSE 3
+             END`,
+        )
+        .bind(readingId, version, version);
+      const { results = [] } = await statement.all();
+      if (results.length === 0) return null;
+      return results.map((row) => ({
+        id: row.id,
+        correctAnswer: row.correct_answer,
+        rationale: row.rationale,
+        evidenceSpan: parseJsonField(
+          row.evidence_span_json,
+          "evidence_span_json",
+        ),
+      }));
+    },
   });
 }
