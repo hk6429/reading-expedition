@@ -25,12 +25,33 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
   await expect(page.getByText("聚義書樓升到第 1 階")).toBeVisible();
   await expect(page.getByText("燈火已點亮")).toBeVisible();
 
+  await page.getByRole("link", { name: "看見整座浮城的變化" }).click();
+  await expect(
+    page.getByRole("heading", {
+      name: "每一盞燈，都是我讀懂的證據",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("一座城市如何分配有限水源？", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("累積 1 點")).toHaveCount(3);
+
   await page.reload();
-  await expect(page.getByText("聚義書樓・第 1 階")).toBeVisible();
+  await expect(page.getByText("聚義書樓")).toBeVisible();
   const city = await page.evaluate(() => {
     const state = JSON.parse(localStorage.getItem("reading-expedition:v1"));
-    return state.city;
+    return {
+      city: state.city,
+      readingHistory: state.readingHistory,
+      abilityGrowth: state.abilityGrowth,
+    };
   });
-  expect(city.buildings.library).toBe(1);
-  expect(city.investments).toHaveLength(1);
+  expect(city.city.buildings.library).toBe(1);
+  expect(city.city.investments).toHaveLength(1);
+  expect(city.readingHistory).toHaveLength(1);
+  expect(city.abilityGrowth).toEqual({
+    comprehension: 1,
+    inference: 1,
+    evidence: 1,
+  });
 });

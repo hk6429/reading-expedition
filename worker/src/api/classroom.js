@@ -179,11 +179,23 @@ export function createClassroomApi({
       const aggregate = await repository.getClassAggregate(
         participant.classroomId,
       );
+      const landmarkLevel = Math.min(
+        5,
+        Math.floor(aggregate.validReadings / 10),
+      );
+      const nextLevelAt =
+        landmarkLevel >= 5 ? 50 : (landmarkLevel + 1) * 10;
+      const remainingToNextLevel = Math.max(
+        0,
+        nextLevelAt - aggregate.validReadings,
+      );
       if (aggregate.anonymousParticipants < privacyThreshold) {
         return jsonResponse({
           privacyProtected: true,
           participantThreshold: privacyThreshold,
-          landmarkLevel: Math.min(5, Math.floor(aggregate.validReadings / 10)),
+          landmarkLevel,
+          nextLevelAt,
+          remainingToNextLevel,
         });
       }
       return jsonResponse({
@@ -192,7 +204,9 @@ export function createClassroomApi({
         validReadings: aggregate.validReadings,
         categoryDistribution: aggregate.categoryDistribution,
         skillDistribution: aggregate.skillDistribution,
-        landmarkLevel: Math.min(5, Math.floor(aggregate.validReadings / 10)),
+        landmarkLevel,
+        nextLevelAt,
+        remainingToNextLevel,
       });
     },
   });

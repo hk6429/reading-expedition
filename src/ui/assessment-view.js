@@ -6,6 +6,12 @@ const COMPETENCY_LABELS = Object.freeze({
   evidence: "找證據",
 });
 
+const COMPETENCY_MENTORS = Object.freeze({
+  comprehension: "武松：先抓住真正重要的訊息。",
+  inference: "吳用：把線索連起來，再檢查推論。",
+  evidence: "魯智深：回到原文，讓證據自己說話。",
+});
+
 function createQuestion(item, index, total) {
   const fieldset = document.createElement("fieldset");
   fieldset.className = "assessment-question";
@@ -233,6 +239,12 @@ export function renderAssessment(
         status.textContent = itemResult.correct ? "文證吻合" : "再找一次";
         const reason = document.createElement("p");
         reason.textContent = itemResult.rationale;
+        const mentor = document.createElement("p");
+        mentor.className = "assessment-mentor";
+        mentor.textContent =
+          COMPETENCY_MENTORS[
+            reading.assessment.find(({ id }) => id === itemResult.id)?.type
+          ] ?? "梁山伙伴：回到文章，再走一步就好。";
         const evidence = document.createElement("button");
         evidence.type = "button";
         evidence.className = "evidence-link";
@@ -249,7 +261,7 @@ export function renderAssessment(
           evidencePanel.hidden = false;
           evidencePanel.scrollIntoView({ behavior: "smooth", block: "center" });
         });
-        feedback.append(status, reason, evidence);
+        feedback.append(status, reason, mentor, evidence);
       });
 
       if (result.canRevise) {
@@ -266,6 +278,13 @@ export function renderAssessment(
       }
 
       for (const input of form.elements) input.disabled = true;
+      const revisedCount = firstResults.filter(
+        (item, index) => !item.correct && latestResults[index]?.correct,
+      ).length;
+      completionCopy.textContent =
+        revisedCount > 0
+          ? `你回到原文並修正了 ${revisedCount} 題。吳用說：願意重找證據，就是閱讀本領正在長大。`
+          : "三位領航伙伴已把你的理解與文證收入航圖，準備帶回浮城。";
       form.hidden = true;
       evidencePanel.hidden = true;
       completion.hidden = false;

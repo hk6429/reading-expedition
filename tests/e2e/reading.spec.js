@@ -9,7 +9,11 @@ test("學生可閱讀行舟卷、調整夜讀並保存進度", async ({ page }) 
   await expect(page.locator(".reading-paragraph")).toHaveCount(4);
   await expect(page.getByText("U.S. Geological Survey")).toBeVisible();
 
-  await page.getByRole("button", { name: "夜讀" }).click();
+  const nightButton = page.getByRole("button", { name: "夜讀" });
+  if (!(await nightButton.isVisible())) {
+    await page.getByRole("button", { name: "顯示設定" }).click();
+  }
+  await nightButton.click();
   await expect(page.locator("html")).toHaveAttribute("data-reading-mode", "night");
 
   await page.locator(".reading-paragraph").nth(2).scrollIntoViewIfNeeded();

@@ -34,6 +34,10 @@ export async function renderClassView(
       return;
     }
     const aggregate = await response.json();
+    const remaining = Number.isInteger(aggregate.remainingToNextLevel)
+      ? aggregate.remainingToNextLevel
+      : Math.max(0, 10 - ((aggregate.validReadings ?? 0) % 10));
+    const missionProgress = remaining === 0 ? 10 : 10 - Math.min(10, remaining);
     root.innerHTML = `
       <section class="class-shell paper-panel">
         <p class="chapter-label">聚義共建・不比個人</p>
@@ -41,6 +45,14 @@ export async function renderClassView(
         <div class="landmark-level" aria-label="共同地標等級 ${aggregate.landmarkLevel}">
           第 ${aggregate.landmarkLevel} 階
         </div>
+        <section class="class-mission" aria-labelledby="class-mission-title">
+          <p class="eyebrow">本週聚義任務</p>
+          <h2 id="class-mission-title">蒐集三路文證，修復聚義橋</h2>
+          <div class="class-mission__track" role="progressbar" aria-label="共同地標下一階進度" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${missionProgress}">
+            <span style="width:${missionProgress * 10}%"></span>
+          </div>
+          <p>${remaining > 0 ? `全班再完成 ${remaining} 次有效閱讀，就能共同點亮下一階。` : "本階已點亮，新的共同航圖正在展開。"}</p>
+        </section>
         ${
           aggregate.privacyProtected
             ? `<p>目前人數尚未達 ${aggregate.participantThreshold} 人，只顯示共同地標，不顯示細分統計。</p>`

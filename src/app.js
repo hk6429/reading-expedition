@@ -7,13 +7,17 @@ import {
 import {
   rewardVerifiedReading,
 } from "./domain/city.js";
+import { countHistoryActiveDays } from "./domain/active-days.js";
+import { growReadingAbilities } from "./domain/ability-growth.js";
 import { createAnonymousDeviceId } from "./domain/device-identity.js";
+import { appendVerifiedReading } from "./domain/reading-history.js";
 import { createReadingSession } from "./domain/reading-session.js";
 import { createLocalStore } from "./storage/local-store.js";
 import { createSyncQueue } from "./storage/sync-queue.js";
 import { createClassContributionQueue } from "./storage/class-contribution-queue.js";
 import { renderAssessment } from "./ui/assessment-view.js";
 import { renderCityInvest } from "./ui/city-view.js";
+import { renderCityOverview } from "./ui/city-overview.js";
 import { renderHome } from "./ui/home-view.js";
 import { renderReading } from "./ui/reading-view.js";
 import { renderReviewConsole } from "./ui/review-console.js";
@@ -175,10 +179,37 @@ function taipeiToday() {
   }).format(new Date());
 }
 
+function exportLearningState() {
+  const payload = store.export();
+  if (!payload) return;
+  const blob = new Blob([payload], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `梁山閱征記-${taipeiToday()}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+async function restoreLearningState(file) {
+  if (!(file instanceof File) || file.size > 2_000_000) {
+    throw new TypeError("invalid learning record file");
+  }
+  const restored = store.restore(await file.text());
+  for (const key of Object.keys(state)) delete state[key];
+  Object.assign(state, restored);
+  window.location.reload();
+}
+
 const router = createRouter({
   async onHome() {
     setPublicCounterVisible(true);
-    renderHome(main, await loadDaily(), state.completedReadings);
+    renderHome(
+      main,
+      await loadDaily(),
+      state.completedReadings,
+      state.readingHistory,
+    );
   },
   async onRead(id) {
     setPublicCounterVisible(false);
@@ -218,18 +249,60 @@ const router = createRouter({
         const revisedCount = firstResults.filter(
           (item, index) => !item.correct && finalResults[index]?.correct,
         ).length;
+        const historyResult = appendVerifiedReading(state.readingHistory, {
+          readingId: reading.id,
+          date,
+          category: reading.category,
+          skill: "evidence",
+          evidence: `${reading.title}：已完成文證定位`,
+        });
+        state.readingHistory = historyResult.history;
+        const totalActiveDays = countHistoryActiveDays(state.readingHistory);
+        const activeDay = Math.max(1, Math.min(totalActiveDays, 30));
         const reward = rewardVerifiedReading({
           completed: true,
           evidenceSubmitted: true,
           correctCount: firstCorrect,
           revisedCount,
           repeatedSameDay,
+          mainlineReward:
+            historyResult.added &&
+            historyResult.event.mainlineReward &&
+            totalActiveDays <= 30,
+          activeDay,
         });
         state.city.materials.inkBricks += reward.inkBricks;
+        state.city.materials.fellowshipSeals += reward.fellowshipSeals;
+        if (
+          reward.rewardType === "story" &&
+          !state.city.storyUnlocks.some(
+            (unlock) => unlock.activeDay === activeDay,
+          )
+        ) {
+          state.city.storyUnlocks.push({
+            activeDay,
+            title: reward.rewardTitle,
+            date,
+          });
+        }
+        if (historyResult.added) {
+          state.abilityGrowth = growReadingAbilities(state.abilityGrowth, {
+            completed: true,
+            evidenceSubmitted: true,
+            revisedCount,
+          });
+        }
         state.completedReadings[reading.id] = {
           date,
           version: reading.version,
           reward: reward.inkBricks,
+          rewards: {
+            inkBricks: reward.inkBricks,
+            fellowshipSeals: reward.fellowshipSeals,
+            type: reward.rewardType,
+            title: reward.rewardTitle ?? "",
+          },
+          activeDay,
           evidenceSubmitted: true,
           category: reading.category,
           skill: "理解與文證",
@@ -265,11 +338,26 @@ const router = createRouter({
       window.location.hash = `#/read/${id}`;
       return;
     }
+    const reading = await loadReading(id);
     renderCityInvest(main, state, {
       readingId: id,
       earnedInkBricks: completion.reward,
+      earnedFellowshipSeals: completion.rewards?.fellowshipSeals ?? 0,
+      rewardType: completion.rewards?.type ?? "building",
+      rewardTitle: completion.rewards?.title ?? "",
+      activeDay: completion.activeDay ?? 1,
+      reading,
+      evidence: completion.evidence,
       date: completion.date,
       saveState: (next) => store.save(next),
+    });
+  },
+  async onCity() {
+    setPublicCounterVisible(true);
+    renderCityOverview(main, state, {
+      saveState: (next) => store.save(next),
+      exportState: exportLearningState,
+      restoreState: restoreLearningState,
     });
   },
   async onTeacher(view) {

@@ -8,11 +8,27 @@ export function createReadingControls(preferences, onChange) {
   const aside = document.createElement("aside");
   aside.className = "reading-controls";
   aside.setAttribute("aria-label", "閱讀顯示設定");
+  aside.dataset.expanded = "false";
+
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "reading-controls__toggle";
+  toggle.textContent = "顯示設定";
+  toggle.setAttribute("aria-expanded", "false");
+
+  const panel = document.createElement("div");
+  panel.className = "reading-controls__panel";
+  toggle.addEventListener("click", () => {
+    const expanded = aside.dataset.expanded !== "true";
+    aside.dataset.expanded = String(expanded);
+    toggle.setAttribute("aria-expanded", String(expanded));
+    toggle.textContent = expanded ? "收合設定" : "顯示設定";
+  });
 
   const heading = document.createElement("p");
   heading.className = "control-label";
   heading.textContent = "紙張模式";
-  aside.append(heading);
+  panel.append(heading);
 
   const modeGroup = document.createElement("div");
   modeGroup.className = "mode-group";
@@ -31,7 +47,7 @@ export function createReadingControls(preferences, onChange) {
     });
     modeGroup.append(button);
   }
-  aside.append(modeGroup);
+  panel.append(modeGroup);
 
   const sizeGroup = document.createElement("div");
   sizeGroup.className = "font-size-group";
@@ -56,7 +72,8 @@ export function createReadingControls(preferences, onChange) {
     });
     sizeGroup.append(button);
   }
-  aside.append(sizeGroup);
+  panel.append(sizeGroup);
+  aside.append(toggle, panel);
 
   return aside;
 }

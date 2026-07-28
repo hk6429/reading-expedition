@@ -1,6 +1,24 @@
 import { waterMarginTheme } from "../theme/water-margin.js";
 import { createReadingControls } from "./reading-controls.js";
 
+const MENTOR_GUIDES = Object.freeze({
+  world: {
+    name: "武松",
+    opening: "先辨認事件中的人、時間與規則，再決定相信什麼。",
+    halfway: "已走過一半。回看帶讀問題，找出真正能承重的段落。",
+  },
+  science: {
+    name: "吳用",
+    opening: "先找證據與機制，不急著被最驚奇的說法帶走。",
+    halfway: "已走過一半。留意原因、結果與數字之間是否真的相連。",
+  },
+  humanities: {
+    name: "魯智深",
+    opening: "先看人物的選擇與處境，同一件事可能有不同聲音。",
+    halfway: "已走過一半。想想哪些人的聲音還沒有被文章說出來。",
+  },
+});
+
 function paragraphText(paragraph) {
   return typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
 }
@@ -61,6 +79,14 @@ export function renderReading(
   title.textContent = reading.title;
   const question = document.createElement("p");
   question.className = "reading-hook";
+  const mentor = MENTOR_GUIDES[reading.category] ?? MENTOR_GUIDES.humanities;
+  const mentorGuide = document.createElement("aside");
+  mentorGuide.className = "mentor-guide";
+  mentorGuide.setAttribute("aria-live", "polite");
+  mentorGuide.innerHTML = `
+    <span>${mentor.name}領航</span>
+    <p>${mentor.opening}</p>
+  `;
   if (reading.hookQuestion) {
     const questionLabel = document.createElement("span");
     questionLabel.textContent = "帶著這個問題讀";
@@ -69,7 +95,7 @@ export function renderReading(
   } else {
     header.append(kicker, title);
   }
-  article.append(header);
+  article.append(header, mentorGuide);
 
   const paragraphs = document.createElement("div");
   paragraphs.className = "reading-body";
@@ -187,6 +213,13 @@ export function renderReading(
         "aria-valuenow",
         String(Math.round(readingProgress * 100)),
       );
+      if (
+        readingProgress >= 0.5 &&
+        mentorGuide.dataset.halfway !== "true"
+      ) {
+        mentorGuide.dataset.halfway = "true";
+        mentorGuide.querySelector("p").textContent = mentor.halfway;
+      }
       if (resumeChoicePending) return;
       session.updatePosition(reading.id, {
         contentKey: reading.contentKey,

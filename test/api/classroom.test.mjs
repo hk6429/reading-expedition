@@ -152,6 +152,8 @@ test("未達五人隱私門檻不顯示細分統計或個人貢獻", async () =>
   const payload = await response.json();
 
   assert.equal(payload.privacyProtected, true);
+  assert.equal(payload.nextLevelAt, 10);
+  assert.equal(payload.remainingToNextLevel, 10);
   assert.equal("categoryDistribution" in payload, false);
   assert.equal("individuals" in payload, false);
 });

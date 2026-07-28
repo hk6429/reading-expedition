@@ -302,6 +302,10 @@ a:focus-visible {
   box-shadow: 0 0 0 6px var(--focus-ring);
 }
 
+main h1[tabindex="-1"]:focus {
+  outline: none;
+}
+
 .home-view {
   width: min(76rem, calc(100% - 2rem));
   margin: 0 auto;
@@ -549,6 +553,13 @@ a:focus-visible {
   border-left: 3px solid var(--cinnabar);
   font-family: "Noto Serif TC", "Songti TC", serif;
   font-weight: 700;
+}
+
+.route-reward {
+  margin: 0.8rem 0 0;
+  color: var(--mineral-green);
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .route-card__actions {
@@ -1009,7 +1020,7 @@ a:focus-visible {
 @media (max-width: 42rem) {
   .site-header {
     width: min(100% - 1rem, 42rem);
-    padding: 0.65rem 0;
+    padding: 0.5rem 0;
   }
 
   .brand-lockup {
@@ -1551,6 +1562,11 @@ a:focus-visible {
   background: rgb(231 216 188 / 98%);
 }
 
+.building-card.is-recommended {
+  border-color: var(--mineral-green);
+  box-shadow: inset 0 4px 0 var(--mineral-green);
+}
+
 .building-mark {
   display: grid;
   width: 3.5rem;
@@ -1925,5 +1941,492 @@ a:focus-visible {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+.reading-controls__toggle {
+  display: none;
+}
+
+.mentor-guide {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.25rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--mineral-blue) 45%, transparent);
+  border-radius: 1rem 0.25rem;
+  background: color-mix(in srgb, var(--paper-card) 55%, transparent);
+}
+
+.mentor-guide span {
+  color: var(--cinnabar);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.mentor-guide p,
+.assessment-mentor {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+}
+
+.assessment-mentor {
+  padding-top: 0.4rem;
+  border-top: 1px dashed color-mix(in srgb, var(--ink-primary) 18%, transparent);
+}
+
+.chapter-mentor {
+  margin-bottom: 0;
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+.chapter-unlock {
+  display: inline-block;
+  margin-top: var(--space-3);
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--mineral-green);
+  border-radius: 999px;
+  color: var(--mineral-green);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.city-overview {
+  width: min(76rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1rem 0 7rem;
+}
+
+.city-overview__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: center;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 16%, transparent);
+  border-radius: 2rem 0.5rem;
+  background:
+    radial-gradient(circle at 80% 20%, rgb(216 168 77 / 16%), transparent 22rem),
+    var(--panel-background);
+  box-shadow: 0 2rem 6rem rgb(38 55 70 / 13%);
+}
+
+.city-overview__hero h1 {
+  max-width: 10ch;
+}
+
+.city-overview__stats,
+.city-overview__actions,
+.goal-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.city-overview__stats span {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 18%, transparent);
+  border-radius: 999px;
+  background: var(--chip-background);
+  color: var(--ink-muted);
+  font-size: 0.86rem;
+}
+
+.city-overview__actions {
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.city-overview__actions button,
+.restore-record,
+.goal-options button {
+  display: inline-flex;
+  min-height: 3rem;
+  padding: 0.55rem 0.85rem;
+  align-items: center;
+  border: 1px solid var(--ink-primary);
+  border-radius: 0.7rem 0.2rem;
+  background: transparent;
+  color: var(--ink-primary);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.restore-record {
+  cursor: pointer;
+}
+
+.restore-record input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.restore-status {
+  min-height: 1.5rem;
+  margin: 0.4rem 0 0;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+
+.city-panorama {
+  display: flex;
+  min-height: 18rem;
+  gap: 0.55rem;
+  align-items: end;
+  justify-content: center;
+  padding: 2rem 1rem 1rem;
+  border-radius: 50% 50% 1.2rem 1.2rem;
+  background:
+    radial-gradient(circle at 50% 25%, rgb(245 240 230 / 70%), transparent 9rem),
+    linear-gradient(180deg, rgb(63 104 116 / 20%), rgb(71 115 98 / 34%));
+  box-shadow: inset 0 -2rem 0 rgb(29 26 23 / 14%);
+}
+
+.panorama-building {
+  display: grid;
+  position: relative;
+  width: 22%;
+  min-height: calc(5.5rem + var(--stage) * 1.05rem);
+  place-items: center;
+  padding: 0.6rem;
+  clip-path: polygon(12% 100%, 12% 28%, 0 28%, 50% 0, 100% 28%, 88% 28%, 88% 100%);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--paper-card) calc(72% + var(--stage) * 4%), var(--mineral-blue)),
+      color-mix(in srgb, var(--mineral-blue) calc(18% + var(--stage) * 7%), var(--paper-card))
+    );
+  color: var(--ink-primary);
+  filter: drop-shadow(0 0.7rem 0.8rem rgb(29 26 23 / 18%));
+  transition:
+    min-height 400ms ease,
+    filter 400ms ease;
+}
+
+.panorama-building b {
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: 1.4rem;
+}
+
+.panorama-building i {
+  position: absolute;
+  bottom: 0.8rem;
+  color: #d8a84d;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 0.7rem #d8a84d;
+}
+
+.city-overview__buildings,
+.ability-panel,
+.journey-panel,
+.current-chapter,
+.weekly-goal {
+  margin-top: 1.25rem;
+}
+
+.city-overview__buildings {
+  padding-top: 2.5rem;
+}
+
+.city-overview__buildings .section-heading h2,
+.ability-panel h2,
+.journey-panel h2,
+.weekly-goal h2 {
+  margin: 0.25rem 0;
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: clamp(1.7rem, 4vw, 2.7rem);
+}
+
+.city-building {
+  background: var(--panel-background);
+}
+
+.city-building__scene {
+  display: grid;
+  position: relative;
+  min-height: calc(7rem + var(--building-stage) * 0.45rem);
+  place-items: center;
+  overflow: hidden;
+  border-radius: 1rem 0.25rem;
+  background:
+    radial-gradient(circle, rgb(216 168 77 / 12%), transparent 55%),
+    color-mix(in srgb, var(--paper-card) 80%, var(--mineral-blue));
+}
+
+.city-building__scene .building-mark {
+  z-index: 2;
+  background: var(--panel-background-strong);
+}
+
+.city-building__tower {
+  position: absolute;
+  bottom: 0;
+  width: 58%;
+  height: calc(3.7rem + var(--building-stage) * 0.55rem);
+  clip-path: polygon(8% 100%, 8% 25%, 0 25%, 50% 0, 100% 25%, 92% 25%, 92% 100%);
+  background: color-mix(
+    in srgb,
+    var(--mineral-blue) calc(22% + var(--building-stage) * 9%),
+    var(--paper-card)
+  );
+  transition: height 350ms ease;
+}
+
+.city-building__lights {
+  position: absolute;
+  bottom: 0.55rem;
+  z-index: 2;
+  color: #d8a84d;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 0.65rem #d8a84d;
+}
+
+.building-knowledge {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed color-mix(in srgb, var(--ink-primary) 18%, transparent);
+}
+
+.building-knowledge h3 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.building-knowledge ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.building-knowledge li span,
+.building-knowledge p {
+  display: block;
+  margin: 0.2rem 0 0;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.ability-panel,
+.journey-panel,
+.current-chapter,
+.weekly-goal {
+  width: 100%;
+}
+
+.ability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.ability-card {
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 16%, transparent);
+  border-radius: 1rem 0.25rem;
+  background: var(--chip-background);
+}
+
+.ability-card > div:first-child {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.ability-card strong {
+  color: var(--cinnabar);
+}
+
+.ability-track,
+.class-mission__track {
+  height: 0.65rem;
+  margin-top: 0.8rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink-primary) 12%, transparent);
+}
+
+.ability-track span,
+.class-mission__track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--mineral-blue), var(--mineral-green));
+}
+
+.ability-card p {
+  margin-bottom: 0;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+
+.journey-track {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.journey-track span {
+  display: grid;
+  min-height: 2.4rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 18%, transparent);
+  border-radius: 0.55rem 0.15rem;
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+}
+
+.journey-track span.is-story {
+  border-style: dashed;
+  color: var(--cinnabar);
+}
+
+.journey-track span.is-complete {
+  border-color: var(--mineral-green);
+  background: var(--mineral-green);
+  color: #fff;
+}
+
+.journey-track span.is-complete.is-story {
+  background: var(--cinnabar);
+}
+
+.next-unlock,
+.class-mission {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--mineral-green) 38%, transparent);
+  border-radius: 1rem 0.25rem;
+  background: color-mix(in srgb, var(--mineral-green) 8%, transparent);
+}
+
+.next-unlock h3,
+.class-mission h2 {
+  margin: 0.3rem 0;
+  font-family: "Noto Serif TC", "Songti TC", serif;
+}
+
+.goal-options button[aria-pressed="true"] {
+  border-color: var(--cinnabar);
+  background: var(--cinnabar);
+  color: #fff8eb;
+}
+
+.city-growth-seal {
+  display: grid;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid var(--cinnabar);
+  border-radius: 50% 44% 52% 46%;
+  color: var(--cinnabar);
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  animation: cinnabar-seal 480ms ease both;
+}
+
+@keyframes cinnabar-seal {
+  from {
+    opacity: 0;
+    transform: scale(1.8) rotate(-12deg);
+  }
+}
+
+@media (max-width: 63.99rem) {
+  .reading-controls {
+    right: 0.75rem;
+    left: auto;
+    display: block;
+    max-width: calc(100% - 1.5rem);
+    padding: 0.35rem;
+  }
+
+  .reading-controls__toggle {
+    display: block;
+    min-height: 3rem;
+    padding-inline: 0.8rem;
+  }
+
+  .reading-controls__panel {
+    display: none;
+  }
+
+  .reading-controls[data-expanded="true"] {
+    left: 0.75rem;
+  }
+
+  .reading-controls[data-expanded="true"] .reading-controls__panel {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.35rem;
+  }
+
+  .reading-controls[data-expanded="true"] .mode-group,
+  .reading-controls[data-expanded="true"] .font-size-group {
+    display: flex;
+  }
+
+  .city-overview__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .city-panorama {
+    min-height: 14rem;
+  }
+}
+
+@media (max-width: 42rem) {
+  .site-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 12rem;
+  }
+
+  .city-overview,
+  .city-view {
+    width: min(100% - 1rem, 42rem);
+  }
+
+  .city-overview__hero {
+    padding: 1.2rem;
+  }
+
+  .city-overview__hero h1 {
+    font-size: clamp(2rem, 10vw, 2.7rem);
+  }
+
+  .city-panorama {
+    min-height: 11rem;
+    padding-inline: 0.4rem;
+  }
+
+  .panorama-building {
+    min-height: calc(4rem + var(--stage) * 0.65rem);
+  }
+
+  .ability-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-track {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .mentor-guide {
+    grid-template-columns: 1fr;
   }
 }

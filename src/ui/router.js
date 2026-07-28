@@ -1,4 +1,4 @@
-export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onGuide, onTeacher, onClass }) {
+export function createRouter({ onHome, onRead, onQuiz, onCity, onCityInvest, onGuide, onTeacher, onClass }) {
   async function renderRoute(render) {
     await render();
     window.scrollTo(0, 0);
@@ -35,6 +35,10 @@ export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onGuide, on
       if (onCityInvest) {
         await renderRoute(() => onCityInvest(cityMatch[1]));
       }
+      return;
+    }
+    if (window.location.hash === "#/city") {
+      if (onCity) await renderRoute(onCity);
       return;
     }
     const quizMatch = /^#\/quiz\/([a-zA-Z0-9-]+)$/.exec(

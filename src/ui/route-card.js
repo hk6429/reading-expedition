@@ -5,16 +5,19 @@ const CATEGORY_COPY = Object.freeze({
     mentor: "武松領航",
     description: "從事件、制度與地理脈絡，讀懂遠方正在發生什麼。",
     mark: "海",
+    reward: "可帶回天下驛站，收藏世界議題與制度線索",
   },
   science: {
     mentor: "吳用領航",
     description: "從證據與機制追問原因，把驚奇變成可以檢查的問題。",
     mark: "理",
+    reward: "可帶回百工水寨，收藏科學機制與證據",
   },
   humanities: {
     mentor: "魯智深領航",
     description: "從人物的選擇與感受，看見同一件事裡不同的聲音。",
     mark: "人",
+    reward: "可帶回聚義書樓，收藏人物故事與金句",
   },
 });
 
@@ -65,6 +68,7 @@ export function createRouteCard(route) {
   body.innerHTML = `
     <p>${copy.description}</p>
     <p class="route-question">${primary.hookQuestion}</p>
+    <p class="route-reward">${copy.reward}</p>
   `;
 
   const actions = document.createElement("div");

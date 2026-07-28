@@ -16,8 +16,30 @@ export function countActiveDays(completedReadings = {}) {
   return listActiveDays(completedReadings).length;
 }
 
+export function listHistoryActiveDays(history = []) {
+  return [
+    ...new Set(
+      history
+        .map(({ date } = {}) => date)
+        .filter(validDate),
+    ),
+  ].sort();
+}
+
+export function countHistoryActiveDays(history = []) {
+  return listHistoryActiveDays(history).length;
+}
+
 export function resolveChapterProgress(completedReadings = {}) {
   const totalActiveDays = countActiveDays(completedReadings);
+  return chapterProgress(totalActiveDays);
+}
+
+export function resolveHistoryChapterProgress(history = []) {
+  return chapterProgress(countHistoryActiveDays(history));
+}
+
+function chapterProgress(totalActiveDays) {
   return Object.freeze({
     activeDay: Math.min(totalActiveDays, 30),
     totalActiveDays,

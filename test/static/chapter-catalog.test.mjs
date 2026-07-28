@@ -25,3 +25,18 @@ test("章節敘事可略過且不以焦慮或損失推動閱讀", () => {
     );
   }
 });
+
+test("三十日章回不是重複模板，故事日帶有角色與實際解鎖", () => {
+  assert.ok(
+    new Set(chapterCatalog.map(({ story }) => story)).size >= 25,
+    "至少二十五回應有不同故事",
+  );
+  const storyChapters = chapterCatalog.filter(
+    ({ rewardType }) => rewardType === "story",
+  );
+  assert.equal(storyChapters.length, 10);
+  for (const chapter of storyChapters) {
+    assert.ok(chapter.mentor);
+    assert.ok(chapter.unlock);
+  }
+});

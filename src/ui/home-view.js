@@ -2,7 +2,12 @@ import { groupDailyRoutes } from "../domain/daily-routes.js";
 import { createRouteCard } from "./route-card.js";
 import { createReadingJournal } from "./reading-journal.js";
 
-export function renderHome(container, readings, completedReadings = {}) {
+export function renderHome(
+  container,
+  readings,
+  completedReadings = {},
+  readingHistory = [],
+) {
   const routes = groupDailyRoutes(readings);
   container.replaceChildren();
   container.className = "home-view";
@@ -53,5 +58,9 @@ export function renderHome(container, readings, completedReadings = {}) {
   for (const route of routes) grid.append(createRouteCard(route));
   routeSection.append(grid);
 
-  container.append(hero, routeSection, createReadingJournal(completedReadings));
+  container.append(
+    hero,
+    routeSection,
+    createReadingJournal(completedReadings, readingHistory),
+  );
 }

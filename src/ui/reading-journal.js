@@ -1,9 +1,17 @@
 import { chapterForActiveDay } from "../data/chapter-catalog.js";
-import { resolveChapterProgress } from "../domain/active-days.js";
+import {
+  resolveChapterProgress,
+  resolveHistoryChapterProgress,
+} from "../domain/active-days.js";
 import { createChapterCard } from "./chapter-card.js";
 
-export function createReadingJournal(completedReadings = {}) {
-  const progress = resolveChapterProgress(completedReadings);
+export function createReadingJournal(
+  completedReadings = {},
+  readingHistory = [],
+) {
+  const progress = readingHistory.length
+    ? resolveHistoryChapterProgress(readingHistory)
+    : resolveChapterProgress(completedReadings);
   const currentDay = Math.max(progress.activeDay, 1);
   const chapter = chapterForActiveDay(currentDay);
   const section = document.createElement("section");
@@ -19,6 +27,11 @@ export function createReadingJournal(completedReadings = {}) {
     </div>
   `;
   section.append(createChapterCard(chapter, { completed: progress.activeDay > 0 }));
+  const cityLink = document.createElement("a");
+  cityLink.className = "primary-link";
+  cityLink.href = "#/city";
+  cityLink.textContent = "查看我的浮城與成長";
+  section.append(cityLink);
   if (progress.nextSeasonUnlocked) {
     const notice = document.createElement("p");
     notice.className = "season-unlocked";

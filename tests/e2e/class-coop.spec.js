@@ -20,6 +20,8 @@ test("學生以班級碼匿名加入，只看到共同地標", async ({ page }) 
         privacyProtected: true,
         participantThreshold: 5,
         landmarkLevel: 2,
+        nextLevelAt: 30,
+        remainingToNextLevel: 4,
       }),
     });
   });
@@ -30,6 +32,8 @@ test("學生以班級碼匿名加入，只看到共同地標", async ({ page }) 
 
   await expect(page.getByRole("heading", { name: "班級共同地標" })).toBeVisible();
   await expect(page.getByText("第 2 階")).toBeVisible();
+  await expect(page.getByText("蒐集三路文證，修復聚義橋")).toBeVisible();
+  await expect(page.getByText("再完成 4 次有效閱讀")).toBeVisible();
   await expect(page.getByText(/沒有排行榜、個人貢獻、姓名/)).toBeVisible();
   await expect(page.getByText(/小明|第一名/)).toHaveCount(0);
 });

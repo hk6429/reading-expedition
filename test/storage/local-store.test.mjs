@@ -62,3 +62,51 @@ test("保存時拒絕規格禁止的個資欄位", () => {
 
   assert.throws(() => store.save(state), /email/);
 });
+
+test("舊版狀態載入時補上事件簿、能力成長與章回解鎖，不清除既有城市", () => {
+  const legacy = createDefaultState("device-123");
+  delete legacy.readingHistory;
+  delete legacy.abilityGrowth;
+  delete legacy.city.storyUnlocks;
+  legacy.completedReadings["water-sharing-guided-v1"] = {
+    date: "2026-07-28",
+    category: "world",
+    skill: "理解與文證",
+    evidence: "已完成文證定位",
+  };
+  legacy.city.buildings.library = 2;
+  const storage = memoryStorage({
+    "reading-expedition:v1": JSON.stringify(legacy),
+  });
+
+  const loaded = createLocalStore(storage).load();
+
+  assert.equal(loaded.city.buildings.library, 2);
+  assert.deepEqual(loaded.city.storyUnlocks, []);
+  assert.deepEqual(loaded.abilityGrowth, {
+    comprehension: 0,
+    inference: 0,
+    evidence: 1,
+  });
+  assert.equal(loaded.readingHistory.length, 1);
+  assert.equal(loaded.readingHistory[0].date, "2026-07-28");
+});
+
+test("閱征紀錄可安全復原，含禁止欄位的檔案不會覆寫原狀態", () => {
+  const storage = memoryStorage();
+  const store = createLocalStore(storage);
+  const original = createDefaultState("device-original");
+  store.save(original);
+  const restored = createDefaultState("device-restored");
+  restored.city.buildings.library = 3;
+
+  const result = store.restore(JSON.stringify(restored));
+  assert.equal(result.city.buildings.library, 3);
+  assert.equal(store.load().deviceId, "device-restored");
+
+  assert.throws(
+    () => store.restore(JSON.stringify({ ...restored, email: "x@example.com" })),
+    /email/,
+  );
+  assert.equal(store.load().deviceId, "device-restored");
+});

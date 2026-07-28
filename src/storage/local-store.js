@@ -10,6 +10,7 @@ export function createDefaultState(deviceId = crypto.randomUUID()) {
     deviceId,
     readingProgress: {},
     completedReadings: {},
+    readingHistory: [],
     city: {
       materials: { inkBricks: 0, fellowshipSeals: 0, starFragments: 0 },
       buildings: {
@@ -19,11 +20,17 @@ export function createDefaultState(deviceId = crypto.randomUUID()) {
         worldPost: 0,
       },
       investments: [],
+      storyUnlocks: [],
     },
     collections: {
       stars: [],
       tokens: [],
       quotes: [],
+    },
+    abilityGrowth: {
+      comprehension: 0,
+      inference: 0,
+      evidence: 0,
     },
     preferences: {
       mode: "paper",
@@ -55,6 +62,79 @@ function assertState(state) {
   }
 }
 
+function historyFromCompletedReadings(completedReadings = {}) {
+  const rewardedDates = new Set();
+  return Object.entries(completedReadings)
+    .map(([readingId, record]) => ({ readingId, ...record }))
+    .filter(
+      ({ readingId, date }) =>
+        typeof readingId === "string" &&
+        /^\d{4}-\d{2}-\d{2}$/.test(date),
+    )
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map(({ readingId, date, category, evidence }) => {
+      const mainlineReward = !rewardedDates.has(date);
+      rewardedDates.add(date);
+      return {
+        id: `${readingId}:${date}`,
+        readingId,
+        date,
+        category: ["world", "science", "humanities"].includes(category)
+          ? category
+          : "humanities",
+        skill: "evidence",
+        evidence:
+          typeof evidence === "string" && evidence.trim()
+            ? evidence.trim()
+            : "已完成文證定位",
+        mainlineReward,
+      };
+    });
+}
+
+function normalizeState(state) {
+  const defaults = createDefaultState(state.deviceId);
+  const readingHistory = Array.isArray(state.readingHistory)
+    ? state.readingHistory
+    : historyFromCompletedReadings(state.completedReadings);
+  return {
+    ...defaults,
+    ...state,
+    readingHistory,
+    city: {
+      ...defaults.city,
+      ...state.city,
+      materials: {
+        ...defaults.city.materials,
+        ...state.city?.materials,
+      },
+      buildings: {
+        ...defaults.city.buildings,
+        ...state.city?.buildings,
+      },
+      investments: Array.isArray(state.city?.investments)
+        ? state.city.investments
+        : [],
+      storyUnlocks: Array.isArray(state.city?.storyUnlocks)
+        ? state.city.storyUnlocks
+        : [],
+    },
+    collections: {
+      ...defaults.collections,
+      ...state.collections,
+    },
+    abilityGrowth: state.abilityGrowth ?? {
+      comprehension: 0,
+      inference: 0,
+      evidence: readingHistory.length,
+    },
+    preferences: {
+      ...defaults.preferences,
+      ...state.preferences,
+    },
+  };
+}
+
 export function createLocalStore(
   storage,
   { createDeviceId = () => crypto.randomUUID() } = {},
@@ -74,7 +154,7 @@ export function createLocalStore(
       try {
         const parsed = JSON.parse(raw);
         assertState(parsed);
-        return parsed;
+        return normalizeState(parsed);
       } catch {
         storage.setItem("reading-expedition:backup:invalid", raw);
         return createDefaultState(createDeviceId());
@@ -89,6 +169,13 @@ export function createLocalStore(
     },
     export() {
       return storage.getItem(LOCAL_STORAGE_KEY);
+    },
+    restore(raw) {
+      const parsed = JSON.parse(raw);
+      assertState(parsed);
+      const restored = normalizeState(parsed);
+      storage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(restored));
+      return restored;
     },
   });
 }
