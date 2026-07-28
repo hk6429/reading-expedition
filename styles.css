@@ -1,3 +1,7 @@
+@import url("./src/theme/tokens.css");
+@import url("./src/theme/motion.css");
+@import url("./src/theme/accessibility.css");
+
 :root {
   --reading-scale: 1;
   color-scheme: light;
@@ -194,6 +198,23 @@ a:focus-visible {
   isolation: isolate;
 }
 
+.hero-illustration {
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgb(29 26 23 / 12%);
+  border-radius: 1.5rem 0.35rem;
+  background: var(--paper-card);
+  box-shadow: 0 1rem 3rem rgb(38 55 70 / 14%);
+}
+
+.hero-illustration img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
 .ink-moon {
   position: absolute;
   top: 0;
@@ -308,11 +329,28 @@ a:focus-visible {
 
 .route-card__header {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  align-items: center;
-  min-height: 8rem;
-  padding: 1.5rem;
+  align-items: stretch;
+  min-height: 18rem;
+  padding: 0.55rem;
   background: linear-gradient(145deg, rgb(63 104 116 / 13%), transparent);
+}
+
+.route-card__header > div {
+  padding: 0.35rem 0.95rem 0.75rem;
+}
+
+.route-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 1.1rem 0.25rem;
+  object-fit: cover;
+  object-position: center;
+  background:
+    linear-gradient(145deg, rgb(63 104 116 / 15%), transparent),
+    var(--paper-card);
 }
 
 .route-science .route-card__header {

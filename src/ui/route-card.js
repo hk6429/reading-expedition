@@ -46,7 +46,14 @@ export function createRouteCard(route) {
   const header = document.createElement("div");
   header.className = "route-card__header";
   header.innerHTML = `
-    <span class="route-mark" aria-hidden="true">${copy.mark}</span>
+    <img
+      class="route-art"
+      src="./assets/scenes/${route.category}-720.webp"
+      alt=""
+      width="720"
+      height="540"
+      loading="lazy"
+    >
     <div>
       <p class="route-mentor">${copy.mentor}</p>
       <h2>${waterMarginTheme.categoryLabels[route.category]}</h2>

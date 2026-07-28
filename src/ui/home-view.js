@@ -22,15 +22,16 @@ export function renderHome(container, readings) {
         <span>中斷不會歸零</span>
       </div>
     </div>
-    <div class="floating-city-preview" aria-hidden="true">
-      <div class="ink-moon"></div>
-      <div class="mountain mountain-back"></div>
-      <div class="mountain mountain-front"></div>
-      <div class="city-tower"></div>
-      <div class="city-light light-one"></div>
-      <div class="city-light light-two"></div>
-      <span class="city-caption">萬卷浮城・初築</span>
-    </div>
+    <picture class="hero-illustration">
+      <source media="(max-width: 700px)" srcset="./assets/scenes/hero-960.webp">
+      <img
+        src="./assets/scenes/hero-1600.webp"
+        width="1600"
+        height="900"
+        alt="六名Q版閱行伙伴站在雲海浮城，以書卷、羅盤與燈籠準備今日閱讀遠征"
+        fetchpriority="high"
+      >
+    </picture>
   `;
 
   const routeSection = document.createElement("section");

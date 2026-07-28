@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "style": {
+    "medium": "Chinese xieyi ink wash with mineral pigment and flowing watercolor edges",
+    "lighting": "warm upper-right dawn light",
+    "characterProportion": "1:1",
+    "avoid": [
+      "specific film, comic, mobile-game or figurine likeness",
+      "combat, blood, gambling and intimidation",
+      "embedded text, logo and watermark"
+    ]
+  },
+  "hero": {
+    "alt": "六名Q版閱行伙伴站在雲海浮城，以書卷、羅盤與燈籠準備今日閱讀遠征",
+    "sources": {
+      "960": "./scenes/hero-960.webp",
+      "1600": "./scenes/hero-1600.webp"
+    }
+  },
+  "routes": {
+    "world": {
+      "src": "./scenes/world-720.webp",
+      "alt": "Q版領航員拿著羅盤與地圖，站在雲海航港前"
+    },
+    "science": {
+      "src": "./scenes/science-720.webp",
+      "alt": "Q版研究者拿著放大鏡，在雲上觀測臺查找科學線索"
+    },
+    "humanities": {
+      "src": "./scenes/humanities-720.webp",
+      "alt": "Q版說書人提燈讀書，身旁是雲上藏書閣"
+    }
+  },
+  "characters": {
+    "song-jiang": {
+      "48": "./characters/song-jiang-48.webp",
+      "96": "./characters/song-jiang-96.webp",
+      "192": "./characters/song-jiang-192.webp",
+      "512": "./characters/song-jiang-512.webp"
+    },
+    "wu-yong": {
+      "48": "./characters/wu-yong-48.webp",
+      "96": "./characters/wu-yong-96.webp",
+      "192": "./characters/wu-yong-192.webp",
+      "512": "./characters/wu-yong-512.webp"
+    },
+    "wu-song": {
+      "48": "./characters/wu-song-48.webp",
+      "96": "./characters/wu-song-96.webp",
+      "192": "./characters/wu-song-192.webp",
+      "512": "./characters/wu-song-512.webp"
+    },
+    "lu-zhi-shen": {
+      "48": "./characters/lu-zhi-shen-48.webp",
+      "96": "./characters/lu-zhi-shen-96.webp",
+      "192": "./characters/lu-zhi-shen-192.webp",
+      "512": "./characters/lu-zhi-shen-512.webp"
+    },
+    "hu-san-niang": {
+      "48": "./characters/hu-san-niang-48.webp",
+      "96": "./characters/hu-san-niang-96.webp",
+      "192": "./characters/hu-san-niang-192.webp",
+      "512": "./characters/hu-san-niang-512.webp"
+    },
+    "li-kui": {
+      "48": "./characters/li-kui-48.webp",
+      "96": "./characters/li-kui-96.webp",
+      "192": "./characters/li-kui-192.webp",
+      "512": "./characters/li-kui-512.webp"
+    }
+  }
+}

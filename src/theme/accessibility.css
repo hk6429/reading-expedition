@@ -1,0 +1,19 @@
+:root[data-texture="off"] body {
+  background: var(--paper-100);
+}
+
+:root[data-muted="true"] audio,
+:root[data-muted="true"] video {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  * {
+    border-color: CanvasText !important;
+  }
+
+  button,
+  a {
+    forced-color-adjust: auto;
+  }
+}
