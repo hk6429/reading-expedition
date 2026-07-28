@@ -1,0 +1,203 @@
+{
+  "source": {
+    "id": "seed-open-data",
+    "name": "萬卷浮城教學種子資料",
+    "baseUrl": "https://example.edu.tw/open-data",
+    "licenseType": "CC-BY-4.0",
+    "licenseVersion": "4.0",
+    "allowedUsage": "adapt-with-attribution"
+  },
+  "sourceItem": {
+    "id": "seed-water-source",
+    "canonicalUrl": "https://example.edu.tw/open-data/water-sharing",
+    "title": "城市用水公開資料",
+    "publisher": "萬卷浮城教學種子資料",
+    "publishedAt": "2026-07-27T00:00:00.000Z",
+    "fetchedAt": "2026-07-28T05:00:00.000+08:00",
+    "contentFingerprint": "seed-water-sharing-v1",
+    "licenseSnapshot": "CC-BY-4.0",
+    "extractScope": "人工編寫的測試事實，不引用真實新聞全文"
+  },
+  "factPack": {
+    "id": "fact-water-sharing-v1",
+    "topicDate": "2026-07-28",
+    "category": "world",
+    "facts": [
+      {
+        "id": "fact-1",
+        "statement": "城市缺水時，民生、農業與產業可能同時需要有限水源。",
+        "sourceItemId": "seed-water-source"
+      },
+      {
+        "id": "fact-2",
+        "statement": "公平分配需要同時考量基本需求、影響與節水能力。",
+        "sourceItemId": "seed-water-source"
+      }
+    ],
+    "sourceLinks": [
+      "https://example.edu.tw/open-data/water-sharing"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "2026-07-28-water-sharing",
+  "packages": [
+    {
+      "id": "water-sharing-guided-v1",
+      "difficulty": "guided",
+      "title": "一座城市如何分配有限水源？",
+      "hookQuestion": "如果水不夠，每個人都該拿到一樣多嗎？",
+      "body": [
+        "清晨，水庫的刻度又下降了一格。城市裡的家庭、農田與工廠，都需要同一批有限的水。",
+        "看起來最公平的方法，是每一方減少相同比例。但家庭需要基本飲水，農作物錯過灌溉期可能枯萎，工廠也可能影響許多人的工作。",
+        "因此，分配水源不能只看誰的需求量最大，還要比較基本需要、受影響程度，以及每一方能不能先節省用水。",
+        "真正困難的不是找出唯一答案，而是讓分配理由可以被檢查，也願意依新資料調整。"
+      ],
+      "glossary": [
+        {
+          "term": "分配",
+          "definition": "把有限資源依照規則分給不同對象。"
+        }
+      ],
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "萬卷浮城教學種子資料",
+          "url": "https://example.edu.tw/open-data/water-sharing",
+          "license": "CC-BY-4.0"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "published",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "water-sharing-guided-q1-v1",
+          "type": "comprehension",
+          "prompt": "文章認為分配水源時，最需要考量什麼？",
+          "options": [
+            "只看誰要求得最多",
+            "基本需要、影響與節水能力",
+            "讓每一方自由取用",
+            "由最早到場的人決定"
+          ],
+          "correctAnswer": "基本需要、影響與節水能力",
+          "rationale": "第三段直接列出三項應比較的條件。",
+          "distractorReasons": {
+            "只看誰要求得最多": "文章明確說不能只看需求量。",
+            "讓每一方自由取用": "文章討論的是有限水源的共同規則。",
+            "由最早到場的人決定": "文中未把先後順序當成分配依據。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 63
+          }
+        },
+        {
+          "id": "water-sharing-guided-q2-v1",
+          "type": "evidence",
+          "prompt": "哪一段最能支持「公平不一定是平均」？",
+          "options": [
+            "第1段",
+            "第2段",
+            "第3段",
+            "第4段"
+          ],
+          "correctAnswer": "第2段",
+          "rationale": "第二段比較了相同減量與不同基本處境。",
+          "distractorReasons": {
+            "第1段": "只交代缺水背景。",
+            "第3段": "列出分配條件，未直接比較平均。",
+            "第4段": "說明理由需要檢查與調整。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 0,
+            "end": 70
+          }
+        }
+      ]
+    },
+    {
+      "id": "water-sharing-challenge-v1",
+      "difficulty": "challenge",
+      "title": "缺水時，平均分配真的公平嗎？",
+      "hookQuestion": "同樣減少一成用水，對每個人造成的影響相同嗎？",
+      "body": [
+        "一座城市進入枯水期，民生、農業與產業同時面對供水減少。若一律減少相同比例，看似採用了相同規則，實際承擔的後果卻可能不同。",
+        "家庭用水包含飲用與衛生等基本需要；農業用水受作物生長時程限制；產業用水則可能連動就業與供應。只比較總量，會忽略不同用途的最低需求與替代可能。",
+        "較完整的分配方案，會公開基本需求、影響範圍、節水能力與資料限制，並設計可依水情更新的調整機制。",
+        "公平因此不是一次算出的固定比例，而是一套理由透明、可以檢查，也能隨證據修正的程序。"
+      ],
+      "glossary": [
+        {
+          "term": "替代可能",
+          "definition": "能否改用其他方法或資源達到同一目的。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "萬卷浮城教學種子資料",
+          "url": "https://example.edu.tw/open-data/water-sharing",
+          "license": "CC-BY-4.0"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "published",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "water-sharing-challenge-q1-v1",
+          "type": "inference",
+          "prompt": "作者最可能同意下列哪個觀點？",
+          "options": [
+            "相同比例必然帶來相同影響",
+            "公平程序必須能依新證據調整",
+            "總用水量是唯一分配依據",
+            "不同用途不需要公開理由"
+          ],
+          "correctAnswer": "公平程序必須能依新證據調整",
+          "rationale": "末段把公平定義為可檢查、可修正的程序。",
+          "distractorReasons": {
+            "相同比例必然帶來相同影響": "首段指出實際後果可能不同。",
+            "總用水量是唯一分配依據": "第二段指出只看總量會忽略差異。",
+            "不同用途不需要公開理由": "第三段要求公開多項分配依據。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 0,
+            "end": 57
+          }
+        },
+        {
+          "id": "water-sharing-challenge-q2-v1",
+          "type": "evidence",
+          "prompt": "哪一段最能支持「相同規則可能造成不同後果」？",
+          "options": [
+            "第1段",
+            "第2段",
+            "第3段",
+            "第4段"
+          ],
+          "correctAnswer": "第1段",
+          "rationale": "第一段直接比較相同比例與不同後果。",
+          "distractorReasons": {
+            "第2段": "說明用途差異，但不是最直接的句子。",
+            "第3段": "提出較完整方案。",
+            "第4段": "總結公平程序。"
+          },
+          "evidenceSpan": {
+            "paragraph": 1,
+            "start": 0,
+            "end": 62
+          }
+        }
+      ]
+    }
+  ]
+}
