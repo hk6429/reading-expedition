@@ -1,7 +1,7 @@
 import { GenerationError } from "./generation-provider.js";
 
-const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
-const MAX_OUTPUT_TOKENS = 4000;
+const DEFAULT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+const MAX_OUTPUT_TOKENS = 2500;
 
 const glossarySchema = Object.freeze({
   type: "object",

@@ -19,15 +19,15 @@ test("Workers AI binding 使用受限輸出與 JSON schema，不需要外部 API
         return { response: { readings: [] } };
       },
     },
-    model: "@cf/meta/llama-3.1-8b-instruct-fast",
+    model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
   });
 
   const result = await provider.generate(prompt);
 
   assert.deepEqual(result, { readings: [] });
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].model, "@cf/meta/llama-3.1-8b-instruct-fast");
-  assert.equal(calls[0].input.max_tokens, 4000);
+  assert.equal(calls[0].model, "@cf/meta/llama-3.3-70b-instruct-fp8-fast");
+  assert.equal(calls[0].input.max_tokens, 2500);
   assert.equal(calls[0].input.stream, false);
   assert.equal(calls[0].input.response_format.type, "json_schema");
   const readingSchema =
