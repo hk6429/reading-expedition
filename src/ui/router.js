@@ -1,5 +1,9 @@
-export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onTeacher, onClass }) {
+export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onGuide, onTeacher, onClass }) {
   async function navigate() {
+    if (window.location.hash === "#/guide") {
+      if (onGuide) await onGuide();
+      return;
+    }
     if (window.location.hash === "#/class") {
       if (onClass) await onClass();
       return;

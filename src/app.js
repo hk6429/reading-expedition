@@ -17,6 +17,7 @@ import { renderHome } from "./ui/home-view.js";
 import { renderReading } from "./ui/reading-view.js";
 import { renderReviewConsole } from "./ui/review-console.js";
 import { renderClassView } from "./ui/class-view.js";
+import { renderUsageGuide } from "./ui/usage-guide.js";
 import { createRouter } from "./ui/router.js";
 
 const main = document.querySelector("#main-content");
@@ -202,6 +203,9 @@ const router = createRouter({
   },
   async onTeacher() {
     await renderReviewConsole(main);
+  },
+  async onGuide() {
+    renderUsageGuide(main);
   },
   async onClass() {
     await renderClassView(main);
