@@ -27,8 +27,8 @@ export default {
       eventsApi,
     }).fetch(request);
   },
-  scheduled(_event, env, context) {
+  async scheduled(_event, env) {
     const repository = createReadingRepository(env.READING_DB);
-    context.waitUntil(createPipelineRuntime({ env, repository }).run());
+    await createPipelineRuntime({ env, repository }).run();
   },
 };

@@ -36,3 +36,10 @@ test("部署文件明定 migration、Worker、前端順序與 Preview 隔離", (
   assert.match(deployment, /Preview D1/);
   assert.doesNotMatch(deployment, /[A-Za-z0-9_-]{30,}/);
 });
+
+test("每日排程直接等待生成完成，不受 HTTP waitUntil 三十秒限制", () => {
+  const worker = read("worker/src/index.js");
+  assert.match(worker, /async scheduled/);
+  assert.match(worker, /await createPipelineRuntime/);
+  assert.doesNotMatch(worker, /scheduled[\s\S]{0,200}waitUntil/);
+});
