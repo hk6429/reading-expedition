@@ -20,9 +20,14 @@ export function createRouter({ onHome, onRead, onQuiz, onCity, onCityInvest, onG
     }
     if (window.location.hash.startsWith("#/teacher")) {
       if (onTeacher) {
+        const [teacherPath, teacherQuery = ""] =
+          window.location.hash.slice(1).split("?");
+        const teacherStatus =
+          new URLSearchParams(teacherQuery).get("status") ?? "review";
         await renderRoute(() =>
           onTeacher(
-            window.location.hash === "#/teacher/classes" ? "classes" : "review",
+            teacherPath === "/teacher/classes" ? "classes" : "review",
+            teacherStatus,
           ),
         );
       }

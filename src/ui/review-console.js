@@ -2,6 +2,25 @@ import { renderReviewDiff } from "./review-diff.js";
 import { renderStudentPreview } from "./student-preview.js";
 import { renderClassroomManagement } from "./classroom-management.js";
 
+const REVIEW_STATUS_COPY = Object.freeze({
+  review: {
+    title: "今日待審讀卷",
+    empty: "目前沒有待審讀卷。",
+  },
+  draft: {
+    title: "需修正讀卷",
+    empty: "目前沒有需要修正的讀卷。",
+  },
+  published: {
+    title: "已發布讀卷",
+    empty: "目前沒有已發布讀卷。",
+  },
+  archived: {
+    title: "已封存讀卷",
+    empty: "目前沒有已封存讀卷。",
+  },
+});
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -64,7 +83,7 @@ function assessmentMarkup(items) {
     .join("");
 }
 
-function detailMarkup(packageRecord) {
+function detailMarkup(packageRecord, { reviewable = true } = {}) {
   const characters = packageRecord.body
     .map((paragraph) =>
       typeof paragraph === "string" ? paragraph : paragraph?.text ?? "",
@@ -103,7 +122,9 @@ function detailMarkup(packageRecord) {
         </section>
       </div>
       ${renderReviewDiff(packageRecord.title, packageRecord.title)}
-      <form class="review-actions" data-review-action>
+      ${
+        reviewable
+          ? `<form class="review-actions" data-review-action>
         <label>退回原因
           <select name="reasonCode">
             <option value="">請選擇</option>
@@ -120,7 +141,9 @@ function detailMarkup(packageRecord) {
         </label>
         <button type="submit" name="action" value="returned">退回修正</button>
         <button class="primary-action" type="submit" name="action" value="published">核准發布</button>
-      </form>
+      </form>`
+          : `<p class="review-status-note">此頁為狀態檢視；若要變更內容，請先回到待審或需修正流程。</p>`
+      }
     </section>
   `;
 }
@@ -131,6 +154,7 @@ export async function renderReviewConsole(
     request = fetch,
     sessionStorage = window.sessionStorage,
     initialView = "review",
+    initialStatus = "review",
   } = {},
 ) {
   let csrfToken = sessionStorage.getItem("reading-expedition.csrf");
@@ -205,11 +229,28 @@ export async function renderReviewConsole(
     );
   }
 
-  async function showReview() {
-    const listResponse = await request("/api/v1/teacher/review?status=review");
+  async function showReview(status = initialStatus) {
+    const activeStatus = REVIEW_STATUS_COPY[status] ? status : "review";
+    const statusCopy = REVIEW_STATUS_COPY[activeStatus];
+    const listResponse = await request(
+      `/api/v1/teacher/review?status=${activeStatus}`,
+    );
     if (!listResponse.ok) {
-      sessionStorage.removeItem("reading-expedition.csrf");
-      await showLogin("");
+      if (listResponse.status === 401) {
+        sessionStorage.removeItem("reading-expedition.csrf");
+        await showLogin("");
+        return;
+      }
+      root.innerHTML = `
+        <section class="review-shell">
+          <div class="review-empty" role="alert">
+            <p class="chapter-label">校閱臺暫時離線</p>
+            <h1>文章清單無法載入</h1>
+            <p>請檢查網路後重新整理；既有文章與審核紀錄不會消失。</p>
+            <a class="primary-link" href="#/teacher?status=${activeStatus}">重新載入</a>
+          </div>
+        </section>
+      `;
       return;
     }
     const { packages } = await listResponse.json();
@@ -225,18 +266,33 @@ export async function renderReviewConsole(
         <header class="review-heading">
           <div>
             <p class="chapter-label">梁山校閱臺</p>
-            <h1>今日待審讀卷</h1>
+            <h1>${statusCopy.title}</h1>
           </div>
           <nav aria-label="校閱狀態">
             <a href="#/teacher/classes">班級管理</a>
-            <a href="#/teacher?status=review">待審</a>
-            <a href="#/teacher?status=draft">需修正</a>
-            <a href="#/teacher?status=published">已發布</a>
-            <a href="#/teacher?status=archived">已封存</a>
+            <a ${activeStatus === "review" ? 'aria-current="page"' : ""} href="#/teacher?status=review">待審</a>
+            <a ${activeStatus === "draft" ? 'aria-current="page"' : ""} href="#/teacher?status=draft">需修正</a>
+            <a ${activeStatus === "published" ? 'aria-current="page"' : ""} href="#/teacher?status=published">已發布</a>
+            <a ${activeStatus === "archived" ? 'aria-current="page"' : ""} href="#/teacher?status=archived">已封存</a>
             <button type="button" data-teacher-logout>安全登出</button>
           </nav>
         </header>
-        <div class="review-pair">${available.map(detailMarkup).join("")}</div>
+        ${
+          available.length
+            ? `<div class="review-pair">${available
+                .map((record) =>
+                  detailMarkup(record, {
+                    reviewable: activeStatus === "review",
+                  }),
+                )
+                .join("")}</div>`
+            : `<section class="review-empty">
+                <p class="chapter-label">目前 0 篇</p>
+                <h2>${statusCopy.empty}</h2>
+                <p>${activeStatus === "review" ? "新文章完成產生並送審後，會出現在這裡；現有正式文章可從「已發布」查看。" : "切換其他狀態即可查看不同階段的讀卷。"}</p>
+                ${activeStatus === "review" ? '<a class="primary-link" href="#/teacher?status=published">查看已發布讀卷</a>' : '<a class="primary-link" href="#/teacher?status=review">回到待審讀卷</a>'}
+              </section>`
+        }
         <p class="form-message" data-review-message role="status"></p>
       </section>
     `;
@@ -282,7 +338,7 @@ export async function renderReviewConsole(
 
   async function showWorkspace() {
     if (initialView === "classes") await showClasses();
-    else await showReview();
+    else await showReview(initialStatus);
   }
 
   if (csrfToken) await showWorkspace();

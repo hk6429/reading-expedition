@@ -732,6 +732,62 @@ main h1[tabindex="-1"]:focus {
   white-space: nowrap;
 }
 
+.classroom-created,
+.review-empty {
+  margin: 1rem 0;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border: 2px solid rgb(182 64 50 / 52%);
+  border-radius: 1rem 0.25rem;
+  background:
+    linear-gradient(135deg, rgb(182 64 50 / 12%), transparent 62%),
+    rgb(255 255 255 / 55%);
+}
+
+.classroom-created {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.8fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.classroom-created h3,
+.review-empty h2 {
+  margin: 0.2rem 0;
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+}
+
+.classroom-created p,
+.review-empty p {
+  margin: 0.35rem 0;
+}
+
+.classroom-created .class-code-row {
+  margin: 0;
+  background: rgb(255 248 237 / 78%);
+}
+
+.review-empty {
+  max-width: 48rem;
+  border-color: rgb(71 115 98 / 38%);
+  background:
+    linear-gradient(135deg, rgb(71 115 98 / 10%), transparent 62%),
+    rgb(255 255 255 / 48%);
+}
+
+.review-heading nav a[aria-current="page"] {
+  border-color: var(--cinnabar);
+  background: var(--cinnabar);
+  color: #fff8ed;
+}
+
+.review-status-note {
+  padding: 0.8rem;
+  border-left: 4px solid var(--mineral-green);
+  background: rgb(71 115 98 / 8%);
+  color: var(--ink-muted);
+}
+
 .classroom-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1003,6 +1059,10 @@ main h1[tabindex="-1"]:focus {
 }
 
 @media (max-width: 60rem) {
+  .classroom-created {
+    grid-template-columns: 1fr;
+  }
+
   .classroom-list {
     grid-template-columns: 1fr;
   }

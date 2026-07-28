@@ -77,9 +77,20 @@ test("教師建立、複製並停用匿名班級", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: "班級管理" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "建立新班級" }).click();
-  await expect(page.getByText("CLASS2A3", { exact: true })).toBeVisible();
+  const createdCallout = page.locator(".classroom-created");
+  await expect(createdCallout).toBeVisible();
+  await expect(
+    createdCallout.getByText("CLASS2A3", { exact: true }),
+  ).toBeVisible();
+  const createdBox = await createdCallout.boundingBox();
+  const viewport = page.viewportSize();
+  expect(createdBox.y + createdBox.height).toBeLessThanOrEqual(
+    viewport.height,
+  );
 
-  await page.getByRole("button", { name: /複製班級碼/ }).click();
+  await createdCallout
+    .getByRole("button", { name: /複製班級碼/ })
+    .click();
   copiedCode = await page.evaluate(() => window.__copiedClassCode);
   expect(copiedCode).toBe("CLASS2A3");
   await expect(page.locator("[data-classroom-message]")).toContainText(

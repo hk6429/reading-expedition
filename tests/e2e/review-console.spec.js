@@ -101,3 +101,67 @@ test("教師登入後可並排校閱雙難度、切換預覽並發布", async ({
   );
   expect(published).toBe(true);
 });
+
+test("待審為空時清楚說明，切換已發布後顯示正式文章", async ({
+  page,
+}) => {
+  const publishedRecord = packageRecord(
+    "water-published",
+    "guided",
+    "已發布的水源讀卷",
+  );
+  publishedRecord.publicationStatus = "published";
+
+  await page.addInitScript(() => {
+    sessionStorage.setItem("reading-expedition.csrf", "csrf-demo");
+  });
+  await page.route("**/api/v1/teacher/review?status=review", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ packages: [] }),
+    });
+  });
+  await page.route(
+    "**/api/v1/teacher/review?status=published",
+    async (route) => {
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({
+          packages: [
+            {
+              id: publishedRecord.id,
+              contentKey: publishedRecord.contentKey,
+              difficulty: publishedRecord.difficulty,
+              title: publishedRecord.title,
+              qualityScore: publishedRecord.qualityScore,
+            },
+          ],
+        }),
+      });
+    },
+  );
+  await page.route(
+    "**/api/v1/teacher/review/water-published",
+    async (route) => {
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({ package: publishedRecord }),
+      });
+    },
+  );
+
+  await page.goto("/#/teacher?status=review");
+  await expect(page.getByText("目前沒有待審讀卷")).toBeVisible();
+  await page.getByRole("link", { name: "查看已發布讀卷" }).click();
+
+  await expect(page).toHaveURL(/#\/teacher\?status=published$/);
+  await expect(
+    page.getByRole("heading", { name: "已發布讀卷" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "已發布的水源讀卷",
+    }),
+  ).toBeVisible();
+});

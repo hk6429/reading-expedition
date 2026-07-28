@@ -400,9 +400,12 @@ const router = createRouter({
       restoreState: restoreLearningState,
     });
   },
-  async onTeacher(view) {
+  async onTeacher(view, status) {
     setPublicCounterVisible(false);
-    await renderReviewConsole(main, { initialView: view });
+    await renderReviewConsole(main, {
+      initialView: view,
+      initialStatus: status,
+    });
   },
   async onGuide() {
     setPublicCounterVisible(true);

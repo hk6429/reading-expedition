@@ -99,6 +99,25 @@ function classroomMarkup(classroom, rememberedCode) {
   `;
 }
 
+function createdClassroomMarkup(classroom) {
+  if (!classroom?.id || !/^[A-Z2-9]{8}$/.test(classroom.classCode ?? "")) {
+    return "";
+  }
+  return `
+    <section class="classroom-created" aria-labelledby="created-classroom-title">
+      <div>
+        <p class="chapter-label">班級建立成功</p>
+        <h3 id="created-classroom-title">現在把這組代碼交給學生</h3>
+        <p>學生從頁首「加入班級」輸入即可；這組代碼只在教師目前的分頁保存。</p>
+      </div>
+      <div class="class-code-row">
+        <code>${escapeHtml(classroom.classCode)}</code>
+        <button type="button" aria-label="複製班級碼 ${escapeHtml(classroom.classCode)}" data-copy-class-code="${escapeHtml(classroom.id)}">複製班級碼</button>
+      </div>
+    </section>
+  `;
+}
+
 export async function renderClassroomManagement(
   root,
   {
@@ -110,7 +129,11 @@ export async function renderClassroomManagement(
 ) {
   let rememberedCodes = readRememberedCodes(storage);
 
-  async function load(message = "", focusTarget = "") {
+  async function load({
+    message = "",
+    focusTarget = "",
+    createdClassroom = null,
+  } = {}) {
     let response;
     try {
       response = await request("/api/v1/teacher/classrooms");
@@ -140,6 +163,7 @@ export async function renderClassroomManagement(
           </div>
           <button class="primary-action" type="button" data-create-classroom>建立新班級</button>
         </header>
+        ${createdClassroomMarkup(createdClassroom)}
         <p class="form-message" data-classroom-message role="status">${escapeHtml(message)}</p>
         <div class="classroom-list">
           ${
@@ -188,10 +212,11 @@ export async function renderClassroomManagement(
           [classroom.id]: classroom.classCode,
         };
         saveRememberedCodes(storage, rememberedCodes);
-        await load(
-          "班級已建立，請立即複製班級碼交給學生。",
-          `[data-copy-class-code="${classroom.id}"]`,
-        );
+        await load({
+          message: "班級碼已顯示在上方，也會保留在下方班級卡片。",
+          focusTarget: `.classroom-created [data-copy-class-code="${classroom.id}"]`,
+          createdClassroom: classroom,
+        });
       });
 
     root.querySelectorAll("[data-copy-class-code]").forEach((button) => {
@@ -240,13 +265,19 @@ export async function renderClassroomManagement(
         }
         delete rememberedCodes[classroomId];
         saveRememberedCodes(storage, rememberedCodes);
-        await load(
-          "班級已停用，原有班級碼與學生權杖皆已失效。",
-          "[data-create-classroom]",
-        );
+        await load({
+          message: "班級已停用，原有班級碼與學生權杖皆已失效。",
+          focusTarget: "[data-create-classroom]",
+        });
       });
     });
-    if (focusTarget) root.querySelector(focusTarget)?.focus();
+    if (focusTarget) {
+      const target = root.querySelector(focusTarget);
+      target?.focus();
+      target
+        ?.closest(".classroom-created")
+        ?.scrollIntoView({ block: "nearest" });
+    }
   }
 
   await load();
