@@ -16,16 +16,19 @@ test("三平台統一發布 dist 且 API 來源只來自環境變數", () => {
   const vercel = read("vercel.ts");
   const vercelProxy = read("api/[...path].js");
   const netlify = read("netlify.toml");
+  const netlifyProxy = read("netlify/functions/api.mjs");
   const cloudflare = read("functions/api/[[path]].js");
   assert.match(vercel, /outputDirectory: "dist"/);
   assert.match(vercel, /READING_API_ORIGIN/);
   assert.match(vercel, /source: "\/api\/:path\*"/);
   assert.match(vercel, /destination: `\$\{apiOrigin\}\/api\/:path\*`/);
   assert.match(netlify, /publish = "dist"/);
+  assert.match(netlify, /\/\.netlify\/functions\/api\/:splat/);
+  assert.match(netlifyProxy, /READING_API_ORIGIN/);
   assert.match(vercelProxy, /READING_API_ORIGIN/);
   assert.match(cloudflare, /READING_API_ORIGIN/);
   assert.doesNotMatch(
-    `${vercel}${vercelProxy}${netlify}${cloudflare}`,
+    `${vercel}${vercelProxy}${netlify}${netlifyProxy}${cloudflare}`,
     /workers\.dev/,
   );
 });
