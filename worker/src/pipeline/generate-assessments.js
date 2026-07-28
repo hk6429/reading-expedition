@@ -151,21 +151,35 @@ function itemValidationCode(item, reading) {
         typeof option === "string" ? option.trim() : "",
       )
     : [];
+  if (!ITEM_TYPE_SET.has(item?.type)) {
+    return "assessment_types_invalid";
+  }
   if (
-    !ITEM_TYPE_SET.has(item?.type) ||
     typeof item.prompt !== "string" ||
     item.prompt.trim().length === 0 ||
+    typeof item.rationale !== "string" ||
+    item.rationale.trim().length === 0
+  ) {
+    return "assessment_text_invalid";
+  }
+  if (
     !Array.isArray(item.options) ||
     item.options.length !== 4 ||
     normalizedOptions.some((option) => option.length === 0) ||
-    new Set(normalizedOptions).size !== item.options.length ||
-    item.options.filter((option) => option === item.correctAnswer).length !== 1 ||
-    typeof item.rationale !== "string" ||
-    item.rationale.trim().length === 0 ||
+    new Set(normalizedOptions).size !== item.options.length
+  ) {
+    return "assessment_options_invalid";
+  }
+  if (
+    item.options.filter((option) => option === item.correctAnswer).length !== 1
+  ) {
+    return "assessment_answer_invalid";
+  }
+  if (
     !item.distractorReasons ||
     typeof item.distractorReasons !== "object"
   ) {
-    return "assessment_structure_invalid";
+    return "assessment_reasons_shape_invalid";
   }
   const distractors = item.options.filter(
     (option) => option !== item.correctAnswer,

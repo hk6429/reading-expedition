@@ -243,7 +243,7 @@ test("空白題幹、空白解析或套版干擾理由會被拒絕", async () =>
 
   await assert.rejects(
     generateAssessments(provider, reading),
-    (error) => error.code === "assessment_structure_invalid",
+    (error) => error.code === "assessment_text_invalid",
   );
 });
 
