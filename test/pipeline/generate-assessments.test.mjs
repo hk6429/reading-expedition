@@ -219,6 +219,38 @@ test("模型重複干擾理由時，以三種固定誤讀診斷補正", async ()
   assert.match(reasons[2], /因果/);
 });
 
+test("第一次題組選項重複時，重生一次並只接受合格題組", async () => {
+  let calls = 0;
+  const validItems = ["comprehension", "inference", "evidence"].map((type) =>
+    item(type, `${type}題`, `${type}答案`, {
+      paragraph: 1,
+      start: 0,
+      end: 7,
+      text: "海水受熱會膨脹",
+    }),
+  );
+  const provider = {
+    async generate() {
+      calls += 1;
+      if (calls === 1) {
+        return {
+          items: validItems.map((generated) => ({
+            ...generated,
+            options: ["重複", "重複", "重複", "重複"],
+            correctAnswer: "重複",
+          })),
+        };
+      }
+      return { items: validItems };
+    },
+  };
+
+  const items = await generateAssessments(provider, reading);
+
+  assert.equal(calls, 2);
+  assert.equal(items.length, 3);
+});
+
 test("空白題幹、空白解析或套版干擾理由會被拒絕", async () => {
   const provider = {
     async generate() {

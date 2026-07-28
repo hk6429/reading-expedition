@@ -219,8 +219,7 @@ function itemValidationCode(item, reading) {
 }
 
 export async function generateAssessments(provider, reading, factPack = null) {
-  const result = await provider.generate(
-    createBoundedPrompt({
+  const prompt = createBoundedPrompt({
       task:
         "為已發布文字產生一組國中教育會考式素養閱讀題。輸出物件為 items 陣列；依序各產生一題 comprehension、inference、evidence。每題用 correctIndex（0 到 3）標示正解；distractorReasons 固定為四格非空字串陣列，依序解釋四個選項為何正確或錯誤。",
       factPack: factPack ?? { id: reading.factPackId },
@@ -236,25 +235,29 @@ export async function generateAssessments(provider, reading, factPack = null) {
         "不得考來源以外的冷知識，也不得只靠題幹常識作答。",
         "題目語氣參考會考與學測的閱讀歷程，但不得複製歷屆題目文字。",
       ],
-    }),
-  );
-  const items = Array.isArray(result?.items)
-    ? result.items.map((item) => normalizeItem(item, reading))
-    : null;
-  if (
-    !items ||
-    items.length !== ITEM_TYPES.length
-  ) {
-    throw schemaError("assessment_collection_invalid");
+    });
+  let lastValidationCode = "assessment_generation_schema_invalid";
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const result = await provider.generate(prompt);
+    const items = Array.isArray(result?.items)
+      ? result.items.map((item) => normalizeItem(item, reading))
+      : null;
+    if (!items || items.length !== ITEM_TYPES.length) {
+      lastValidationCode = "assessment_collection_invalid";
+      continue;
+    }
+    if (items.some((item, index) => item.type !== ITEM_TYPES[index])) {
+      lastValidationCode = "assessment_types_invalid";
+      continue;
+    }
+    const validationCode = items
+      .map((item) => itemValidationCode(item, reading))
+      .find(Boolean);
+    if (validationCode) {
+      lastValidationCode = validationCode;
+      continue;
+    }
+    return structuredClone(items);
   }
-  if (items.some((item, index) => item.type !== ITEM_TYPES[index])) {
-    throw schemaError("assessment_types_invalid");
-  }
-  const validationCode = items
-    .map((item) => itemValidationCode(item, reading))
-    .find(Boolean);
-  if (validationCode) {
-    throw schemaError(validationCode);
-  }
-  return structuredClone(items);
+  throw schemaError(lastValidationCode);
 }
