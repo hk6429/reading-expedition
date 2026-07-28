@@ -120,7 +120,9 @@ async function loadDaily() {
     const response = await fetch("/api/v1/daily");
     if (!response.ok) throw new Error("daily API unavailable");
     const payload = await response.json();
-    return payload.readings;
+    return Array.isArray(payload.readings) && payload.readings.length
+      ? payload.readings
+      : demoDailyReadings;
   } catch {
     return demoDailyReadings;
   }
