@@ -83,7 +83,7 @@ function taipeiToday() {
 
 const router = createRouter({
   async onHome() {
-    renderHome(main, await loadDaily());
+    renderHome(main, await loadDaily(), state.completedReadings);
   },
   async onRead(id) {
     const reading = await loadReading(id);
@@ -133,6 +133,9 @@ const router = createRouter({
           version: reading.version,
           reward: reward.inkBricks,
           evidenceSubmitted: true,
+          category: reading.category,
+          skill: "理解與文證",
+          evidence: `${reading.title}：已完成文證定位`,
         };
         store.save(state);
         window.location.hash = `#/city/invest/${reading.id}`;

@@ -401,6 +401,32 @@ a:focus-visible {
   padding: 1rem 1.5rem 1.5rem;
 }
 
+.reading-journal {
+  margin-top: var(--space-8);
+}
+
+.chapter-card {
+  max-width: 42rem;
+  padding: var(--space-5);
+  border: 1px solid color-mix(in srgb, var(--color-ink) 18%, transparent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-paper) 92%, var(--color-jade));
+}
+
+.chapter-card h3 {
+  margin: 0.3rem 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+}
+
+.chapter-review,
+.season-unlocked {
+  display: inline-block;
+  margin-top: var(--space-3);
+  color: var(--color-cinnabar);
+  font-weight: 800;
+}
+
 .difficulty-button {
   min-height: 3.5rem;
   padding: 0.65rem;
