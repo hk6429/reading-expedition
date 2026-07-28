@@ -127,7 +127,7 @@ test("空白題幹、空白解析或套版干擾理由會被拒絕", async () =>
 
   await assert.rejects(
     generateAssessments(provider, reading),
-    (error) => error.code === "assessment_generation_schema_invalid",
+    (error) => error.code === "assessment_structure_invalid",
   );
 });
 
@@ -152,7 +152,7 @@ test("重複答案或不在發布文字內的文證會被拒絕", async () => {
 
   await assert.rejects(
     generateAssessments(provider, reading),
-    (error) => error.code === "assessment_generation_schema_invalid",
+    (error) => error.code === "assessment_collection_invalid",
   );
 });
 
@@ -186,6 +186,6 @@ test("題組必須依序包含三種能力且每題固定四選一", async () =>
 
   await assert.rejects(
     generateAssessments(provider, reading),
-    (error) => error.code === "assessment_generation_schema_invalid",
+    (error) => error.code === "assessment_types_invalid",
   );
 });

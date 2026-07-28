@@ -4,9 +4,9 @@ import { createBoundedPrompt } from "./prompt-boundary.js";
 const ITEM_TYPES = Object.freeze(["comprehension", "inference", "evidence"]);
 const ITEM_TYPE_SET = new Set(ITEM_TYPES);
 
-function schemaError() {
+function schemaError(code = "assessment_generation_schema_invalid") {
   return new GenerationError(
-    "assessment_generation_schema_invalid",
+    code,
     "Generated assessment does not match the required schema",
   );
 }
@@ -65,7 +65,7 @@ function normalizeItem(item, reading) {
   };
 }
 
-function validateItem(item, reading) {
+function itemValidationCode(item, reading) {
   const normalizedOptions = Array.isArray(item?.options)
     ? item.options.map((option) =>
         typeof option === "string" ? option.trim() : "",
@@ -85,7 +85,7 @@ function validateItem(item, reading) {
     !item.distractorReasons ||
     typeof item.distractorReasons !== "object"
   ) {
-    return false;
+    return "assessment_structure_invalid";
   }
   const distractors = item.options.filter(
     (option) => option !== item.correctAnswer,
@@ -97,14 +97,14 @@ function validateItem(item, reading) {
         item.distractorReasons[option].trim().length > 0,
     )
   ) {
-    return false;
+    return "assessment_distractors_invalid";
   }
   if (
     new Set(
       distractors.map((option) => item.distractorReasons[option].trim()),
     ).size !== distractors.length
   ) {
-    return false;
+    return "assessment_distractors_invalid";
   }
   const span = item.evidenceSpan;
   const rawParagraph = reading.body[span?.paragraph - 1];
@@ -119,9 +119,9 @@ function validateItem(item, reading) {
     span.end > paragraph.length ||
     paragraph.slice(span.start, span.end) !== span.text
   ) {
-    return false;
+    return "assessment_evidence_invalid";
   }
-  return true;
+  return null;
 }
 
 export async function generateAssessments(provider, reading, factPack = null) {
@@ -146,11 +146,18 @@ export async function generateAssessments(provider, reading, factPack = null) {
     : null;
   if (
     !items ||
-    items.length !== ITEM_TYPES.length ||
-    items.some((item, index) => item.type !== ITEM_TYPES[index]) ||
-    !items.every((item) => validateItem(item, reading))
+    items.length !== ITEM_TYPES.length
   ) {
-    throw schemaError();
+    throw schemaError("assessment_collection_invalid");
+  }
+  if (items.some((item, index) => item.type !== ITEM_TYPES[index])) {
+    throw schemaError("assessment_types_invalid");
+  }
+  const validationCode = items
+    .map((item) => itemValidationCode(item, reading))
+    .find(Boolean);
+  if (validationCode) {
+    throw schemaError(validationCode);
   }
   return structuredClone(items);
 }
