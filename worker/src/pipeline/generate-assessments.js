@@ -187,7 +187,7 @@ export async function generateAssessments(provider, reading, factPack = null) {
   const result = await provider.generate(
     createBoundedPrompt({
       task:
-        "為已發布文字產生一組國中教育會考式素養閱讀題。輸出物件為 items 陣列；依序各產生一題 comprehension、inference、evidence。每題用 correctIndex（0 到 3）標示正解；distractorReasons 固定為四格字串陣列，依序對應四個選項，正解位置填空字串。",
+        "為已發布文字產生一組國中教育會考式素養閱讀題。輸出物件為 items 陣列；依序各產生一題 comprehension、inference、evidence。每題用 correctIndex（0 到 3）標示正解；distractorReasons 固定為四格非空字串陣列，依序解釋四個選項為何正確或錯誤。",
       factPack: factPack ?? { id: reading.factPackId },
       reading,
       trustedRequirements: [
@@ -195,7 +195,7 @@ export async function generateAssessments(provider, reading, factPack = null) {
         "每題固定四個選項，只有一個正確或最佳答案。",
         "correctIndex 必須是正確選項的零起算位置，不另輸出 correctAnswer。",
         "干擾選項須分別對應常見誤讀、過度推論、局部訊息或因果倒置，不得荒謬到可直接排除。",
-        "distractorReasons 依四個選項順序排列，正解位置填空字串；另外三則理由不可重複。",
+        "distractorReasons 依四個選項順序排列；正解位置也要寫明成立原因，另外三則錯誤理由不可重複。",
         "每題都須提供 rationale、每個錯誤選項的 distractorReasons，以及正文內可逐字對應的 evidenceSpan；文證請摘錄 8 到 30 個連續字元，不得改寫。",
         "不得考來源以外的冷知識，也不得只靠題幹常識作答。",
         "題目語氣參考會考與學測的閱讀歷程，但不得複製歷屆題目文字。",

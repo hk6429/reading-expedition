@@ -105,7 +105,7 @@ const assessmentResponseSchema = Object.freeze({
             type: "array",
             minItems: 4,
             maxItems: 4,
-            items: { type: "string" },
+            items: { type: "string", minLength: 1 },
           },
           evidenceSpan: {
             type: "object",

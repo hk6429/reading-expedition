@@ -169,7 +169,7 @@ test("模型以正解索引與四格理由陣列輸出時，轉為學生題組�
           delete generated.correctAnswer;
           generated.correctIndex = 0;
           generated.distractorReasons = [
-            "",
+            "這是正文直接支持的答案。",
             "只看到局部訊息。",
             "加入文章沒有的推論。",
             "倒置正文的因果。",
