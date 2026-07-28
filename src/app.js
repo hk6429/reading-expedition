@@ -18,6 +18,11 @@ import { renderReviewConsole } from "./ui/review-console.js";
 import { createRouter } from "./ui/router.js";
 
 const main = document.querySelector("#main-content");
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js").catch(() => {
+    // 離線能力是漸進增強；註冊失敗不阻擋閱讀。
+  });
+}
 const store = createLocalStore(window.localStorage, {
   createDeviceId: createAnonymousDeviceId,
 });

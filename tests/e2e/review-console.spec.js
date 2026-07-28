@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+test.use({ serviceWorkers: "block" });
+
 function packageRecord(id, difficulty, title) {
   return {
     id,
