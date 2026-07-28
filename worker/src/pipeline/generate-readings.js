@@ -51,6 +51,7 @@ export async function generateReadings(
         textType === "classical"
           ? [
               "兩篇 textType 都必須是 classical，正文各 120 到 300 字。",
+              "正文分成 2 到 3 段，每段 70 到 100 個字元。",
               "語法與內容須適合七至九年級，不仿作艱深古文，不杜撰史實。",
               "每篇須有 3 到 8 則注釋，且每個 term 必須真的出現在正文。",
               "guided 與 challenge 共用事實，但 challenge 可有較複雜句式。",
@@ -59,6 +60,7 @@ export async function generateReadings(
           : [
               "兩篇 textType 都必須是 vernacular；字數只計真正的漢字，標點、數字、空白與英文字母都不計。",
               "guided 正文以 300 到 420 個漢字為目標，challenge 正文以 420 到 600 個漢字為目標；兩篇都絕不可少於 300 或多於 600 個漢字。",
+              "正文分成 4 到 5 段，每段 85 到 115 個字元；glossary 固定輸出空陣列。",
               "採國中素養導向情境，完整交代脈絡、衝突、證據與可檢驗的結論。",
               "不得只把來源摘要分段或堆疊條列。",
               "每篇預估閱讀與理解時間 5 到 15 分鐘。",

@@ -30,6 +30,11 @@ test("Workers AI binding 使用受限輸出與 JSON schema，不需要外部 API
   assert.equal(calls[0].input.max_tokens, 4000);
   assert.equal(calls[0].input.stream, false);
   assert.equal(calls[0].input.response_format.type, "json_schema");
+  const readingSchema =
+    calls[0].input.response_format.json_schema.properties.readings.items.properties;
+  assert.equal(readingSchema.body.minItems, 4);
+  assert.equal(readingSchema.body.items.properties.text.minLength, 85);
+  assert.equal(readingSchema.glossary.maxItems, 0);
   assert.equal(calls[0].input.messages[0].role, "system");
   assert.match(calls[0].input.messages[1].content, /untrusted_data/);
 });

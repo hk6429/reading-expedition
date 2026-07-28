@@ -3,16 +3,6 @@ import { GenerationError } from "./generation-provider.js";
 const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const MAX_OUTPUT_TOKENS = 4000;
 
-const paragraphSchema = Object.freeze({
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    id: { type: "string" },
-    text: { type: "string" },
-  },
-  required: ["id", "text"],
-});
-
 const glossarySchema = Object.freeze({
   type: "object",
   additionalProperties: false,
@@ -23,40 +13,68 @@ const glossarySchema = Object.freeze({
   required: ["term", "definition"],
 });
 
-const readingResponseSchema = Object.freeze({
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    readings: {
-      type: "array",
-      minItems: 2,
-      maxItems: 2,
-      items: {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          difficulty: { type: "string", enum: ["guided", "challenge"] },
-          textType: { type: "string", enum: ["vernacular", "classical"] },
-          title: { type: "string" },
-          hookQuestion: { type: "string" },
-          body: { type: "array", minItems: 1, items: paragraphSchema },
-          glossary: { type: "array", items: glossarySchema },
-          readingMinutes: { type: "integer", minimum: 5, maximum: 15 },
-        },
-        required: [
-          "difficulty",
-          "textType",
-          "title",
-          "hookQuestion",
-          "body",
-          "glossary",
-          "readingMinutes",
-        ],
+function readingResponseSchema({ classical }) {
+  const paragraphSchema = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: { type: "string" },
+      text: {
+        type: "string",
+        minLength: classical ? 70 : 85,
+        maxLength: classical ? 100 : 115,
       },
     },
-  },
-  required: ["readings"],
-});
+    required: ["id", "text"],
+  };
+  return {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      readings: {
+        type: "array",
+        minItems: 2,
+        maxItems: 2,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            difficulty: { type: "string", enum: ["guided", "challenge"] },
+            textType: {
+              type: "string",
+              enum: [classical ? "classical" : "vernacular"],
+            },
+            title: { type: "string" },
+            hookQuestion: { type: "string" },
+            body: {
+              type: "array",
+              minItems: classical ? 2 : 4,
+              maxItems: classical ? 3 : 5,
+              items: paragraphSchema,
+            },
+            glossary: {
+              type: "array",
+              minItems: classical ? 3 : 0,
+              maxItems: classical ? 8 : 0,
+              items: glossarySchema,
+            },
+            readingMinutes: { type: "integer", minimum: 5, maximum: 15 },
+          },
+          required: [
+            "difficulty",
+            "textType",
+            "title",
+            "hookQuestion",
+            "body",
+            "glossary",
+            "readingMinutes",
+          ],
+        },
+      },
+    },
+    required: ["readings"],
+  };
+}
 
 const assessmentResponseSchema = Object.freeze({
   type: "object",
@@ -116,7 +134,7 @@ const assessmentResponseSchema = Object.freeze({
 
 function responseSchema(prompt) {
   return prompt.task.includes("readings")
-    ? readingResponseSchema
+    ? readingResponseSchema({ classical: prompt.task.includes("文言改寫") })
     : assessmentResponseSchema;
 }
 
