@@ -36,6 +36,15 @@
     <noscript>
       《萬卷浮城》需要 JavaScript 才能保存閱讀進度。你仍可以先記住今天的約定：每天十分鐘，讀懂一件事。
     </noscript>
+    <script>
+      if (!["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+        const counterScript = document.createElement("script");
+        counterScript.src =
+          "https://self-learning-orbit.pages.dev/platform-counter.js";
+        counterScript.dataset.site = "reading-expedition";
+        document.body.append(counterScript);
+      }
+    </script>
     <script type="module" src="./src/app.js"></script>
   </body>
 </html>

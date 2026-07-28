@@ -14,6 +14,16 @@ test("首頁提供可直接開啟的師生使用說明", () => {
   assert.match(app, /renderUsageGuide/);
 });
 
+test("首頁載入自學星圖返回入口與獨立到訪計數器", () => {
+  const html = read("index.html");
+  assert.match(
+    html,
+    /https:\/\/self-learning-orbit\.pages\.dev\/platform-counter\.js/,
+  );
+  assert.match(html, /dataset\.site = "reading-expedition"/);
+  assert.match(html, /\["localhost", "127\.0\.0\.1"\]/);
+});
+
 test("使用說明分別提供學生四步與教師四步", () => {
   const guide = read("src/ui/usage-guide.js");
   assert.match(guide, /學生篇/);

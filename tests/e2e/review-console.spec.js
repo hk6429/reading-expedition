@@ -90,6 +90,8 @@ test("教師登入後可並排校閱雙難度、切換預覽並發布", async ({
   await page.locator(".review-detail").first().getByRole("button", { name: "桌面" }).click();
   await expect(page.locator(".student-preview--desktop")).toBeVisible();
   await page.locator(".review-detail").first().getByRole("button", { name: "核准發布" }).click();
-  await expect(page.getByRole("status")).toContainText("已建立發布紀錄");
+  await expect(page.locator("[data-review-message]")).toContainText(
+    "已建立發布紀錄",
+  );
   expect(published).toBe(true);
 });
