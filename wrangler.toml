@@ -1,0 +1,13 @@
+name = "reading-expedition-api"
+main = "worker/src/index.js"
+compatibility_date = "2026-07-28"
+workers_dev = true
+
+[triggers]
+crons = ["0 21 * * *"]
+
+[[d1_databases]]
+binding = "READING_DB"
+database_name = "reading-expedition"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"

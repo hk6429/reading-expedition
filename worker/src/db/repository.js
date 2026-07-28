@@ -108,6 +108,215 @@ export function createReadingRepository(db) {
   }
 
   return Object.freeze({
+    async getPipelineRun(idempotencyKey) {
+      const row = await db
+        .prepare(
+          `SELECT
+             id,
+             run_date,
+             idempotency_key,
+             stage,
+             status,
+             attempts,
+             trace_id,
+             error_code,
+             error_summary,
+             finished_at
+           FROM pipeline_runs
+           WHERE idempotency_key = ?
+           LIMIT 1`,
+        )
+        .bind(idempotencyKey)
+        .first();
+      if (!row) return null;
+      return {
+        id: row.id,
+        runDate: row.run_date,
+        idempotencyKey: row.idempotency_key,
+        stage: row.stage,
+        status: row.status,
+        attempts: row.attempts,
+        traceId: row.trace_id,
+        errorCode: row.error_code,
+        errorSummary: row.error_summary,
+        finishedAt: row.finished_at,
+      };
+    },
+    async startPipelineRun(run) {
+      await db
+        .prepare(
+          `INSERT INTO pipeline_runs
+             (id, run_date, idempotency_key, stage, status, attempts, trace_id)
+           VALUES (?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT(idempotency_key) DO UPDATE SET
+             stage = excluded.stage,
+             status = excluded.status,
+             attempts = excluded.attempts,
+             trace_id = excluded.trace_id,
+             error_code = NULL,
+             error_summary = NULL,
+             started_at = CURRENT_TIMESTAMP,
+             finished_at = NULL`,
+        )
+        .bind(
+          run.id,
+          run.runDate,
+          run.idempotencyKey,
+          run.stage,
+          run.status,
+          run.attempts,
+          run.traceId,
+        )
+        .run();
+    },
+    async finishPipelineRun(idempotencyKey, update) {
+      await db
+        .prepare(
+          `UPDATE pipeline_runs
+           SET stage = ?,
+               status = ?,
+               attempts = ?,
+               trace_id = ?,
+               error_code = ?,
+               error_summary = ?,
+               finished_at = ?
+           WHERE idempotency_key = ?`,
+        )
+        .bind(
+          update.stage,
+          update.status,
+          update.attempts,
+          update.traceId,
+          update.errorCode,
+          update.errorSummary,
+          update.finishedAt,
+          idempotencyKey,
+        )
+        .run();
+    },
+    async saveDraftIfAbsent(bundle) {
+      const existing = await db
+        .prepare(
+          `SELECT id
+           FROM reading_packages
+           WHERE content_key = ?
+           LIMIT 1`,
+        )
+        .bind(bundle.contentKey)
+        .first();
+      if (existing) return false;
+
+      const statements = [
+        db
+          .prepare(
+            `INSERT OR IGNORE INTO sources
+               (id, name, base_url, license_type, license_version, allowed_usage, status, last_checked_at)
+             VALUES (?, ?, ?, ?, ?, ?, 'active', CURRENT_TIMESTAMP)`,
+          )
+          .bind(
+            bundle.source.id,
+            bundle.source.name,
+            bundle.source.baseUrl,
+            bundle.source.license.type,
+            bundle.source.license.version,
+            bundle.source.allowedUsage,
+          ),
+        db
+          .prepare(
+            `INSERT OR IGNORE INTO source_items
+               (id, source_id, canonical_url, title, publisher, published_at, fetched_at,
+                content_fingerprint, license_snapshot, extract_scope)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          )
+          .bind(
+            bundle.sourceItem.id,
+            bundle.sourceItem.sourceId,
+            bundle.sourceItem.canonicalUrl,
+            bundle.sourceItem.title,
+            bundle.sourceItem.publisher,
+            bundle.sourceItem.publishedAt,
+            bundle.sourceItem.fetchedAt,
+            bundle.sourceItem.contentFingerprint,
+            JSON.stringify(bundle.sourceItem.licenseSnapshot),
+            bundle.sourceItem.extractScope,
+          ),
+        db
+          .prepare(
+            `INSERT INTO fact_packs
+               (id, topic_date, category, facts_json, source_links_json,
+                sensitivity_flags_json, verification_status, version)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          )
+          .bind(
+            bundle.factPack.id,
+            bundle.factPack.topicDate,
+            bundle.factPack.category,
+            JSON.stringify(bundle.factPack.facts),
+            JSON.stringify(bundle.factPack.sourceItemIds),
+            JSON.stringify(bundle.factPack.sensitivityFlags),
+            bundle.factPack.verificationStatus,
+            bundle.factPack.version,
+          ),
+      ];
+      for (const packageRecord of bundle.packages) {
+        statements.push(
+          db
+            .prepare(
+              `INSERT INTO reading_packages
+                 (id, content_key, fact_pack_id, difficulty, title, hook_question,
+                  body, glossary_json, reading_minutes, source_attribution_json,
+                  quality_score, hard_gate_status, publication_status, version,
+                  published_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            )
+            .bind(
+              packageRecord.id,
+              bundle.contentKey,
+              bundle.factPack.id,
+              packageRecord.difficulty,
+              packageRecord.title,
+              packageRecord.hookQuestion,
+              JSON.stringify(packageRecord.body),
+              JSON.stringify(packageRecord.glossary),
+              packageRecord.readingMinutes,
+              JSON.stringify(packageRecord.sourceAttribution),
+              packageRecord.qualityScore,
+              packageRecord.hardGateStatus,
+              packageRecord.publicationStatus,
+              packageRecord.version,
+              packageRecord.publicationStatus === "published"
+                ? new Date().toISOString()
+                : null,
+            ),
+        );
+        for (const item of packageRecord.assessment) {
+          statements.push(
+            db
+              .prepare(
+                `INSERT INTO assessment_items
+                   (id, reading_package_id, item_type, prompt, options_json,
+                    correct_answer, rationale, distractor_reasons_json,
+                    evidence_span_json, version)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+              )
+              .bind(
+                `${packageRecord.id}-${item.type}`,
+                packageRecord.id,
+                item.type,
+                item.prompt,
+                JSON.stringify(item.options),
+                item.correctAnswer,
+                item.rationale,
+                JSON.stringify(item.distractorReasons),
+                JSON.stringify(item.evidenceSpan),
+                1,
+              ),
+          );
+        }
+      }
+      await db.batch(statements);
+      return true;
+    },
     async listReviewPackages(status) {
       const statement = db
         .prepare(

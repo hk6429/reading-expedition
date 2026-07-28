@@ -3,6 +3,7 @@ import { createPublicationApi } from "./api/publication.js";
 import { createReviewApi } from "./api/review.js";
 import { createTeacherSessionApi } from "./api/teacher-session.js";
 import { createReadingRepository } from "./db/repository.js";
+import { createPipelineRuntime } from "./pipeline/pipeline-runtime.js";
 
 export default {
   fetch(request, env) {
@@ -19,5 +20,9 @@ export default {
       reviewApi,
       publicationApi,
     }).fetch(request);
+  },
+  scheduled(_event, env, context) {
+    const repository = createReadingRepository(env.READING_DB);
+    context.waitUntil(createPipelineRuntime({ env, repository }).run());
   },
 };
