@@ -1,0 +1,27 @@
+{
+  "id": "2026-07-28-science",
+  "topicDate": "2026-07-28",
+  "category": "science",
+  "topicKind": "evergreen",
+  "facts": [
+    {
+      "factKey": "sea-level-rise",
+      "claim": "全球平均海平面正在上升。",
+      "sourceItemId": "source-item-1",
+      "sourceOriginId": "source-origin-1",
+      "location": {
+        "field": "summary",
+        "start": 0,
+        "end": 13
+      },
+      "publishedAt": "2026-07-27T08:00:00Z",
+      "confidence": 0.96,
+      "entities": {
+        "numbers": [],
+        "dates": [],
+        "people": [],
+        "units": []
+      }
+    }
+  ]
+}
