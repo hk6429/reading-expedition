@@ -1,5 +1,6 @@
 import { createReadingRepository } from "../db/repository.js";
 import { createHttpGenerationProvider } from "./http-generation-provider.js";
+import { createWorkersAiGenerationProvider } from "./workers-ai-generation-provider.js";
 import { createGenerationConfig } from "./generation-provider.js";
 import { createSourceRegistry } from "./source-registry.js";
 import { createSourceFetcher, fetchSourcesIndependently } from "./source-adapter.js";
@@ -14,6 +15,11 @@ import { calculateQualityScore } from "./quality-score.js";
 import { decidePublication, evaluateHardGates } from "./hard-gates.js";
 import { runDailyPipeline } from "./daily-run.js";
 import { APPROVED_SOURCES } from "./approved-sources.js";
+import {
+  evaluateContentProfile,
+  readingText,
+  selectDailyTextType,
+} from "./content-profile.js";
 
 function taipeiDate(date = new Date()) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -83,6 +89,7 @@ function createDraftBundle({
     packages: readings.map((reading, index) => ({
       id: `${date}-${candidate.category}-${shortId}-${reading.difficulty}-v1`,
       difficulty: reading.difficulty,
+      textType: reading.textType,
       title: reading.title,
       hookQuestion: reading.hookQuestion,
       body: reading.body,
@@ -109,11 +116,22 @@ export function createPipelineRuntime({
   repository = createReadingRepository(env.READING_DB),
   sources = APPROVED_SOURCES,
   fetchImpl = fetch,
-  provider = createHttpGenerationProvider({
-    config: createGenerationConfig(env),
-    fetchImpl,
-  }),
+  provider = null,
 }) {
+  const generationProvider =
+    provider ??
+    (env.AI
+      ? createWorkersAiGenerationProvider({
+          ai: env.AI,
+          model:
+            env.GENERATION_MODEL ??
+            "@cf/meta/llama-3.1-8b-instruct-fast",
+          maxRetries: env.GENERATION_MAX_RETRIES ?? 2,
+        })
+      : createHttpGenerationProvider({
+          config: createGenerationConfig(env),
+          fetchImpl,
+        }));
   const registry = createSourceRegistry(sources);
   const sourceFetcher = createSourceFetcher({ registry, fetchImpl });
   const rssAdapter = createRssAdapter({ fetchSource: sourceFetcher });
@@ -160,26 +178,39 @@ export function createPipelineRuntime({
       topicKind: candidate.topicKind,
       facts: [createFact(candidate, date)],
     });
-    const readings = await generateReadings(provider, factPack);
+    const textType = selectDailyTextType({
+      category: candidate.category,
+      date,
+    });
+    const readings = await generateReadings(generationProvider, factPack, {
+      textType,
+    });
     const assessments = await Promise.all(
       readings.map((reading) =>
-        generateAssessments(provider, {
-          ...reading,
-          id: `${factPack.id}-${reading.difficulty}`,
-        }, factPack),
+        generateAssessments(
+          generationProvider,
+          {
+            ...reading,
+            id: `${factPack.id}-${reading.difficulty}`,
+          },
+          factPack,
+        ),
       ),
     );
     const maxSimilarity = Math.max(
       ...readings.map((reading) =>
         contentSimilarity(
           candidate.extract,
-          reading.body.map(({ text }) => text).join(""),
+          readingText(reading),
         ),
       ),
     );
     const levels = compareDifficultyLevels(readings[0], readings[1]);
     const assessmentsValid = assessments.every(
       (items, index) => validateAssessmentAnswers(readings[index], items).ok,
+    );
+    const contentProfileValid = readings.every(
+      (reading) => evaluateContentProfile(reading).ok,
     );
     const hardGates = evaluateHardGates({
       sourceTraceable: true,
@@ -190,6 +221,8 @@ export function createPipelineRuntime({
       ),
       similarity: maxSimilarity,
       assessmentValid: assessmentsValid,
+      readingLevelValid: levels.ok,
+      contentProfileValid,
       schemaValid: true,
     });
     const quality = calculateQualityScore({

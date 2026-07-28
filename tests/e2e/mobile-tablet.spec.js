@@ -26,3 +26,15 @@ for (const viewport of viewports) {
     await expect(page.getByRole("heading", { name: /一座城市如何分配有限水源/ })).toBeVisible();
   });
 }
+
+test("平板直向正文不會被三欄擠壓，手機工具列不遮住頁首", async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await page.goto("/#/read/water-sharing-guided-v1");
+  const tabletArticle = await page.locator(".reading-article").boundingBox();
+  expect(tabletArticle.width).toBeGreaterThanOrEqual(448);
+
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.reload();
+  const controls = await page.locator(".reading-controls").boundingBox();
+  expect(controls.y).toBeGreaterThan(500);
+});

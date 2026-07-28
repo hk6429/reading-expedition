@@ -6,7 +6,10 @@ Cloudflare Worker 是唯一內容與教師 API；Cloudflare Pages、Vercel、Net
 
 ## 環境變數名稱
 
-- Worker：`TEACHER_KEY_HASH`、`GENERATION_API_BASE`、`GENERATION_MODEL`、`GENERATION_API_KEY`
+- Worker secret：`TEACHER_KEY_HASH`
+- Worker AI binding：`AI`
+- Worker vars：`GENERATION_MODEL`、`GENERATION_MAX_RETRIES`
+- 備援 OpenAI-compatible provider（非預設）：`GENERATION_API_BASE`、`GENERATION_API_KEY`
 - 三個前端：`READING_API_ORIGIN`
 - Cloudflare Worker D1 binding：`READING_DB`
 

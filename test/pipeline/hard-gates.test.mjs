@@ -14,6 +14,8 @@ const passing = {
   twoDifficultiesShareFacts: true,
   similarity: 0.2,
   assessmentValid: true,
+  readingLevelValid: true,
+  contentProfileValid: true,
   schemaValid: true,
 };
 
@@ -66,6 +68,33 @@ test("黃金資料集至少30組並可重跑硬門檻", () => {
 
   assert.ok(golden.length >= 30);
   for (const item of golden) {
-    assert.equal(evaluateHardGates(item.input).passed, item.expectedPassed);
+    assert.equal(
+      evaluateHardGates({
+        contentProfileValid: true,
+        readingLevelValid: true,
+        ...item.input,
+      }).passed,
+      item.expectedPassed,
+    );
   }
+});
+
+test("行舟卷未低於登樓卷時不得發布", () => {
+  const result = evaluateHardGates({
+    ...passing,
+    readingLevelValid: false,
+  });
+
+  assert.equal(result.passed, false);
+  assert.ok(result.failed.includes("reading_level_valid"));
+});
+
+test("篇幅、文體或文言注釋不合格時不得發布", () => {
+  const result = evaluateHardGates({
+    ...passing,
+    contentProfileValid: false,
+  });
+
+  assert.equal(result.passed, false);
+  assert.ok(result.failed.includes("content_profile_valid"));
 });

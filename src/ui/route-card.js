@@ -28,7 +28,7 @@ function difficultyButton(reading, label) {
   );
   button.innerHTML = `
     <span>${label}</span>
-    <small>${reading.readingMinutes} 分鐘</small>
+    <small>${reading.textType === "classical" ? "文言" : "白話"}・${reading.readingMinutes} 分鐘</small>
   `;
   button.addEventListener("click", () => {
     window.location.hash = `#/read/${reading.id}`;

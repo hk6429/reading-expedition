@@ -1,5 +1,7 @@
+import { readingText } from "./content-profile.js";
+
 function sentenceLengths(reading) {
-  const text = reading.body.map(({ text: paragraph }) => paragraph).join("");
+  const text = readingText(reading);
   return text
     .split(/[。！？!?]/)
     .map((sentence) => sentence.replace(/\s/g, "").length)
@@ -8,10 +10,7 @@ function sentenceLengths(reading) {
 
 export function measureReadingLevel(reading) {
   const lengths = sentenceLengths(reading);
-  const characters = reading.body
-    .map(({ text }) => text)
-    .join("")
-    .replace(/\s/g, "").length;
+  const characters = readingText(reading).replace(/\s/g, "").length;
   return {
     characters,
     averageSentenceLength:
@@ -25,11 +24,17 @@ export function measureReadingLevel(reading) {
 export function compareDifficultyLevels(guided, challenge) {
   const guidedLevel = measureReadingLevel(guided);
   const challengeLevel = measureReadingLevel(challenge);
+  const meaningfullyLonger =
+    challengeLevel.characters >= Math.ceil(guidedLevel.characters * 1.15);
+  const sentenceLoadHigher =
+    guidedLevel.averageSentenceLength <=
+    challengeLevel.averageSentenceLength + 2;
+  const glossaryLoadHigher =
+    challengeLevel.glossaryCount > guidedLevel.glossaryCount;
   return {
     ok:
       guidedLevel.characters <= challengeLevel.characters &&
-      guidedLevel.averageSentenceLength <=
-        challengeLevel.averageSentenceLength + 2,
+      (meaningfullyLonger || sentenceLoadHigher || glossaryLoadHigher),
     guided: guidedLevel,
     challenge: challengeLevel,
   };

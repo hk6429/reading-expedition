@@ -4,13 +4,14 @@ import test from "node:test";
 
 const projectRoot = new URL("../../", import.meta.url);
 
-test("D1 migration 鎖住來源、發布版本與稽核事件", async () => {
-  const [contentSql, reviewSql, classSql] = await Promise.all([
+test("D1 migration 鎖住來源、發布版本、文體與稽核事件", async () => {
+  const [contentSql, reviewSql, classSql, textTypeSql] = await Promise.all([
     readFile(new URL("migrations/0001_content.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0002_review.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0003_class_aggregate.sql", projectRoot), "utf8"),
+    readFile(new URL("migrations/0006_reading_text_type.sql", projectRoot), "utf8"),
   ]);
-  const sql = `${contentSql}\n${reviewSql}\n${classSql}`;
+  const sql = `${contentSql}\n${reviewSql}\n${classSql}\n${textTypeSql}`;
 
   for (const table of [
     "sources",
@@ -33,4 +34,9 @@ test("D1 migration 鎖住來源、發布版本與稽核事件", async () => {
   );
   assert.match(reviewSql, /CREATE TRIGGER review_events_no_update/);
   assert.match(reviewSql, /CREATE TRIGGER review_events_no_delete/);
+  assert.match(textTypeSql, /ADD COLUMN text_type TEXT NOT NULL/);
+  assert.match(
+    textTypeSql,
+    /CHECK \(text_type IN \('vernacular', 'classical'\)\)/,
+  );
 });

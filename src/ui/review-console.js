@@ -42,10 +42,16 @@ function sourceMarkup(sources) {
 }
 
 function assessmentMarkup(items) {
+  const labels = {
+    comprehension: "擷取與理解",
+    inference: "統整與推論",
+    evidence: "文證與評鑑",
+  };
   return items
     .map(
       (item) => `
         <article class="review-question">
+          <p class="chapter-label">${escapeHtml(labels[item.type] ?? "閱讀理解")}</p>
           <p><strong>${escapeHtml(item.prompt)}</strong></p>
           <p>答案：${escapeHtml(item.correctAnswer)}</p>
           <p>理由：${escapeHtml(item.rationale)}</p>
@@ -57,12 +63,21 @@ function assessmentMarkup(items) {
 }
 
 function detailMarkup(packageRecord) {
+  const characters = packageRecord.body
+    .map((paragraph) =>
+      typeof paragraph === "string" ? paragraph : paragraph?.text ?? "",
+    )
+    .join("")
+    .replace(/\s/g, "").length;
+  const textType =
+    packageRecord.textType === "classical" ? "文言文" : "白話文";
   return `
     <section class="review-detail">
       <header class="review-detail__header">
         <div>
           <p class="chapter-label">${escapeHtml(packageRecord.difficulty === "guided" ? "行舟卷" : "登樓卷")}・版本 ${packageRecord.version}</p>
           <h2>${escapeHtml(packageRecord.title)}</h2>
+          <p>${textType}・${characters} 字・${packageRecord.glossary.length} 則${packageRecord.textType === "classical" ? "注釋" : "詞語旁批"}</p>
         </div>
         <div class="quality-seal" aria-label="品質分數 ${packageRecord.qualityScore}">
           ${packageRecord.qualityScore}

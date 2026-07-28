@@ -912,7 +912,8 @@ a:focus-visible {
 
 .assessment-option {
   display: grid;
-  grid-template-columns: auto 2rem minmax(0, 1fr);
+  position: relative;
+  grid-template-columns: 2rem minmax(0, 1fr);
   gap: 0.55rem;
   align-items: center;
   min-height: 3rem;
@@ -928,8 +929,15 @@ a:focus-visible {
 }
 
 .assessment-option input {
-  width: 1.1rem;
-  height: 1.1rem;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.assessment-option:focus-within {
+  outline: 3px double var(--cinnabar);
+  outline-offset: 2px;
 }
 
 .option-marker {
@@ -964,9 +972,43 @@ a:focus-visible {
   margin: 0.35rem 0;
 }
 
-.question-feedback a {
+.question-feedback a,
+.evidence-link {
   color: var(--ink-primary);
   font-weight: 800;
+}
+
+.evidence-link {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid currentcolor;
+  border-radius: 0.6rem;
+  background: transparent;
+}
+
+.assessment-navigation {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.assessment-navigation button {
+  min-height: 3rem;
+}
+
+.evidence-drawer {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border: 2px solid var(--mineral-blue);
+  border-radius: 1rem 0.25rem 1rem 0.25rem;
+  background: var(--paper-secondary);
+}
+
+.evidence-drawer p {
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: 1.05rem;
+  line-height: 1.9;
 }
 
 .form-error {
@@ -1188,6 +1230,7 @@ a:focus-visible {
 
   .reading-controls {
     position: fixed;
+    top: auto;
     right: 0.75rem;
     bottom: 0.75rem;
     left: 0.75rem;
@@ -1226,6 +1269,38 @@ a:focus-visible {
 
   .building-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 63.99rem) {
+  .reading-layout {
+    display: block;
+    width: 100%;
+    padding: 0 0 7rem;
+  }
+
+  .reading-side {
+    position: static;
+    padding: 1rem max(1rem, calc((100% - 45rem) / 2));
+  }
+
+  .reading-side .chapter-label,
+  .reading-difficulty {
+    display: none;
+  }
+
+  .reading-article {
+    width: min(45rem, 100%);
+    margin: 0 auto;
+  }
+
+  .reading-controls {
+    position: fixed;
+    top: auto;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    z-index: 15;
   }
 }
 

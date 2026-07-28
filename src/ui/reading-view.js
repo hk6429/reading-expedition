@@ -1,6 +1,10 @@
 import { waterMarginTheme } from "../theme/water-margin.js";
 import { createReadingControls } from "./reading-controls.js";
 
+function paragraphText(paragraph) {
+  return typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
+}
+
 export function renderReading(
   container,
   reading,
@@ -36,7 +40,13 @@ export function renderReading(
   header.className = "reading-header";
   const kicker = document.createElement("p");
   kicker.className = "reading-meta";
-  kicker.textContent = `約 ${reading.readingMinutes} 分鐘・第 ${reading.version} 版`;
+  const characters = reading.body
+    .map(paragraphText)
+    .join("")
+    .replace(/\s/g, "").length;
+  const textTypeLabel =
+    reading.textType === "classical" ? "文言文" : "白話文";
+  kicker.textContent = `約 ${reading.readingMinutes} 分鐘・${textTypeLabel} ${characters} 字・第 ${reading.version} 版`;
   const title = document.createElement("h1");
   title.textContent = reading.title;
   const question = document.createElement("p");
@@ -51,7 +61,7 @@ export function renderReading(
     const paragraph = document.createElement("p");
     paragraph.className = "reading-paragraph";
     paragraph.dataset.paragraph = String(index);
-    paragraph.textContent = text;
+    paragraph.textContent = paragraphText(text);
     paragraphs.append(paragraph);
   });
   article.append(paragraphs);
@@ -62,7 +72,8 @@ export function renderReading(
     glossary.setAttribute("aria-labelledby", "glossary-title");
     const glossaryTitle = document.createElement("h2");
     glossaryTitle.id = "glossary-title";
-    glossaryTitle.textContent = "詞語旁批";
+    glossaryTitle.textContent =
+      reading.textType === "classical" ? "文言注釋" : "詞語旁批";
     glossary.append(glossaryTitle);
     for (const item of reading.glossary) {
       const entry = document.createElement("p");
@@ -94,7 +105,7 @@ export function renderReading(
   const quizButton = document.createElement("button");
   quizButton.type = "button";
   quizButton.className = "primary-action";
-  quizButton.textContent = "前往兩題問答";
+  quizButton.textContent = `前往 ${reading.assessment.length} 題問答`;
   quizButton.addEventListener("click", () => {
     window.location.hash = `#/quiz/${reading.id}`;
   });

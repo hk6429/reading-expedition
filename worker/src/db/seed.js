@@ -71,17 +71,18 @@ export async function seedReadingPackage(db, fixture) {
       db
         .prepare(
           `INSERT OR IGNORE INTO reading_packages (
-             id, content_key, fact_pack_id, difficulty, title, hook_question,
+             id, content_key, fact_pack_id, difficulty, text_type, title, hook_question,
              body, glossary_json, reading_minutes, source_attribution_json,
              quality_score, hard_gate_status, publication_status, version,
              published_at
-           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
         .bind(
           reading.id,
           fixture.contentKey,
           fixture.factPack.id,
           reading.difficulty,
+          reading.textType ?? "vernacular",
           reading.title,
           reading.hookQuestion,
           json(reading.body),

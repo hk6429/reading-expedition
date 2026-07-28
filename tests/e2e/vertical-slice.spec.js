@@ -9,13 +9,22 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
     page.getByRole("heading", { name: "一座城市如何分配有限水源？" }),
   ).toBeVisible();
 
-  await page.getByRole("button", { name: "前往兩題問答" }).click();
+  await page.getByRole("button", { name: "前往 3 題問答" }).click();
   await page
     .getByRole("radio", { name: "只看誰要求得最多" })
     .check();
-  await page.getByRole("radio", { name: "第2段" }).check();
-  await page.getByRole("button", { name: "送出兩題" }).click();
-  await expect(page.getByText("再看第3段")).toBeVisible();
+  await page.getByRole("button", { name: "下一題" }).click();
+  await page
+    .getByRole("radio", {
+      name: "不同用途的基本需要與缺水影響可能不同",
+    })
+    .check();
+  await page.getByRole("button", { name: "下一題" }).click();
+  await page.getByRole("radio", { name: "第4段" }).check();
+  await page.getByRole("button", { name: "送出 3 題" }).click();
+  await expect(
+    page.getByRole("button", { name: "查看第3段線索" }),
+  ).toBeVisible();
 
   await page
     .getByRole("radio", { name: "基本需要、影響與節水能力" })

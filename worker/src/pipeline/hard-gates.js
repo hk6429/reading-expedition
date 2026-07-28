@@ -7,6 +7,10 @@ const GATES = Object.freeze({
   originality: ({ similarity }) =>
     typeof similarity === "number" && similarity < 0.78,
   assessment_valid: ({ assessmentValid }) => assessmentValid === true,
+  reading_level_valid: ({ readingLevelValid }) =>
+    readingLevelValid === true,
+  content_profile_valid: ({ contentProfileValid }) =>
+    contentProfileValid === true,
   schema_valid: ({ schemaValid }) => schemaValid === true,
 });
 

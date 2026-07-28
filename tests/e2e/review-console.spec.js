@@ -8,8 +8,10 @@ function packageRecord(id, difficulty, title) {
     contentKey: "2026-07-28-world-water",
     category: "world",
     difficulty,
+    textType: "vernacular",
     title,
     body: [{ id: "p1", text: "水資源需要兼顧基本需求與公平分配。" }],
+    glossary: [],
     sourceAttribution: [
       {
         publisher: "公開資料站",

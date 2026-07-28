@@ -3,6 +3,13 @@ main = "worker/src/index.js"
 compatibility_date = "2026-07-28"
 workers_dev = true
 
+[vars]
+GENERATION_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast"
+GENERATION_MAX_RETRIES = "2"
+
+[ai]
+binding = "AI"
+
 [triggers]
 crons = ["0 21 * * *"]
 
@@ -15,6 +22,13 @@ migrations_dir = "migrations"
 [env.preview]
 name = "reading-expedition-api-preview"
 workers_dev = true
+
+[env.preview.vars]
+GENERATION_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast"
+GENERATION_MAX_RETRIES = "2"
+
+[env.preview.ai]
+binding = "AI"
 
 [env.preview.triggers]
 crons = []

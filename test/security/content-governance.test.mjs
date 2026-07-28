@@ -12,6 +12,8 @@ test("來源失效或授權改變時不得發布", () => {
     twoDifficultiesShareFacts: true,
     similarity: 0.2,
     assessmentValid: true,
+    readingLevelValid: true,
+    contentProfileValid: true,
     schemaValid: true,
   };
   assert.equal(

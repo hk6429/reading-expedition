@@ -4,17 +4,32 @@ test("答錯會定位原文，學生可修正一次後帶回文證", async ({ pa
   await page.goto("/#/quiz/water-sharing-guided-v1");
 
   await expect(
-    page.getByRole("heading", { name: "帶回兩份文證" }),
+    page.getByRole("heading", { name: "用 3 題確認你讀懂了什麼" }),
   ).toBeVisible();
 
   await page
     .getByRole("radio", { name: "只看誰要求得最多" })
     .check();
-  await page.getByRole("radio", { name: "第2段" }).check();
-  await page.getByRole("button", { name: "送出兩題" }).click();
+  await page.getByRole("button", { name: "下一題" }).click();
+  await page
+    .getByRole("radio", {
+      name: "不同用途的基本需要與缺水影響可能不同",
+    })
+    .check();
+  await page.getByRole("button", { name: "下一題" }).click();
+  await page.getByRole("radio", { name: "第4段" }).check();
+  await page.getByRole("button", { name: "送出 3 題" }).click();
 
-  await expect(page.getByText("再看第3段")).toBeVisible();
-  await expect(page.getByText("第一題還可以修正一次")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "查看第3段線索" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("尚有題目可以回看文章後修正一次"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "查看第3段線索" }).click();
+  await expect(page.getByRole("heading", { name: "第 3 段" })).toBeVisible();
+  await expect(page).toHaveURL(/#\/quiz\/water-sharing-guided-v1$/);
+  await page.getByRole("button", { name: "回到題目" }).click();
 
   await page
     .getByRole("radio", { name: "基本需要、影響與節水能力" })

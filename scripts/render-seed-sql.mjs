@@ -74,18 +74,19 @@ WHERE id = ${value(fixture.factPack.id)};`);
 
   for (const reading of fixture.packages) {
     rows.push(`INSERT OR IGNORE INTO reading_packages (
-    id, content_key, fact_pack_id, difficulty, title, hook_question, body,
+    id, content_key, fact_pack_id, difficulty, text_type, title, hook_question, body,
     glossary_json, reading_minutes, source_attribution_json, quality_score,
     hard_gate_status, publication_status, version, published_at
   ) VALUES (
     ${value(reading.id)}, ${value(fixture.contentKey)}, ${value(fixture.factPack.id)},
-    ${value(reading.difficulty)}, ${value(reading.title)}, ${value(reading.hookQuestion)},
+    ${value(reading.difficulty)}, ${value(reading.textType)}, ${value(reading.title)}, ${value(reading.hookQuestion)},
     ${json(reading.body)}, ${json(reading.glossary)}, ${reading.readingMinutes},
     ${json(reading.sourceAttribution)}, ${reading.qualityScore},
     ${value(reading.hardGateStatus)}, ${value(reading.publicationStatus)},
     ${reading.version}, ${value(fixture.sourceItem.fetchedAt)}
   );`);
     rows.push(`UPDATE reading_packages SET
+    text_type = ${value(reading.textType)},
     title = ${value(reading.title)},
     hook_question = ${value(reading.hookQuestion)},
     body = ${json(reading.body)},
@@ -107,6 +108,7 @@ WHERE id = ${value(fixture.factPack.id)};`);
       ${json(item.distractorReasons)}, ${json(item.evidenceSpan)}, ${reading.version}
       );`);
       rows.push(`UPDATE assessment_items SET
+      item_type = ${value(item.type)},
       prompt = ${value(item.prompt)},
       options_json = ${json(item.options)},
       correct_answer = ${value(item.correctAnswer)},

@@ -1,7 +1,8 @@
 import { GenerationError } from "./generation-provider.js";
 import { createBoundedPrompt } from "./prompt-boundary.js";
 
-const ITEM_TYPES = new Set(["comprehension", "inference", "evidence"]);
+const ITEM_TYPES = Object.freeze(["comprehension", "inference", "evidence"]);
+const ITEM_TYPE_SET = new Set(ITEM_TYPES);
 
 function schemaError() {
   return new GenerationError(
@@ -11,14 +12,22 @@ function schemaError() {
 }
 
 function validateItem(item, reading) {
+  const normalizedOptions = Array.isArray(item?.options)
+    ? item.options.map((option) =>
+        typeof option === "string" ? option.trim() : "",
+      )
+    : [];
   if (
-    !ITEM_TYPES.has(item?.type) ||
+    !ITEM_TYPE_SET.has(item?.type) ||
     typeof item.prompt !== "string" ||
+    item.prompt.trim().length === 0 ||
     !Array.isArray(item.options) ||
-    item.options.length < 2 ||
-    new Set(item.options).size !== item.options.length ||
+    item.options.length !== 4 ||
+    normalizedOptions.some((option) => option.length === 0) ||
+    new Set(normalizedOptions).size !== item.options.length ||
     item.options.filter((option) => option === item.correctAnswer).length !== 1 ||
     typeof item.rationale !== "string" ||
+    item.rationale.trim().length === 0 ||
     !item.distractorReasons ||
     typeof item.distractorReasons !== "object"
   ) {
@@ -29,21 +38,32 @@ function validateItem(item, reading) {
   );
   if (
     !distractors.every(
-      (option) => typeof item.distractorReasons[option] === "string",
+      (option) =>
+        typeof item.distractorReasons[option] === "string" &&
+        item.distractorReasons[option].trim().length > 0,
     )
   ) {
     return false;
   }
+  if (
+    new Set(
+      distractors.map((option) => item.distractorReasons[option].trim()),
+    ).size !== distractors.length
+  ) {
+    return false;
+  }
   const span = item.evidenceSpan;
-  const paragraph = reading.body[span?.paragraph - 1];
+  const rawParagraph = reading.body[span?.paragraph - 1];
+  const paragraph =
+    typeof rawParagraph === "string" ? rawParagraph : rawParagraph?.text;
   if (
     !paragraph ||
     !Number.isInteger(span.start) ||
     !Number.isInteger(span.end) ||
     span.start < 0 ||
     span.end <= span.start ||
-    span.end > paragraph.text.length ||
-    paragraph.text.slice(span.start, span.end) !== span.text
+    span.end > paragraph.length ||
+    paragraph.slice(span.start, span.end) !== span.text
   ) {
     return false;
   }
@@ -54,14 +74,23 @@ export async function generateAssessments(provider, reading, factPack = null) {
   const result = await provider.generate(
     createBoundedPrompt({
       task:
-        "為已發布文字產生理解、推論與文證題；每題只能有一個答案，並說明每個干擾選項。",
+        "為已發布文字產生一組國中教育會考式素養閱讀題。輸出物件為 items 陣列；依序各產生一題 comprehension、inference、evidence。",
       factPack: factPack ?? { id: reading.factPackId },
       reading,
+      trustedRequirements: [
+        "固定三題，能力依序為擷取與理解、比較統整與推論、文證判讀與評鑑。",
+        "每題固定四個選項，只有一個正確或最佳答案。",
+        "干擾選項須分別對應常見誤讀、過度推論、局部訊息或因果倒置，不得荒謬到可直接排除。",
+        "每題都須提供 rationale、每個錯誤選項的 distractorReasons，以及正文內可逐字對應的 evidenceSpan。",
+        "不得考來源以外的冷知識，也不得只靠題幹常識作答。",
+        "題目語氣參考會考與學測的閱讀歷程，但不得複製歷屆題目文字。",
+      ],
     }),
   );
   if (
     !Array.isArray(result?.items) ||
-    result.items.length === 0 ||
+    result.items.length !== ITEM_TYPES.length ||
+    result.items.some((item, index) => item.type !== ITEM_TYPES[index]) ||
     !result.items.every((item) => validateItem(item, reading))
   ) {
     throw schemaError();

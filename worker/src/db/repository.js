@@ -12,7 +12,10 @@ function mapPublishedReading(row) {
     contentKey: row.content_key,
     category: row.category,
     difficulty: row.difficulty,
+    textType: row.text_type,
     title: row.title,
+    hookQuestion: row.hook_question,
+    readingMinutes: row.reading_minutes,
     glossary: parseJsonField(row.glossary_json, "glossary_json"),
     sourceAttribution: parseJsonField(
       row.source_attribution_json,
@@ -44,6 +47,7 @@ function mapReviewPackage(row, assessment = []) {
     contentKey: row.content_key,
     category: row.category,
     difficulty: row.difficulty,
+    textType: row.text_type,
     title: row.title,
     hookQuestion: row.hook_question,
     body: parseJsonField(row.body, "body"),
@@ -412,17 +416,18 @@ export function createReadingRepository(db) {
           db
             .prepare(
               `INSERT INTO reading_packages
-                 (id, content_key, fact_pack_id, difficulty, title, hook_question,
+                 (id, content_key, fact_pack_id, difficulty, text_type, title, hook_question,
                   body, glossary_json, reading_minutes, source_attribution_json,
                   quality_score, hard_gate_status, publication_status, version,
                   published_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             )
             .bind(
               packageRecord.id,
               bundle.contentKey,
               bundle.factPack.id,
               packageRecord.difficulty,
+              packageRecord.textType,
               packageRecord.title,
               packageRecord.hookQuestion,
               JSON.stringify(packageRecord.body),
@@ -474,6 +479,7 @@ export function createReadingRepository(db) {
              rp.content_key,
              fp.category,
              rp.difficulty,
+             rp.text_type,
              rp.title,
              rp.quality_score,
              rp.hard_gate_status,
@@ -491,6 +497,7 @@ export function createReadingRepository(db) {
         contentKey: row.content_key,
         category: row.category,
         difficulty: row.difficulty,
+        textType: row.text_type,
         title: row.title,
         qualityScore: row.quality_score,
         hardGateStatus: row.hard_gate_status,
@@ -647,7 +654,10 @@ export function createReadingRepository(db) {
              rp.content_key,
              fp.category,
              rp.difficulty,
+             rp.text_type,
              rp.title,
+             rp.hook_question,
+             rp.reading_minutes,
              rp.glossary_json,
              rp.source_attribution_json,
              rp.version
@@ -678,6 +688,7 @@ export function createReadingRepository(db) {
              rp.content_key,
              fp.category,
              rp.difficulty,
+             rp.text_type,
              rp.title,
              rp.body,
              rp.glossary_json,
@@ -722,6 +733,7 @@ export function createReadingRepository(db) {
         contentKey: row.content_key,
         category: row.category,
         difficulty: row.difficulty,
+        textType: row.text_type,
         title: row.title,
         body: parseJsonField(row.body, "body"),
         glossary: parseJsonField(row.glossary_json, "glossary_json"),

@@ -6,7 +6,7 @@ import { seedReadingPackage } from "../../worker/src/db/seed.js";
 
 const fixtureUrl = new URL("../fixtures/seed-reading-package.json", import.meta.url);
 
-test("人工種子一次建立來源、事實包、雙難度與四題", async () => {
+test("人工種子一次建立來源、事實包、雙難度與六題", async () => {
   const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
   const statements = [];
   const db = {
@@ -28,7 +28,7 @@ test("人工種子一次建立來源、事實包、雙難度與四題", async ()
   assert.deepEqual(result, {
     contentKey: "2026-07-28-water-sharing",
     packages: 2,
-    assessmentItems: 4,
+    assessmentItems: 6,
   });
   assert.equal(
     statements.filter(({ sql }) =>
@@ -40,6 +40,6 @@ test("人工種子一次建立來源、事實包、雙難度與四題", async ()
     statements.filter(({ sql }) =>
       /INSERT(?: OR IGNORE)? INTO assessment_items/.test(sql),
     ).length,
-    4,
+    6,
   );
 });

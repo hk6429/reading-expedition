@@ -22,6 +22,6 @@ test("學生可閱讀行舟卷、調整夜讀並保存進度", async ({ page }) 
     )
     .toHaveProperty("water-sharing-guided-v1");
 
-  await page.getByRole("button", { name: "前往兩題問答" }).click();
+  await page.getByRole("button", { name: "前往 3 題問答" }).click();
   await expect(page).toHaveURL(/#\/quiz\/water-sharing-guided-v1$/);
 });

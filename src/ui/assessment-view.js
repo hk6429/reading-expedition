@@ -1,11 +1,20 @@
 import { createAssessmentSession } from "../domain/assessment-session.js";
 
-function createQuestion(item, index) {
+const COMPETENCY_LABELS = Object.freeze({
+  comprehension: "找重點",
+  inference: "想意思",
+  evidence: "找證據",
+});
+
+function createQuestion(item, index, total) {
   const fieldset = document.createElement("fieldset");
   fieldset.className = "assessment-question";
   fieldset.dataset.itemId = item.id;
+  fieldset.tabIndex = -1;
   const legend = document.createElement("legend");
-  legend.innerHTML = `<span>第 ${index + 1}／2 題</span>${item.prompt}`;
+  const label = document.createElement("span");
+  label.textContent = `第 ${index + 1}／${total} 題・${COMPETENCY_LABELS[item.type] ?? "閱讀理解"}`;
+  legend.append(label, item.prompt);
   fieldset.append(legend);
 
   const options = document.createElement("div");
@@ -48,27 +57,52 @@ export function renderAssessment(
   wrapper.innerHTML = `
     <header class="assessment-header">
       <a href="#/read/${reading.id}">← 返回文章</a>
-      <p class="chapter-label">過關問答・不計速度</p>
-      <h1>帶回兩份文證</h1>
-      <p>先回答理解，再指出支持答案的段落。答錯可以回看並修正一次。</p>
+      <p class="chapter-label">讀完後想一想・不計速度</p>
+      <h1>用 3 題確認你讀懂了什麼</h1>
+      <p class="assessment-reading-title">${reading.title}</p>
+      <p>依序找重點、想意思、找證據。答錯可以回看並修正一次。</p>
     </header>
   `;
 
   const form = document.createElement("form");
+  const questions = [];
   reading.assessment.forEach((item, index) => {
-    form.append(createQuestion(item, index));
+    const question = createQuestion(item, index, reading.assessment.length);
+    questions.push(question);
+    form.append(question);
   });
 
   const error = document.createElement("p");
   error.className = "form-error";
   error.setAttribute("aria-live", "assertive");
-  form.append(error);
-
+  const navigation = document.createElement("div");
+  navigation.className = "assessment-navigation";
+  const previousButton = document.createElement("button");
+  previousButton.type = "button";
+  previousButton.textContent = "上一題";
+  const nextButton = document.createElement("button");
+  nextButton.type = "button";
+  nextButton.textContent = "下一題";
   const submitButton = document.createElement("button");
   submitButton.type = "submit";
   submitButton.className = "primary-action";
-  submitButton.textContent = "送出兩題";
-  form.append(submitButton);
+  submitButton.textContent = `送出 ${reading.assessment.length} 題`;
+  navigation.append(previousButton, nextButton, submitButton);
+  form.append(error, navigation);
+
+  const evidencePanel = document.createElement("section");
+  evidencePanel.className = "evidence-drawer";
+  evidencePanel.hidden = true;
+  evidencePanel.setAttribute("aria-live", "polite");
+  const evidenceHeading = document.createElement("h2");
+  const evidenceCopy = document.createElement("p");
+  const closeEvidence = document.createElement("button");
+  closeEvidence.type = "button";
+  closeEvidence.textContent = "回到題目";
+  closeEvidence.addEventListener("click", () => {
+    evidencePanel.hidden = true;
+  });
+  evidencePanel.append(evidenceHeading, evidenceCopy, closeEvidence);
 
   const completion = document.createElement("section");
   completion.className = "assessment-completion";
@@ -98,13 +132,51 @@ export function renderAssessment(
     itemIds: reading.assessment.map(({ id }) => id),
     submit: submitAnswers,
   });
+  let currentIndex = 0;
+  let revisionMode = false;
+
+  function showStep(index) {
+    currentIndex = Math.max(0, Math.min(index, questions.length - 1));
+    questions.forEach((question, questionIndex) => {
+      question.hidden = questionIndex !== currentIndex;
+    });
+    previousButton.hidden = currentIndex === 0 || revisionMode;
+    nextButton.hidden =
+      currentIndex === questions.length - 1 || revisionMode;
+    submitButton.hidden =
+      !revisionMode && currentIndex !== questions.length - 1;
+    const label = questions[currentIndex]?.querySelector("legend span");
+    if (label) label.setAttribute("aria-current", "step");
+  }
+
+  previousButton.addEventListener("click", () => {
+    error.textContent = "";
+    showStep(currentIndex - 1);
+  });
+  nextButton.addEventListener("click", () => {
+    const selected = questions[currentIndex].querySelector(
+      'input[type="radio"]:checked',
+    );
+    if (!selected) {
+      error.textContent = "請先選一個答案，再前往下一題。";
+      questions[currentIndex].focus();
+      return;
+    }
+    error.textContent = "";
+    showStep(currentIndex + 1);
+  });
+  showStep(0);
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     error.textContent = "";
     const data = new FormData(form);
     try {
-      for (const item of reading.assessment) {
+      for (const [index, item] of reading.assessment.entries()) {
+        if (!data.get(item.id)) {
+          showStep(index);
+          throw new Error("all items must be answered");
+        }
         session.answer(item.id, String(data.get(item.id) ?? ""));
       }
       const result = await session.submit();
@@ -124,32 +196,47 @@ export function renderAssessment(
         status.textContent = itemResult.correct ? "文證吻合" : "再找一次";
         const reason = document.createElement("p");
         reason.textContent = itemResult.rationale;
-        const evidence = document.createElement("a");
-        evidence.href = `#/read/${reading.id}?paragraph=${itemResult.evidenceSpan.paragraph}`;
-        evidence.textContent = `再看第${itemResult.evidenceSpan.paragraph}段`;
+        const evidence = document.createElement("button");
+        evidence.type = "button";
+        evidence.className = "evidence-link";
+        evidence.textContent = `查看第${itemResult.evidenceSpan.paragraph}段線索`;
+        evidence.addEventListener("click", () => {
+          const paragraph =
+            reading.body[itemResult.evidenceSpan.paragraph - 1];
+          evidenceHeading.textContent = `第 ${itemResult.evidenceSpan.paragraph} 段`;
+          evidenceCopy.textContent =
+            typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
+          evidencePanel.hidden = false;
+          evidencePanel.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
         feedback.append(status, reason, evidence);
       });
 
       if (result.canRevise) {
         const incorrect = result.results.find((item) => !item.correct);
         if (incorrect) {
-          error.textContent = "第一題還可以修正一次";
+          error.textContent = "尚有題目可以回看文章後修正一次";
           submitButton.textContent = "完成修正";
+          revisionMode = true;
+          showStep(
+            reading.assessment.findIndex(({ id }) => id === incorrect.id),
+          );
           return;
         }
       }
 
       for (const input of form.elements) input.disabled = true;
-      submitButton.hidden = true;
+      form.hidden = true;
+      evidencePanel.hidden = true;
       completion.hidden = false;
     } catch (cause) {
       error.textContent =
         cause.message === "all items must be answered"
-          ? "請先完成兩題，再送出答案。"
+          ? `請先完成 ${reading.assessment.length} 題，再送出答案。`
           : "作答暫時無法送出，答案仍保留在這一頁。";
     }
   });
 
-  wrapper.append(form, completion);
+  wrapper.append(form, evidencePanel, completion);
   container.append(wrapper);
 }
