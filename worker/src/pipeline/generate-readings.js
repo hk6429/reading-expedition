@@ -1,7 +1,10 @@
 import { GenerationError } from "./generation-provider.js";
 import { createBoundedPrompt } from "./prompt-boundary.js";
 import { evaluateContentProfile } from "./content-profile.js";
-import { compareDifficultyLevels } from "./reading-level.js";
+import {
+  compareDifficultyLevels,
+  measureReadingLevel,
+} from "./reading-level.js";
 
 const DIFFICULTIES = ["guided", "challenge"];
 
@@ -86,15 +89,21 @@ export async function generateReadings(
       lastValidationCode = validationCode;
       continue;
     }
-    const ordered = DIFFICULTIES.map((difficulty) =>
-      readings.find((item) => item.difficulty === difficulty),
-    );
+    const ordered = [...readings].sort((left, right) => {
+      const leftLevel = measureReadingLevel(left);
+      const rightLevel = measureReadingLevel(right);
+      return (
+        leftLevel.characters - rightLevel.characters ||
+        leftLevel.averageSentenceLength - rightLevel.averageSentenceLength
+      );
+    });
     if (!compareDifficultyLevels(ordered[0], ordered[1]).ok) {
       lastValidationCode = "reading_level_invalid";
       continue;
     }
-    return ordered.map((reading) => ({
+    return ordered.map((reading, index) => ({
       ...structuredClone(reading),
+      difficulty: DIFFICULTIES[index],
       factPackId: factPack.id,
     }));
   }

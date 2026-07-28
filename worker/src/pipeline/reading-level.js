@@ -25,10 +25,10 @@ export function compareDifficultyLevels(guided, challenge) {
   const guidedLevel = measureReadingLevel(guided);
   const challengeLevel = measureReadingLevel(challenge);
   const meaningfullyLonger =
-    challengeLevel.characters >= Math.ceil(guidedLevel.characters * 1.15);
+    challengeLevel.characters >= Math.ceil(guidedLevel.characters * 1.05);
   const sentenceLoadHigher =
     challengeLevel.averageSentenceLength >=
-    guidedLevel.averageSentenceLength + 2;
+    guidedLevel.averageSentenceLength + 1;
   const glossaryLoadHigher =
     challengeLevel.glossaryCount > guidedLevel.glossaryCount;
   return {

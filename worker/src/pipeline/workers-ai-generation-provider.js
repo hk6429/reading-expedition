@@ -197,8 +197,14 @@ export function createWorkersAiGenerationProvider({
           });
           return parseResponse(result);
         } catch (error) {
-          if (error instanceof GenerationError) throw error;
+          if (
+            error instanceof GenerationError &&
+            error.code !== "generation_format_invalid"
+          ) {
+            throw error;
+          }
           if (attempt === retries) {
+            if (error instanceof GenerationError) throw error;
             throw new GenerationError(
               "generation_provider_error",
               "Workers AI generation failed",
