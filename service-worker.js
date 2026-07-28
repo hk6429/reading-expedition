@@ -1,4 +1,5 @@
-const VERSION = "reading-expedition-v5";
+const VERSION = "reading-expedition-v6";
+const CACHE_PREFIX = "reading-expedition-";
 const SHELL = [
   "/",
   "/index.html",
@@ -13,13 +14,22 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(keys.filter((key) => key !== VERSION).map((key) => caches.delete(key))),
-      ),
+    (async () => {
+      const keys = await caches.keys();
+      const staleKeys = keys.filter(
+        (key) => key.startsWith(CACHE_PREFIX) && key !== VERSION,
+      );
+      await Promise.all(staleKeys.map((key) => caches.delete(key)));
+      await self.clients.claim();
+
+      if (staleKeys.length) {
+        const clients = await self.clients.matchAll({ type: "window" });
+        await Promise.all(
+          clients.map((client) => client.navigate(client.url)),
+        );
+      }
+    })(),
   );
-  self.clients.claim();
 });
 
 function isReadingRequest(url) {
@@ -27,6 +37,36 @@ function isReadingRequest(url) {
     url.pathname === "/api/v1/daily" ||
     /^\/api\/v1\/readings\/[a-zA-Z0-9-]+$/.test(url.pathname)
   );
+}
+
+function isAppShellRequest(request, url) {
+  return (
+    request.mode === "navigate" ||
+    url.pathname === "/" ||
+    url.pathname === "/index.html" ||
+    url.pathname === "/styles.css" ||
+    url.pathname.startsWith("/src/")
+  );
+}
+
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(VERSION);
+      await cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    const cached = await caches.match(request);
+    return (
+      cached ??
+      new Response("目前離線，且這個畫面尚未下載。", {
+        status: 503,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      })
+    );
+  }
 }
 
 self.addEventListener("fetch", (event) => {
@@ -62,6 +102,11 @@ self.addEventListener("fetch", (event) => {
           );
         }),
     );
+    return;
+  }
+
+  if (isAppShellRequest(event.request, url)) {
+    event.respondWith(networkFirst(event.request));
     return;
   }
 
