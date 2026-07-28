@@ -77,6 +77,32 @@ test("每題有唯一答案、干擾理由及發布文本內的文證", async ()
   assert.equal(items[0].evidenceSpan.text, "海水受熱會膨脹");
 });
 
+test("模型提供錯誤文證座標時，以發布正文的逐字位置重新定位", async () => {
+  const provider = {
+    async generate() {
+      return {
+        items: ["comprehension", "inference", "evidence"].map((type) =>
+          item(type, `${type}題`, `${type}答案`, {
+            paragraph: 9,
+            start: 99,
+            end: 120,
+            text: "陸地冰融化",
+          }),
+        ),
+      };
+    },
+  };
+
+  const items = await generateAssessments(provider, reading);
+
+  assert.deepEqual(items[0].evidenceSpan, {
+    paragraph: 1,
+    start: 8,
+    end: 13,
+    text: "陸地冰融化",
+  });
+});
+
 test("空白題幹、空白解析或套版干擾理由會被拒絕", async () => {
   const provider = {
     async generate() {

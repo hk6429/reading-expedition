@@ -11,6 +11,60 @@ function schemaError() {
   );
 }
 
+function paragraphText(paragraph) {
+  return typeof paragraph === "string" ? paragraph : paragraph?.text;
+}
+
+function normalizeItem(item, reading) {
+  const options = Array.isArray(item?.options)
+    ? item.options.map((option) =>
+        typeof option === "string" ? option.trim() : option,
+      )
+    : item?.options;
+  const reasons = Object.fromEntries(
+    Object.entries(item?.distractorReasons ?? {}).map(([option, reason]) => [
+      option.trim(),
+      typeof reason === "string" ? reason.trim() : reason,
+    ]),
+  );
+  const evidenceText =
+    typeof item?.evidenceSpan?.text === "string"
+      ? item.evidenceSpan.text.trim()
+      : "";
+  let paragraphIndex = Number.isInteger(item?.evidenceSpan?.paragraph)
+    ? item.evidenceSpan.paragraph - 1
+    : -1;
+  let paragraph = paragraphText(reading.body[paragraphIndex]);
+  let start = paragraph?.indexOf(evidenceText) ?? -1;
+  if (start < 0 && evidenceText) {
+    paragraphIndex = reading.body.findIndex((candidate) =>
+      paragraphText(candidate)?.includes(evidenceText),
+    );
+    paragraph = paragraphText(reading.body[paragraphIndex]);
+    start = paragraph?.indexOf(evidenceText) ?? -1;
+  }
+  return {
+    ...item,
+    prompt: typeof item?.prompt === "string" ? item.prompt.trim() : item?.prompt,
+    options,
+    correctAnswer:
+      typeof item?.correctAnswer === "string"
+        ? item.correctAnswer.trim()
+        : item?.correctAnswer,
+    rationale:
+      typeof item?.rationale === "string"
+        ? item.rationale.trim()
+        : item?.rationale,
+    distractorReasons: reasons,
+    evidenceSpan: {
+      paragraph: paragraphIndex + 1,
+      start,
+      end: start < 0 ? -1 : start + evidenceText.length,
+      text: evidenceText,
+    },
+  };
+}
+
 function validateItem(item, reading) {
   const normalizedOptions = Array.isArray(item?.options)
     ? item.options.map((option) =>
@@ -81,19 +135,22 @@ export async function generateAssessments(provider, reading, factPack = null) {
         "固定三題，能力依序為擷取與理解、比較統整與推論、文證判讀與評鑑。",
         "每題固定四個選項，只有一個正確或最佳答案。",
         "干擾選項須分別對應常見誤讀、過度推論、局部訊息或因果倒置，不得荒謬到可直接排除。",
-        "每題都須提供 rationale、每個錯誤選項的 distractorReasons，以及正文內可逐字對應的 evidenceSpan。",
+        "每題都須提供 rationale、每個錯誤選項的 distractorReasons，以及正文內可逐字對應的 evidenceSpan；文證請摘錄 8 到 30 個連續字元，不得改寫。",
         "不得考來源以外的冷知識，也不得只靠題幹常識作答。",
         "題目語氣參考會考與學測的閱讀歷程，但不得複製歷屆題目文字。",
       ],
     }),
   );
+  const items = Array.isArray(result?.items)
+    ? result.items.map((item) => normalizeItem(item, reading))
+    : null;
   if (
-    !Array.isArray(result?.items) ||
-    result.items.length !== ITEM_TYPES.length ||
-    result.items.some((item, index) => item.type !== ITEM_TYPES[index]) ||
-    !result.items.every((item) => validateItem(item, reading))
+    !items ||
+    items.length !== ITEM_TYPES.length ||
+    items.some((item, index) => item.type !== ITEM_TYPES[index]) ||
+    !items.every((item) => validateItem(item, reading))
   ) {
     throw schemaError();
   }
-  return structuredClone(result.items);
+  return structuredClone(items);
 }
