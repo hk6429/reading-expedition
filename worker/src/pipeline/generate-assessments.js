@@ -74,6 +74,27 @@ function normalizeReasons(rawReasons, options, correctAnswer) {
   );
 }
 
+function ensureDistinctDistractorReasons(reasons, options, correctAnswer) {
+  const distractors = options.filter((option) => option !== correctAnswer);
+  const current = distractors.map((option) => reasons[option]);
+  if (
+    current.every(
+      (reason) => typeof reason === "string" && reason.trim().length > 0,
+    ) &&
+    new Set(current.map((reason) => reason.trim())).size === distractors.length
+  ) {
+    return reasons;
+  }
+  const fallbacks = [
+    "這個選項只抓到局部訊息，沒有完整回應題幹。",
+    "這個選項加入正文沒有提供的推論，文證不足。",
+    "這個選項混淆因果、先後或比較關係，與原文脈絡不符。",
+  ];
+  return Object.fromEntries(
+    distractors.map((option, index) => [option, fallbacks[index]]),
+  );
+}
+
 function normalizeItem(item, reading) {
   const options = Array.isArray(item?.options)
     ? item.options.map((option) =>
@@ -83,8 +104,8 @@ function normalizeItem(item, reading) {
   const correctAnswer = Number.isInteger(item?.correctIndex)
     ? options?.[item.correctIndex]
     : normalizeCorrectAnswer(item?.correctAnswer, options ?? []);
-  const reasons = normalizeReasons(
-    item?.distractorReasons,
+  const reasons = ensureDistinctDistractorReasons(
+    normalizeReasons(item?.distractorReasons, options ?? [], correctAnswer),
     options ?? [],
     correctAnswer,
   );
@@ -195,6 +216,7 @@ export async function generateAssessments(provider, reading, factPack = null) {
         "每題固定四個選項，只有一個正確或最佳答案。",
         "correctIndex 必須是正確選項的零起算位置，不另輸出 correctAnswer。",
         "干擾選項須分別對應常見誤讀、過度推論、局部訊息或因果倒置，不得荒謬到可直接排除。",
+        "扣除正解後，三個錯誤選項依出現順序固定設計為：局部訊息、過度推論、因果或關係倒置。",
         "distractorReasons 依四個選項順序排列；正解位置也要寫明成立原因，另外三則錯誤理由不可重複。",
         "每題都須提供 rationale、每個錯誤選項的 distractorReasons，以及正文內可逐字對應的 evidenceSpan；文證請摘錄 8 到 30 個連續字元，不得改寫。",
         "不得考來源以外的冷知識，也不得只靠題幹常識作答。",

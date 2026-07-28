@@ -190,6 +190,35 @@ test("模型以正解索引與四格理由陣列輸出時，轉為學生題組�
   );
 });
 
+test("模型重複干擾理由時，以三種固定誤讀診斷補正", async () => {
+  const provider = {
+    async generate() {
+      return {
+        items: ["comprehension", "inference", "evidence"].map((type) => {
+          const generated = item(type, `${type}題`, `${type}答案`, {
+            paragraph: 1,
+            start: 0,
+            end: 7,
+            text: "海水受熱會膨脹",
+          });
+          generated.distractorReasons = Object.fromEntries(
+            generated.options.slice(1).map((option) => [option, "理由相同"]),
+          );
+          return generated;
+        }),
+      };
+    },
+  };
+
+  const items = await generateAssessments(provider, reading);
+  const reasons = Object.values(items[0].distractorReasons);
+
+  assert.equal(new Set(reasons).size, 3);
+  assert.match(reasons[0], /局部訊息/);
+  assert.match(reasons[1], /文證不足/);
+  assert.match(reasons[2], /因果/);
+});
+
 test("空白題幹、空白解析或套版干擾理由會被拒絕", async () => {
   const provider = {
     async generate() {
