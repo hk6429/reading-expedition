@@ -82,7 +82,16 @@ export function renderAssessment(
   cityButton.type = "button";
   cityButton.className = "primary-action";
   cityButton.textContent = "把知識帶回浮城";
-  cityButton.addEventListener("click", onComplete);
+  let firstResults = null;
+  let latestResults = null;
+  let latestAttempt = 0;
+  cityButton.addEventListener("click", () => {
+    onComplete({
+      firstResults,
+      finalResults: latestResults,
+      attempt: latestAttempt,
+    });
+  });
   completion.append(completionTitle, completionCopy, cityButton);
 
   const session = createAssessmentSession({
@@ -99,6 +108,9 @@ export function renderAssessment(
         session.answer(item.id, String(data.get(item.id) ?? ""));
       }
       const result = await session.submit();
+      firstResults ??= result.results;
+      latestResults = result.results;
+      latestAttempt = result.attempt;
       result.results.forEach((itemResult) => {
         const fieldset = form.querySelector(
           `[data-item-id="${itemResult.id}"]`,

@@ -4,10 +4,14 @@ import { demoReadingsById } from "./data/demo-readings.js";
 import {
   gradeAssessment,
 } from "./domain/assessment-session.js";
+import {
+  rewardVerifiedReading,
+} from "./domain/city.js";
 import { createAnonymousDeviceId } from "./domain/device-identity.js";
 import { createReadingSession } from "./domain/reading-session.js";
 import { createLocalStore } from "./storage/local-store.js";
 import { renderAssessment } from "./ui/assessment-view.js";
+import { renderCityInvest } from "./ui/city-view.js";
 import { renderHome } from "./ui/home-view.js";
 import { renderReading } from "./ui/reading-view.js";
 import { createRouter } from "./ui/router.js";
@@ -61,6 +65,15 @@ async function submitAssessment(reading, answers) {
   }
 }
 
+function taipeiToday() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
 const router = createRouter({
   async onHome() {
     renderHome(main, await loadDaily());
@@ -92,9 +105,44 @@ const router = createRouter({
     }
     renderAssessment(main, reading, {
       submitAnswers: (answers) => submitAssessment(reading, answers),
-      onComplete: () => {
+      onComplete: ({ firstResults, finalResults }) => {
+        const date = taipeiToday();
+        const previous = state.completedReadings[reading.id];
+        const repeatedSameDay = previous?.date === date;
+        const firstCorrect = firstResults.filter(({ correct }) => correct).length;
+        const revisedCount = firstResults.filter(
+          (item, index) => !item.correct && finalResults[index]?.correct,
+        ).length;
+        const reward = rewardVerifiedReading({
+          completed: true,
+          evidenceSubmitted: true,
+          correctCount: firstCorrect,
+          revisedCount,
+          repeatedSameDay,
+        });
+        state.city.materials.inkBricks += reward.inkBricks;
+        state.completedReadings[reading.id] = {
+          date,
+          version: reading.version,
+          reward: reward.inkBricks,
+          evidenceSubmitted: true,
+        };
+        store.save(state);
         window.location.hash = `#/city/invest/${reading.id}`;
       },
+    });
+  },
+  async onCityInvest(id) {
+    const completion = state.completedReadings[id];
+    if (!completion) {
+      window.location.hash = `#/read/${id}`;
+      return;
+    }
+    renderCityInvest(main, state, {
+      readingId: id,
+      earnedInkBricks: completion.reward,
+      date: completion.date,
+      saveState: (next) => store.save(next),
     });
   },
 });
