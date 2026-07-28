@@ -76,10 +76,12 @@ test("夜讀模式返回或重載首頁時，標題與航線仍有足夠對比",
   page,
 }) => {
   await page.goto("/#/read/water-sharing-guided-v1");
+  await expect(page.locator(".reading-controls")).toBeVisible();
   const nightButton = page.getByRole("button", { name: "夜讀" });
   if (!(await nightButton.isVisible())) {
     await page.getByRole("button", { name: "顯示設定" }).click();
   }
+  await expect(nightButton).toBeVisible();
   await nightButton.click();
   await page.getByRole("link", { name: "返回三條航線" }).click();
 
