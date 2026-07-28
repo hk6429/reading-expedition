@@ -1,4 +1,4 @@
-const VERSION = "reading-expedition-v1";
+const VERSION = "reading-expedition-v2";
 const SHELL = [
   "/",
   "/index.html",
