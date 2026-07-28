@@ -2,6 +2,7 @@ const CATEGORIES = new Set(["world", "science", "humanities"]);
 const SKILLS = new Set(["comprehension", "inference", "evidence"]);
 const CONTRIBUTION_KEYS = new Set([
   "validReading",
+  "contentId",
   "category",
   "skill",
   "period",
@@ -15,6 +16,8 @@ export function createClassContribution(input) {
   }
   if (
     input.validReading !== true ||
+    typeof input.contentId !== "string" ||
+    !/^[A-Za-z0-9-]{1,120}$/.test(input.contentId) ||
     !CATEGORIES.has(input.category) ||
     !SKILLS.has(input.skill) ||
     !/^\d{4}-W\d{2}$/.test(input.period)

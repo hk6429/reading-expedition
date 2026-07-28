@@ -11,6 +11,7 @@ import { createAnonymousDeviceId } from "./domain/device-identity.js";
 import { createReadingSession } from "./domain/reading-session.js";
 import { createLocalStore } from "./storage/local-store.js";
 import { createSyncQueue } from "./storage/sync-queue.js";
+import { createClassContributionQueue } from "./storage/class-contribution-queue.js";
 import { renderAssessment } from "./ui/assessment-view.js";
 import { renderCityInvest } from "./ui/city-view.js";
 import { renderHome } from "./ui/home-view.js";
@@ -33,6 +34,14 @@ const state = store.load();
 store.save(state);
 const session = createReadingSession(state, (next) => store.save(next));
 const syncQueue = createSyncQueue(window.localStorage);
+const classContributionQueue = createClassContributionQueue(window.localStorage);
+const CLASS_TOKEN_KEY = "reading-expedition.class-token";
+
+function setPublicCounterVisible(visible) {
+  document.documentElement.dataset.publicCounter = visible ? "show" : "hide";
+  const counter = document.getElementById("danai-public-counter");
+  if (counter) counter.style.display = visible ? "" : "none";
+}
 
 function durationBucket(reading) {
   if (reading.readingMinutes <= 5) return "1-5m";
@@ -68,8 +77,43 @@ async function flushEvents() {
   });
 }
 
-window.addEventListener("online", () => flushEvents());
+async function flushClassContributions() {
+  const token = window.localStorage.getItem(CLASS_TOKEN_KEY);
+  if (!token) return;
+  await classContributionQueue.flush(async (contribution) => {
+    const response = await fetch("/api/v1/classrooms/contribute", {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(contribution),
+    });
+    if (response.status === 401) {
+      window.localStorage.removeItem(CLASS_TOKEN_KEY);
+      classContributionQueue.clear();
+      return true;
+    }
+    return response.ok;
+  });
+}
+
+function isoWeekKey(dateString) {
+  const date = new Date(`${dateString}T00:00:00Z`);
+  const day = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - day);
+  const year = date.getUTCFullYear();
+  const yearStart = new Date(Date.UTC(year, 0, 1));
+  const week = Math.ceil(((date - yearStart) / 86_400_000 + 1) / 7);
+  return `${year}-W${String(week).padStart(2, "0")}`;
+}
+
+window.addEventListener("online", () => {
+  flushEvents();
+  flushClassContributions();
+});
 flushEvents();
+flushClassContributions();
 
 async function loadDaily() {
   try {
@@ -123,9 +167,11 @@ function taipeiToday() {
 
 const router = createRouter({
   async onHome() {
+    setPublicCounterVisible(true);
     renderHome(main, await loadDaily(), state.completedReadings);
   },
   async onRead(id) {
+    setPublicCounterVisible(false);
     const reading = await loadReading(id);
     if (!reading) {
       main.innerHTML = `
@@ -146,6 +192,7 @@ const router = createRouter({
     });
   },
   async onQuiz(id) {
+    setPublicCounterVisible(false);
     const reading = await loadReading(id);
     if (!reading) {
       window.location.hash = "#/";
@@ -182,13 +229,27 @@ const router = createRouter({
         queueEvent("reading_completed", reading);
         queueEvent("evidence_located", reading);
         if (revisedCount > 0) queueEvent("answer_revised", reading);
+        if (
+          !repeatedSameDay &&
+          window.localStorage.getItem(CLASS_TOKEN_KEY)
+        ) {
+          classContributionQueue.enqueue({
+            validReading: true,
+            contentId: reading.id,
+            category: reading.category,
+            skill: "evidence",
+            period: isoWeekKey(date),
+          });
+        }
         store.save(state);
         flushEvents();
+        flushClassContributions();
         window.location.hash = `#/city/invest/${reading.id}`;
       },
     });
   },
   async onCityInvest(id) {
+    setPublicCounterVisible(false);
     const completion = state.completedReadings[id];
     if (!completion) {
       window.location.hash = `#/read/${id}`;
@@ -201,14 +262,19 @@ const router = createRouter({
       saveState: (next) => store.save(next),
     });
   },
-  async onTeacher() {
-    await renderReviewConsole(main);
+  async onTeacher(view) {
+    setPublicCounterVisible(false);
+    await renderReviewConsole(main, { initialView: view });
   },
   async onGuide() {
+    setPublicCounterVisible(true);
     renderUsageGuide(main);
   },
   async onClass() {
-    await renderClassView(main);
+    setPublicCounterVisible(false);
+    await renderClassView(main, {
+      contributionQueue: classContributionQueue,
+    });
   },
 });
 

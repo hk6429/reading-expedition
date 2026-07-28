@@ -4,14 +4,21 @@ import test from "node:test";
 
 const projectRoot = new URL("../../", import.meta.url);
 
-test("D1 migration 鎖住來源、發布版本、文體與稽核事件", async () => {
-  const [contentSql, reviewSql, classSql, textTypeSql] = await Promise.all([
+test("D1 migration 鎖住來源、發布版本、文體、稽核事件與班級去重", async () => {
+  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql] = await Promise.all([
     readFile(new URL("migrations/0001_content.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0002_review.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0003_class_aggregate.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0006_reading_text_type.sql", projectRoot), "utf8"),
+    readFile(
+      new URL(
+        "migrations/0007_classroom_contribution_idempotency.sql",
+        projectRoot,
+      ),
+      "utf8",
+    ),
   ]);
-  const sql = `${contentSql}\n${reviewSql}\n${classSql}\n${textTypeSql}`;
+  const sql = `${contentSql}\n${reviewSql}\n${classSql}\n${textTypeSql}\n${classDedupeSql}`;
 
   for (const table of [
     "sources",
@@ -38,5 +45,10 @@ test("D1 migration 鎖住來源、發布版本、文體與稽核事件", async (
   assert.match(
     textTypeSql,
     /CHECK \(text_type IN \('vernacular', 'classical'\)\)/,
+  );
+  assert.match(classDedupeSql, /ADD COLUMN content_id/);
+  assert.match(
+    classDedupeSql,
+    /classroom_id,\s*participant_id,\s*content_id/,
   );
 });

@@ -10,16 +10,25 @@ export async function renderClassView(
   {
     request = fetch,
     storage = window.localStorage,
+    contributionQueue = null,
+    confirmAction = (message) => window.confirm(message),
   } = {},
 ) {
   let token = storage.getItem("reading-expedition.class-token");
 
-  async function showLandmark() {
-    const response = await request("/api/v1/classrooms/landmark", {
-      headers: { authorization: `Bearer ${token}` },
-    });
+  async function showLandmark(message = "") {
+    let response;
+    try {
+      response = await request("/api/v1/classrooms/landmark", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+    } catch {
+      showJoin("目前無法連線班級，請確認網路後再試。");
+      return;
+    }
     if (!response.ok) {
       storage.removeItem("reading-expedition.class-token");
+      contributionQueue?.clear();
       token = null;
       showJoin("參與權杖已到期，請重新輸入班級碼。");
       return;
@@ -37,43 +46,90 @@ export async function renderClassView(
             ? `<p>目前人數尚未達 ${aggregate.participantThreshold} 人，只顯示共同地標，不顯示細分統計。</p>`
             : `<p>匿名參與 ${aggregate.anonymousParticipants} 人，共完成 ${aggregate.validReadings} 次有效閱讀。</p>`
         }
-        <p class="privacy-note">這裡沒有排行榜、個人貢獻、姓名、自由聊天或公開個人頁。</p>
+        <p class="class-success">${escapeHtml(message || "你已匿名加入。完成任一篇有效閱讀，就會替全班共同地標增加進度。")}</p>
+        <p class="privacy-note">只會同步有效閱讀的類別與能力，不會上傳答案文字。這裡沒有排行榜、個人貢獻、姓名、自由聊天或公開個人頁。</p>
         <a href="#/">回到今日航線</a>
+        <button class="class-leave" type="button" data-leave-class>離開／更換班級</button>
       </section>
     `;
+    root.querySelector("[data-leave-class]").addEventListener("click", () => {
+      if (!confirmAction("確定離開目前班級嗎？你的個人閱讀與城市成果會保留。")) {
+        return;
+      }
+      storage.removeItem("reading-expedition.class-token");
+      contributionQueue?.clear();
+      token = null;
+      showJoin("已離開班級，可輸入新的 8 碼班級碼。");
+    });
   }
 
-  function showJoin(message = "") {
+  function showJoin(message = "", value = "") {
     root.innerHTML = `
       <section class="class-shell paper-panel">
         <p class="chapter-label">聚義共建・匿名加入</p>
         <h1>輸入班級碼</h1>
         <p>班級只共建一座地標，不顯示誰做得多，也不會上傳你的答案文字。</p>
         <form data-class-join>
-          <label>八碼班級碼
-            <input name="classCode" inputmode="text" minlength="8" maxlength="8" autocomplete="off" required>
-          </label>
+          <label for="class-code">8 碼班級碼</label>
+          <input id="class-code" name="classCode" value="${escapeHtml(value)}" inputmode="text" minlength="8" maxlength="11" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="class-code-help class-join-message" required>
+          <p id="class-code-help" class="class-code-help">可直接貼上，空格與連字號會自動移除。</p>
+          <p id="class-join-message" class="form-message" data-class-join-message role="status">${escapeHtml(message)}</p>
           <button class="primary-action" type="submit">加入共同地標</button>
         </form>
-        <p class="form-message" role="status">${escapeHtml(message)}</p>
       </section>
     `;
-    root.querySelector("[data-class-join]").addEventListener("submit", async (event) => {
+    const form = root.querySelector("[data-class-join]");
+    const input = form.elements.classCode;
+    const status = root.querySelector("[data-class-join-message]");
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const classCode = new FormData(event.currentTarget).get("classCode");
-      const response = await request("/api/v1/classrooms/join", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ classCode }),
-      });
-      if (!response.ok) {
-        showJoin("班級碼無效或已到期。");
+      const classCode = String(input.value)
+        .replace(/[\s-]+/g, "")
+        .toUpperCase();
+      input.value = classCode;
+      if (!/^[A-Z2-9]{8}$/.test(classCode)) {
+        input.setAttribute("aria-invalid", "true");
+        status.textContent = "請輸入老師提供的 8 碼班級碼。";
+        input.focus();
         return;
       }
-      const payload = await response.json();
-      token = payload.participantToken;
-      storage.setItem("reading-expedition.class-token", token);
-      await showLandmark();
+      input.removeAttribute("aria-invalid");
+      const button = form.querySelector("button");
+      button.disabled = true;
+      button.textContent = "正在加入…";
+      form.setAttribute("aria-busy", "true");
+      try {
+        const response = await request("/api/v1/classrooms/join", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ classCode }),
+        });
+        if (!response.ok) {
+          input.setAttribute("aria-invalid", "true");
+          status.textContent =
+            response.status === 404 || response.status === 410
+              ? "班級碼無效或已到期，請向老師確認。"
+              : response.status === 429
+                ? "嘗試次數過多，請稍後再試。"
+                : "班級暫時無法加入，請稍後重試。";
+          input.focus();
+          return;
+        }
+        const payload = await response.json();
+        token = payload.participantToken;
+        contributionQueue?.clear();
+        storage.setItem("reading-expedition.class-token", token);
+        await showLandmark("你已匿名加入班級。完成一篇閱讀，就能參與共同地標。");
+      } catch {
+        status.textContent = "目前無法連線，班級碼尚未送出，請確認網路後重試。";
+        input.focus();
+      } finally {
+        if (button.isConnected) {
+          button.disabled = false;
+          button.textContent = "加入共同地標";
+          form.removeAttribute("aria-busy");
+        }
+      }
     });
   }
 

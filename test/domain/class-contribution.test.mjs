@@ -6,16 +6,18 @@ import {
   createStructuredHint,
 } from "../../src/domain/class-contribution.js";
 
-test("班級只同步有效閱讀、類別、能力與日期區間", () => {
+test("班級只同步內容識別、有效閱讀、類別、能力與日期區間", () => {
   assert.deepEqual(
     createClassContribution({
       validReading: true,
+      contentId: "water-sharing-guided-v1",
       category: "science",
       skill: "evidence",
       period: "2026-W31",
     }),
     {
       validReading: true,
+      contentId: "water-sharing-guided-v1",
       category: "science",
       skill: "evidence",
       period: "2026-W31",
@@ -25,6 +27,7 @@ test("班級只同步有效閱讀、類別、能力與日期區間", () => {
     () =>
       createClassContribution({
         validReading: true,
+        contentId: "water-sharing-guided-v1",
         category: "science",
         skill: "evidence",
         period: "2026-W31",

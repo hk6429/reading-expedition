@@ -9,7 +9,11 @@ export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onGuide, on
       return;
     }
     if (window.location.hash.startsWith("#/teacher")) {
-      if (onTeacher) await onTeacher();
+      if (onTeacher) {
+        await onTeacher(
+          window.location.hash === "#/teacher/classes" ? "classes" : "review",
+        );
+      }
       return;
     }
     const cityMatch = /^#\/city\/invest\/([a-zA-Z0-9-]+)$/.exec(

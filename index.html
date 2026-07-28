@@ -14,11 +14,15 @@
     <a class="skip-link" href="#main-content">跳至主要內容</a>
     <div id="app">
       <header class="site-header" aria-label="網站標題">
-        <a class="eyebrow" href="#/">梁山閱征記</a>
-        <p class="wordmark">萬卷浮城</p>
-        <a class="teacher-entry" href="#/guide">師生使用說明</a>
-        <a class="teacher-entry" href="#/class">班級共建</a>
-        <a class="teacher-entry" href="#/teacher">教師校閱</a>
+        <a class="brand-lockup" href="#/" aria-label="萬卷浮城首頁">
+          <span class="eyebrow">梁山閱征記</span>
+          <span class="wordmark">萬卷浮城</span>
+        </a>
+        <nav class="site-nav" aria-label="主要功能">
+          <a class="teacher-entry" href="#/guide" aria-label="師生使用說明">使用說明</a>
+          <a class="teacher-entry" href="#/class" aria-label="學生加入班級">學生加入</a>
+          <a class="teacher-entry" href="#/teacher" aria-label="教師登入與管理">教師登入</a>
+        </nav>
       </header>
       <main id="main-content">
         <section class="paper-panel" aria-labelledby="welcome-title">
@@ -42,6 +46,15 @@
         counterScript.src =
           "https://self-learning-orbit.pages.dev/platform-counter.js";
         counterScript.dataset.site = "reading-expedition";
+        counterScript.addEventListener("load", () => {
+          const counter = document.getElementById("danai-public-counter");
+          if (
+            counter &&
+            document.documentElement.dataset.publicCounter === "hide"
+          ) {
+            counter.style.display = "none";
+          }
+        });
         document.body.append(counterScript);
       }
     </script>

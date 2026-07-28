@@ -1,6 +1,17 @@
 import { expect, test } from "@playwright/test";
 
 test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) => {
+  const contributions = [];
+  await page.addInitScript(() => {
+    localStorage.setItem("reading-expedition.class-token", "a".repeat(43));
+  });
+  await page.route("**/api/v1/classrooms/contribute", async (route) => {
+    contributions.push({
+      authorization: route.request().headers().authorization,
+      body: route.request().postDataJSON(),
+    });
+    await route.fulfill({ status: 202, body: "" });
+  });
   await page.goto("/");
 
   const worldCard = page.getByRole("article").filter({ hasText: "四海航線" });
@@ -31,6 +42,16 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
     .check();
   await page.getByRole("button", { name: "完成修正" }).click();
   await page.getByRole("button", { name: "把知識帶回浮城" }).click();
+  await expect.poll(() => contributions.length).toBe(1);
+  expect(contributions[0]).toMatchObject({
+    authorization: `Bearer ${"a".repeat(43)}`,
+    body: {
+      validReading: true,
+      contentId: "water-sharing-guided-v1",
+      category: "world",
+      skill: "evidence",
+    },
+  });
 
   await page
     .getByRole("button", { name: /投入天下驛站/ })

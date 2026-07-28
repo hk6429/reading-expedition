@@ -81,9 +81,27 @@ export function createApi({
         if (
           classroomApi &&
           url.pathname === "/api/v1/teacher/classrooms" &&
+          request.method === "GET"
+        ) {
+          return classroomApi.list();
+        }
+        if (
+          classroomApi &&
+          url.pathname === "/api/v1/teacher/classrooms" &&
           request.method === "POST"
         ) {
           return classroomApi.create(authorization.sessionId);
+        }
+        const classroomMatch =
+          /^\/api\/v1\/teacher\/classrooms\/([a-zA-Z0-9-]+)$/.exec(
+            url.pathname,
+          );
+        if (
+          classroomApi &&
+          classroomMatch &&
+          request.method === "DELETE"
+        ) {
+          return classroomApi.revoke(classroomMatch[1]);
         }
         if (
           reviewApi &&

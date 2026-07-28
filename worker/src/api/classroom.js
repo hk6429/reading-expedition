@@ -47,8 +47,49 @@ export function createClassroomApi({
       };
       await repository.createClassroom(record);
       return jsonResponse(
-        { classCode, expiresAt: record.expiresAt },
+        {
+          id: record.id,
+          classCode,
+          createdAt: record.createdAt,
+          expiresAt: record.expiresAt,
+        },
         { status: 201, headers: { "cache-control": "no-store" } },
+      );
+    },
+
+    async list() {
+      const classrooms = await repository.listClassrooms();
+      return jsonResponse(
+        { classrooms },
+        { headers: { "cache-control": "no-store" } },
+      );
+    },
+
+    async revoke(classroomId) {
+      if (
+        typeof classroomId !== "string" ||
+        !/^[A-Za-z0-9-]{1,80}$/.test(classroomId)
+      ) {
+        return errorResponse(
+          "classroom_not_found",
+          "找不到指定班級。",
+          404,
+          crypto.randomUUID(),
+        );
+      }
+      const revokedAt = clock().toISOString();
+      const revoked = await repository.revokeClassroom(classroomId, revokedAt);
+      if (!revoked) {
+        return errorResponse(
+          "classroom_not_found",
+          "找不到指定班級，或班級已停用。",
+          404,
+          crypto.randomUUID(),
+        );
+      }
+      return jsonResponse(
+        { ok: true, revokedAt },
+        { headers: { "cache-control": "no-store" } },
       );
     },
 

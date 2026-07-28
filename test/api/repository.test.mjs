@@ -105,3 +105,54 @@ test("repository 只取得已發布文章的正文與題目", async () => {
   assert.deepEqual(calls[0].bindings, ["water-001-guided"]);
   assert.deepEqual(calls[1].bindings, ["water-001-guided"]);
 });
+
+test("repository 列出匿名班級統計並同步停用班級與權杖", async () => {
+  const calls = [];
+  const batches = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async all() {
+          return {
+            results: [
+              {
+                id: "class-001",
+                created_at: "2026-07-28T00:00:00Z",
+                expires_at: "2027-01-24T00:00:00Z",
+                revoked_at: null,
+                anonymous_participants: 6,
+                valid_readings: 18,
+              },
+            ],
+          };
+        },
+      };
+    },
+    async batch(statements) {
+      batches.push(statements);
+      return [{ meta: { changes: 1 } }, { meta: { changes: 3 } }];
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const classrooms = await repository.listClassrooms();
+  const revoked = await repository.revokeClassroom(
+    "class-001",
+    "2026-07-28T01:00:00Z",
+  );
+
+  assert.equal(classrooms[0].anonymousParticipants, 6);
+  assert.equal(classrooms[0].validReadings, 18);
+  assert.equal("classCode" in classrooms[0], false);
+  assert.equal(revoked, true);
+  assert.match(calls[0].sql, /LEFT JOIN classroom_contributions/);
+  assert.match(calls[1].sql, /UPDATE classrooms/);
+  assert.match(calls[2].sql, /UPDATE classroom_tokens/);
+  assert.equal(batches[0].length, 2);
+});

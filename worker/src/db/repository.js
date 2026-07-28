@@ -150,6 +150,51 @@ export function createReadingRepository(db) {
         )
         .run();
     },
+    async listClassrooms() {
+      const result = await db
+        .prepare(
+          `SELECT
+             c.id,
+             c.created_at,
+             c.expires_at,
+             c.revoked_at,
+             COUNT(DISTINCT cc.participant_id) AS anonymous_participants,
+             COUNT(cc.id) AS valid_readings
+           FROM classrooms c
+           LEFT JOIN classroom_contributions cc
+             ON cc.classroom_id = c.id
+           GROUP BY c.id, c.created_at, c.expires_at, c.revoked_at
+           ORDER BY c.created_at DESC`,
+        )
+        .all();
+      return (result.results ?? []).map((row) => ({
+        id: row.id,
+        createdAt: row.created_at,
+        expiresAt: row.expires_at,
+        revokedAt: row.revoked_at,
+        anonymousParticipants: Number(row.anonymous_participants) || 0,
+        validReadings: Number(row.valid_readings) || 0,
+      }));
+    },
+    async revokeClassroom(classroomId, revokedAt) {
+      const results = await db.batch([
+        db
+          .prepare(
+            `UPDATE classrooms
+             SET revoked_at = ?
+             WHERE id = ? AND revoked_at IS NULL`,
+          )
+          .bind(revokedAt, classroomId),
+        db
+          .prepare(
+            `UPDATE classroom_tokens
+             SET revoked_at = ?
+             WHERE classroom_id = ? AND revoked_at IS NULL`,
+          )
+          .bind(revokedAt, classroomId),
+      ]);
+      return Number(results[0]?.meta?.changes) > 0;
+    },
     async findClassroomByCodeHash(classCodeHash) {
       const row = await db
         .prepare(
@@ -206,14 +251,15 @@ export function createReadingRepository(db) {
     async addClassContribution(record) {
       await db
         .prepare(
-          `INSERT INTO classroom_contributions
-             (id, classroom_id, participant_id, category, skill, period)
-           VALUES (?, ?, ?, ?, ?, ?)`,
+          `INSERT OR IGNORE INTO classroom_contributions
+             (id, classroom_id, participant_id, content_id, category, skill, period)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
         )
         .bind(
           crypto.randomUUID(),
           record.classroomId,
           record.participantId,
+          record.contentId,
           record.category,
           record.skill,
           record.period,

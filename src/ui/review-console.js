@@ -1,5 +1,6 @@
 import { renderReviewDiff } from "./review-diff.js";
 import { renderStudentPreview } from "./student-preview.js";
+import { renderClassroomManagement } from "./classroom-management.js";
 
 function escapeHtml(value) {
   return String(value)
@@ -14,7 +15,7 @@ function loginMarkup(message = "") {
     <section class="review-shell paper-panel">
       <p class="chapter-label">梁山校閱臺</p>
       <h1>教師驗證</h1>
-      <p>教師權限由安全 session 驗證，畫面上的身份切換不會取得權限。</p>
+      <p>登入最長保留 8 小時；若使用學校共用裝置，離開前請按「安全登出」。</p>
       <form data-review-login>
         <label>教師管理密鑰
           <input name="key" type="password" autocomplete="current-password" required>
@@ -128,9 +129,35 @@ export async function renderReviewConsole(
   {
     request = fetch,
     sessionStorage = window.sessionStorage,
+    initialView = "review",
   } = {},
 ) {
   let csrfToken = sessionStorage.getItem("reading-expedition.csrf");
+
+  async function logout() {
+    const response = await request("/api/v1/teacher/session", {
+      method: "DELETE",
+      headers: { "x-csrf-token": csrfToken },
+    });
+    if (!response.ok && response.status !== 401) return false;
+    sessionStorage.removeItem("reading-expedition.csrf");
+    sessionStorage.removeItem("reading-expedition.teacher-class-codes");
+    csrfToken = null;
+    await showLogin("已安全登出。");
+    return true;
+  }
+
+  function attachLogout() {
+    root.querySelector("[data-teacher-logout]")?.addEventListener(
+      "click",
+      async (event) => {
+        event.currentTarget.disabled = true;
+        if (!(await logout()) && event.currentTarget.isConnected) {
+          event.currentTarget.disabled = false;
+        }
+      },
+    );
+  }
 
   async function showLogin(message) {
     root.innerHTML = loginMarkup(message);
@@ -149,8 +176,32 @@ export async function renderReviewConsole(
       const payload = await response.json();
       csrfToken = payload.csrfToken;
       sessionStorage.setItem("reading-expedition.csrf", csrfToken);
-      await showReview();
+      await showWorkspace();
     });
+  }
+
+  async function showClasses() {
+    root.innerHTML = `
+      <section class="review-shell">
+        <header class="review-heading teacher-workspace-heading">
+          <div>
+            <p class="chapter-label">梁山教師臺</p>
+            <h1>班級管理</h1>
+          </div>
+          <nav aria-label="教師工作區">
+            <a aria-current="page" href="#/teacher/classes">班級管理</a>
+            <a href="#/teacher">內容校閱</a>
+            <button type="button" data-teacher-logout>安全登出</button>
+          </nav>
+        </header>
+        <div data-classroom-management></div>
+      </section>
+    `;
+    attachLogout();
+    await renderClassroomManagement(
+      root.querySelector("[data-classroom-management]"),
+      { request, csrfToken, storage: sessionStorage },
+    );
   }
 
   async function showReview() {
@@ -176,16 +227,19 @@ export async function renderReviewConsole(
             <h1>今日待審讀卷</h1>
           </div>
           <nav aria-label="校閱狀態">
+            <a href="#/teacher/classes">班級管理</a>
             <a href="#/teacher?status=review">待審</a>
             <a href="#/teacher?status=draft">需修正</a>
             <a href="#/teacher?status=published">已發布</a>
             <a href="#/teacher?status=archived">已封存</a>
+            <button type="button" data-teacher-logout>安全登出</button>
           </nav>
         </header>
         <div class="review-pair">${available.map(detailMarkup).join("")}</div>
         <p class="form-message" data-review-message role="status"></p>
       </section>
     `;
+    attachLogout();
 
     root.querySelectorAll("[data-preview-mode]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -225,6 +279,11 @@ export async function renderReviewConsole(
     });
   }
 
-  if (csrfToken) await showReview();
+  async function showWorkspace() {
+    if (initialView === "classes") await showClasses();
+    else await showReview();
+  }
+
+  if (csrfToken) await showWorkspace();
   else await showLogin("");
 }

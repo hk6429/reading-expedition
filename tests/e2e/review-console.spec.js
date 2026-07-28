@@ -64,6 +64,12 @@ test("教師登入後可並排校閱雙難度、切換預覽並發布", async ({
       }),
     });
   });
+  await page.route("**/api/v1/teacher/classrooms", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ classrooms: [] }),
+    });
+  });
   await page.route("**/api/v1/teacher/review/*/action", async (route) => {
     published = (await route.request().postDataJSON()).action === "published";
     await route.fulfill({

@@ -8,7 +8,7 @@ const studentSteps = [
 const teacherSteps = [
   ["先看學生端", "用一篇文章走完選卷、閱讀、作答、修正與建城，確認課堂時間與裝置操作。"],
   ["校閱後再發布", "教師校閱可並排檢查雙難度、來源、正文、答案、干擾選項與文證位置。"],
-  ["建立匿名班級", "在班級共建建立班級碼，學生加入時不必填姓名、學號或班級真名。"],
+  ["建立匿名班級", "登入教師校閱臺，在班級管理建立並複製 8 碼班級碼；學生加入時不必填姓名、學號或班級真名。"],
   ["用回顧取代排名", "關注完成閱讀、文證一致率與共同地標，不公開個人成績，也不以斷簽施壓。"],
 ];
 
@@ -43,6 +43,7 @@ export function renderUsageGuide(container) {
         <p class="eyebrow">學生篇</p>
         <h2 id="student-guide-title">一篇、三題、一次修正</h2>
         <ol>${renderSteps(studentSteps)}</ol>
+        <p class="guide-class-note">要加入全班共同地標時，點選頁首「班級共建」，輸入老師提供的 8 碼班級碼即可。</p>
         <a class="guide-action" href="#/">選今天的閱讀航線</a>
       </section>
 
@@ -52,7 +53,8 @@ export function renderUsageGuide(container) {
         <ol>${renderSteps(teacherSteps)}</ol>
         <div class="guide-actions">
           <a class="guide-action" href="#/teacher">進入教師校閱</a>
-          <a class="guide-action secondary" href="#/class">建立班級共建</a>
+          <a class="guide-action secondary" href="#/teacher/classes">建立匿名班級</a>
+          <a class="guide-action secondary" href="#/class">學生加入班級</a>
         </div>
       </section>
     </div>
