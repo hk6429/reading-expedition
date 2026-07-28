@@ -54,8 +54,8 @@ export async function generateReadings(
               "每篇預估閱讀與理解時間 5 到 15 分鐘。",
             ]
           : [
-              "兩篇 textType 都必須是 vernacular，正文各 300 到 600 個中文字。",
-              "guided 建議 300 到 450 字，challenge 建議 450 到 600 字。",
+              "兩篇 textType 都必須是 vernacular；字數只計真正的漢字，標點、數字、空白與英文字母都不計。",
+              "guided 正文必須有 330 到 450 個漢字，challenge 正文必須有 480 到 600 個漢字。",
               "採國中素養導向情境，完整交代脈絡、衝突、證據與可檢驗的結論。",
               "不得只把來源摘要分段或堆疊條列。",
               "每篇預估閱讀與理解時間 5 到 15 分鐘。",
@@ -70,7 +70,7 @@ export async function generateReadings(
     new Set(readings.map(({ difficulty }) => difficulty)).size !== 2
   ) {
     throw new GenerationError(
-      "generation_schema_invalid",
+      "reading_generation_schema_invalid",
       "Generated readings do not match the required schema",
     );
   }

@@ -6,7 +6,7 @@ const ITEM_TYPE_SET = new Set(ITEM_TYPES);
 
 function schemaError() {
   return new GenerationError(
-    "generation_schema_invalid",
+    "assessment_generation_schema_invalid",
     "Generated assessment does not match the required schema",
   );
 }

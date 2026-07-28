@@ -27,7 +27,7 @@ test("Workers AI binding 使用受限輸出與 JSON schema，不需要外部 API
   assert.deepEqual(result, { readings: [] });
   assert.equal(calls.length, 1);
   assert.equal(calls[0].model, "@cf/meta/llama-3.1-8b-instruct-fast");
-  assert.equal(calls[0].input.max_tokens, 2500);
+  assert.equal(calls[0].input.max_tokens, 4000);
   assert.equal(calls[0].input.stream, false);
   assert.equal(calls[0].input.response_format.type, "json_schema");
   assert.equal(calls[0].input.messages[0].role, "system");
