@@ -108,6 +108,28 @@ export function createReadingRepository(db) {
   }
 
   return Object.freeze({
+    async recordAnonymousEvents(events) {
+      const statements = events.map((event) =>
+        db
+          .prepare(
+            `INSERT INTO anonymous_events
+               (id, event_type, occurred_at, content_id, category, difficulty,
+                duration_bucket, anonymous_device_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          )
+          .bind(
+            crypto.randomUUID(),
+            event.type,
+            event.occurredAt,
+            event.context.contentId,
+            event.context.category,
+            event.context.difficulty,
+            event.context.durationBucket,
+            event.context.deviceId,
+          ),
+      );
+      if (statements.length) await db.batch(statements);
+    },
     async createClassroom(record) {
       await db
         .prepare(

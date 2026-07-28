@@ -16,6 +16,7 @@ export function createApi({
   reviewApi = null,
   publicationApi = null,
   classroomApi = null,
+  eventsApi = null,
   clock = () => new Date(),
 }) {
   if (!repository || typeof repository.getPublishedDaily !== "function") {
@@ -26,6 +27,13 @@ export function createApi({
     async fetch(request) {
       const traceId = crypto.randomUUID();
       const url = new URL(request.url);
+      if (
+        eventsApi &&
+        url.pathname === "/api/v1/events" &&
+        request.method === "POST"
+      ) {
+        return eventsApi.collect(request);
+      }
       if (
         classroomApi &&
         url.pathname === "/api/v1/classrooms/join" &&

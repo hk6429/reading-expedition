@@ -10,6 +10,7 @@ import {
 import { createAnonymousDeviceId } from "./domain/device-identity.js";
 import { createReadingSession } from "./domain/reading-session.js";
 import { createLocalStore } from "./storage/local-store.js";
+import { createSyncQueue } from "./storage/sync-queue.js";
 import { renderAssessment } from "./ui/assessment-view.js";
 import { renderCityInvest } from "./ui/city-view.js";
 import { renderHome } from "./ui/home-view.js";
@@ -30,6 +31,44 @@ const store = createLocalStore(window.localStorage, {
 const state = store.load();
 store.save(state);
 const session = createReadingSession(state, (next) => store.save(next));
+const syncQueue = createSyncQueue(window.localStorage);
+
+function durationBucket(reading) {
+  if (reading.readingMinutes <= 5) return "1-5m";
+  if (reading.readingMinutes <= 10) return "6-10m";
+  return "over-10m";
+}
+
+function queueEvent(type, reading) {
+  syncQueue.enqueue({
+    id: crypto.randomUUID(),
+    type,
+    createdAt: new Date().toISOString(),
+    context: {
+      contentId: reading.id,
+      category: reading.category,
+      difficulty: reading.difficulty,
+      durationBucket: durationBucket(reading),
+      deviceId: state.deviceId,
+    },
+  });
+}
+
+async function flushEvents() {
+  await syncQueue.flush(async ({ id: _id, createdAt, ...event }) => {
+    const response = await fetch("/api/v1/events", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        events: [{ ...event, occurredAt: createdAt }],
+      }),
+    });
+    return response.ok;
+  });
+}
+
+window.addEventListener("online", () => flushEvents());
+flushEvents();
 
 async function loadDaily() {
   try {
@@ -98,6 +137,7 @@ const router = createRouter({
       `;
       return;
     }
+    queueEvent("reading_opened", reading);
     renderReading(main, reading, {
       state,
       saveState: (next) => store.save(next),
@@ -137,7 +177,12 @@ const router = createRouter({
           skill: "理解與文證",
           evidence: `${reading.title}：已完成文證定位`,
         };
+        queueEvent("assessment_submitted", reading);
+        queueEvent("reading_completed", reading);
+        queueEvent("evidence_located", reading);
+        if (revisedCount > 0) queueEvent("answer_revised", reading);
         store.save(state);
+        flushEvents();
         window.location.hash = `#/city/invest/${reading.id}`;
       },
     });
