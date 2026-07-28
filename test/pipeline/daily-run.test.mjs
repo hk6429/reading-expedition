@@ -76,6 +76,33 @@ test("同一天同版本成功後重跑不重複建立", async () => {
   assert.equal(repo.drafts.length, 1);
 });
 
+test("多個候選主題並行生成，避免長文模型串行超時", async () => {
+  const repo = repository();
+  let active = 0;
+  let maximumActive = 0;
+  const result = await runDailyPipeline({
+    date: "2026-07-28",
+    version: "parallel-v1",
+    repository: repo,
+    acquireCandidates: async () => [
+      { id: "world", category: "world", contentKey: "world-parallel", score: 96 },
+      { id: "science", category: "science", contentKey: "science-parallel", score: 95 },
+    ],
+    loadFallbackCandidates: async () => [],
+    buildDraft: async (candidate) => {
+      active += 1;
+      maximumActive = Math.max(maximumActive, active);
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      active -= 1;
+      return candidate;
+    },
+  });
+
+  assert.equal(result.status, "succeeded");
+  assert.equal(maximumActive, 2);
+  assert.equal(repo.drafts.length, 2);
+});
+
 test("排程 runtime 串起三類 RSS、雙難度生成、品管與待審稿", async () => {
   const repo = repository();
   const sources = ["world", "science", "humanities"].map((category) => ({

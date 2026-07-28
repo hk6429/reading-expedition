@@ -45,15 +45,34 @@ export async function runDailyPipeline({
       loadFallbackCandidates(date, 7),
     ]);
     selected = selectDailyCandidates({ date, fresh, fallback });
-    for (const candidate of selected) {
+    const built = await Promise.all(
+      selected.map(async (candidate) => {
+        try {
+          return {
+            candidate,
+            draft: await buildDraft(candidate, { date, traceId }),
+          };
+        } catch (error) {
+          return { candidate, error };
+        }
+      }),
+    );
+    for (const result of built) {
+      if (result.error) {
+        errors.push({
+          candidateId: result.candidate.id,
+          code: result.error.code ?? "candidate_failed",
+          message: result.error.message,
+        });
+        continue;
+      }
       try {
-        const draft = await buildDraft(candidate, { date, traceId });
-        const inserted = await repository.saveDraftIfAbsent(draft);
+        const inserted = await repository.saveDraftIfAbsent(result.draft);
         if (inserted) created += 1;
         else preserved += 1;
       } catch (error) {
         errors.push({
-          candidateId: candidate.id,
+          candidateId: result.candidate.id,
           code: error.code ?? "candidate_failed",
           message: error.message,
         });
