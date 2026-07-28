@@ -7,6 +7,7 @@
     "node": "24.x"
   },
   "scripts": {
+    "build": "node scripts/build-static.mjs",
     "test": "node --test \"test/**/*.test.mjs\"",
     "test:unit": "node --test \"test/domain/**/*.test.mjs\" \"test/storage/**/*.test.mjs\"",
     "test:api": "node --test \"test/api/**/*.test.mjs\"",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",
+    "@vercel/config": "^0.5.5",
     "wrangler": "^4.114.0"
   }
 }
