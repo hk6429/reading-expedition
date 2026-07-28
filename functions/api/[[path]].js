@@ -8,8 +8,17 @@ export async function onRequest(context) {
   }
   const incoming = new URL(context.request.url);
   const path = context.params.path ?? [];
-  const target = new URL(`/api/${path.join("/")}${incoming.search}`, origin);
+  const suffix = Array.isArray(path) ? path.join("/") : path;
+  const target = new URL(`/api/${suffix}${incoming.search}`, origin);
   const headers = new Headers(context.request.headers);
   headers.delete("host");
-  return fetch(target, new Request(context.request, { headers }));
+  headers.delete("x-forwarded-host");
+  return fetch(target, {
+    method: context.request.method,
+    headers,
+    body: ["GET", "HEAD"].includes(context.request.method)
+      ? null
+      : context.request.body,
+    redirect: "manual",
+  });
 }
