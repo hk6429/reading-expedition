@@ -95,6 +95,40 @@ function ensureDistinctDistractorReasons(reasons, options, correctAnswer) {
   );
 }
 
+function locateEvidence(reading, evidenceText, preferredParagraph) {
+  const paragraphs = reading.body.map(paragraphText);
+  const exactOrder = [
+    preferredParagraph,
+    ...paragraphs.map((_, index) => index).filter((index) => index !== preferredParagraph),
+  ].filter((index) => index >= 0 && index < paragraphs.length);
+  for (const paragraphIndex of exactOrder) {
+    const start = paragraphs[paragraphIndex]?.indexOf(evidenceText) ?? -1;
+    if (start >= 0) {
+      return { paragraphIndex, start, text: evidenceText };
+    }
+  }
+  const queryCharacters = new Set(
+    evidenceText.match(/\p{Script=Han}/gu) ?? [],
+  );
+  if (queryCharacters.size < 4) return null;
+  let best = null;
+  for (let paragraphIndex = 0; paragraphIndex < paragraphs.length; paragraphIndex += 1) {
+    const paragraph = paragraphs[paragraphIndex] ?? "";
+    const width = Math.min(50, Math.max(8, evidenceText.length));
+    for (let start = 0; start <= Math.max(0, paragraph.length - width); start += 1) {
+      const text = paragraph.slice(start, start + width);
+      const overlap = [...queryCharacters].filter((character) =>
+        text.includes(character),
+      ).length;
+      const score = overlap / queryCharacters.size;
+      if (!best || score > best.score) {
+        best = { paragraphIndex, start, text, score };
+      }
+    }
+  }
+  return best?.score >= 0.65 ? best : null;
+}
+
 function normalizeItem(item, reading) {
   const options = Array.isArray(item?.options)
     ? item.options.map((option) =>
@@ -113,18 +147,15 @@ function normalizeItem(item, reading) {
     typeof item?.evidenceSpan?.text === "string"
       ? item.evidenceSpan.text.trim()
       : "";
-  let paragraphIndex = Number.isInteger(item?.evidenceSpan?.paragraph)
+  const preferredParagraph = Number.isInteger(item?.evidenceSpan?.paragraph)
     ? item.evidenceSpan.paragraph - 1
     : -1;
-  let paragraph = paragraphText(reading.body[paragraphIndex]);
-  let start = paragraph?.indexOf(evidenceText) ?? -1;
-  if (start < 0 && evidenceText) {
-    paragraphIndex = reading.body.findIndex((candidate) =>
-      paragraphText(candidate)?.includes(evidenceText),
-    );
-    paragraph = paragraphText(reading.body[paragraphIndex]);
-    start = paragraph?.indexOf(evidenceText) ?? -1;
-  }
+  const located = evidenceText
+    ? locateEvidence(reading, evidenceText, preferredParagraph)
+    : null;
+  const paragraphIndex = located?.paragraphIndex ?? -1;
+  const start = located?.start ?? -1;
+  const locatedText = located?.text ?? evidenceText;
   const { correctIndex: _correctIndex, ...normalizedItem } = item ?? {};
   return {
     ...normalizedItem,
@@ -139,8 +170,8 @@ function normalizeItem(item, reading) {
     evidenceSpan: {
       paragraph: paragraphIndex + 1,
       start,
-      end: start < 0 ? -1 : start + evidenceText.length,
-      text: evidenceText,
+      end: start < 0 ? -1 : start + locatedText.length,
+      text: locatedText,
     },
   };
 }
