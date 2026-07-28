@@ -51,9 +51,7 @@ export function evaluateContentProfile(reading) {
   if (!glossaryIsValid(reading, text)) reasons.push("glossary_invalid");
 
   if (textType === "vernacular") {
-    const minimum = reading?.difficulty === "challenge" ? 450 : 300;
-    const maximum = reading?.difficulty === "guided" ? 450 : 600;
-    if (hanCharacters < minimum || hanCharacters > maximum) {
+    if (hanCharacters < 300 || hanCharacters > 600) {
       reasons.push("vernacular_length_out_of_range");
     }
   }

@@ -27,8 +27,8 @@ export function compareDifficultyLevels(guided, challenge) {
   const meaningfullyLonger =
     challengeLevel.characters >= Math.ceil(guidedLevel.characters * 1.15);
   const sentenceLoadHigher =
-    guidedLevel.averageSentenceLength <=
-    challengeLevel.averageSentenceLength + 2;
+    challengeLevel.averageSentenceLength >=
+    guidedLevel.averageSentenceLength + 2;
   const glossaryLoadHigher =
     challengeLevel.glossaryCount > guidedLevel.glossaryCount;
   return {

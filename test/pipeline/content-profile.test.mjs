@@ -26,6 +26,18 @@ test("白話文正文必須介於 300 到 600 字", () => {
         difficulty: "challenge",
         body: [{
           id: "p1",
+          text: "甲乙丙丁戊己庚辛壬癸天地人物山川風雨日月星辰學思行知信義禮智".repeat(11).slice(0, 320),
+        }],
+      }),
+    ).ok,
+    true,
+  );
+  assert.equal(
+    evaluateContentProfile(
+      reading({
+        difficulty: "challenge",
+        body: [{
+          id: "p1",
           text: "甲乙丙丁戊己庚辛壬癸天地人物山川風雨日月星辰學思行知信義禮智".repeat(20).slice(0, 600),
         }],
       }),
