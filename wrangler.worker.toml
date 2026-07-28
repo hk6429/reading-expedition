@@ -3,16 +3,8 @@ main = "worker/src/index.js"
 compatibility_date = "2026-07-28"
 workers_dev = true
 
-[vars]
-GENERATION_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
-GENERATION_MAX_RETRIES = "2"
-
-[ai]
-binding = "AI"
-remote = true
-
 [triggers]
-crons = ["0 21 * * *"]
+crons = []
 
 [[d1_databases]]
 binding = "READING_DB"
@@ -24,14 +16,6 @@ remote = true
 [env.preview]
 name = "reading-expedition-api-preview"
 workers_dev = true
-
-[env.preview.vars]
-GENERATION_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
-GENERATION_MAX_RETRIES = "2"
-
-[env.preview.ai]
-binding = "AI"
-remote = true
 
 [env.preview.triggers]
 crons = []

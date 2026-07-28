@@ -14,6 +14,10 @@
     "test:pipeline": "node --test \"test/pipeline/**/*.test.mjs\"",
     "test:static": "node --test \"test/static/**/*.test.mjs\"",
     "test:e2e": "playwright test",
+    "content:new": "node scripts/generate-manual-content.mjs",
+    "content:validate": "node scripts/validate-manual-content.mjs",
+    "content:ready": "node scripts/validate-manual-content.mjs --require-count 30",
+    "content:sql": "node scripts/render-manual-sql.mjs",
     "dev:web": "wrangler pages dev . --port 8788",
     "deploy:worker": "wrangler deploy --config wrangler.worker.toml --env=\"\"",
     "deploy:worker:preview": "wrangler deploy --config wrangler.worker.toml --env preview"

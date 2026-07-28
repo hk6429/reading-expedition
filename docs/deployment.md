@@ -7,13 +7,26 @@ Cloudflare Worker 是唯一內容與教師 API；Cloudflare Pages、Vercel、Net
 ## 環境變數名稱
 
 - Worker secret：`TEACHER_KEY_HASH`
-- Worker AI binding：`AI`
-- Worker vars：`GENERATION_MODEL`、`GENERATION_MAX_RETRIES`
-- 備援 OpenAI-compatible provider（非預設）：`GENERATION_API_BASE`、`GENERATION_API_KEY`
 - 三個前端：`READING_API_ORIGIN`
 - Cloudflare Worker D1 binding：`READING_DB`
 
 文件與建置紀錄只列變數名稱，不保存值。
+
+## Codex CLI 手動內容庫
+
+正式環境不設定每日 AI Cron，也不綁定雲端 AI。內容由教師在本機使用已登入的 Codex CLI 人工策展，目標為 30 個閱讀主題；每個主題包含 guided 與 challenge 雙難度、每篇三題，合計 60 篇正文與 180 題。
+
+```sh
+npm run content:new -- --slug moon-phases "月相為什麼會改變"
+npm run content:validate
+npm run content:ready
+npm run content:sql
+npx wrangler d1 execute reading-expedition --remote \
+  --config wrangler.worker.toml \
+  --file tmp/manual-content.sql
+```
+
+`content:new` 只呼叫本機 Codex CLI，沿用既有登入狀態，不讀取、不複製也不輸出 OAuth 憑證。每一組草稿固定保存為 `content/manual/drafts/*.json`；未達 30 組、字數不足、答案不唯一、文證不在正文、來源不完整或雙難度不成立時，`content:ready` 必須失敗，不能匯入正式 D1。所有匯入內容固定為 `manual_review`，仍須教師登入後核准才能發布。
 
 ## Preview 隔離
 

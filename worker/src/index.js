@@ -5,7 +5,6 @@ import { createClassroomApi } from "./api/classroom.js";
 import { createEventsApi } from "./api/events.js";
 import { createTeacherSessionApi } from "./api/teacher-session.js";
 import { createReadingRepository } from "./db/repository.js";
-import { createPipelineRuntime } from "./pipeline/pipeline-runtime.js";
 
 export default {
   fetch(request, env) {
@@ -26,9 +25,5 @@ export default {
       classroomApi,
       eventsApi,
     }).fetch(request);
-  },
-  async scheduled(_event, env) {
-    const repository = createReadingRepository(env.READING_DB);
-    await createPipelineRuntime({ env, repository }).run();
   },
 };

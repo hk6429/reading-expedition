@@ -1,14 +1,24 @@
 import fs from "node:fs";
+import path from "node:path";
 
-const fixtures = [
-  "seed-reading-package.json",
-  "seed-science-reading-package.json",
-  "seed-humanities-reading-package.json",
-].map((file) =>
-  JSON.parse(
-    fs.readFileSync(new URL(`../test/fixtures/${file}`, import.meta.url), "utf8"),
-  ),
-);
+const cliFiles = process.argv.slice(2);
+const fixtures =
+  cliFiles.length > 0
+    ? cliFiles.map((file) =>
+        JSON.parse(fs.readFileSync(path.resolve(file), "utf8")),
+      )
+    : [
+        "seed-reading-package.json",
+        "seed-science-reading-package.json",
+        "seed-humanities-reading-package.json",
+      ].map((file) =>
+        JSON.parse(
+          fs.readFileSync(
+            new URL(`../test/fixtures/${file}`, import.meta.url),
+            "utf8",
+          ),
+        ),
+      );
 
 const value = (input) =>
   input === null || input === undefined
@@ -73,6 +83,10 @@ rows.push(`INSERT OR IGNORE INTO fact_packs (
 WHERE id = ${value(fixture.factPack.id)};`);
 
   for (const reading of fixture.packages) {
+    const publishedAt =
+      reading.publicationStatus === "published"
+        ? fixture.sourceItem.fetchedAt
+        : null;
     rows.push(`INSERT OR IGNORE INTO reading_packages (
     id, content_key, fact_pack_id, difficulty, text_type, title, hook_question, body,
     glossary_json, reading_minutes, source_attribution_json, quality_score,
@@ -83,7 +97,7 @@ WHERE id = ${value(fixture.factPack.id)};`);
     ${json(reading.body)}, ${json(reading.glossary)}, ${reading.readingMinutes},
     ${json(reading.sourceAttribution)}, ${reading.qualityScore},
     ${value(reading.hardGateStatus)}, ${value(reading.publicationStatus)},
-    ${reading.version}, ${value(fixture.sourceItem.fetchedAt)}
+    ${reading.version}, ${value(publishedAt)}
   );`);
     rows.push(`UPDATE reading_packages SET
     text_type = ${value(reading.textType)},
@@ -96,7 +110,7 @@ WHERE id = ${value(fixture.factPack.id)};`);
     quality_score = ${reading.qualityScore},
     hard_gate_status = ${value(reading.hardGateStatus)},
     publication_status = ${value(reading.publicationStatus)},
-    published_at = ${value(fixture.sourceItem.fetchedAt)}
+    published_at = ${value(publishedAt)}
   WHERE id = ${value(reading.id)};`);
     for (const item of reading.assessment) {
       rows.push(`INSERT OR IGNORE INTO assessment_items (
