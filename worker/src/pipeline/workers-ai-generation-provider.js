@@ -21,8 +21,8 @@ function readingResponseSchema({ classical }) {
       id: { type: "string" },
       text: {
         type: "string",
-        minLength: classical ? 70 : 85,
-        maxLength: classical ? 100 : 115,
+        minLength: classical ? 70 : 110,
+        maxLength: classical ? 100 : 130,
       },
     },
     required: ["id", "text"],
@@ -49,7 +49,7 @@ function readingResponseSchema({ classical }) {
             body: {
               type: "array",
               minItems: classical ? 2 : 4,
-              maxItems: classical ? 3 : 5,
+              maxItems: classical ? 3 : 4,
               items: paragraphSchema,
             },
             glossary: {

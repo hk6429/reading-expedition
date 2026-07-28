@@ -15,6 +15,20 @@ function paragraphText(paragraph) {
   return typeof paragraph === "string" ? paragraph : paragraph?.text;
 }
 
+function normalizeCorrectAnswer(value, options) {
+  if (typeof value !== "string") return value;
+  const trimmed = value.trim();
+  const labels = ["A", "B", "C", "D", "甲", "乙", "丙", "丁", "1", "2", "3", "4"];
+  const labelIndex = labels.indexOf(trimmed);
+  if (labelIndex >= 0) return options[labelIndex % 4];
+  const prefixed = trimmed.match(/^(?:選項)?([ABCD甲乙丙丁1-4])[.、：:\s]/);
+  if (prefixed) {
+    const index = labels.indexOf(prefixed[1]);
+    return options[index % 4];
+  }
+  return trimmed;
+}
+
 function normalizeItem(item, reading) {
   const options = Array.isArray(item?.options)
     ? item.options.map((option) =>
@@ -47,10 +61,7 @@ function normalizeItem(item, reading) {
     ...item,
     prompt: typeof item?.prompt === "string" ? item.prompt.trim() : item?.prompt,
     options,
-    correctAnswer:
-      typeof item?.correctAnswer === "string"
-        ? item.correctAnswer.trim()
-        : item?.correctAnswer,
+    correctAnswer: normalizeCorrectAnswer(item?.correctAnswer, options ?? []),
     rationale:
       typeof item?.rationale === "string"
         ? item.rationale.trim()
@@ -134,6 +145,7 @@ export async function generateAssessments(provider, reading, factPack = null) {
       trustedRequirements: [
         "固定三題，能力依序為擷取與理解、比較統整與推論、文證判讀與評鑑。",
         "每題固定四個選項，只有一個正確或最佳答案。",
+        "correctAnswer 必須逐字複製正確選項的完整文字，不得填 A、B、C、D、甲乙丙丁或選項編號。",
         "干擾選項須分別對應常見誤讀、過度推論、局部訊息或因果倒置，不得荒謬到可直接排除。",
         "每題都須提供 rationale、每個錯誤選項的 distractorReasons，以及正文內可逐字對應的 evidenceSpan；文證請摘錄 8 到 30 個連續字元，不得改寫。",
         "不得考來源以外的冷知識，也不得只靠題幹常識作答。",

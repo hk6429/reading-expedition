@@ -103,6 +103,28 @@ test("模型提供錯誤文證座標時，以發布正文的逐字位置重新�
   });
 });
 
+test("模型以選項代號回覆正解時，正規化為完整選項文字", async () => {
+  const provider = {
+    async generate() {
+      return {
+        items: ["comprehension", "inference", "evidence"].map((type) => ({
+          ...item(type, `${type}題`, `${type}答案`, {
+            paragraph: 1,
+            start: 0,
+            end: 7,
+            text: "海水受熱會膨脹",
+          }),
+          correctAnswer: "A",
+        })),
+      };
+    },
+  };
+
+  const items = await generateAssessments(provider, reading);
+
+  assert.equal(items[0].correctAnswer, "comprehension答案");
+});
+
 test("空白題幹、空白解析或套版干擾理由會被拒絕", async () => {
   const provider = {
     async generate() {
