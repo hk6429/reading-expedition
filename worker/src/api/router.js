@@ -13,6 +13,8 @@ import {
 export function createApi({
   repository,
   teacherSessionApi = null,
+  reviewApi = null,
+  publicationApi = null,
   clock = () => new Date(),
 }) {
   if (!repository || typeof repository.getPublishedDaily !== "function") {
@@ -45,6 +47,45 @@ export function createApi({
           requireCsrf: request.method !== "GET",
         });
         if (!authorization.ok) return teacherSessionApi.unauthorizedResponse();
+
+        if (
+          reviewApi &&
+          url.pathname === "/api/v1/teacher/review" &&
+          request.method === "GET"
+        ) {
+          return reviewApi.list(request);
+        }
+        if (
+          reviewApi &&
+          url.pathname === "/api/v1/teacher/review/batch" &&
+          request.method === "POST"
+        ) {
+          return reviewApi.batch(request, authorization.sessionId);
+        }
+        const reviewMatch = /^\/api\/v1\/teacher\/review\/([a-zA-Z0-9-]+)$/.exec(
+          url.pathname,
+        );
+        if (reviewApi && reviewMatch && request.method === "GET") {
+          return reviewApi.detail(reviewMatch[1]);
+        }
+        if (reviewApi && reviewMatch && request.method === "PATCH") {
+          return reviewApi.update(
+            reviewMatch[1],
+            request,
+            authorization.sessionId,
+          );
+        }
+        const actionMatch =
+          /^\/api\/v1\/teacher\/review\/([a-zA-Z0-9-]+)\/action$/.exec(
+            url.pathname,
+          );
+        if (publicationApi && actionMatch && request.method === "POST") {
+          return publicationApi.act(
+            actionMatch[1],
+            request,
+            authorization.sessionId,
+          );
+        }
       }
       const submitMatch =
         /^\/api\/v1\/readings\/([a-zA-Z0-9-]+)\/submit$/.exec(url.pathname);

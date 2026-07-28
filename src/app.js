@@ -14,6 +14,7 @@ import { renderAssessment } from "./ui/assessment-view.js";
 import { renderCityInvest } from "./ui/city-view.js";
 import { renderHome } from "./ui/home-view.js";
 import { renderReading } from "./ui/reading-view.js";
+import { renderReviewConsole } from "./ui/review-console.js";
 import { createRouter } from "./ui/router.js";
 
 const main = document.querySelector("#main-content");
@@ -144,6 +145,9 @@ const router = createRouter({
       date: completion.date,
       saveState: (next) => store.save(next),
     });
+  },
+  async onTeacher() {
+    await renderReviewConsole(main);
   },
 });
 

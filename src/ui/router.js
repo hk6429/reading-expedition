@@ -1,5 +1,9 @@
-export function createRouter({ onHome, onRead, onQuiz, onCityInvest }) {
+export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onTeacher }) {
   async function navigate() {
+    if (window.location.hash.startsWith("#/teacher")) {
+      if (onTeacher) await onTeacher();
+      return;
+    }
     const cityMatch = /^#\/city\/invest\/([a-zA-Z0-9-]+)$/.exec(
       window.location.hash,
     );
