@@ -70,7 +70,7 @@ test("未達 300 字的白話文不得進入文章", async () => {
 
   await assert.rejects(
     generateReadings(provider, factPack),
-    (error) => error.code === "reading_generation_schema_invalid",
+    (error) => error.code === "vernacular_length_out_of_range",
   );
 });
 
@@ -83,6 +83,6 @@ test("衝突事實包與不完整 JSON 不得進入文章", async () => {
   );
   await assert.rejects(
     generateReadings(provider, factPack),
-    (error) => error.code === "reading_generation_schema_invalid",
+    (error) => error.code === "reading_collection_invalid",
   );
 });
