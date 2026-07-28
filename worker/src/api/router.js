@@ -15,6 +15,7 @@ export function createApi({
   teacherSessionApi = null,
   reviewApi = null,
   publicationApi = null,
+  classroomApi = null,
   clock = () => new Date(),
 }) {
   if (!repository || typeof repository.getPublishedDaily !== "function") {
@@ -25,6 +26,27 @@ export function createApi({
     async fetch(request) {
       const traceId = crypto.randomUUID();
       const url = new URL(request.url);
+      if (
+        classroomApi &&
+        url.pathname === "/api/v1/classrooms/join" &&
+        request.method === "POST"
+      ) {
+        return classroomApi.join(request);
+      }
+      if (
+        classroomApi &&
+        url.pathname === "/api/v1/classrooms/contribute" &&
+        request.method === "POST"
+      ) {
+        return classroomApi.contribute(request);
+      }
+      if (
+        classroomApi &&
+        url.pathname === "/api/v1/classrooms/landmark" &&
+        request.method === "GET"
+      ) {
+        return classroomApi.landmark(request);
+      }
       if (
         teacherSessionApi &&
         url.pathname === "/api/v1/teacher/session" &&
@@ -48,6 +70,13 @@ export function createApi({
         });
         if (!authorization.ok) return teacherSessionApi.unauthorizedResponse();
 
+        if (
+          classroomApi &&
+          url.pathname === "/api/v1/teacher/classrooms" &&
+          request.method === "POST"
+        ) {
+          return classroomApi.create(authorization.sessionId);
+        }
         if (
           reviewApi &&
           url.pathname === "/api/v1/teacher/review" &&

@@ -108,6 +108,133 @@ export function createReadingRepository(db) {
   }
 
   return Object.freeze({
+    async createClassroom(record) {
+      await db
+        .prepare(
+          `INSERT INTO classrooms
+             (id, class_code_hash, created_by_session, created_at, expires_at)
+           VALUES (?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          record.id,
+          record.classCodeHash,
+          record.createdBySession,
+          record.createdAt,
+          record.expiresAt,
+        )
+        .run();
+    },
+    async findClassroomByCodeHash(classCodeHash) {
+      const row = await db
+        .prepare(
+          `SELECT id, expires_at, revoked_at
+           FROM classrooms
+           WHERE class_code_hash = ?
+           LIMIT 1`,
+        )
+        .bind(classCodeHash)
+        .first();
+      return row
+        ? {
+            id: row.id,
+            expiresAt: row.expires_at,
+            revokedAt: row.revoked_at,
+          }
+        : null;
+    },
+    async createClassroomToken(record) {
+      await db
+        .prepare(
+          `INSERT INTO classroom_tokens
+             (id, classroom_id, token_hash, created_at, expires_at)
+           VALUES (?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          record.id,
+          record.classroomId,
+          record.tokenHash,
+          record.createdAt,
+          record.expiresAt,
+        )
+        .run();
+    },
+    async findClassroomToken(tokenHash) {
+      const row = await db
+        .prepare(
+          `SELECT id, classroom_id, expires_at, revoked_at
+           FROM classroom_tokens
+           WHERE token_hash = ?
+           LIMIT 1`,
+        )
+        .bind(tokenHash)
+        .first();
+      return row
+        ? {
+            id: row.id,
+            classroomId: row.classroom_id,
+            expiresAt: row.expires_at,
+            revokedAt: row.revoked_at,
+          }
+        : null;
+    },
+    async addClassContribution(record) {
+      await db
+        .prepare(
+          `INSERT INTO classroom_contributions
+             (id, classroom_id, participant_id, category, skill, period)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          crypto.randomUUID(),
+          record.classroomId,
+          record.participantId,
+          record.category,
+          record.skill,
+          record.period,
+        )
+        .run();
+    },
+    async getClassAggregate(classroomId) {
+      const summary = await db
+        .prepare(
+          `SELECT
+             COUNT(*) AS valid_readings,
+             COUNT(DISTINCT participant_id) AS anonymous_participants
+           FROM classroom_contributions
+           WHERE classroom_id = ?`,
+        )
+        .bind(classroomId)
+        .first();
+      const { results: categoryRows = [] } = await db
+        .prepare(
+          `SELECT category, COUNT(*) AS count
+           FROM classroom_contributions
+           WHERE classroom_id = ?
+           GROUP BY category`,
+        )
+        .bind(classroomId)
+        .all();
+      const { results: skillRows = [] } = await db
+        .prepare(
+          `SELECT skill, COUNT(*) AS count
+           FROM classroom_contributions
+           WHERE classroom_id = ?
+           GROUP BY skill`,
+        )
+        .bind(classroomId)
+        .all();
+      return {
+        classroomId,
+        validReadings: Number(summary?.valid_readings ?? 0),
+        anonymousParticipants: Number(summary?.anonymous_participants ?? 0),
+        categoryDistribution: Object.fromEntries(
+          categoryRows.map((row) => [row.category, Number(row.count)]),
+        ),
+        skillDistribution: Object.fromEntries(
+          skillRows.map((row) => [row.skill, Number(row.count)]),
+        ),
+      };
+    },
     async getPipelineRun(idempotencyKey) {
       const row = await db
         .prepare(

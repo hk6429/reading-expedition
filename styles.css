@@ -556,6 +556,32 @@ a:focus-visible {
   font-weight: 700;
 }
 
+.class-shell {
+  margin-inline: auto;
+}
+
+.class-shell form {
+  display: grid;
+  gap: 1rem;
+}
+
+.landmark-level {
+  display: grid;
+  width: min(16rem, 100%);
+  min-height: 8rem;
+  margin: 1.5rem 0;
+  place-items: center;
+  border: 1px solid rgb(29 26 23 / 20%);
+  border-radius: 50% 45% 52% 43%;
+  background:
+    radial-gradient(circle, rgb(71 115 98 / 22%), transparent 62%),
+    rgb(255 255 255 / 35%);
+  color: var(--mineral-green);
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
 @media (max-width: 60rem) {
   .review-pair,
   .review-columns {
