@@ -29,8 +29,11 @@ test("repository 依日期取得已發布文章並解析結構欄位", async () 
       id: "water-001-guided",
       content_key: "2026-07-28-water",
       category: "world",
+      topic_date: "2026-07-28",
       difficulty: "guided",
+      text_type: "plain",
       title: "城市如何分配有限水源？",
+      hook_question: "如果水不夠，每個人都該一樣多嗎？",
       glossary_json: '[{"term":"水權","definition":"使用水資源的權利"}]',
       source_attribution_json: '[{"publisher":"公開資料站"}]',
       version: 1,
@@ -51,6 +54,33 @@ test("repository 依日期取得已發布文章並解析結構欄位", async () 
   assert.deepEqual(db.calls[0].bindings, ["2026-07-28"]);
 });
 
+test("repository 可取得七日內最近一次已發布文章", async () => {
+  const db = createFakeDb([
+    {
+      id: "water-001-guided",
+      content_key: "2026-07-28-water",
+      topic_date: "2026-07-28",
+      category: "world",
+      difficulty: "guided",
+      text_type: "plain",
+      title: "城市如何分配有限水源？",
+      hook_question: "如果水不夠，每個人都該一樣多嗎？",
+      reading_minutes: 6,
+      glossary_json: "[]",
+      source_attribution_json: "[]",
+      version: 1,
+    },
+  ]);
+  const repository = createReadingRepository(db);
+
+  const readings = await repository.getLatestPublishedDaily("2026-07-29");
+
+  assert.equal(readings[0].topicDate, "2026-07-28");
+  assert.match(db.calls[0].sql, /MAX\(fp2\.topic_date\)/);
+  assert.match(db.calls[0].sql, /date\(\?, '-7 days'\)/);
+  assert.deepEqual(db.calls[0].bindings, ["2026-07-29", "2026-07-29"]);
+});
+
 test("repository 只取得已發布文章的正文與題目", async () => {
   const calls = [];
   const db = {
@@ -68,7 +98,9 @@ test("repository 只取得已發布文章的正文與題目", async () => {
             content_key: "2026-07-28-water",
             category: "world",
             difficulty: "guided",
+            text_type: "plain",
             title: "城市如何分配有限水源？",
+            hook_question: "分配一樣多，就是公平嗎？",
             body: '["第一段","第二段"]',
             glossary_json: "[]",
             source_attribution_json: '[{"publisher":"公開資料站"}]',
@@ -100,6 +132,7 @@ test("repository 只取得已發布文章的正文與題目", async () => {
   const reading = await repository.getPublishedReading("water-001-guided");
 
   assert.deepEqual(reading.body, ["第一段", "第二段"]);
+  assert.equal(reading.hookQuestion, "分配一樣多，就是公平嗎？");
   assert.equal(reading.assessment[0].correctAnswer, "城市用水");
   assert.match(calls[0].sql, /publication_status = 'published'/);
   assert.deepEqual(calls[0].bindings, ["water-001-guided"]);

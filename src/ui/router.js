@@ -1,17 +1,29 @@
 export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onGuide, onTeacher, onClass }) {
+  async function renderRoute(render) {
+    await render();
+    window.scrollTo(0, 0);
+    const heading = document.querySelector("main h1");
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+  }
+
   async function navigate() {
     if (window.location.hash === "#/guide") {
-      if (onGuide) await onGuide();
+      if (onGuide) await renderRoute(onGuide);
       return;
     }
     if (window.location.hash === "#/class") {
-      if (onClass) await onClass();
+      if (onClass) await renderRoute(onClass);
       return;
     }
     if (window.location.hash.startsWith("#/teacher")) {
       if (onTeacher) {
-        await onTeacher(
-          window.location.hash === "#/teacher/classes" ? "classes" : "review",
+        await renderRoute(() =>
+          onTeacher(
+            window.location.hash === "#/teacher/classes" ? "classes" : "review",
+          ),
         );
       }
       return;
@@ -20,24 +32,26 @@ export function createRouter({ onHome, onRead, onQuiz, onCityInvest, onGuide, on
       window.location.hash,
     );
     if (cityMatch) {
-      if (onCityInvest) await onCityInvest(cityMatch[1]);
+      if (onCityInvest) {
+        await renderRoute(() => onCityInvest(cityMatch[1]));
+      }
       return;
     }
     const quizMatch = /^#\/quiz\/([a-zA-Z0-9-]+)$/.exec(
       window.location.hash,
     );
     if (quizMatch) {
-      await onQuiz(quizMatch[1]);
+      await renderRoute(() => onQuiz(quizMatch[1]));
       return;
     }
     const readMatch = /^#\/read\/([a-zA-Z0-9-]+)$/.exec(
       window.location.hash,
     );
     if (readMatch) {
-      await onRead(readMatch[1]);
+      await renderRoute(() => onRead(readMatch[1]));
       return;
     }
-    await onHome();
+    await renderRoute(onHome);
   }
 
   window.addEventListener("hashchange", navigate);

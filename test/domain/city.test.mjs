@@ -22,9 +22,17 @@ test("完成閱讀與文證必有基本墨磚，修正也能增加成果", () =>
     revisedCount: 1,
     repeatedSameDay: false,
   });
+  const needsSupport = rewardVerifiedReading({
+    completed: true,
+    evidenceSubmitted: true,
+    correctCount: 0,
+    revisedCount: 0,
+    repeatedSameDay: false,
+  });
 
   assert.equal(independent.inkBricks, 5);
   assert.equal(revised.inkBricks, 5);
+  assert.equal(needsSupport.inkBricks, 5);
   assert.equal(revised.baseEarned, true);
 });
 

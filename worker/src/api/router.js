@@ -251,7 +251,7 @@ export function createApi({
       return jsonResponse(payload, {
         headers: {
           "cache-control": "public, max-age=300",
-          "x-content-date": date,
+          "x-content-date": payload.contentDate,
           "x-trace-id": traceId,
         },
       });

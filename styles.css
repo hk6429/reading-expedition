@@ -486,6 +486,7 @@ a:focus-visible {
 .route-art {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 4 / 3;
   border-radius: 1.1rem 0.25rem;
   object-fit: cover;
@@ -1090,10 +1091,28 @@ a:focus-visible {
   top: 0;
   left: 0;
   z-index: 20;
+  width: 100%;
+  height: 2rem;
+  background: color-mix(in srgb, var(--paper-primary) 94%, transparent);
+  box-shadow: 0 1px 0 rgb(109 104 95 / 16%);
+}
+
+.reading-progress__bar {
+  position: absolute;
+  inset: 0 auto auto 0;
   width: 0;
   height: 3px;
   background: var(--cinnabar);
   transition: width 180ms ease;
+}
+
+.reading-progress__text {
+  position: absolute;
+  inset: 0.3rem 0 auto;
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+  font-weight: 750;
+  text-align: center;
 }
 
 .reading-layout {
@@ -1155,6 +1174,44 @@ a:focus-visible {
   background: color-mix(in srgb, var(--paper-card) 55%, transparent);
   font-family: "Noto Serif TC", "Songti TC", serif;
   font-weight: 700;
+}
+
+.reading-hook span {
+  color: var(--cinnabar);
+}
+
+.reading-resume {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid rgb(109 104 95 / 22%);
+  border-radius: 0.9rem;
+  background: var(--paper-card);
+}
+
+.reading-resume p {
+  margin-top: 0;
+  font-weight: 750;
+}
+
+.reading-resume div {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.reading-resume button {
+  min-height: 3rem;
+}
+
+.reading-paragraph.is-resumed {
+  scroll-margin-top: 3rem;
+  animation: resume-highlight 1.5s ease;
+}
+
+@keyframes resume-highlight {
+  0%,
+  65% {
+    background: color-mix(in srgb, var(--cinnabar) 12%, transparent);
+  }
 }
 
 .reading-body {
@@ -1550,8 +1607,38 @@ a:focus-visible {
 
   .home-hero {
     grid-template-columns: 1fr;
+    gap: 1rem;
     min-height: auto;
-    padding: 1.4rem;
+    padding: 1.2rem;
+  }
+
+  .home-hero h1 {
+    margin-block: 0.5rem;
+    font-size: clamp(2rem, 10vw, 2.65rem);
+  }
+
+  .hero-lead {
+    margin-block: 0.5rem;
+    font-size: 0.98rem;
+  }
+
+  .today-status {
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+  }
+
+  .today-status span {
+    padding: 0.3rem 0.55rem;
+    font-size: 0.78rem;
+  }
+
+  .hero-illustration img {
+    height: 7.5rem;
+    object-position: center 38%;
+  }
+
+  .hero-illustration {
+    display: none;
   }
 
   .floating-city-preview {
@@ -1559,7 +1646,7 @@ a:focus-visible {
   }
 
   .route-section {
-    padding-top: 3rem;
+    padding-top: 1.5rem;
   }
 
   .section-heading {
@@ -1568,12 +1655,43 @@ a:focus-visible {
     gap: 0;
   }
 
+  .route-section .section-heading > p {
+    display: none;
+  }
+
   .route-grid {
     grid-template-columns: 1fr;
   }
 
   .route-card {
     min-height: 0;
+  }
+
+  .route-card__header {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    min-height: 0;
+    align-items: center;
+  }
+
+  .route-art {
+    aspect-ratio: 1;
+  }
+
+  .route-card__body {
+    padding: 0.85rem 1rem;
+  }
+
+  .route-card__body > p:first-child {
+    display: none;
+  }
+
+  .route-question {
+    margin: 0;
+  }
+
+  .route-card__actions {
+    padding: 0.75rem 1rem 1rem;
   }
 
   .reading-layout {
@@ -1593,11 +1711,20 @@ a:focus-visible {
   }
 
   .reading-article {
-    padding: 1.35rem;
+    padding: 1.1rem;
     border-right: 0;
     border-left: 0;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  .reading-resume div {
+    flex-direction: column;
+  }
+
+  .reading-paragraph {
+    font-size: calc(1.08rem * var(--reading-scale));
+    line-height: 1.8;
   }
 
   .reading-controls {
@@ -1708,11 +1835,61 @@ a:focus-visible {
 
 @media (min-width: 36.01rem) and (max-width: 63.99rem) {
   .home-hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(14rem, 0.9fr);
+    min-height: auto;
+    padding: 1.5rem;
+  }
+
+  .home-hero h1 {
+    max-width: 10ch;
+    font-size: 2.75rem;
+  }
+
+  .home-hero .hero-lead {
+    display: none;
+  }
+
+  .route-section {
+    padding-top: 1rem;
+  }
+
+  .route-section .section-heading > p {
+    display: none;
   }
 
   .route-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .route-card {
+    min-height: 0;
+  }
+
+  .route-card__header {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    min-height: 0;
+    align-items: center;
+  }
+
+  .route-art {
+    aspect-ratio: 1;
+  }
+
+  .route-card__body {
+    padding: 1rem;
+  }
+
+  .route-card__body > p:first-child {
+    display: none;
+  }
+
+  .route-question {
+    margin-top: 0;
+  }
+
+  .route-card__actions {
+    padding: 0.75rem 1rem 1rem;
   }
 
   .route-card:last-child {

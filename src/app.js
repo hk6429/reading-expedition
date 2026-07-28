@@ -116,15 +116,18 @@ flushEvents();
 flushClassContributions();
 
 async function loadDaily() {
+  const safeDemoReadings = demoDailyReadings.filter(
+    ({ id }) => demoReadingsById[id],
+  );
   try {
     const response = await fetch("/api/v1/daily");
     if (!response.ok) throw new Error("daily API unavailable");
     const payload = await response.json();
     return Array.isArray(payload.readings) && payload.readings.length
       ? payload.readings
-      : demoDailyReadings;
+      : safeDemoReadings;
   } catch {
-    return demoDailyReadings;
+    return safeDemoReadings;
   }
 }
 

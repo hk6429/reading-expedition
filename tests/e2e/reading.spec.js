@@ -25,3 +25,24 @@ test("學生可閱讀行舟卷、調整夜讀並保存進度", async ({ page }) 
   await page.getByRole("button", { name: "前往 3 題問答" }).click();
   await expect(page).toHaveURL(/#\/quiz\/water-sharing-guided-v1$/);
 });
+
+test("從首頁深處開啟文章仍從標題開始", async ({ page }) => {
+  await page.goto("/");
+  const routeButton = page.getByRole("button", {
+    name: /行舟卷.*一座城市如何分配有限水源/,
+  }).first();
+  await routeButton.scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, 500));
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
+
+  await routeButton.click();
+
+  await expect(page).toHaveURL(/#\/read\/water-sharing-guided-v1$/);
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY))
+    .toBeLessThanOrEqual(4);
+  await expect(
+    page.getByRole("heading", { name: "一座城市如何分配有限水源？" }),
+  ).toBeVisible();
+  await expect(page.getByText("帶著這個問題讀")).toBeVisible();
+});

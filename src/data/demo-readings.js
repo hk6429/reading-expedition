@@ -116,4 +116,122 @@ export const demoReadingsById = Object.freeze({
       },
     ],
   },
+  "water-cycle-guided-v1": {
+    id: "water-cycle-guided-v1",
+    contentKey: "2026-07-28-water-cycle",
+    category: "science",
+    difficulty: "guided",
+    textType: "vernacular",
+    title: "一滴水為什麼總在旅行？",
+    hookQuestion: "落下來的雨，下一站一定是河流嗎？",
+    body: [
+      "我們常在課本上看見一個圓形箭頭，表示水從地面到天空，再回到地面。這張圖能提醒我們水會持續移動，卻也可能讓人誤以為每一滴水都依照同一條路線前進。實際上，水可能以液態、固態或氣態存在，也可能暫時停留在海洋、河流、土壤、地下、大氣或冰雪之中。",
+      "水循環的一個重要動力是陽光。海洋、湖泊與河川表面的液態水受熱後會蒸發，變成看不見的水蒸氣；植物吸收水分之後，也會把部分水分送入大氣。這兩條路都讓地表的水進入空氣，但來源與過程不完全相同，閱讀示意圖時不能只注意其中一條箭頭。",
+      "水蒸氣升高並冷卻後，會凝結成許多細小水滴，形成我們看見的雲。當雲中的水以雨或雪回到地表，旅程仍沒有結束：它可能流向河海、滲入地下、被植物吸收，或在合適的條件下再次進入大氣。水在各處停留的時間不同，去向也不只有一種。",
+      "因此，把水循環想成一張有許多交叉路徑的網，比只背誦「蒸發、凝結、降水」三個詞更有幫助。閱讀圖表時，可以逐一追問：水現在是什麼狀態？暫時停在哪裡？接著可能往哪裡移動？只要能用文章中的機制說明箭頭，就不是單純記住圖形，而是真的理解水如何不斷改變與移動。",
+    ],
+    glossary: [
+      { term: "凝結", definition: "氣體冷卻後變成液體的過程。" },
+    ],
+    sourceAttribution: [
+      {
+        publisher: "NASA Science",
+        url: "https://science.nasa.gov/kids/earth/what-is-the-water-cycle/",
+        license: "美國聯邦政府公開資訊；圖片權利另計",
+      },
+    ],
+    readingMinutes: 6,
+    version: 1,
+    assessment: [
+      {
+        id: "water-cycle-guided-q1-v1",
+        type: "comprehension",
+        prompt: "文章中的水蒸氣主要如何形成？",
+        options: [
+          "液態水受熱蒸發，植物也釋出水分",
+          "雲直接變成地下水",
+          "冰只要移動就變成氣體",
+          "河流把水推到天空",
+        ],
+      },
+      {
+        id: "water-cycle-guided-q2-v1",
+        type: "inference",
+        prompt: "作者為什麼提醒讀者不要只把水循環想成固定圓圈？",
+        options: [
+          "水會在多種狀態、停留處與路徑之間移動",
+          "所有水滴都會同時沿著同一條路移動",
+          "水循環只有蒸發而沒有凝結與降水",
+          "圓形圖完全不能表示任何循環概念",
+        ],
+      },
+      {
+        id: "water-cycle-guided-q3-v1",
+        type: "evidence",
+        prompt: "哪一段最能支持「水循環不是只有一條路」？",
+        options: ["第1段", "第2段", "第3段", "第4段"],
+      },
+    ],
+  },
+  "community-clues-guided-v1": {
+    id: "community-clues-guided-v1",
+    contentKey: "2026-07-28-community-clues",
+    category: "humanities",
+    difficulty: "guided",
+    textType: "classical",
+    title: "一張舊照片，能告訴我們什麼？",
+    hookQuestion: "看見照片裡的人和街道，就等於知道完整故事嗎？",
+    body: [
+      "昔有學子觀邑中舊影，見市肆、郵人、車夫與眾民作息，欲由此知地方之舊事。",
+      "師曰：「毋遽斷其人之身分與心意。當先察影中人物、器用、文字與處所，錄其實見者。」",
+      "既察，乃可據衣服、工具及屋宇推其所為；然影外之人事，未必盡入鏡中，故推論不可視為定論。",
+      "又取地圖、訪談及他影互證，分所見、所推與所疑。由是知舊物不自言全貌，善讀者因其跡而能問得更深。",
+    ],
+    glossary: [
+      { term: "邑", definition: "城鎮、地方。" },
+      { term: "市肆", definition: "市場與店鋪。" },
+      { term: "遽", definition: "急忙、立刻。" },
+      { term: "屋宇", definition: "房屋、建築。" },
+      { term: "互證", definition: "以不同資料互相比對證明。" },
+    ],
+    sourceAttribution: [
+      {
+        publisher: "Library of Congress",
+        url: "https://www.loc.gov/classroom-materials/community-people-and-places/",
+        license: "教學觀念可引用；個別館藏權利狀態需逐件確認",
+      },
+    ],
+    readingMinutes: 6,
+    version: 1,
+    assessment: [
+      {
+        id: "community-clues-guided-q1-v1",
+        type: "comprehension",
+        prompt: "文章建議分析舊照片時，第一步做什麼？",
+        options: [
+          "先列出確實看見的線索",
+          "直接猜人物的心情",
+          "只相信照片上的文字",
+          "先決定唯一答案",
+        ],
+      },
+      {
+        id: "community-clues-guided-q2-v1",
+        type: "inference",
+        prompt: "依本文，下列何者最接近「推論不可視為定論」的原因？",
+        options: [
+          "影像只留下部分線索，鏡頭外仍有人事未被記錄",
+          "舊影中的人物一定故意隱藏真實身分",
+          "地圖與訪談永遠比影像更正確",
+          "只要年代久遠，所有資料都失去價值",
+        ],
+      },
+      {
+        id: "community-clues-guided-q3-v1",
+        type: "evidence",
+        prompt: "哪一段最能支持「照片不等於完整故事」？",
+        options: ["第1段", "第2段", "第3段", "第4段"],
+      },
+    ],
+  },
 });

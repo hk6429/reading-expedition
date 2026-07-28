@@ -10,6 +10,7 @@ function mapPublishedReading(row) {
   return {
     id: row.id,
     contentKey: row.content_key,
+    topicDate: row.topic_date,
     category: row.category,
     difficulty: row.difficulty,
     textType: row.text_type,
@@ -698,6 +699,7 @@ export function createReadingRepository(db) {
           `SELECT
              rp.id,
              rp.content_key,
+             fp.topic_date,
              fp.category,
              rp.difficulty,
              rp.text_type,
@@ -726,6 +728,48 @@ export function createReadingRepository(db) {
       const { results = [] } = await statement.all();
       return results.map(mapPublishedReading);
     },
+    async getLatestPublishedDaily(topicDate) {
+      const statement = db
+        .prepare(
+          `SELECT
+             rp.id,
+             rp.content_key,
+             fp.topic_date,
+             fp.category,
+             rp.difficulty,
+             rp.text_type,
+             rp.title,
+             rp.hook_question,
+             rp.reading_minutes,
+             rp.glossary_json,
+             rp.source_attribution_json,
+             rp.version
+           FROM reading_packages rp
+           JOIN fact_packs fp ON fp.id = rp.fact_pack_id
+           WHERE rp.publication_status = 'published'
+             AND fp.topic_date = (
+               SELECT MAX(fp2.topic_date)
+               FROM reading_packages rp2
+               JOIN fact_packs fp2 ON fp2.id = rp2.fact_pack_id
+               WHERE rp2.publication_status = 'published'
+                 AND fp2.topic_date <= ?
+                 AND fp2.topic_date >= date(?, '-7 days')
+             )
+           ORDER BY
+             CASE fp.category
+               WHEN 'world' THEN 1
+               WHEN 'science' THEN 2
+               ELSE 3
+             END,
+             CASE rp.difficulty
+               WHEN 'guided' THEN 1
+               ELSE 2
+             END`,
+        )
+        .bind(topicDate, topicDate);
+      const { results = [] } = await statement.all();
+      return results.map(mapPublishedReading);
+    },
     async getPublishedReading(id) {
       const row = await db
         .prepare(
@@ -736,6 +780,7 @@ export function createReadingRepository(db) {
              rp.difficulty,
              rp.text_type,
              rp.title,
+             rp.hook_question,
              rp.body,
              rp.glossary_json,
              rp.source_attribution_json,
@@ -781,6 +826,7 @@ export function createReadingRepository(db) {
         difficulty: row.difficulty,
         textType: row.text_type,
         title: row.title,
+        hookQuestion: row.hook_question,
         body: parseJsonField(row.body, "body"),
         glossary: parseJsonField(row.glossary_json, "glossary_json"),
         sourceAttribution: parseJsonField(

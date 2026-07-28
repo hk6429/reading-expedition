@@ -20,7 +20,17 @@ export function renderReading(
 
   const progress = document.createElement("div");
   progress.className = "reading-progress";
-  progress.setAttribute("aria-hidden", "true");
+  progress.setAttribute("role", "progressbar");
+  progress.setAttribute("aria-label", "閱讀進度");
+  progress.setAttribute("aria-valuemin", "0");
+  progress.setAttribute("aria-valuemax", "100");
+  progress.setAttribute("aria-valuenow", "0");
+  const progressBar = document.createElement("span");
+  progressBar.className = "reading-progress__bar";
+  const progressText = document.createElement("span");
+  progressText.className = "reading-progress__text";
+  progressText.textContent = `尚未開始・共 ${reading.body.length} 段`;
+  progress.append(progressBar, progressText);
   container.append(progress);
 
   const layout = document.createElement("div");
@@ -51,8 +61,14 @@ export function renderReading(
   title.textContent = reading.title;
   const question = document.createElement("p");
   question.className = "reading-hook";
-  question.textContent = reading.hookQuestion;
-  header.append(kicker, title, question);
+  if (reading.hookQuestion) {
+    const questionLabel = document.createElement("span");
+    questionLabel.textContent = "帶著這個問題讀";
+    question.append(questionLabel, `：${reading.hookQuestion}`);
+    header.append(kicker, title, question);
+  } else {
+    header.append(kicker, title);
+  }
   article.append(header);
 
   const paragraphs = document.createElement("div");
@@ -64,6 +80,46 @@ export function renderReading(
     paragraph.textContent = paragraphText(text);
     paragraphs.append(paragraph);
   });
+  const savedPosition = state.readingProgress[reading.id];
+  let resumeChoicePending =
+    savedPosition?.paragraph > 0 &&
+    savedPosition.progress >= 0.1 &&
+    savedPosition.progress < 0.95;
+  if (resumeChoicePending) {
+    const resume = document.createElement("section");
+    resume.className = "reading-resume";
+    const resumeCopy = document.createElement("p");
+    resumeCopy.textContent = `上次讀到第 ${savedPosition.paragraph + 1}／${reading.body.length} 段`;
+    const resumeActions = document.createElement("div");
+    const continueButton = document.createElement("button");
+    continueButton.type = "button";
+    continueButton.className = "primary-action";
+    continueButton.textContent = "從上次位置繼續";
+    const restartButton = document.createElement("button");
+    restartButton.type = "button";
+    restartButton.textContent = "從頭開始";
+    continueButton.addEventListener("click", () => {
+      resumeChoicePending = false;
+      const target = paragraphs.children[savedPosition.paragraph];
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+      target?.classList.add("is-resumed");
+      resume.remove();
+    });
+    restartButton.addEventListener("click", () => {
+      resumeChoicePending = false;
+      session.updatePosition(reading.id, {
+        contentKey: reading.contentKey,
+        paragraph: 0,
+        offset: 0,
+        progress: 0,
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      resume.remove();
+    });
+    resumeActions.append(continueButton, restartButton);
+    resume.append(resumeCopy, resumeActions);
+    article.append(resume);
+  }
   article.append(paragraphs);
 
   if (reading.glossary.length > 0) {
@@ -125,7 +181,13 @@ export function renderReading(
       if (!visible) return;
       const paragraph = Number(visible.target.dataset.paragraph);
       const readingProgress = (paragraph + 1) / reading.body.length;
-      progress.style.width = `${readingProgress * 100}%`;
+      progressBar.style.width = `${readingProgress * 100}%`;
+      progressText.textContent = `第 ${paragraph + 1}／${reading.body.length} 段`;
+      progress.setAttribute(
+        "aria-valuenow",
+        String(Math.round(readingProgress * 100)),
+      );
+      if (resumeChoicePending) return;
       session.updatePosition(reading.id, {
         contentKey: reading.contentKey,
         paragraph,

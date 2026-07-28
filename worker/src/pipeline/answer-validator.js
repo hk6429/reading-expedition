@@ -29,6 +29,9 @@ export function validateAssessmentAnswers(reading, items) {
       typeof paragraph !== "string" ||
       !Number.isInteger(span?.start) ||
       !Number.isInteger(span?.end) ||
+      typeof span?.text !== "string" ||
+      span.text.length < 8 ||
+      span.text.length > 30 ||
       paragraph.slice(span.start, span.end) !== span.text
     ) {
       errors.add("evidence_not_found");

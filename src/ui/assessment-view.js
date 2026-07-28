@@ -44,6 +44,27 @@ function createQuestion(item, index, total) {
   return fieldset;
 }
 
+function renderEvidenceExcerpt(container, paragraph, span) {
+  const text = typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
+  const start = Math.max(0, Math.min(text.length, span?.start ?? 0));
+  const end = Math.max(start, Math.min(text.length, span?.end ?? start));
+  if (end <= start) {
+    container.textContent = text;
+    return;
+  }
+  const contextStart = Math.max(0, start - 24);
+  const contextEnd = Math.min(text.length, end + 24);
+  const mark = document.createElement("mark");
+  mark.textContent = text.slice(start, end);
+  container.replaceChildren(
+    contextStart > 0 ? "……" : "",
+    text.slice(contextStart, start),
+    mark,
+    text.slice(end, contextEnd),
+    contextEnd < text.length ? "……" : "",
+  );
+}
+
 export function renderAssessment(
   container,
   reading,
@@ -134,24 +155,35 @@ export function renderAssessment(
   });
   let currentIndex = 0;
   let revisionMode = false;
+  let revisionIndexes = [];
 
   function showStep(index) {
     currentIndex = Math.max(0, Math.min(index, questions.length - 1));
     questions.forEach((question, questionIndex) => {
       question.hidden = questionIndex !== currentIndex;
     });
-    previousButton.hidden = currentIndex === 0 || revisionMode;
-    nextButton.hidden =
-      currentIndex === questions.length - 1 || revisionMode;
-    submitButton.hidden =
-      !revisionMode && currentIndex !== questions.length - 1;
+    const revisionPosition = revisionIndexes.indexOf(currentIndex);
+    previousButton.hidden = revisionMode
+      ? revisionPosition <= 0
+      : currentIndex === 0;
+    nextButton.hidden = revisionMode
+      ? revisionPosition < 0 || revisionPosition === revisionIndexes.length - 1
+      : currentIndex === questions.length - 1;
+    submitButton.hidden = revisionMode
+      ? revisionPosition !== revisionIndexes.length - 1
+      : currentIndex !== questions.length - 1;
     const label = questions[currentIndex]?.querySelector("legend span");
     if (label) label.setAttribute("aria-current", "step");
   }
 
   previousButton.addEventListener("click", () => {
     error.textContent = "";
-    showStep(currentIndex - 1);
+    const revisionPosition = revisionIndexes.indexOf(currentIndex);
+    showStep(
+      revisionMode
+        ? revisionIndexes[revisionPosition - 1]
+        : currentIndex - 1,
+    );
   });
   nextButton.addEventListener("click", () => {
     const selected = questions[currentIndex].querySelector(
@@ -163,7 +195,12 @@ export function renderAssessment(
       return;
     }
     error.textContent = "";
-    showStep(currentIndex + 1);
+    const revisionPosition = revisionIndexes.indexOf(currentIndex);
+    showStep(
+      revisionMode
+        ? revisionIndexes[revisionPosition + 1]
+        : currentIndex + 1,
+    );
   });
   showStep(0);
 
@@ -204,8 +241,11 @@ export function renderAssessment(
           const paragraph =
             reading.body[itemResult.evidenceSpan.paragraph - 1];
           evidenceHeading.textContent = `第 ${itemResult.evidenceSpan.paragraph} 段`;
-          evidenceCopy.textContent =
-            typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
+          renderEvidenceExcerpt(
+            evidenceCopy,
+            paragraph,
+            itemResult.evidenceSpan,
+          );
           evidencePanel.hidden = false;
           evidencePanel.scrollIntoView({ behavior: "smooth", block: "center" });
         });
@@ -213,14 +253,14 @@ export function renderAssessment(
       });
 
       if (result.canRevise) {
-        const incorrect = result.results.find((item) => !item.correct);
-        if (incorrect) {
-          error.textContent = "尚有題目可以回看文章後修正一次";
+        revisionIndexes = result.results
+          .map((item, index) => (item.correct ? -1 : index))
+          .filter((index) => index >= 0);
+        if (revisionIndexes.length) {
+          error.textContent = `尚有 ${revisionIndexes.length} 題可以回看文章後修正一次`;
           submitButton.textContent = "完成修正";
           revisionMode = true;
-          showStep(
-            reading.assessment.findIndex(({ id }) => id === incorrect.id),
-          );
+          showStep(revisionIndexes[0]);
           return;
         }
       }

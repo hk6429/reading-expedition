@@ -25,9 +25,18 @@ export function isValidIsoDate(value) {
 }
 
 export async function getDailyPayload(repository, date) {
-  const readings = await repository.getPublishedDaily(date);
+  let readings = await repository.getPublishedDaily(date);
+  if (
+    readings.length === 0 &&
+    typeof repository.getLatestPublishedDaily === "function"
+  ) {
+    readings = await repository.getLatestPublishedDaily(date);
+  }
+  const contentDate = readings[0]?.topicDate ?? date;
   return {
     date,
+    contentDate,
+    isEncore: contentDate !== date,
     readings: readings.map(
       ({
         id,
@@ -65,6 +74,7 @@ export async function getReadingPayload(repository, id) {
     difficulty: reading.difficulty,
     textType: reading.textType,
     title: reading.title,
+    hookQuestion: reading.hookQuestion,
     body: reading.body,
     glossary: reading.glossary,
     sourceAttribution: reading.sourceAttribution,

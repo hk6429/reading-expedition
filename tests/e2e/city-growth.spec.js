@@ -17,7 +17,7 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
   await page.getByRole("button", { name: "送出 3 題" }).click();
   await page.getByRole("button", { name: "把知識帶回浮城" }).click();
 
-  await expect(page.getByText("帶回 6 塊墨磚")).toBeVisible();
+  await expect(page.getByText("帶回 5 塊墨磚")).toBeVisible();
   await page
     .getByRole("button", { name: /投入聚義書樓/ })
     .click();

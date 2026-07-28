@@ -15,11 +15,8 @@ export function rewardVerifiedReading({
   if (repeatedSameDay || !completed || !evidenceSubmitted) {
     return { inkBricks: 0, baseEarned: false };
   }
-  const base = 3;
-  const answerGrowth = Math.max(0, correctCount);
-  const revisionGrowth = Math.max(0, revisedCount);
   return {
-    inkBricks: base + answerGrowth + revisionGrowth,
+    inkBricks: 5,
     baseEarned: true,
   };
 }
