@@ -1,22 +1,22 @@
 {
   "source": {
     "id": "seed-open-data",
-    "name": "萬卷浮城教學種子資料",
-    "baseUrl": "https://example.edu.tw/open-data",
-    "licenseType": "CC-BY-4.0",
-    "licenseVersion": "4.0",
-    "allowedUsage": "adapt-with-attribution"
+    "name": "U.S. Geological Survey Water Science School",
+    "baseUrl": "https://www.usgs.gov/",
+    "licenseType": "public-domain",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
   },
   "sourceItem": {
     "id": "seed-water-source",
-    "canonicalUrl": "https://example.edu.tw/open-data/water-sharing",
-    "title": "城市用水公開資料",
-    "publisher": "萬卷浮城教學種子資料",
-    "publishedAt": "2026-07-27T00:00:00.000Z",
+    "canonicalUrl": "https://www.usgs.gov/water-science-school/science/what-hydrology",
+    "title": "What is Hydrology?",
+    "publisher": "U.S. Geological Survey",
+    "publishedAt": null,
     "fetchedAt": "2026-07-28T05:00:00.000+08:00",
     "contentFingerprint": "seed-water-sharing-v1",
-    "licenseSnapshot": "CC-BY-4.0",
-    "extractScope": "人工編寫的測試事實，不引用真實新聞全文"
+    "licenseSnapshot": "public-domain",
+    "extractScope": "只取城市水資源與水文事實，以繁體中文重新編寫"
   },
   "factPack": {
     "id": "fact-water-sharing-v1",
@@ -35,7 +35,7 @@
       }
     ],
     "sourceLinks": [
-      "https://example.edu.tw/open-data/water-sharing"
+      "https://www.usgs.gov/water-science-school/science/what-hydrology"
     ],
     "sensitivityFlags": [],
     "verificationStatus": "verified",
@@ -63,9 +63,9 @@
       "readingMinutes": 6,
       "sourceAttribution": [
         {
-          "publisher": "萬卷浮城教學種子資料",
-          "url": "https://example.edu.tw/open-data/water-sharing",
-          "license": "CC-BY-4.0"
+          "publisher": "U.S. Geological Survey",
+          "url": "https://www.usgs.gov/water-science-school/science/what-hydrology",
+          "license": "Public Domain"
         }
       ],
       "qualityScore": 100,
@@ -141,9 +141,9 @@
       "readingMinutes": 8,
       "sourceAttribution": [
         {
-          "publisher": "萬卷浮城教學種子資料",
-          "url": "https://example.edu.tw/open-data/water-sharing",
-          "license": "CC-BY-4.0"
+          "publisher": "U.S. Geological Survey",
+          "url": "https://www.usgs.gov/water-science-school/science/what-hydrology",
+          "license": "Public Domain"
         }
       ],
       "qualityScore": 100,

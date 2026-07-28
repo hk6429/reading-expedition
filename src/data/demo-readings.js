@@ -20,9 +20,9 @@ export const demoReadingsById = Object.freeze({
     ],
     sourceAttribution: [
       {
-        publisher: "萬卷浮城教學種子資料",
-        url: "https://example.edu.tw/open-data/water-sharing",
-        license: "CC-BY-4.0",
+        publisher: "U.S. Geological Survey",
+        url: "https://www.usgs.gov/water-science-school/science/what-hydrology",
+        license: "Public Domain",
       },
     ],
     readingMinutes: 6,
@@ -68,9 +68,9 @@ export const demoReadingsById = Object.freeze({
     ],
     sourceAttribution: [
       {
-        publisher: "萬卷浮城教學種子資料",
-        url: "https://example.edu.tw/open-data/water-sharing",
-        license: "CC-BY-4.0",
+        publisher: "U.S. Geological Survey",
+        url: "https://www.usgs.gov/water-science-school/science/what-hydrology",
+        license: "Public Domain",
       },
     ],
     readingMinutes: 8,

@@ -14,5 +14,7 @@ test("公開文件清楚說明本機優先與禁收資料", async () => {
   assert.match(publicCopy, /保存在這部裝置/);
   assert.match(publicCopy, /不收姓名、學號、Email、學校或班級真名/);
   assert.match(readme, /npm test/);
-  assert.match(readme, /尚未部署/);
+  assert.match(readme, /Cloudflare Pages：https:\/\/reading-expedition-2u1\.pages\.dev\//);
+  assert.match(readme, /Vercel：https:\/\/reading-expedition\.vercel\.app\//);
+  assert.match(readme, /Netlify：https:\/\/reading-expedition\.netlify\.app\//);
 });

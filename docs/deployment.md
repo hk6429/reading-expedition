@@ -35,3 +35,10 @@ npm run build
 npm run test:e2e
 git diff --check
 ```
+
+## 正式網址
+
+- Cloudflare Pages：`https://reading-expedition-2u1.pages.dev/`
+- Vercel：`https://reading-expedition.vercel.app/`
+- Netlify：`https://reading-expedition.netlify.app/`
+- Worker API：`https://reading-expedition-api.hk6429.workers.dev/`

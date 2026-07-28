@@ -1,0 +1,209 @@
+{
+  "source": {
+    "id": "seed-loc-community",
+    "name": "Library of Congress Classroom Materials",
+    "baseUrl": "https://www.loc.gov/",
+    "licenseType": "facts-only-rights-vary",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "seed-loc-community-item",
+    "canonicalUrl": "https://www.loc.gov/classroom-materials/community-people-and-places/",
+    "title": "Community: People and Places",
+    "publisher": "Library of Congress",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-28T05:00:00.000+08:00",
+    "contentFingerprint": "seed-loc-community-v1",
+    "licenseSnapshot": "facts-only-rights-vary",
+    "extractScope": "只取教學觀念與資料類型，以繁體中文重新編寫"
+  },
+  "factPack": {
+    "id": "fact-community-sources-v1",
+    "topicDate": "2026-07-28",
+    "category": "humanities",
+    "facts": [
+      {
+        "id": "humanities-fact-1",
+        "statement": "社區可存在於鄉村、都市與郊區，不同地理條件會影響居民的需要。",
+        "sourceItemId": "seed-loc-community-item"
+      },
+      {
+        "id": "humanities-fact-2",
+        "statement": "照片、地圖、訪談與日常工作紀錄都能成為理解社區的第一手資料。",
+        "sourceItemId": "seed-loc-community-item"
+      },
+      {
+        "id": "humanities-fact-3",
+        "statement": "分析第一手資料時，需要區分觀察到的線索、推論與仍待追問的問題。",
+        "sourceItemId": "seed-loc-community-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.loc.gov/classroom-materials/community-people-and-places/",
+      "https://www.loc.gov/programs/teachers/getting-started-with-primary-sources/primary-sources-and-standards/"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "2026-07-28-community-clues",
+  "packages": [
+    {
+      "id": "community-clues-guided-v1",
+      "difficulty": "guided",
+      "title": "一張舊照片，能告訴我們什麼？",
+      "hookQuestion": "看見照片裡的人和街道，就等於知道完整故事嗎？",
+      "body": [
+        "一張社區舊照片，可能拍到市場、郵差、公車司機、圖書館或正在工作的居民。這些都是理解地方生活的線索。",
+        "第一步是觀察：畫面裡確實有哪些人、物件、文字與空間？這時先不急著替人物猜想心情或身分。",
+        "第二步才是推論：根據服裝、工具、建築與活動，提出可能的解釋。同時要記得，照片框外還有沒被拍到的人與事。",
+        "最後留下問題，並尋找地圖、訪談或其他照片互相比對。第一手資料不是自動給出答案，而是讓我們提出更好的問題。"
+      ],
+      "glossary": [
+        {
+          "term": "第一手資料",
+          "definition": "由事件當時的人、物或紀錄直接留下的材料。"
+        }
+      ],
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "Library of Congress",
+          "url": "https://www.loc.gov/classroom-materials/community-people-and-places/",
+          "license": "教學觀念可引用；個別館藏權利狀態需逐件確認"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "published",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "community-clues-guided-q1-v1",
+          "type": "comprehension",
+          "prompt": "文章建議分析舊照片時，第一步做什麼？",
+          "options": [
+            "先列出確實看見的線索",
+            "直接猜人物的心情",
+            "只相信照片上的文字",
+            "先決定唯一答案"
+          ],
+          "correctAnswer": "先列出確實看見的線索",
+          "rationale": "第二段明確把觀察放在推論之前。",
+          "distractorReasons": {
+            "直接猜人物的心情": "文章提醒先不要替人物猜想。",
+            "只相信照片上的文字": "文章要求觀察多種線索。",
+            "先決定唯一答案": "後文要求比對並保留問題。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 0,
+            "end": 54
+          }
+        },
+        {
+          "id": "community-clues-guided-q2-v1",
+          "type": "evidence",
+          "prompt": "哪一段最能支持「照片不等於完整故事」？",
+          "options": [
+            "第1段",
+            "第2段",
+            "第3段",
+            "第4段"
+          ],
+          "correctAnswer": "第3段",
+          "rationale": "第三段提醒照片框外仍有未被拍到的人與事。",
+          "distractorReasons": {
+            "第1段": "只介紹照片可能包含的內容。",
+            "第2段": "說明觀察步驟。",
+            "第4段": "強調比對與提問。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 63
+          }
+        }
+      ]
+    },
+    {
+      "id": "community-clues-challenge-v1",
+      "difficulty": "challenge",
+      "title": "第一手資料會不會也有盲點？",
+      "hookQuestion": "一份資料很真實，是否就代表它呈現了全部？",
+      "body": [
+        "照片、地圖、日記、報紙與口述訪談，都可能是理解過去與社區生活的第一手資料。它們貼近當時，卻不等於完整真相。",
+        "每份資料都有留下它的人、時間、位置與目的。攝影者選擇鏡頭方向，受訪者從自己的記憶出發，地圖也會依用途挑選要標示的資訊。",
+        "分析時可以先記錄可觀察的細節，再提出推論，接著追問：誰留下這份資料？誰沒有出現在裡面？它原本要給誰看？",
+        "把不同形式、不同立場的資料放在一起比較，並不保證得到唯一答案，卻能讓解釋更有根據，也更看得見原先被忽略的人。"
+      ],
+      "glossary": [
+        {
+          "term": "盲點",
+          "definition": "因位置、目的或限制而沒有被看見的部分。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "Library of Congress",
+          "url": "https://www.loc.gov/programs/teachers/getting-started-with-primary-sources/primary-sources-and-standards/",
+          "license": "教學觀念可引用；個別館藏權利狀態需逐件確認"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "published",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "community-clues-challenge-q1-v1",
+          "type": "inference",
+          "prompt": "作者最可能同意哪個說法？",
+          "options": [
+            "第一手資料一定比所有解釋完整",
+            "資料的形成位置與目的會影響它呈現的內容",
+            "只要找到照片就不必再查其他資料",
+            "不同資料只能選一份相信"
+          ],
+          "correctAnswer": "資料的形成位置與目的會影響它呈現的內容",
+          "rationale": "第二段說明攝影者、受訪者與地圖都會有所選擇。",
+          "distractorReasons": {
+            "第一手資料一定比所有解釋完整": "首段明說貼近當時不等於完整真相。",
+            "只要找到照片就不必再查其他資料": "末段主張比較多種資料。",
+            "不同資料只能選一份相信": "文章鼓勵並置比較。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 0,
+            "end": 70
+          }
+        },
+        {
+          "id": "community-clues-challenge-q2-v1",
+          "type": "evidence",
+          "prompt": "哪一段提出最完整的資料查證問題？",
+          "options": [
+            "第1段",
+            "第2段",
+            "第3段",
+            "第4段"
+          ],
+          "correctAnswer": "第3段",
+          "rationale": "第三段逐一追問製作者、缺席者與原始讀者。",
+          "distractorReasons": {
+            "第1段": "介紹第一手資料及其限制。",
+            "第2段": "說明資料如何受到選擇影響。",
+            "第4段": "說明比較資料的價值。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 66
+          }
+        }
+      ]
+    }
+  ]
+}

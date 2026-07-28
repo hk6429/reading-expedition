@@ -1,20 +1,16 @@
-import { deploymentEnv, routes, type VercelConfig } from "@vercel/config/v1";
-
-export const config: VercelConfig = {
+export const config = {
   buildCommand: "npm run build",
   framework: null,
   outputDirectory: "dist",
-  rewrites: [
-    routes.rewrite(
-      "/api/:path*",
-      `${deploymentEnv("READING_API_ORIGIN")}/api/$1`,
-    ),
-  ],
   headers: [
-    routes.cacheControl("/assets/(.*)", {
-      public: true,
-      maxAge: "1 year",
-      immutable: true,
-    }),
+    {
+      source: "/assets/(.*)",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=31536000, immutable",
+        },
+      ],
+    },
   ],
 };

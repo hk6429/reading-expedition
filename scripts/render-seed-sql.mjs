@@ -1,9 +1,12 @@
 import fs from "node:fs";
 
-const fixture = JSON.parse(
-  fs.readFileSync(
-    new URL("../test/fixtures/seed-reading-package.json", import.meta.url),
-    "utf8",
+const fixtures = [
+  "seed-reading-package.json",
+  "seed-science-reading-package.json",
+  "seed-humanities-reading-package.json",
+].map((file) =>
+  JSON.parse(
+    fs.readFileSync(new URL(`../test/fixtures/${file}`, import.meta.url), "utf8"),
   ),
 );
 
@@ -14,13 +17,23 @@ const value = (input) =>
 const json = (input) => value(JSON.stringify(input));
 const rows = [];
 
-rows.push(`INSERT OR IGNORE INTO sources (
+for (const fixture of fixtures) {
+  rows.push(`INSERT OR IGNORE INTO sources (
   id, name, base_url, license_type, license_version, allowed_usage, status, last_checked_at
 ) VALUES (
   ${value(fixture.source.id)}, ${value(fixture.source.name)}, ${value(fixture.source.baseUrl)},
   ${value(fixture.source.licenseType)}, ${value(fixture.source.licenseVersion)},
   ${value(fixture.source.allowedUsage)}, 'active', ${value(fixture.sourceItem.fetchedAt)}
 );`);
+  rows.push(`UPDATE sources SET
+  name = ${value(fixture.source.name)},
+  base_url = ${value(fixture.source.baseUrl)},
+  license_type = ${value(fixture.source.licenseType)},
+  license_version = ${value(fixture.source.licenseVersion)},
+  allowed_usage = ${value(fixture.source.allowedUsage)},
+  status = 'active',
+  last_checked_at = ${value(fixture.sourceItem.fetchedAt)}
+WHERE id = ${value(fixture.source.id)};`);
 rows.push(`INSERT OR IGNORE INTO source_items (
   id, source_id, canonical_url, title, publisher, published_at, fetched_at,
   content_fingerprint, license_snapshot, extract_scope
@@ -31,6 +44,16 @@ rows.push(`INSERT OR IGNORE INTO source_items (
   ${value(fixture.sourceItem.fetchedAt)}, ${value(fixture.sourceItem.contentFingerprint)},
   ${value(fixture.sourceItem.licenseSnapshot)}, ${value(fixture.sourceItem.extractScope)}
 );`);
+  rows.push(`UPDATE source_items SET
+  canonical_url = ${value(fixture.sourceItem.canonicalUrl)},
+  title = ${value(fixture.sourceItem.title)},
+  publisher = ${value(fixture.sourceItem.publisher)},
+  published_at = ${value(fixture.sourceItem.publishedAt)},
+  fetched_at = ${value(fixture.sourceItem.fetchedAt)},
+  content_fingerprint = ${value(fixture.sourceItem.contentFingerprint)},
+  license_snapshot = ${value(fixture.sourceItem.licenseSnapshot)},
+  extract_scope = ${value(fixture.sourceItem.extractScope)}
+WHERE id = ${value(fixture.sourceItem.id)};`);
 rows.push(`INSERT OR IGNORE INTO fact_packs (
   id, topic_date, category, facts_json, source_links_json,
   sensitivity_flags_json, verification_status, version
@@ -40,9 +63,17 @@ rows.push(`INSERT OR IGNORE INTO fact_packs (
   ${json(fixture.factPack.sourceLinks)}, ${json(fixture.factPack.sensitivityFlags)},
   ${value(fixture.factPack.verificationStatus)}, ${fixture.factPack.version}
 );`);
+  rows.push(`UPDATE fact_packs SET
+  topic_date = ${value(fixture.factPack.topicDate)},
+  category = ${value(fixture.factPack.category)},
+  facts_json = ${json(fixture.factPack.facts)},
+  source_links_json = ${json(fixture.factPack.sourceLinks)},
+  sensitivity_flags_json = ${json(fixture.factPack.sensitivityFlags)},
+  verification_status = ${value(fixture.factPack.verificationStatus)}
+WHERE id = ${value(fixture.factPack.id)};`);
 
-for (const reading of fixture.packages) {
-  rows.push(`INSERT OR IGNORE INTO reading_packages (
+  for (const reading of fixture.packages) {
+    rows.push(`INSERT OR IGNORE INTO reading_packages (
     id, content_key, fact_pack_id, difficulty, title, hook_question, body,
     glossary_json, reading_minutes, source_attribution_json, quality_score,
     hard_gate_status, publication_status, version, published_at
@@ -54,15 +85,36 @@ for (const reading of fixture.packages) {
     ${value(reading.hardGateStatus)}, ${value(reading.publicationStatus)},
     ${reading.version}, ${value(fixture.sourceItem.fetchedAt)}
   );`);
-  for (const item of reading.assessment) {
-    rows.push(`INSERT OR IGNORE INTO assessment_items (
+    rows.push(`UPDATE reading_packages SET
+    title = ${value(reading.title)},
+    hook_question = ${value(reading.hookQuestion)},
+    body = ${json(reading.body)},
+    glossary_json = ${json(reading.glossary)},
+    reading_minutes = ${reading.readingMinutes},
+    source_attribution_json = ${json(reading.sourceAttribution)},
+    quality_score = ${reading.qualityScore},
+    hard_gate_status = ${value(reading.hardGateStatus)},
+    publication_status = ${value(reading.publicationStatus)},
+    published_at = ${value(fixture.sourceItem.fetchedAt)}
+  WHERE id = ${value(reading.id)};`);
+    for (const item of reading.assessment) {
+      rows.push(`INSERT OR IGNORE INTO assessment_items (
       id, reading_package_id, item_type, prompt, options_json, correct_answer,
       rationale, distractor_reasons_json, evidence_span_json, version
     ) VALUES (
       ${value(item.id)}, ${value(reading.id)}, ${value(item.type)}, ${value(item.prompt)},
       ${json(item.options)}, ${value(item.correctAnswer)}, ${value(item.rationale)},
       ${json(item.distractorReasons)}, ${json(item.evidenceSpan)}, ${reading.version}
-    );`);
+      );`);
+      rows.push(`UPDATE assessment_items SET
+      prompt = ${value(item.prompt)},
+      options_json = ${json(item.options)},
+      correct_answer = ${value(item.correctAnswer)},
+      rationale = ${value(item.rationale)},
+      distractor_reasons_json = ${json(item.distractorReasons)},
+      evidence_span_json = ${json(item.evidenceSpan)}
+    WHERE id = ${value(item.id)};`);
+    }
   }
 }
 

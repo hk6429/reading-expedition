@@ -1,0 +1,208 @@
+{
+  "source": {
+    "id": "seed-nasa-water-cycle",
+    "name": "NASA Science",
+    "baseUrl": "https://science.nasa.gov/",
+    "licenseType": "us-federal-public-information",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "seed-nasa-water-cycle-item",
+    "canonicalUrl": "https://science.nasa.gov/kids/earth/what-is-the-water-cycle/",
+    "title": "What Is the Water Cycle?",
+    "publisher": "NASA Science",
+    "publishedAt": "2025-09-01T00:00:00.000Z",
+    "fetchedAt": "2026-07-28T05:00:00.000+08:00",
+    "contentFingerprint": "seed-nasa-water-cycle-v1",
+    "licenseSnapshot": "us-federal-public-information",
+    "extractScope": "只取水循環事實，以繁體中文重新編寫"
+  },
+  "factPack": {
+    "id": "fact-water-cycle-v1",
+    "topicDate": "2026-07-28",
+    "category": "science",
+    "facts": [
+      {
+        "id": "science-fact-1",
+        "statement": "地球上的水會在固態、液態與氣態之間改變。",
+        "sourceItemId": "seed-nasa-water-cycle-item"
+      },
+      {
+        "id": "science-fact-2",
+        "statement": "陽光促使水蒸發，植物也會把水分送入大氣。",
+        "sourceItemId": "seed-nasa-water-cycle-item"
+      },
+      {
+        "id": "science-fact-3",
+        "statement": "水蒸氣冷卻凝結成雲，之後以雨或雪回到地表。",
+        "sourceItemId": "seed-nasa-water-cycle-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://science.nasa.gov/kids/earth/what-is-the-water-cycle/"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "2026-07-28-water-cycle",
+  "packages": [
+    {
+      "id": "water-cycle-guided-v1",
+      "difficulty": "guided",
+      "title": "一滴水為什麼總在旅行？",
+      "hookQuestion": "落下來的雨，下一站一定是河流嗎？",
+      "body": [
+        "一滴水不會永遠留在同一個地方。它可能在海洋、河流、土壤、地下或大氣中停留，也可能變成冰。",
+        "陽光讓海洋、湖泊與河川表面的液態水蒸發，變成看不見的水蒸氣。植物也會把吸收的水分送回大氣。",
+        "水蒸氣升高後遇冷，會凝結成細小水滴並形成雲。當水滴聚集到足夠大，就可能以雨或雪回到地表。",
+        "回到地面的水，有些流入河海，有些滲入地下，有些再次蒸發。水循環不是一條單一路線，而是一張不斷移動的網。"
+      ],
+      "glossary": [
+        {
+          "term": "凝結",
+          "definition": "氣體冷卻後變成液體的過程。"
+        }
+      ],
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "NASA Science",
+          "url": "https://science.nasa.gov/kids/earth/what-is-the-water-cycle/",
+          "license": "美國聯邦政府公開資訊；圖片權利另計"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "published",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "water-cycle-guided-q1-v1",
+          "type": "comprehension",
+          "prompt": "文章中的水蒸氣主要如何形成？",
+          "options": [
+            "液態水受熱蒸發，植物也釋出水分",
+            "雲直接變成地下水",
+            "冰只要移動就變成氣體",
+            "河流把水推到天空"
+          ],
+          "correctAnswer": "液態水受熱蒸發，植物也釋出水分",
+          "rationale": "第二段說明陽光造成蒸發，也提到植物送出水分。",
+          "distractorReasons": {
+            "雲直接變成地下水": "雲中的水要先以降水回到地表。",
+            "冰只要移動就變成氣體": "文章沒有提出這項條件。",
+            "河流把水推到天空": "水是受熱蒸發，不是被河流推上去。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 0,
+            "end": 61
+          }
+        },
+        {
+          "id": "water-cycle-guided-q2-v1",
+          "type": "evidence",
+          "prompt": "哪一段最能支持「水循環不是只有一條路」？",
+          "options": [
+            "第1段",
+            "第2段",
+            "第3段",
+            "第4段"
+          ],
+          "correctAnswer": "第4段",
+          "rationale": "第四段列出流入河海、滲入地下與再次蒸發等不同去向。",
+          "distractorReasons": {
+            "第1段": "交代水可能停留的位置。",
+            "第2段": "主要說明蒸發。",
+            "第3段": "主要說明凝結與降水。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 0,
+            "end": 67
+          }
+        }
+      ]
+    },
+    {
+      "id": "water-cycle-challenge-v1",
+      "difficulty": "challenge",
+      "title": "水循環為什麼更像網，而不是圓圈？",
+      "hookQuestion": "同一滴水回到地表後，可能走向多少條不同路徑？",
+      "body": [
+        "課本常把水循環畫成一個圓，但真實的水會在海洋、河湖、土壤、地下水、冰雪與大氣等儲存處之間移動。",
+        "太陽能量推動蒸發，植物的蒸散也把水送入大氣。水蒸氣升高冷卻後凝結，形成雲，再以降水回到海洋或陸地。",
+        "降水到達陸地後，可能成為地表逕流、滲入土壤、補充地下水、被植物吸收，或在低溫處成為冰雪。",
+        "因此，圓形圖能提示循環不斷發生，卻容易讓人誤以為水只有固定順序。把它理解成具有多個儲存處與路徑的網，較接近實際情形。"
+      ],
+      "glossary": [
+        {
+          "term": "儲存處",
+          "definition": "水在循環途中暫時停留的環境，例如海洋、冰雪或地下。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "NASA Science",
+          "url": "https://science.nasa.gov/earth/earth-observatory/the-water-cycle/",
+          "license": "美國聯邦政府公開資訊；圖片權利另計"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "published",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "water-cycle-challenge-q1-v1",
+          "type": "inference",
+          "prompt": "作者為什麼認為「網」比「圓圈」更接近真實水循環？",
+          "options": [
+            "因為水只會往地下移動",
+            "因為水有多個儲存處與不同移動路徑",
+            "因為圓圈不能畫出雲",
+            "因為所有水都會同時蒸發"
+          ],
+          "correctAnswer": "因為水有多個儲存處與不同移動路徑",
+          "rationale": "末段直接比較固定順序與多個儲存處、路徑。",
+          "distractorReasons": {
+            "因為水只會往地下移動": "第三段列出多種去向。",
+            "因為圓圈不能畫出雲": "文章批評的是固定順序，不是圖形能否畫雲。",
+            "因為所有水都會同時蒸發": "文章沒有這項說法。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 0,
+            "end": 72
+          }
+        },
+        {
+          "id": "water-cycle-challenge-q2-v1",
+          "type": "evidence",
+          "prompt": "哪一段提供最多「降水後不同去向」的文證？",
+          "options": [
+            "第1段",
+            "第2段",
+            "第3段",
+            "第4段"
+          ],
+          "correctAnswer": "第3段",
+          "rationale": "第三段列出逕流、滲入、地下水、植物與冰雪等去向。",
+          "distractorReasons": {
+            "第1段": "列出儲存處，未聚焦降水後的去向。",
+            "第2段": "說明蒸發、凝結與降水。",
+            "第4段": "總結圖像模型的差異。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 64
+          }
+        }
+      ]
+    }
+  ]
+}

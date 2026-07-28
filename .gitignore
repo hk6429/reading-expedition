@@ -12,3 +12,5 @@ coverage/
 dist/
 assets/generated/
 tmp/
+.vercel
+.env*

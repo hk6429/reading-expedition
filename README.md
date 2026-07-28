@@ -4,7 +4,12 @@
 
 ## 專案狀態
 
-功能與部署設定已完成，尚未部署正式環境。
+正式環境已部署，三站共用同一個 Cloudflare Worker API 與 Production D1：
+
+- Cloudflare Pages：https://reading-expedition-2u1.pages.dev/
+- Vercel：https://reading-expedition.vercel.app/
+- Netlify：https://reading-expedition.netlify.app/
+- GitHub：https://github.com/hk6429/reading-expedition
 
 ## 核心功能
 
