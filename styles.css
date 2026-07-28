@@ -68,10 +68,7 @@ body {
 }
 
 main {
-  display: grid;
   min-height: calc(100vh - 6rem);
-  place-items: center;
-  padding: 1rem;
 }
 
 .paper-panel {
@@ -104,6 +101,268 @@ p {
   font-size: 0.92rem;
 }
 
+button,
+a {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--ink-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--focus-ring);
+}
+
+.home-view {
+  width: min(76rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1rem 0 5rem;
+}
+
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 0.88fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  min-height: 32rem;
+  padding: clamp(2rem, 6vw, 5rem);
+  overflow: hidden;
+  border: 1px solid rgb(29 26 23 / 14%);
+  border-radius: 2rem 0.5rem 2rem 0.5rem;
+  background: rgb(245 240 230 / 94%);
+  box-shadow: 0 2rem 6rem rgb(38 55 70 / 13%);
+}
+
+.hero-copy h1 {
+  max-width: 9ch;
+}
+
+.hero-lead {
+  max-width: 34rem;
+  color: #4f4a43;
+  font-size: clamp(1.05rem, 2vw, 1.22rem);
+}
+
+.today-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.today-status span {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgb(29 26 23 / 14%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 48%);
+  color: #554f47;
+  font-size: 0.88rem;
+}
+
+.floating-city-preview {
+  position: relative;
+  min-height: 22rem;
+  isolation: isolate;
+}
+
+.ink-moon {
+  position: absolute;
+  top: 0;
+  right: 12%;
+  width: 8.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(182 64 50 / 12%);
+  box-shadow: inset 1.2rem -1rem 0 rgb(245 240 230 / 36%);
+}
+
+.mountain {
+  position: absolute;
+  right: -8%;
+  bottom: 2rem;
+  left: 4%;
+  height: 15rem;
+  clip-path: polygon(0 100%, 20% 35%, 36% 78%, 57% 9%, 78% 67%, 100% 27%, 100% 100%);
+}
+
+.mountain-back {
+  opacity: 0.28;
+  background: var(--mineral-blue);
+  transform: translateY(-2rem);
+}
+
+.mountain-front {
+  opacity: 0.82;
+  background: linear-gradient(150deg, var(--ink-muted), var(--ink-primary));
+}
+
+.city-tower {
+  position: absolute;
+  right: 31%;
+  bottom: 3.25rem;
+  z-index: 2;
+  width: 5.3rem;
+  height: 8.4rem;
+  clip-path: polygon(12% 100%, 12% 30%, 0 30%, 50% 0, 100% 30%, 88% 30%, 88% 100%);
+  background: var(--paper-card);
+  box-shadow: inset 0 -2.5rem 0 rgb(63 104 116 / 28%);
+}
+
+.city-light {
+  position: absolute;
+  bottom: 5.6rem;
+  z-index: 3;
+  width: 0.65rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #d8a84d;
+  box-shadow: 0 0 1.2rem #d8a84d;
+}
+
+.light-one {
+  right: 39%;
+}
+
+.light-two {
+  right: 34%;
+}
+
+.city-caption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: var(--ink-muted);
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  letter-spacing: 0.12em;
+}
+
+.route-section {
+  padding-top: 5rem;
+}
+
+.section-heading {
+  display: flex;
+  gap: 2rem;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.section-heading h2,
+.route-card h2 {
+  margin: 0.25rem 0 0;
+  font-family: "Noto Serif TC", "Songti TC", serif;
+}
+
+.section-heading > p {
+  max-width: 30rem;
+  color: var(--ink-muted);
+}
+
+.route-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.route-card {
+  display: flex;
+  min-width: 0;
+  min-height: 28rem;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(29 26 23 / 14%);
+  border-radius: 1.5rem 0.35rem 1.5rem 0.35rem;
+  background: rgb(245 240 230 / 94%);
+  box-shadow: 0 1.2rem 3rem rgb(38 55 70 / 8%);
+}
+
+.route-card__header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  min-height: 8rem;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, rgb(63 104 116 / 13%), transparent);
+}
+
+.route-science .route-card__header {
+  background: linear-gradient(145deg, rgb(71 115 98 / 16%), transparent);
+}
+
+.route-humanities .route-card__header {
+  background: linear-gradient(145deg, rgb(194 146 61 / 18%), transparent);
+}
+
+.route-mark {
+  display: grid;
+  width: 4rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid currentcolor;
+  border-radius: 50% 45% 52% 43%;
+  color: var(--cinnabar);
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.route-mentor {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.route-card__body {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.route-question {
+  margin-top: 1.4rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--cinnabar);
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-weight: 700;
+}
+
+.route-card__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.difficulty-button {
+  min-height: 3.5rem;
+  padding: 0.65rem;
+  border: 1px solid rgb(29 26 23 / 24%);
+  border-radius: 0.8rem 0.2rem 0.8rem 0.2rem;
+  background: transparent;
+  color: var(--ink-primary);
+  cursor: pointer;
+}
+
+.difficulty-button:hover {
+  border-color: var(--cinnabar);
+  background: rgb(182 64 50 / 6%);
+}
+
+.difficulty-button span,
+.difficulty-button small {
+  display: block;
+}
+
+.difficulty-button span {
+  font-weight: 800;
+}
+
+.difficulty-button small {
+  margin-top: 0.2rem;
+  color: var(--ink-muted);
+}
+
 @media (max-width: 36rem) {
   .site-header {
     align-items: flex-start;
@@ -113,6 +372,52 @@ p {
 
   main {
     align-items: start;
+  }
+
+  .home-view {
+    width: min(100% - 1rem, 36rem);
+  }
+
+  .home-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 1.4rem;
+  }
+
+  .floating-city-preview {
+    min-height: 14rem;
+  }
+
+  .route-section {
+    padding-top: 3rem;
+  }
+
+  .section-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .route-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .route-card {
+    min-height: 0;
+  }
+}
+
+@media (min-width: 36.01rem) and (max-width: 63.99rem) {
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .route-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .route-card:last-child {
+    grid-column: 1 / -1;
   }
 }
 
