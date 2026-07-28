@@ -21,3 +21,14 @@ for (const entry of entries) {
     },
   });
 }
+
+if (process.env.READING_API_ORIGIN) {
+  const apiOrigin = new URL(process.env.READING_API_ORIGIN);
+  if (apiOrigin.protocol !== "https:") {
+    throw new TypeError("READING_API_ORIGIN must use HTTPS");
+  }
+  fs.writeFileSync(
+    path.join(output, "_redirects"),
+    `/api/*  ${apiOrigin.origin}/api/:splat  200!\n`,
+  );
+}
