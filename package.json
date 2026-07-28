@@ -1,0 +1,22 @@
+{
+  "name": "reading-expedition",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "test:unit": "node --test \"test/domain/**/*.test.mjs\" \"test/storage/**/*.test.mjs\"",
+    "test:api": "node --test \"test/api/**/*.test.mjs\"",
+    "test:pipeline": "node --test \"test/pipeline/**/*.test.mjs\"",
+    "test:static": "node --test \"test/static/**/*.test.mjs\"",
+    "test:e2e": "playwright test",
+    "dev:web": "wrangler pages dev . --port 8788"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.0",
+    "wrangler": "^4.114.0"
+  }
+}

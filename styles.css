@@ -1,0 +1,128 @@
+:root {
+  color-scheme: light;
+  --ink-primary: #1d1a17;
+  --ink-muted: #6d685f;
+  --paper-primary: #f5f0e6;
+  --paper-card: #e7d8bc;
+  --cinnabar: #b64032;
+  --mineral-blue: #3f6874;
+  --focus-ring: #f5f0e6;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: var(--paper-primary);
+  color: var(--ink-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 88% 12%, rgb(63 104 116 / 16%), transparent 34rem),
+    linear-gradient(145deg, #f7f2e8, #e8ddca);
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10;
+  padding: 0.6rem 0.9rem;
+  transform: translateY(-200%);
+  background: var(--ink-primary);
+  color: var(--paper-primary);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: min(72rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1.5rem 0;
+}
+
+.eyebrow,
+.wordmark,
+.chapter-label {
+  margin: 0;
+}
+
+.eyebrow,
+.chapter-label {
+  color: var(--cinnabar);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.wordmark {
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+main {
+  display: grid;
+  min-height: calc(100vh - 6rem);
+  place-items: center;
+  padding: 1rem;
+}
+
+.paper-panel {
+  width: min(42rem, 100%);
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid rgb(29 26 23 / 16%);
+  border-radius: 1.5rem 0.35rem 1.5rem 0.35rem;
+  background: rgb(245 240 230 / 96%);
+  box-shadow: 0 1.5rem 5rem rgb(38 55 70 / 12%);
+}
+
+h1 {
+  max-width: 12ch;
+  margin: 0.8rem 0 1.2rem;
+  font-family: "Noto Serif TC", "Songti TC", serif;
+  font-size: clamp(2.3rem, 8vw, 4.8rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.privacy-note {
+  padding-top: 1rem;
+  border-top: 1px solid rgb(29 26 23 / 12%);
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 36rem) {
+  .site-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  main {
+    align-items: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

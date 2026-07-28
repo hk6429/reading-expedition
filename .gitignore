@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+.wrangler/
+.netlify/
+.vercel/
+playwright-report/
+test-results/
+coverage/
+assets/generated/
+tmp/
