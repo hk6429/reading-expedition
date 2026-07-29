@@ -107,12 +107,12 @@ WHERE id = ${value(fixture.factPack.id)};`);
         : null;
     rows.push(`INSERT OR IGNORE INTO reading_packages (
     id, content_key, fact_pack_id, difficulty, text_type, title, hook_question, body,
-    glossary_json, reading_minutes, source_attribution_json, quality_score,
+    glossary_json, reading_strategy_json, reading_minutes, source_attribution_json, quality_score,
     hard_gate_status, publication_status, version, published_at
   ) VALUES (
     ${value(reading.id)}, ${value(fixture.contentKey)}, ${value(fixture.factPack.id)},
     ${value(reading.difficulty)}, ${value(reading.textType)}, ${value(reading.title)}, ${value(reading.hookQuestion)},
-    ${json(reading.body)}, ${json(reading.glossary)}, ${reading.readingMinutes},
+    ${json(reading.body)}, ${json(reading.glossary)}, ${json(reading.readingStrategy ?? {})}, ${reading.readingMinutes},
     ${json(reading.sourceAttribution)}, ${reading.qualityScore},
     ${value(reading.hardGateStatus)}, ${value(publicationStatus)},
     ${reading.version}, ${value(publishedAt)}
@@ -123,6 +123,7 @@ WHERE id = ${value(fixture.factPack.id)};`);
     hook_question = ${value(reading.hookQuestion)},
     body = ${json(reading.body)},
     glossary_json = ${json(reading.glossary)},
+    reading_strategy_json = ${json(reading.readingStrategy ?? {})},
     reading_minutes = ${reading.readingMinutes},
     source_attribution_json = ${json(reading.sourceAttribution)},
     quality_score = ${reading.qualityScore},

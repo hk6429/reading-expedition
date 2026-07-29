@@ -1670,6 +1670,87 @@ main h1[tabindex="-1"]:focus {
   font-size: 2rem;
 }
 
+.reading-strategy-panel {
+  margin: 1.5rem 0;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid rgb(182 64 50 / 32%);
+  border-radius: 1rem 0.25rem 1rem 0.25rem;
+  background: var(--paper-secondary);
+}
+
+.reading-strategy-panel > h2 {
+  margin: 0.25rem 0 0.65rem;
+  font-size: clamp(1.55rem, 6vw, 2.25rem);
+}
+
+.reading-strategy-purpose {
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.reading-strategy-structure,
+.reading-strategy-reflection {
+  padding: 0.9rem 1rem;
+  border-left: 4px solid var(--cinnabar);
+  background: rgb(182 64 50 / 7%);
+}
+
+.reading-strategy-structure p,
+.reading-strategy-reflection p {
+  margin: 0.35rem 0;
+  line-height: 1.75;
+}
+
+.reading-strategy-steps {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: strategy-step;
+}
+
+.reading-strategy-steps li {
+  position: relative;
+  padding: 1rem 1rem 1rem 3.4rem;
+  border: 1px solid rgb(109 104 95 / 24%);
+  border-radius: 0.8rem 0.2rem 0.8rem 0.2rem;
+  counter-increment: strategy-step;
+}
+
+.reading-strategy-steps li::before {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  width: 1.8rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--cinnabar);
+  color: #fff8e9;
+  content: counter(strategy-step);
+  font-weight: 900;
+}
+
+.reading-strategy-steps h3,
+.reading-strategy-steps p {
+  margin: 0 0 0.5rem;
+}
+
+.reading-strategy-example {
+  color: var(--ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+@media (min-width: 48rem) {
+  .reading-strategy-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .city-view {
   width: min(76rem, calc(100% - 2rem));
   margin: 0 auto;

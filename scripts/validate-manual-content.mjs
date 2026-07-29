@@ -60,6 +60,60 @@ function isHttpsUrl(value) {
   }
 }
 
+function validateReadingStrategy(strategy) {
+  const errors = [];
+  if (!strategy || typeof strategy !== "object" || Array.isArray(strategy)) {
+    return ["缺少閱讀策略拆解"];
+  }
+  const textRules = [
+    ["name", 6, 12, "策略名稱"],
+    ["purpose", 25, 55, "策略目的"],
+    ["structureMap", 35, 80, "文章結構圖"],
+    ["expertTip", 25, 60, "專家提醒"],
+    ["selfCheck", 20, 50, "自我檢核"],
+  ];
+  for (const [field, minimum, maximum, label] of textRules) {
+    const value = strategy[field];
+    if (
+      typeof value !== "string" ||
+      value.trim().length < minimum ||
+      value.trim().length > maximum
+    ) {
+      errors.push(`${label}須為 ${minimum}–${maximum} 字`);
+    }
+  }
+  if (!Array.isArray(strategy.steps) || strategy.steps.length !== 3) {
+    errors.push("閱讀策略必須正好有三個步驟");
+  } else {
+    strategy.steps.forEach((step, index) => {
+      if (
+        !step ||
+        typeof step !== "object" ||
+        typeof step.label !== "string" ||
+        step.label.trim().length < 2 ||
+        step.label.trim().length > 8
+      ) {
+        errors.push(`第 ${index + 1} 步短名須為 2–8 字`);
+      }
+      if (
+        typeof step?.instruction !== "string" ||
+        step.instruction.trim().length < 25 ||
+        step.instruction.trim().length > 60
+      ) {
+        errors.push(`第 ${index + 1} 步操作須為 25–60 字`);
+      }
+      if (
+        typeof step?.example !== "string" ||
+        step.example.trim().length < 25 ||
+        step.example.trim().length > 70
+      ) {
+        errors.push(`第 ${index + 1} 步示範須為 25–70 字`);
+      }
+    });
+  }
+  return errors;
+}
+
 for (const file of files) {
   let fixture;
   try {
@@ -151,6 +205,13 @@ for (const file of files) {
       fail(file, `${reading.difficulty} 必須正好有三題`);
       continue;
     }
+    const strategyErrors = validateReadingStrategy(reading.readingStrategy);
+    if (strategyErrors.length > 0) {
+      fail(
+        file,
+        `${reading.difficulty} 閱讀策略不合格：${strategyErrors.join(", ")}`,
+      );
+    }
     const types = reading.assessment.map((item) => item.type);
     if (
       types.join(",") !== "comprehension,inference,evidence"
@@ -170,6 +231,12 @@ for (const file of files) {
         `${reading.difficulty} 題組不合格：${assessmentCheck.errors.join(", ")}`,
       );
     }
+  }
+  if (
+    byDifficulty.guided.readingStrategy?.name ===
+    byDifficulty.challenge.readingStrategy?.name
+  ) {
+    fail(file, "guided 與 challenge 必須使用不同層次的閱讀策略");
   }
   const levels = compareDifficultyLevels(
     byDifficulty.guided,

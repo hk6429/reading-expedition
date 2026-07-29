@@ -125,6 +125,7 @@
           "hookQuestion",
           "body",
           "glossary",
+          "readingStrategy",
           "readingMinutes",
           "sourceAttribution",
           "qualityScore",
@@ -161,6 +162,64 @@
               "properties": {
                 "term": { "type": "string" },
                 "definition": { "type": "string" }
+              }
+            }
+          },
+          "readingStrategy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "purpose",
+              "steps",
+              "structureMap",
+              "expertTip",
+              "selfCheck"
+            ],
+            "properties": {
+              "name": { "type": "string", "minLength": 6, "maxLength": 12 },
+              "purpose": { "type": "string", "minLength": 25, "maxLength": 55 },
+              "steps": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["label", "instruction", "example"],
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 8
+                    },
+                    "instruction": {
+                      "type": "string",
+                      "minLength": 25,
+                      "maxLength": 60
+                    },
+                    "example": {
+                      "type": "string",
+                      "minLength": 25,
+                      "maxLength": 70
+                    }
+                  }
+                }
+              },
+              "structureMap": {
+                "type": "string",
+                "minLength": 35,
+                "maxLength": 80
+              },
+              "expertTip": {
+                "type": "string",
+                "minLength": 25,
+                "maxLength": 60
+              },
+              "selfCheck": {
+                "type": "string",
+                "minLength": 20,
+                "maxLength": 50
               }
             }
           },

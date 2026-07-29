@@ -116,6 +116,33 @@ test("reading API 提供正文與題目外觀，但不提供答案", async () =>
               title: "城市如何分配有限水源？",
               body: ["清晨，水庫的刻度又下降了一格。"],
               glossary: [],
+              readingStrategy: {
+                name: "因果證據鏈閱讀法",
+                purpose: "先找水量下降的原因，再核對每一項分配主張依據的證據。",
+                steps: [
+                  {
+                    label: "找變化",
+                    instruction: "圈出水量、需求與規則出現變化的位置，先不急著判斷。",
+                    example: "水庫刻度下降是現象，還要繼續尋找造成下降的條件。",
+                  },
+                  {
+                    label: "連因果",
+                    instruction: "把原因、影響與回應措施用箭頭連起來，檢查是否跳步。",
+                    example: "水量減少導向分配壓力，分配規則則會影響不同用水者。",
+                  },
+                  {
+                    label: "核證據",
+                    instruction: "回到原文核對每個推論，區分文章明說與自己補上的想法。",
+                    example: "若正文只說刻度下降，就不能直接斷定是某一類用戶浪費。",
+                  },
+                ],
+                structureMap:
+                  "文章先呈現水源下降的問題，再比較不同分配原則，最後提出可檢驗的判準。",
+                expertTip:
+                  "看見公平二字先別選邊，先確認文章比較的是規則相同，還是結果與需求相稱。",
+                selfCheck:
+                  "我的結論是否能指出原文中的原因、影響與直接證據？",
+              },
               sourceAttribution: [{ publisher: "公開資料站" }],
               readingMinutes: 6,
               version: 1,
@@ -142,6 +169,7 @@ test("reading API 提供正文與題目外觀，但不提供答案", async () =>
   assert.equal(response.status, 200);
   assert.equal(payload.reading.hookQuestion, "分配一樣多，就是公平嗎？");
   assert.equal(payload.reading.body[0], "清晨，水庫的刻度又下降了一格。");
+  assert.equal(payload.reading.readingStrategy.name, "因果證據鏈閱讀法");
   assert.equal(payload.reading.assessment[0].prompt, "文章主要討論什麼？");
   assert.doesNotMatch(JSON.stringify(payload), /correctAnswer|rationale/);
 });

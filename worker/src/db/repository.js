@@ -53,6 +53,10 @@ function mapReviewPackage(row, assessment = []) {
     hookQuestion: row.hook_question,
     body: parseJsonField(row.body, "body"),
     glossary: parseJsonField(row.glossary_json, "glossary_json"),
+    readingStrategy: parseJsonField(
+      row.reading_strategy_json,
+      "reading_strategy_json",
+    ),
     readingMinutes: row.reading_minutes,
     sourceAttribution: parseJsonField(
       row.source_attribution_json,
@@ -783,6 +787,7 @@ export function createReadingRepository(db) {
              rp.hook_question,
              rp.body,
              rp.glossary_json,
+             rp.reading_strategy_json,
              rp.source_attribution_json,
              rp.reading_minutes,
              rp.version
@@ -829,6 +834,10 @@ export function createReadingRepository(db) {
         hookQuestion: row.hook_question,
         body: parseJsonField(row.body, "body"),
         glossary: parseJsonField(row.glossary_json, "glossary_json"),
+        readingStrategy: parseJsonField(
+          row.reading_strategy_json,
+          "reading_strategy_json",
+        ),
         sourceAttribution: parseJsonField(
           row.source_attribution_json,
           "source_attribution_json",

@@ -77,6 +77,7 @@ export async function getReadingPayload(repository, id) {
     hookQuestion: reading.hookQuestion,
     body: reading.body,
     glossary: reading.glossary,
+    readingStrategy: reading.readingStrategy,
     sourceAttribution: reading.sourceAttribution,
     readingMinutes: reading.readingMinutes,
     version: reading.version,

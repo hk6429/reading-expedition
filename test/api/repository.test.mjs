@@ -103,6 +103,8 @@ test("repository 只取得已發布文章的正文與題目", async () => {
             hook_question: "分配一樣多，就是公平嗎？",
             body: '["第一段","第二段"]',
             glossary_json: "[]",
+            reading_strategy_json:
+              '{"name":"因果證據鏈閱讀法","purpose":"先找現象的原因，再核對文章提出的證據與結論。","steps":[],"structureMap":"先提出問題，再比較不同分配方式，最後形成判斷標準。","expertTip":"先分清楚文章明說的內容，以及讀者自行補入的推論。","selfCheck":"我的結論能否回到原文找到直接證據？"}',
             source_attribution_json: '[{"publisher":"公開資料站"}]',
             reading_minutes: 6,
             version: 1,
@@ -133,6 +135,7 @@ test("repository 只取得已發布文章的正文與題目", async () => {
 
   assert.deepEqual(reading.body, ["第一段", "第二段"]);
   assert.equal(reading.hookQuestion, "分配一樣多，就是公平嗎？");
+  assert.equal(reading.readingStrategy.name, "因果證據鏈閱讀法");
   assert.equal(reading.assessment[0].correctAnswer, "城市用水");
   assert.match(calls[0].sql, /publication_status = 'published'/);
   assert.deepEqual(calls[0].bindings, ["water-001-guided"]);

@@ -4,8 +4,8 @@ import test from "node:test";
 
 const projectRoot = new URL("../../", import.meta.url);
 
-test("D1 migration 鎖住來源、發布版本、文體、稽核事件與班級去重", async () => {
-  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql] = await Promise.all([
+test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、稽核事件與班級去重", async () => {
+  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql] = await Promise.all([
     readFile(new URL("migrations/0001_content.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0002_review.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0003_class_aggregate.sql", projectRoot), "utf8"),
@@ -15,6 +15,10 @@ test("D1 migration 鎖住來源、發布版本、文體、稽核事件與班級�
         "migrations/0007_classroom_contribution_idempotency.sql",
         projectRoot,
       ),
+      "utf8",
+    ),
+    readFile(
+      new URL("migrations/0008_reading_strategy.sql", projectRoot),
       "utf8",
     ),
   ]);
@@ -51,4 +55,5 @@ test("D1 migration 鎖住來源、發布版本、文體、稽核事件與班級�
     classDedupeSql,
     /classroom_id,\s*participant_id,\s*content_id/,
   );
+  assert.match(strategySql, /ADD COLUMN reading_strategy_json TEXT NOT NULL/);
 });

@@ -71,6 +71,70 @@ function renderEvidenceExcerpt(container, paragraph, span) {
   );
 }
 
+function createReadingStrategyPanel(strategy) {
+  if (
+    !strategy ||
+    typeof strategy !== "object" ||
+    !Array.isArray(strategy.steps) ||
+    strategy.steps.length !== 3
+  ) {
+    return null;
+  }
+  const panel = document.createElement("section");
+  panel.className = "reading-strategy-panel";
+  panel.setAttribute("aria-labelledby", "reading-strategy-title");
+
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "chapter-label";
+  eyebrow.textContent = "閱讀專家拆解";
+  const title = document.createElement("h2");
+  title.id = "reading-strategy-title";
+  title.textContent = strategy.name;
+  const purpose = document.createElement("p");
+  purpose.className = "reading-strategy-purpose";
+  purpose.textContent = strategy.purpose;
+
+  const structure = document.createElement("div");
+  structure.className = "reading-strategy-structure";
+  const structureLabel = document.createElement("strong");
+  structureLabel.textContent = "文章結構";
+  const structureCopy = document.createElement("p");
+  structureCopy.textContent = strategy.structureMap;
+  structure.append(structureLabel, structureCopy);
+
+  const steps = document.createElement("ol");
+  steps.className = "reading-strategy-steps";
+  strategy.steps.forEach((step) => {
+    const item = document.createElement("li");
+    const heading = document.createElement("h3");
+    heading.textContent = step.label;
+    const instruction = document.createElement("p");
+    instruction.textContent = step.instruction;
+    const example = document.createElement("p");
+    example.className = "reading-strategy-example";
+    const exampleLabel = document.createElement("strong");
+    exampleLabel.textContent = "本文示範：";
+    example.append(exampleLabel, step.example);
+    item.append(heading, instruction, example);
+    steps.append(item);
+  });
+
+  const reflection = document.createElement("div");
+  reflection.className = "reading-strategy-reflection";
+  const tip = document.createElement("p");
+  const tipLabel = document.createElement("strong");
+  tipLabel.textContent = "專家提醒：";
+  tip.append(tipLabel, strategy.expertTip);
+  const selfCheck = document.createElement("p");
+  const selfCheckLabel = document.createElement("strong");
+  selfCheckLabel.textContent = "帶走一問：";
+  selfCheck.append(selfCheckLabel, strategy.selfCheck);
+  reflection.append(tip, selfCheck);
+
+  panel.append(eyebrow, title, purpose, structure, steps, reflection);
+  return panel;
+}
+
 export function renderAssessment(
   container,
   reading,
@@ -156,7 +220,10 @@ export function renderAssessment(
       attempt: latestAttempt,
     });
   });
-  completion.append(completionTitle, completionCopy, cityButton);
+  completion.append(completionTitle, completionCopy);
+  const strategyPanel = createReadingStrategyPanel(reading.readingStrategy);
+  if (strategyPanel) completion.append(strategyPanel);
+  completion.append(cityButton);
 
   const session = createAssessmentSession({
     itemIds: reading.assessment.map(({ id }) => id),

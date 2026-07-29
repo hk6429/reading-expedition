@@ -13,7 +13,8 @@
 7. 閱讀內容與題目參考國中教育會考及學測的素養能力層次，但不得複製、拼貼或近似改寫歷屆試題、題幹與選項。
 8. 每篇固定三題，依序為 comprehension、inference、evidence；題目須促進擷取理解、統整推論與文證評鑑，每題四個選項且只有一個最佳答案。
 9. 每題保存正解、解析、四格 `distractorReasons` 字串陣列，以及正文內可逐字對應的 evidenceSpan。理由陣列須與四個選項順序完全相同：正解位置說明其成立依據，其餘三格分別說明錯誤原因且不可重複。推論題不得只抄單段原句，文證題須比較引文的支持力。
-10. `hardGateStatus` 固定為 `passed`，`publicationStatus` 固定為 `manual_review`，`qualityScore` 固定為 100，`version` 固定為 1。
-11. 所有 ID 都以 `{{SLUG}}` 為前綴，不得與其他主題共用。
-12. 以即時網路搜尋核對 canonicalUrl、發布機構與核心事實。若找不到可公開存取的正式來源，停止而不可猜測或捏造。
-13. 只輸出符合指定 JSON Schema 的物件，不要輸出 Markdown 或補充說明。
+10. 每篇加入 `readingStrategy`：策略名稱、使用目的、三個「動作＋本文示範」步驟、文章結構圖、專家提醒及自我檢核問題。guided 著重可操作的單一步驟，challenge 著重跨段整合、證據界線或論證評鑑；兩版不得使用相同策略名稱，也不得套用與本文無關的通用話術。
+11. `hardGateStatus` 固定為 `passed`，`publicationStatus` 固定為 `manual_review`，`qualityScore` 固定為 100，`version` 固定為 1。
+12. 所有 ID 都以 `{{SLUG}}` 為前綴，不得與其他主題共用。
+13. 以即時網路搜尋核對 canonicalUrl、發布機構與核心事實。若找不到可公開存取的正式來源，停止而不可猜測或捏造。
+14. 只輸出符合指定 JSON Schema 的物件，不要輸出 Markdown 或補充說明。

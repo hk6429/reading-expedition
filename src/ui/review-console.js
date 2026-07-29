@@ -85,6 +85,33 @@ function assessmentMarkup(items) {
     .join("");
 }
 
+function readingStrategyMarkup(strategy) {
+  if (!strategy?.name || !Array.isArray(strategy.steps)) return "";
+  return `
+    <section class="review-reading-strategy">
+      <p class="chapter-label">閱讀專家拆解</p>
+      <h3>${escapeHtml(strategy.name)}</h3>
+      <p>${escapeHtml(strategy.purpose)}</p>
+      <ol>
+        ${strategy.steps
+          .map(
+            (step) => `
+              <li>
+                <strong>${escapeHtml(step.label)}</strong>
+                <p>${escapeHtml(step.instruction)}</p>
+                <p>本文示範：${escapeHtml(step.example)}</p>
+              </li>
+            `,
+          )
+          .join("")}
+      </ol>
+      <p><strong>文章結構：</strong>${escapeHtml(strategy.structureMap)}</p>
+      <p><strong>專家提醒：</strong>${escapeHtml(strategy.expertTip)}</p>
+      <p><strong>自我檢核：</strong>${escapeHtml(strategy.selfCheck)}</p>
+    </section>
+  `;
+}
+
 function reviewListMarkup(packages) {
   return packages
     .map(
@@ -136,6 +163,7 @@ function detailMarkup(packageRecord, { reviewable = true } = {}) {
           <ul>${sourceMarkup(packageRecord.sourceAttribution)}</ul>
           <h3>已核對事實</h3>
           <ul>${packageRecord.facts.map((fact) => `<li>${escapeHtml(fact.statement ?? fact.claim ?? "")}</li>`).join("")}</ul>
+          ${readingStrategyMarkup(packageRecord.readingStrategy)}
           ${assessmentMarkup(packageRecord.assessment)}
         </section>
         <section>

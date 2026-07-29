@@ -137,6 +137,30 @@
       "hardGateStatus": "passed",
       "publicationStatus": "manual_review",
       "version": 1,
+      "readingStrategy": {
+        "name": "授時流程追蹤",
+        "purpose": "本文以合作鏈說明原子鐘資料如何形成 UTC 並走向使用者，適合依資料流向整理複雜授時流程。",
+        "steps": [
+          {
+            "label": "圈出產物",
+            "instruction": "找出原子鐘、TAI、UTC、UTC(k)、UTCr 等名詞，在旁標記它是訊號、尺度或發布結果。",
+            "example": "各地原子鐘維持 UTC(k)，國際度量衡局綜合資料形成 UTC；UTCr 則提供較快的回饋。"
+          },
+          {
+            "label": "畫出資料流",
+            "instruction": "用箭頭連接資料送交、國際計算、差值發布、本地校準與社會授時的先後關係。",
+            "example": "實驗室送出時鐘資料，國際度量衡局計算差值，各地再依結果校準並透過網路或電信授時。"
+          },
+          {
+            "label": "分清用途",
+            "instruction": "把時區與 UTC、快速回饋與正式追溯成對比較，各寫出它們回答的不同問題。",
+            "example": "時區決定本地鐘面顯示幾點，UTC 確定事件在共同時間軸的位置，兩者不能互相取代。"
+          }
+        ],
+        "structureMap": "文章由跨時區同步需求切入，先說明分散式原子鐘合作與閏秒，再追蹤正式、快速差值產品，最後連到地方授時與應用。",
+        "expertTip": "遇到縮寫密集的說明文，先辨認每個名詞的功能與上下游，不要只背中文全名。",
+        "selfCheck": "我能否從一座實驗室的原子鐘開始，說到手機顯示地方時間的完整路徑？"
+      },
       "assessment": [
         {
           "id": "utc-world-time-guided-q1",
@@ -276,6 +300,30 @@
       "hardGateStatus": "passed",
       "publicationStatus": "manual_review",
       "version": 1,
+      "readingStrategy": {
+        "name": "快慢證據分層",
+        "purpose": "本文區分快速操作回饋與正式追溯證據，也拆開原子均勻性與地球自轉，適合做證據層級判讀。",
+        "steps": [
+          {
+            "label": "辨識目的",
+            "instruction": "遇到兩種時間產品或尺度時，先寫它解決的是即時操作、正式認定還是自然參照問題。",
+            "example": "UTCr 協助實驗室每週監看操控狀況；Circular T 則是追溯 UTC 的正式依據。"
+          },
+          {
+            "label": "比較證據",
+            "instruction": "將發布週期、資料間隔與權威用途並列，說明為何較快的結果不必然能取代最終結果。",
+            "example": "UTCr 每週公布一日間隔差值，Circular T 每月公布五日間隔結果，但正式追溯仍以後者為準。"
+          },
+          {
+            "label": "追查誤差",
+            "instruction": "沿授時鏈找出設備、傳輸與換算可能產生偏差的位置，判斷「使用 UTC」不能保證什麼。",
+            "example": "即使標示 UTC，傳輸延遲或時區換算仍可能出錯；可靠性來自持續量測偏差與可追溯紀錄。"
+          }
+        ],
+        "structureMap": "全文先把 UTC 界定為共同座標，再比較原子尺度與地球自轉，繼而分層處理本地供時、快速回饋與正式追溯，最後回到治理可信度。",
+        "expertTip": "「快速」與「正式」是兩種任務，不是精準度的簡單排名；先看產品被授權用來證明什麼。",
+        "selfCheck": "我能否解釋為何 UTCr 很有用，卻不能因此取代 Circular T 的正式證據地位？"
+      },
       "assessment": [
         {
           "id": "utc-world-time-challenge-q1",
