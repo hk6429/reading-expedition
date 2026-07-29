@@ -68,7 +68,12 @@ function setAnonymousStatisticsEnabled(enabled) {
   window.readingExpeditionPublicCounter?.remove();
 }
 
-function setPublicCounterVisible(visible) {
+function setPublicCounterVisible(visible, focusContext = "") {
+  if (focusContext) {
+    document.documentElement.setAttribute("data-focus-context", focusContext);
+  } else {
+    document.documentElement.removeAttribute("data-focus-context");
+  }
   const shouldShow = visible && anonymousStatisticsEnabled();
   document.documentElement.dataset.publicCounter = shouldShow ? "show" : "hide";
   const counter = document.getElementById("danai-public-counter");
@@ -243,7 +248,7 @@ const router = createRouter({
     );
   },
   async onRead(id) {
-    setPublicCounterVisible(false);
+    setPublicCounterVisible(false, "reading");
     const reading = await loadReading(id);
     if (!reading) {
       main.innerHTML = `
@@ -264,7 +269,7 @@ const router = createRouter({
     });
   },
   async onQuiz(id) {
-    setPublicCounterVisible(false);
+    setPublicCounterVisible(false, "assessment");
     const reading = await loadReading(id);
     if (!reading) {
       window.location.hash = "#/";

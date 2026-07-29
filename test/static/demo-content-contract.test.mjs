@@ -11,6 +11,11 @@ test("安全試讀清單中的每張卡都有正文、題組與答案", () => {
     assert.ok(detail, `${reading.id} 缺少正文`);
     assert.equal(detail.assessment.length, 3);
     assert.equal(demoAnswerKeys[reading.id]?.length, 3);
+    assert.equal(
+      detail.readingStrategy?.steps?.length,
+      3,
+      `${reading.id} 缺少三步閱讀策略`,
+    );
   }
 });
 

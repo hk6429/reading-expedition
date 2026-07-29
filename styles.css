@@ -1348,6 +1348,16 @@ main h1[tabindex="-1"]:focus {
   color: var(--cinnabar);
 }
 
+.reading-pace-note {
+  margin-top: 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border-left: 4px solid var(--gold);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  color: var(--ink-secondary);
+  font-weight: 750;
+  line-height: 1.65;
+}
+
 .reading-resume {
   margin-top: 1.25rem;
   padding: 1rem;
@@ -1745,10 +1755,91 @@ main h1[tabindex="-1"]:focus {
   line-height: 1.75;
 }
 
+.reading-strategy-example summary,
+.reading-strategy-more summary {
+  min-height: 2.75rem;
+  padding: 0.55rem 0;
+  color: var(--cinnabar);
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.reading-strategy-example p {
+  margin-bottom: 0;
+}
+
+.reading-strategy-takeaway {
+  padding: 0.9rem 1rem;
+  border-left: 4px solid var(--mineral-green);
+  background: rgb(71 115 98 / 10%);
+  line-height: 1.75;
+}
+
+.reading-strategy-more {
+  margin-top: 0.9rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgb(109 104 95 / 24%);
+  border-radius: 0.75rem;
+}
+
+.reading-strategy-more .reading-strategy-structure {
+  margin-bottom: 0.75rem;
+}
+
 @media (min-width: 48rem) {
   .reading-strategy-steps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+@media (max-width: 36rem) {
+  .assessment-view {
+    width: calc(100% - 1rem);
+  }
+
+  .assessment-sheet {
+    padding: 0.75rem;
+    border-radius: 1rem 0.25rem;
+  }
+
+  .assessment-header h1 {
+    font-size: clamp(2rem, 11vw, 2.7rem);
+  }
+
+  .assessment-question {
+    padding: 0.8rem;
+  }
+
+  .assessment-completion {
+    padding: 0.8rem 0.5rem;
+  }
+
+  .reading-strategy-panel {
+    margin-inline: -0.25rem;
+    padding: 0.75rem;
+  }
+
+  .reading-strategy-steps li {
+    padding: 0.85rem 0.75rem 0.85rem 3rem;
+  }
+
+  .reading-strategy-steps li::before {
+    top: 0.85rem;
+    left: 0.7rem;
+  }
+
+  .assessment-navigation {
+    position: relative;
+    z-index: 2;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+html[data-focus-context="reading"] #danai-family-classroom,
+html[data-focus-context="reading"] #danai-learning-passport,
+html[data-focus-context="assessment"] #danai-family-classroom,
+html[data-focus-context="assessment"] #danai-learning-passport {
+  display: none !important;
 }
 
 .city-view {

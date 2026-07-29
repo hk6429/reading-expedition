@@ -110,28 +110,40 @@ function createReadingStrategyPanel(strategy) {
     heading.textContent = step.label;
     const instruction = document.createElement("p");
     instruction.textContent = step.instruction;
+    const exampleDetails = document.createElement("details");
+    exampleDetails.className = "reading-strategy-example";
+    const exampleSummary = document.createElement("summary");
+    exampleSummary.textContent = "看本文示範";
     const example = document.createElement("p");
     example.className = "reading-strategy-example";
     const exampleLabel = document.createElement("strong");
     exampleLabel.textContent = "本文示範：";
     example.append(exampleLabel, step.example);
-    item.append(heading, instruction, example);
+    exampleDetails.append(exampleSummary, example);
+    item.append(heading, instruction, exampleDetails);
     steps.append(item);
   });
 
+  const takeaway = document.createElement("p");
+  takeaway.className = "reading-strategy-takeaway";
+  const takeawayLabel = document.createElement("strong");
+  takeawayLabel.textContent = "下一篇帶著做：";
+  takeaway.append(takeawayLabel, strategy.selfCheck);
+
+  const more = document.createElement("details");
+  more.className = "reading-strategy-more";
+  const moreSummary = document.createElement("summary");
+  moreSummary.textContent = "查看文章結構與專家提醒";
   const reflection = document.createElement("div");
   reflection.className = "reading-strategy-reflection";
   const tip = document.createElement("p");
   const tipLabel = document.createElement("strong");
   tipLabel.textContent = "專家提醒：";
   tip.append(tipLabel, strategy.expertTip);
-  const selfCheck = document.createElement("p");
-  const selfCheckLabel = document.createElement("strong");
-  selfCheckLabel.textContent = "帶走一問：";
-  selfCheck.append(selfCheckLabel, strategy.selfCheck);
-  reflection.append(tip, selfCheck);
+  reflection.append(tip);
+  more.append(moreSummary, structure, reflection);
 
-  panel.append(eyebrow, title, purpose, structure, steps, reflection);
+  panel.append(eyebrow, title, purpose, steps, takeaway, more);
   return panel;
 }
 
@@ -233,7 +245,17 @@ export function renderAssessment(
   let revisionMode = false;
   let revisionIndexes = [];
 
-  function showStep(index) {
+  function focusSection(target) {
+    target.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    });
+    target.focus({ preventScroll: true });
+  }
+
+  function showStep(index, { moveFocus = false } = {}) {
     currentIndex = Math.max(0, Math.min(index, questions.length - 1));
     questions.forEach((question, questionIndex) => {
       question.hidden = questionIndex !== currentIndex;
@@ -250,6 +272,7 @@ export function renderAssessment(
       : currentIndex !== questions.length - 1;
     const label = questions[currentIndex]?.querySelector("legend span");
     if (label) label.setAttribute("aria-current", "step");
+    if (moveFocus) focusSection(questions[currentIndex]);
   }
 
   previousButton.addEventListener("click", () => {
@@ -259,6 +282,7 @@ export function renderAssessment(
       revisionMode
         ? revisionIndexes[revisionPosition - 1]
         : currentIndex - 1,
+      { moveFocus: true },
     );
   });
   nextButton.addEventListener("click", () => {
@@ -276,6 +300,7 @@ export function renderAssessment(
       revisionMode
         ? revisionIndexes[revisionPosition + 1]
         : currentIndex + 1,
+      { moveFocus: true },
     );
   });
   showStep(0);
@@ -346,7 +371,7 @@ export function renderAssessment(
           error.textContent = `尚有 ${revisionIndexes.length} 題可以回看文章後修正一次`;
           submitButton.textContent = "完成修正";
           revisionMode = true;
-          showStep(revisionIndexes[0]);
+          showStep(revisionIndexes[0], { moveFocus: true });
           return;
         }
       }
@@ -362,6 +387,8 @@ export function renderAssessment(
       form.hidden = true;
       evidencePanel.hidden = true;
       completion.hidden = false;
+      completionTitle.tabIndex = -1;
+      focusSection(completionTitle);
     } catch (cause) {
       error.textContent =
         cause.message === "all items must be answered"

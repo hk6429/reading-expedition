@@ -25,6 +25,17 @@ const GUIDED_PARAGRAPH_SCAFFOLDS = Object.freeze({
   humanities: ["先看場景", "分清所見", "保留推論", "交叉查證"],
 });
 
+function guidedScaffoldLabel(category, index, total) {
+  const labels =
+    GUIDED_PARAGRAPH_SCAFFOLDS[category] ??
+    GUIDED_PARAGRAPH_SCAFFOLDS.humanities;
+  const phase = Math.min(
+    labels.length - 1,
+    Math.floor((index * labels.length) / Math.max(total, 1)),
+  );
+  return `${labels[phase]}・${index + 1}/${total}`;
+}
+
 function paragraphText(paragraph) {
   return typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
 }
@@ -97,6 +108,10 @@ export function renderReading(
   const textTypeLabel =
     reading.textType === "classical" ? "文言文" : "白話文";
   kicker.textContent = `約 ${reading.readingMinutes} 分鐘・${textTypeLabel} ${characters} 字・第 ${reading.version} 版`;
+  const paceNote = document.createElement("p");
+  paceNote.className = "reading-pace-note";
+  paceNote.textContent =
+    "這篇較長，今天先讀十分鐘也算出發；進度會自動保存，下次可從原位繼續。";
   const title = document.createElement("h1");
   title.textContent = reading.title;
   const question = document.createElement("p");
@@ -125,6 +140,7 @@ export function renderReading(
   } else {
     header.append(kicker, title);
   }
+  if (reading.readingMinutes > 10) header.append(paceNote);
   article.append(header, mentorGuide, midpointCheckpoint);
 
   const paragraphs = document.createElement("div");
@@ -136,23 +152,22 @@ export function renderReading(
     if (reading.difficulty === "guided") {
       const scaffold = document.createElement("p");
       scaffold.className = "paragraph-scaffold";
-      const labels =
-        GUIDED_PARAGRAPH_SCAFFOLDS[reading.category] ??
-        GUIDED_PARAGRAPH_SCAFFOLDS.humanities;
-      scaffold.textContent = labels[index] ?? "繼續找線索";
+      scaffold.textContent = guidedScaffoldLabel(
+        reading.category,
+        index,
+        reading.body.length,
+      );
       block.append(scaffold);
     }
     const paragraph = document.createElement("p");
     paragraph.className = "reading-paragraph";
     paragraph.textContent = paragraphText(text);
     block.append(paragraph);
-    if (reading.difficulty === "guided") {
-      const nearbyGlossary = reading.glossary.filter(({ term }) =>
-        paragraph.textContent.includes(term),
-      );
-      if (nearbyGlossary.length) {
-        block.append(createInlineGlossary(nearbyGlossary));
-      }
+    const nearbyGlossary = reading.glossary.filter(({ term }) =>
+      paragraph.textContent.includes(term),
+    );
+    if (nearbyGlossary.length) {
+      block.append(createInlineGlossary(nearbyGlossary));
     }
     paragraphs.append(block);
   });

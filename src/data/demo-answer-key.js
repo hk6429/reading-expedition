@@ -62,13 +62,15 @@ export const demoAnswerKeys = Object.freeze({
     },
     {
       id: "water-sharing-challenge-q3-v1",
-      correctAnswer: "形式上使用了相同規則，實際後果卻未必相同",
-      rationale: "這句直接對照相同規則與不同後果，支持力最完整。",
+      correctAnswer:
+        "只比較總量，很容易把處境差異藏在整齊的百分比之後",
+      rationale:
+        "這句指出整齊比例會遮蔽處境差異，能把文章原則遷移到甲市的新情境。",
       evidenceSpan: {
         paragraph: 1,
-        start: 44,
-        end: 64,
-        text: "形式上使用了相同規則，實際後果卻未必相同",
+        start: 108,
+        end: 132,
+        text: "只比較總量，很容易把處境差異藏在整齊的百分比之後",
       },
     },
   ],

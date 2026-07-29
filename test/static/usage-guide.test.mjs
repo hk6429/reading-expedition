@@ -16,6 +16,8 @@ test("首頁提供可直接開啟的師生使用說明", () => {
 
 test("首頁載入自學星圖返回入口與獨立到訪計數器", () => {
   const html = read("index.html");
+  const app = read("src/app.js");
+  const styles = read("styles.css");
   assert.match(
     html,
     /https:\/\/self-learning-orbit\.pages\.dev\/platform-counter\.js/,
@@ -25,6 +27,9 @@ test("首頁載入自學星圖返回入口與獨立到訪計數器", () => {
   assert.match(html, /max-width: 64rem/);
   assert.match(html, /自學星圖/);
   assert.match(html, /到訪統計/);
+  assert.match(app, /data-focus-context/);
+  assert.match(styles, /#danai-family-classroom/);
+  assert.match(styles, /#danai-learning-passport/);
 });
 
 test("使用說明分別提供學生四步與教師四步", () => {

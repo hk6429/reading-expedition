@@ -56,7 +56,7 @@ test("行舟卷用段落鷹架與就近詞語提示支援導讀", async ({ page 
 
   await expect(page.locator(".paragraph-scaffold")).toHaveCount(4);
   await expect(page.locator(".paragraph-scaffold").first()).toHaveText(
-    "先看情境",
+    "先看情境・1/4",
   );
   const termBlock = page.locator(".reading-block").filter({ hasText: "分配者" });
   await expect(termBlock.getByText("分配", { exact: true })).toBeVisible();
@@ -66,6 +66,17 @@ test("行舟卷用段落鷹架與就近詞語提示支援導讀", async ({ page 
 
   await page.goto("/#/read/water-sharing-challenge-v1");
   await expect(page.locator(".paragraph-scaffold")).toHaveCount(0);
+  const challengeTerm = page
+    .locator(".reading-block")
+    .filter({ hasText: "節水能力" })
+    .first();
+  await expect(
+    challengeTerm.getByText("節水能力", { exact: true }),
+  ).toBeVisible();
+  await challengeTerm.getByText("節水能力", { exact: true }).click();
+  await expect(
+    challengeTerm.getByText("能否透過設備、流程或行為調整而減少用水。"),
+  ).toBeVisible();
 });
 
 test("讀到一半時領航提示出現在學生當下閱讀位置", async ({ page }) => {

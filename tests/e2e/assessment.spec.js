@@ -41,6 +41,9 @@ test("答錯會定位原文，學生可修正一次後帶回文證", async ({ pa
   await page.getByRole("button", { name: "完成修正" }).click();
 
   await expect(page.getByText("文證已帶回")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "文證已帶回" }),
+  ).toBeFocused();
   await page.getByRole("button", { name: "把知識帶回浮城" }).click();
   await expect(page).toHaveURL(/#\/city\/invest\/water-sharing-guided-v1$/);
 });
@@ -86,4 +89,50 @@ test("多題答錯時可逐題修正，文證只突出精準片段", async ({ pa
   await page.getByRole("button", { name: "完成修正" }).click();
 
   await expect(page.getByText("文證已帶回")).toBeVisible();
+});
+
+test("手機作答時隱藏共用浮動元件且策略卡保持滿寬", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/#/quiz/water-sharing-guided-v1");
+  await page.evaluate(() => {
+    for (const id of ["danai-family-classroom", "danai-learning-passport"]) {
+      const host = document.createElement("div");
+      host.id = id;
+      document.body.append(host);
+    }
+  });
+
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-focus-context",
+    "assessment",
+  );
+  await expect(page.locator("#danai-family-classroom")).toBeHidden();
+  await expect(page.locator("#danai-learning-passport")).toBeHidden();
+
+  await page
+    .getByRole("radio", { name: "基本需要、影響與節水能力" })
+    .check();
+  await page.getByRole("button", { name: "下一題" }).click();
+  await page
+    .getByRole("radio", {
+      name: "不同用途的基本需要與缺水影響可能不同",
+    })
+    .check();
+  await page.getByRole("button", { name: "下一題" }).click();
+  await page
+    .getByRole("radio", {
+      name: "當水情、需求或節水成果改變，原先的比例也應重新檢討",
+    })
+    .check();
+  await page.getByRole("button", { name: "送出 3 題" }).click();
+
+  const panel = page.locator(".reading-strategy-panel");
+  await expect(panel).toBeVisible();
+  const panelBox = await panel.boundingBox();
+  const stepBox = await page.locator(".reading-strategy-steps li").first().boundingBox();
+  expect(panelBox.width).toBeGreaterThanOrEqual(300);
+  expect(stepBox.width).toBeGreaterThanOrEqual(260);
+  await expect(
+    page.getByRole("button", { name: "把知識帶回浮城" }),
+  ).toBeVisible();
 });
