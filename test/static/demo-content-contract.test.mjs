@@ -49,7 +49,7 @@ test("正式資料庫的舊試讀卷缺策略時會補上安全示範策略", ()
   const reading = demoReadingsById["water-sharing-guided-v1"];
   const hydrated = withDemoReadingStrategy({
     ...reading,
-    readingStrategy: null,
+    readingStrategy: {},
   });
   assert.equal(hydrated.readingStrategy.steps.length, 3);
   assert.equal(hydrated.readingStrategy.name, "公平條件檢核法");
