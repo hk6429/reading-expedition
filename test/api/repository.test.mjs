@@ -142,6 +142,46 @@ test("repository 只取得已發布文章的正文與題目", async () => {
   assert.deepEqual(calls[1].bindings, ["water-001-guided"]);
 });
 
+test("文章發布升版後仍可使用各題最新版本作答", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async all() {
+          return {
+            results: [
+              {
+                id: "moon-phases-guided-comprehension-01",
+                correct_answer: "觀察者看見的受光比例改變",
+                rationale: "文章版本升版不代表題目必須同步升版。",
+                distractor_reasons_json: "{}",
+                evidence_span_json:
+                  '{"paragraph":2,"start":0,"end":10}',
+              },
+            ],
+          };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const answerKey = await repository.getAssessmentKey(
+    "moon-phases-guided",
+    2,
+  );
+
+  assert.equal(answerKey.length, 1);
+  assert.match(calls[0].sql, /MAX\(ai2\.version\)/);
+  assert.deepEqual(calls[0].bindings, ["moon-phases-guided", 2]);
+});
+
 test("repository 列出匿名班級統計並同步停用班級與權杖", async () => {
   const calls = [];
   const batches = [];

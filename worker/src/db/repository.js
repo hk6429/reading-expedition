@@ -859,9 +859,14 @@ export function createReadingRepository(db) {
            FROM assessment_items ai
            JOIN reading_packages rp ON rp.id = ai.reading_package_id
            WHERE ai.reading_package_id = ?
-             AND ai.version = ?
              AND rp.version = ?
              AND rp.publication_status = 'published'
+             AND ai.version = (
+               SELECT MAX(ai2.version)
+               FROM assessment_items ai2
+               WHERE ai2.reading_package_id = ai.reading_package_id
+                 AND ai2.item_type = ai.item_type
+             )
            ORDER BY
              CASE ai.item_type
                WHEN 'comprehension' THEN 1
@@ -869,7 +874,7 @@ export function createReadingRepository(db) {
                ELSE 3
              END`,
         )
-        .bind(readingId, version, version);
+        .bind(readingId, version);
       const { results = [] } = await statement.all();
       if (results.length === 0) return null;
       return results.map((row) => ({
