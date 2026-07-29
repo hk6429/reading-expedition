@@ -3,7 +3,10 @@ import test from "node:test";
 
 import { demoAnswerKeys } from "../../src/data/demo-answer-key.js";
 import { demoDailyReadings } from "../../src/data/demo-daily.js";
-import { demoReadingsById } from "../../src/data/demo-readings.js";
+import {
+  demoReadingsById,
+  withDemoReadingStrategy,
+} from "../../src/data/demo-readings.js";
 
 test("安全試讀清單中的每張卡都有正文、題組與答案", () => {
   for (const reading of demoDailyReadings) {
@@ -40,4 +43,14 @@ test("安全試讀文證皆為正文內 8 到 30 個連續字元", () => {
       );
     }
   }
+});
+
+test("正式資料庫的舊試讀卷缺策略時會補上安全示範策略", () => {
+  const reading = demoReadingsById["water-sharing-guided-v1"];
+  const hydrated = withDemoReadingStrategy({
+    ...reading,
+    readingStrategy: null,
+  });
+  assert.equal(hydrated.readingStrategy.steps.length, 3);
+  assert.equal(hydrated.readingStrategy.name, "公平條件檢核法");
 });

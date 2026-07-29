@@ -1,6 +1,9 @@
 import { demoAnswerKeys } from "./data/demo-answer-key.js";
 import { demoDailyReadings } from "./data/demo-daily.js";
-import { demoReadingsById } from "./data/demo-readings.js";
+import {
+  demoReadingsById,
+  withDemoReadingStrategy,
+} from "./data/demo-readings.js";
 import {
   gradeAssessment,
 } from "./domain/assessment-session.js";
@@ -181,7 +184,7 @@ async function loadReading(id) {
     const response = await fetch(`/api/v1/readings/${id}`);
     if (!response.ok) throw new Error("reading API unavailable");
     const payload = await response.json();
-    return payload.reading;
+    return withDemoReadingStrategy(payload.reading);
   } catch {
     return demoReadingsById[id] ?? null;
   }

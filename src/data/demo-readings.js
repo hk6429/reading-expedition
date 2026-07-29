@@ -362,3 +362,9 @@ export const demoReadingsById = Object.freeze({
     ],
   },
 });
+
+export function withDemoReadingStrategy(reading) {
+  if (!reading || reading.readingStrategy) return reading;
+  const fallback = demoReadingsById[reading.id]?.readingStrategy;
+  return fallback ? { ...reading, readingStrategy: fallback } : reading;
+}
