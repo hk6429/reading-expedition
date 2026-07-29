@@ -185,6 +185,126 @@ test("教師建立、複製並停用匿名班級", async ({ page }) => {
   await expect(page.getByText("已停用", { exact: true })).toBeVisible();
 });
 
+test("同一瀏覽器多個教師分頁使用最新驗證碼停用班級", async ({
+  context,
+}) => {
+  let loginCount = 0;
+  let classroom = {
+    id: "class-shared-session",
+    createdAt: "2026-07-29T00:00:00Z",
+    expiresAt: "2027-01-25T00:00:00Z",
+    revokedAt: null,
+    anonymousParticipants: 0,
+    validReadings: 0,
+  };
+
+  async function prepare(page) {
+    await page.route("**/api/v1/teacher/session", async (route) => {
+      loginCount += 1;
+      await route.fulfill({
+        status: 201,
+        contentType: "application/json",
+        body: JSON.stringify({
+          csrfToken: loginCount === 1 ? "csrf-old" : "csrf-latest",
+          expiresAt: "2026-07-29T12:00:00Z",
+        }),
+      });
+    });
+    await page.route("**/api/v1/teacher/classrooms", async (route) => {
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({ classrooms: [classroom] }),
+      });
+    });
+    await page.route(
+      "**/api/v1/teacher/classrooms/class-shared-session",
+      async (route) => {
+        if (route.request().headers()["x-csrf-token"] !== "csrf-latest") {
+          await route.fulfill({
+            status: 403,
+            contentType: "application/json",
+            body: JSON.stringify({ error: { code: "csrf_invalid" } }),
+          });
+          return;
+        }
+        classroom = {
+          ...classroom,
+          revokedAt: "2026-07-29T03:30:00Z",
+        };
+        await route.fulfill({
+          contentType: "application/json",
+          body: JSON.stringify({ ok: true }),
+        });
+      },
+    );
+  }
+
+  const firstTab = await context.newPage();
+  await prepare(firstTab);
+  await firstTab.goto("/#/teacher/classes");
+  await firstTab.getByLabel("教師管理密鑰").fill("teacher-secret");
+  await firstTab.getByRole("button", { name: "進入校閱臺" }).click();
+
+  const secondTab = await context.newPage();
+  await prepare(secondTab);
+  await secondTab.goto("/#/teacher/classes");
+  await secondTab.getByRole("button", { name: "安全登出" }).click();
+  await secondTab.getByLabel("教師管理密鑰").fill("teacher-secret");
+  await secondTab.getByRole("button", { name: "進入校閱臺" }).click();
+
+  await firstTab.locator("[data-revoke-classroom]").click();
+  await firstTab.getByRole("button", { name: "確定停用" }).click();
+
+  await expect(
+    firstTab.getByText("班級已停用，原有班級碼與學生權杖皆已失效。"),
+  ).toBeVisible();
+  await expect(firstTab.getByText("已停用", { exact: true })).toBeVisible();
+});
+
+test("教師驗證失效時引導重新登入而非誤報網路問題", async ({ page }) => {
+  await page.addInitScript(() => {
+    sessionStorage.setItem("reading-expedition.csrf", "csrf-stale");
+  });
+  await page.route("**/api/v1/teacher/classrooms", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        classrooms: [
+          {
+            id: "class-stale-session",
+            createdAt: "2026-07-29T00:00:00Z",
+            expiresAt: "2027-01-25T00:00:00Z",
+            revokedAt: null,
+            anonymousParticipants: 0,
+            validReadings: 0,
+          },
+        ],
+      }),
+    });
+  });
+  await page.route(
+    "**/api/v1/teacher/classrooms/class-stale-session",
+    async (route) => {
+      await route.fulfill({
+        status: 403,
+        contentType: "application/json",
+        body: JSON.stringify({ error: { code: "csrf_invalid" } }),
+      });
+    },
+  );
+
+  await page.goto("/#/teacher/classes");
+  await page.locator("[data-revoke-classroom]").click();
+  await page.getByRole("button", { name: "確定停用" }).click();
+
+  await expect(
+    page.getByRole("heading", { level: 1, name: "教師驗證" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("教師登入狀態已更新，請重新登入後再停用班級。"),
+  ).toBeVisible();
+});
+
 test("教師可安全登出並清除本機工作階段", async ({ page }) => {
   await page.addInitScript(() => {
     sessionStorage.setItem("reading-expedition.csrf", "csrf-demo");

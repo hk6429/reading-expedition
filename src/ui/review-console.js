@@ -2,6 +2,8 @@ import { renderReviewDiff } from "./review-diff.js";
 import { renderStudentPreview } from "./student-preview.js";
 import { renderClassroomManagement } from "./classroom-management.js";
 
+const CSRF_STORAGE_KEY = "reading-expedition.csrf";
+
 const REVIEW_STATUS_COPY = Object.freeze({
   review: {
     title: "今日待審讀卷",
@@ -176,19 +178,48 @@ export async function renderReviewConsole(
   {
     request = fetch,
     sessionStorage = window.sessionStorage,
+    sharedStorage = window.localStorage,
     initialView = "review",
     initialStatus = "review",
   } = {},
 ) {
-  let csrfToken = sessionStorage.getItem("reading-expedition.csrf");
+  function readSharedCsrfToken() {
+    try {
+      return sharedStorage.getItem(CSRF_STORAGE_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  function saveCsrfToken(value) {
+    sessionStorage.setItem(CSRF_STORAGE_KEY, value);
+    try {
+      sharedStorage.setItem(CSRF_STORAGE_KEY, value);
+    } catch {
+      // The current tab still works when shared browser storage is unavailable.
+    }
+  }
+
+  function clearCsrfToken() {
+    sessionStorage.removeItem(CSRF_STORAGE_KEY);
+    try {
+      sharedStorage.removeItem(CSRF_STORAGE_KEY);
+    } catch {
+      // Ignore storage restrictions while still clearing the current tab.
+    }
+  }
+
+  let csrfToken =
+    readSharedCsrfToken() ?? sessionStorage.getItem(CSRF_STORAGE_KEY);
+  const currentCsrfToken = () => readSharedCsrfToken() ?? csrfToken;
 
   async function logout() {
     const response = await request("/api/v1/teacher/session", {
       method: "DELETE",
-      headers: { "x-csrf-token": csrfToken },
+      headers: { "x-csrf-token": currentCsrfToken() },
     });
     if (!response.ok && response.status !== 401) return false;
-    sessionStorage.removeItem("reading-expedition.csrf");
+    clearCsrfToken();
     sessionStorage.removeItem("reading-expedition.teacher-class-codes");
     csrfToken = null;
     await showLogin("已安全登出。");
@@ -223,7 +254,7 @@ export async function renderReviewConsole(
       }
       const payload = await response.json();
       csrfToken = payload.csrfToken;
-      sessionStorage.setItem("reading-expedition.csrf", csrfToken);
+      saveCsrfToken(csrfToken);
       await showWorkspace();
     });
   }
@@ -248,7 +279,19 @@ export async function renderReviewConsole(
     attachLogout();
     await renderClassroomManagement(
       root.querySelector("[data-classroom-management]"),
-      { request, csrfToken, storage: sessionStorage },
+      {
+        request,
+        csrfToken,
+        getCsrfToken: currentCsrfToken,
+        onAuthenticationInvalid: async () => {
+          clearCsrfToken();
+          csrfToken = null;
+          await showLogin(
+            "教師登入狀態已更新，請重新登入後再停用班級。",
+          );
+        },
+        storage: sessionStorage,
+      },
     );
   }
 
@@ -260,7 +303,7 @@ export async function renderReviewConsole(
     );
     if (!listResponse.ok) {
       if (listResponse.status === 401) {
-        sessionStorage.removeItem("reading-expedition.csrf");
+        clearCsrfToken();
         await showLogin("");
         return;
       }
@@ -360,7 +403,7 @@ export async function renderReviewConsole(
               method: "POST",
               headers: {
                 "content-type": "application/json",
-                "x-csrf-token": csrfToken,
+                "x-csrf-token": currentCsrfToken(),
               },
               body: JSON.stringify({
                 action,

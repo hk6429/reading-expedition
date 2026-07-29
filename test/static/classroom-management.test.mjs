@@ -14,7 +14,7 @@ test("教師校閱臺提供建立、複製、列出與停用班級", () => {
   assert.match(manager, /複製班級碼/);
   assert.match(manager, /停用班級/);
   assert.match(manager, /\/api\/v1\/teacher\/classrooms/);
-  assert.match(manager, /"x-csrf-token": csrfToken/);
+  assert.match(manager, /"x-csrf-token": getCsrfToken\(\)/);
 });
 
 test("班級碼只記在教師分頁，不寫入長期本機資料或公開畫面", () => {

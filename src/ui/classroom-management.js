@@ -123,6 +123,8 @@ export async function renderClassroomManagement(
   {
     request = fetch,
     csrfToken,
+    getCsrfToken = () => csrfToken,
+    onAuthenticationInvalid = async () => {},
     storage = window.sessionStorage,
   } = {},
 ) {
@@ -192,12 +194,16 @@ export async function renderClassroomManagement(
             method: "POST",
             headers: {
               "content-type": "application/json",
-              "x-csrf-token": csrfToken,
+              "x-csrf-token": getCsrfToken(),
             },
             body: "{}",
           });
         } catch {
           createResponse = null;
+        }
+        if ([401, 403].includes(createResponse?.status)) {
+          await onAuthenticationInvalid();
+          return;
         }
         if (!createResponse?.ok) {
           createButton.disabled = false;
@@ -270,11 +276,15 @@ export async function renderClassroomManagement(
               `/api/v1/teacher/classrooms/${classroomId}`,
               {
                 method: "DELETE",
-                headers: { "x-csrf-token": csrfToken },
+                headers: { "x-csrf-token": getCsrfToken() },
               },
             );
           } catch {
             revokeResponse = null;
+          }
+          if ([401, 403].includes(revokeResponse?.status)) {
+            await onAuthenticationInvalid();
+            return;
           }
           if (!revokeResponse?.ok) {
             confirmButton.disabled = false;
