@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
+import { normalizeManualContentFile } from "./manual-content-normalizer.mjs";
+
 const root = path.resolve(import.meta.dirname, "..");
 const args = process.argv.slice(2);
 const slugIndex = args.indexOf("--slug");
@@ -51,8 +53,13 @@ const prompt = fs
 const result = spawnSync(
   "codex",
   [
+    "--search",
     "exec",
     "--ephemeral",
+    "--ignore-user-config",
+    "--ignore-rules",
+    "-c",
+    'model_reasoning_effort="low"',
     "--sandbox",
     "read-only",
     "--output-schema",
@@ -76,6 +83,13 @@ if (result.error) {
 if (result.status !== 0) {
   console.error(`Codex CLI 失敗，exit ${result.status}`);
   process.exit(result.status ?? 1);
+}
+
+try {
+  normalizeManualContentFile(output);
+} catch (error) {
+  console.error(`無法正規化生成草稿：${error.message}`);
+  process.exit(1);
 }
 
 const validation = spawnSync(

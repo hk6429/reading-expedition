@@ -1,0 +1,414 @@
+{
+  "source": {
+    "id": "pollinator-network-source-usfs",
+    "name": "美國農業部林務署授粉者專題",
+    "baseUrl": "https://www.fs.usda.gov",
+    "licenseType": "US Government Work/Public Domain",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "pollinator-network-source-item-usfs",
+    "canonicalUrl": "https://www.fs.usda.gov/managing-land/wildflowers/pollinators",
+    "title": "Pollinators",
+    "publisher": "U.S. Department of Agriculture, Forest Service",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-29T00:00:00+08:00",
+    "contentFingerprint": "sha256:352f462127916d942df2353e5571ee01c0d1a704f73323d0b54d4685c688a672",
+    "licenseSnapshot": "美國聯邦政府機關作品通常不受美國著作權保護；頁面若含第三方影像或素材，權利狀態可能不同。本草稿僅取用可核對事實並以繁體中文改寫，不重製影像或長段原文。",
+    "extractScope": "授粉機制、授粉動物多樣性、植物繁殖與食物供應的關係、授粉者棲地需求及其面臨的壓力。"
+  },
+  "factPack": {
+    "id": "pollinator-network-fact-pack",
+    "topicDate": "2026-07-29",
+    "category": "science",
+    "facts": [
+      {
+        "id": "pollinator-network-fact-01",
+        "statement": "授粉是花粉由雄性構造移到同種花朵雌性構造的過程；成功授粉可促成受精，並使植物形成果實與種子。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-02",
+        "statement": "授粉者訪花尋找花蜜或花粉時，身體可能沾上花粉，再把花粉帶到另一朵花。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-03",
+        "statement": "授粉者不只有蜜蜂，也包括其他蜂類、蝴蝶、蛾、蠅、甲蟲、鳥與蝙蝠等動物。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-04",
+        "statement": "美國農業部自然資源保育局指出，全球約四分之三的開花植物及約百分之三十五的糧食作物，其繁殖仰賴動物授粉者。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-05",
+        "statement": "授粉促成野生植物產生種子與果實，這些植物產物又能成為其他動物的食物，因此授粉會影響陸域生態系中的食物關係。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-06",
+        "statement": "植物與授粉者形成互惠關係：授粉者取得花蜜或花粉，植物獲得移送花粉的機會，但不同物種之間的依賴程度並不相同。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-07",
+        "statement": "花期彼此銜接、種類多樣且適應當地土壤與氣候的原生植物，通常能在生長季提供較連續的花蜜與花粉。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-08",
+        "statement": "授粉者除了需要花源，也需要築巢、躲藏與越冬空間；保存裸地、枯木、植物莖與未受擾動的原生植被，可支援不同生活史的物種。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-09",
+        "statement": "棲地喪失與破碎化、疾病、寄生生物、農藥及其他環境污染物，都是授粉者可能面對的壓力。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      },
+      {
+        "id": "pollinator-network-fact-10",
+        "statement": "保育授粉者不能只看單一明星物種；維持多樣花源、繁殖與越冬微棲地，並降低不當化學藥劑暴露，才能同時支持授粉網絡。",
+        "sourceItemId": "pollinator-network-source-item-usfs"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.fs.usda.gov/managing-land/wildflowers/pollinators",
+      "https://www.nrcs.usda.gov/conservation-basics/animals/insects-pollinators",
+      "https://gardens.si.edu/gardens/pollinator-garden/why-what-when-where-who-how-pollination/",
+      "https://research.fs.usda.gov/treesearch/53180"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "pollinator-network",
+  "packages": [
+    {
+      "id": "pollinator-network-guided",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "一朵花後面的食物網",
+      "hookQuestion": "如果花園裡的授粉者逐漸消失，改變的會只有花朵數量嗎？",
+      "body": [
+        "清晨，一隻蜂停在花上，鑽進花瓣間尋找花蜜。牠離開時，細小花粉黏在身體上；下一次造訪同種植物的另一朵花，部分花粉便可能落到柱頭。授粉看似只是短短一次飛行，卻能讓花朵進一步受精，形成種子與果實。種子使下一代植物有機會萌發，果實則可能被人或其他動物取食。這條從花粉開始的路，因而不只連接兩朵花，也接上更大的食物網。",
+        "授粉者並不等於蜜蜂。不同地區還有其他蜂類、蝴蝶、蛾、蠅、甲蟲、鳥和蝙蝠參與。牠們訪花多半是為了取得花蜜或花粉，搬運花粉常是覓食過程帶來的結果。花的顏色、氣味、開放時間與形狀各不相同；授粉動物的口器、體形和活動時間也有差異。因此，某一種花可能較常由特定訪客服務，也可能由多種動物共同授粉。自然界的授粉工作，不是一名明星獨自完成，而像許多路線交織成的交通網。",
+        "這張網首先支撐植物繁殖。美國農業部自然資源保育局指出，全球約四分之三的開花植物及約百分之三十五的糧食作物，其繁殖仰賴動物授粉。這不表示每一口食物都以相同程度依靠授粉者：有些穀類主要靠風傳粉，有些作物則在昆蟲訪花後，較能結成果實或種子。正確理解數字，不能把「部分作物依賴」誇大成「沒有蜜蜂，人類立刻失去全部食物」，但也不能因此低估授粉對飲食種類與農業生產的重要性。",
+        "把鏡頭從農田移向野地，關係會更長。野生開花植物接受授粉後，產生種子、堅果或果實；鳥、哺乳類和昆蟲取食這些資源，本身又可能成為其他動物的獵物。植物也提供棲身處，根系協助穩定土壤，植被參與水分與養分的循環。授粉者並非直接餵養食物網中的每一員，卻能經由植物繁殖，間接影響許多節點。若授粉功能長期降低，改變的可能不只是一季收成，而是植物組成及依靠它們生活的動物。",
+        "植物也在支撐授粉者。花蜜供應能量，花粉可提供蛋白質等養分；然而，花開並非全年固定。若一片土地只有單一植物，花期結束後，訪花動物可能面臨食物空窗。保育資料因此建議種植多樣、適應當地環境的原生植物，並讓不同植物的花期互相銜接。這項做法的重點不是把花種得越多越好，而是使春、夏、秋各段時間都可能有合適資源，同時避免外來植物排擠原生花源。",
+        "只有花仍不夠。不同授粉者還需要築巢、產卵、化蛹、躲藏或越冬的地方。有些原生蜂在裸露土壤挖巢，有些利用枯木孔洞或中空植物莖；蝴蝶也可能以卵、幼蟲、蛹或成蟲等不同階段度過不利季節。若花園十分整齊，卻把枯莖、落葉、裸地和小型水源全部清除，便可能像只開餐廳而沒有住所。友善棲地應同時考慮食物與生活史，而不是只在開花季拍到幾隻蜂就宣告成功。",
+        "授粉網絡也承受多重壓力。棲地喪失或破碎化，會拉長花源與巢址之間的距離；疾病與寄生生物可能削弱族群；農藥及其他污染物則可能造成直接或間接影響。這些因素會彼此交織，所以看到授粉者變少時，不能只憑單一現象判定唯一原因。改善方法也應多管齊下：保存或恢復原生植被、提供連續花源與巢址、減少不必要的藥劑使用，並依地點和季節調整管理。",
+        "回到那隻清晨訪花的蜂，我們現在能看見牠身後的多層連結：花提供食物，蜂協助花粉移動，植物結實並延續族群，果實與種子再流向人類和野生動物。保護授粉者，並不是只為了某一種昆蟲，也不是把自然當成一座只替人工作的工廠；它是在維持植物與動物彼此供給、彼此限制的關係。當我們保留一段花期、一小塊裸地或一處枯木，也可能是在修補食物網中看不見的接點。若要在校園檢驗這套關係，可以固定觀察同一片花圃，記下不同時段出現的訪花動物、停留方式與植物結果情形，再比較花期前後的變化。紀錄不必急著下結論，但能幫助我們分辨偶然來訪與長期互動，理解保育措施為何需要連續觀察。"
+      ],
+      "glossary": [
+        {
+          "term": "柱頭",
+          "definition": "花朵雌性生殖構造的一部分，能接受花粉。"
+        },
+        {
+          "term": "授粉",
+          "definition": "花粉移到同種花朵雌性構造的過程。"
+        },
+        {
+          "term": "食物網",
+          "definition": "多條食物鏈互相交織而成的攝食關係。"
+        },
+        {
+          "term": "口器",
+          "definition": "動物用來取食的構造；不同授粉者的口器形狀可能不同。"
+        },
+        {
+          "term": "風傳粉",
+          "definition": "花粉主要藉風力移動的授粉方式。"
+        },
+        {
+          "term": "原生植物",
+          "definition": "在特定地區自然分布並長期適應當地環境的植物。"
+        },
+        {
+          "term": "食物空窗",
+          "definition": "某段時間缺少可利用食物資源的情況。"
+        },
+        {
+          "term": "生活史",
+          "definition": "生物從出生、成長、繁殖到死亡所經歷的階段。"
+        },
+        {
+          "term": "破碎化",
+          "definition": "原本連續的棲地被切割成較小且彼此分離的區塊。"
+        },
+        {
+          "term": "巢址",
+          "definition": "動物築巢或繁殖所使用的地點。"
+        }
+      ],
+      "readingMinutes": 7,
+      "sourceAttribution": [
+        {
+          "publisher": "U.S. Department of Agriculture, Forest Service",
+          "url": "https://www.fs.usda.gov/managing-land/wildflowers/pollinators",
+          "license": "US Government Work/Public Domain；第三方素材可能另有權利，本稿僅取事實改寫。"
+        },
+        {
+          "publisher": "USDA Natural Resources Conservation Service",
+          "url": "https://www.nrcs.usda.gov/conservation-basics/animals/insects-pollinators",
+          "license": "US Government Work/Public Domain；第三方素材可能另有權利，本稿僅取事實改寫。"
+        },
+        {
+          "publisher": "Smithsonian Gardens",
+          "url": "https://gardens.si.edu/gardens/pollinator-garden/why-what-when-where-who-how-pollination/",
+          "license": "授權狀態未於頁面明示；僅核對事實並改寫，不重製長段內容。"
+        },
+        {
+          "publisher": "U.S. Forest Service Research and Development",
+          "url": "https://research.fs.usda.gov/treesearch/53180",
+          "license": "書目與摘要為政府網站公開資訊；期刊全文權利可能另屬出版者，本稿僅取短事實改寫。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "pollinator-network-guided-q1",
+          "type": "comprehension",
+          "prompt": "依據本文，授粉者訪花與植物形成果實、種子的關係，何者最正確？",
+          "options": [
+            "授粉者刻意替植物搬運花粉，唯一目的就是幫助植物繁殖。",
+            "授粉者覓食時可能搬運花粉，成功授粉可促成受精與結實。",
+            "只要花粉黏上任何動物，植物必定立刻形成成熟果實。",
+            "授粉者先吃掉果實，再把花粉送回同一朵花。"
+          ],
+          "correctAnswer": "授粉者覓食時可能搬運花粉，成功授粉可促成受精與結實。",
+          "rationale": "第一段說明訪花、花粉移動、受精及形成種子與果實的先後關係；第二段補充搬運多是覓食帶來的結果。",
+          "distractorReasons": {
+            "授粉者刻意替植物搬運花粉，唯一目的就是幫助植物繁殖。": "錯在把授粉說成動物有意識且唯一的覓食目的。",
+            "只要花粉黏上任何動物，植物必定立刻形成成熟果實。": "錯在把可能的花粉移動誇大為任何情況都必然立即結實。",
+            "授粉者先吃掉果實，再把花粉送回同一朵花。": "錯置果實形成與授粉的先後，也誤稱花粉必須送回同一朵花。"
+          },
+          "evidenceSpan": {
+            "paragraph": 1,
+            "start": 0,
+            "end": 30,
+            "text": "清晨，一隻蜂停在花上，鑽進花瓣間尋找花蜜。牠離開時，細小花粉"
+          }
+        },
+        {
+          "id": "pollinator-network-guided-q2",
+          "type": "inference",
+          "prompt": "根據第五、六段，若校園只種一種短期開花植物，並把落葉、枯莖與裸地全部清除，最合理的推論是什麼？",
+          "options": [
+            "授粉者會因環境整齊而自動增加，不再需要其他資源。",
+            "只要開花期間蜂很多，就能證明棲地全年都很完整。",
+            "授粉者可能同時缺少連續食物與部分築巢、越冬空間。",
+            "單一花種能滿足所有授粉動物在各生活階段的需求。"
+          ],
+          "correctAnswer": "授粉者可能同時缺少連續食物與部分築巢、越冬空間。",
+          "rationale": "第五段指出單一花期可能造成食物空窗，第六段指出枯莖、裸地等可提供生活史所需空間，合併兩段即可推得正解。",
+          "distractorReasons": {
+            "授粉者會因環境整齊而自動增加，不再需要其他資源。": "整齊外觀不等於具備授粉者所需的食物與住所。",
+            "只要開花期間蜂很多，就能證明棲地全年都很完整。": "短期觀察不能證明全年花源與生活史資源都充足。",
+            "單一花種能滿足所有授粉動物在各生活階段的需求。": "忽略不同授粉者、不同階段與不同季節的需求差異。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 0,
+            "end": 30,
+            "text": "只有花仍不夠。不同授粉者還需要築巢、產卵、化蛹、躲藏或越冬的"
+          }
+        },
+        {
+          "id": "pollinator-network-guided-q3",
+          "type": "evidence",
+          "prompt": "若要支持「保護授粉者是在維持更大的食物網，而非只增加花朵」這項主張，下列哪一段引文的支持力最完整？",
+          "options": [
+            "「授粉者並不等於蜜蜂。」",
+            "「花蜜供應能量，花粉可提供蛋白質等養分。」",
+            "「野生開花植物接受授粉後，產生種子、堅果或果實；鳥、哺乳類和昆蟲取食這些資源，本身又可能成為其他動物的獵物。」",
+            "「看到授粉者變少時，不能只憑單一現象判定唯一原因。」"
+          ],
+          "correctAnswer": "「野生開花植物接受授粉後，產生種子、堅果或果實；鳥、哺乳類和昆蟲取食這些資源，本身又可能成為其他動物的獵物。」",
+          "rationale": "此引文同時呈現授粉後的植物產物、取食者及更高層獵食關係，能直接連成食物網，支持力最完整。",
+          "distractorReasons": {
+            "「授粉者並不等於蜜蜂。」": "只能說明授粉者種類，不足以證成食物網的延伸。",
+            "「花蜜供應能量，花粉可提供蛋白質等養分。」": "只呈現植物供應授粉者食物，尚未連到其他消費者。",
+            "「看到授粉者變少時，不能只憑單一現象判定唯一原因。」": "討論因果判斷限制，沒有直接呈現食物網的節點。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 17,
+            "end": 47,
+            "text": "野生開花植物接受授粉後，產生種子、堅果或果實；鳥、哺乳類和昆"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pollinator-network-challenge",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "授粉不是單線服務：從互惠到韌性的網絡",
+      "hookQuestion": "當人們說授粉者「替我們生產食物」時，這個說法揭露了什麼，又遮蔽了什麼？",
+      "body": [
+        "超市裡一顆果實，看似由農夫、土地與作物共同完成；若把時間往前推，還可能看見一隻訪花動物。牠為花蜜或花粉而來，身體擦過花藥，再於另一朵同種花上留下花粉。花粉抵達柱頭後，才有機會啟動受精、種子與果實形成的後續過程。這段機制提醒我們：食物並非只在收穫時誕生，而是由許多先行條件接力完成。授粉者是其中關鍵的一棒，卻不是單獨創造果實的魔法師。",
+        "把授粉描述成一條「動物服務植物、植物服務人類」的直線，雖然好懂，卻過度簡化。訪花者取得能量或養分，植物獲得花粉移送的機會，這是一種互惠；但互惠不等於雙方永遠一對一，也不表示利益在每次接觸中完全對等。蜂、蠅、甲蟲、蝴蝶、蛾、鳥與蝙蝠等動物，在不同時間和環境參與授粉；花朵的形狀、氣味、顏色與開放時段，又篩選出不同訪客。於是，授粉較像具有替代路徑與專門連結的網絡，而非規格一致的生產線。",
+        "這個網絡與人類食物相接，但閱讀統計時必須保留尺度。美國農業部自然資源保育局指出，全球約四分之三的開花植物及約百分之三十五的糧食作物，其繁殖仰賴動物授粉。這兩個比例的分母不同：前者談開花植物，後者談糧食作物；「依賴」也不等於所有物種都會在授粉者缺席時立即絕收。風傳粉作物仍可生產熱量，部分果樹、蔬菜與堅果作物則較仰賴動物傳粉。授粉的價值因此常表現在產量、品質與飲食多樣性，而不是一句「三餐全部來自蜜蜂」可以概括。",
+        "若把人類移出畫面，授粉的重要性並未消失。野生植物結成的果實與種子，會被昆蟲、鳥或哺乳類攝食；這些消費者又進入其他掠食者的菜單。植物本身還構成遮蔽與繁殖場所，根系影響土壤穩定，群落則參與水分和養分循環。因此，授粉者對食物網的作用多半是間接且有時間差的：今天減少的花粉移送，未必明天就使某種動物消失，卻可能先改變植物結實，再改變植物族群，最後重排可利用的食物與棲地。這也使短期觀察難以捕捉全部後果。",
+        "網絡穩定與「多」有關，卻不能只數花朵或蜂隻。多樣授粉者可能在天候、季節或活動時間不同時提供替代路徑；多樣植物則以不同花期供應花蜜與花粉。然而，若所有植物同時盛開，花季過後仍會形成資源斷層；若外來花種擴張並排擠原生植物，表面的花量增加，也可能讓依賴特定寄主或花形的物種失去資源。評估棲地時，除了物種數，還要看花期是否銜接、植物是否適地，以及互動關係是否涵蓋不同季節與功能。",
+        "棲地還包含不開花的部分。有些原生蜂在裸土築巢，有些使用枯木孔洞或中空莖；蝴蝶與蛾的幼蟲可能需要特定寄主植物，越冬時又可能停留在落葉或植被中。若管理者只種花，卻頻繁割草、清除枯莖與落葉，或者把裸地全部覆蓋，便同時切斷食物之外的生命階段。從生活史來看，一處棲地必須讓動物能吃、能繁殖，也能度過資源不足的季節。這正是「看見成蟲訪花」不能等同「族群可以長期維持」的原因。",
+        "壓力也以網絡方式作用。棲地喪失使花源和巢址一起減少；破碎化則可能增加兩者之間的移動成本。農藥暴露、疾病、寄生生物與營養不足，未必各自獨立：資源單調可能使個體較難承受其他壓力，而不當用藥也可能在害蟲之外波及訪花昆蟲。因此，單憑某地蜂量下降就指定唯一肇因，證據並不充分；反過來，只用某一年蜂量回升，也不能證明整個授粉網已復原。監測需要跨季節觀察植物、授粉者及其互動，而管理則要依在地證據調整。",
+        "這種網絡觀會改變保育問題。與其只問「要種多少花」，不如追問：哪些植物在何時開花？哪些動物能使用？牠們在哪裡築巢、產卵與越冬？花源和巢址之間是否可達？藥劑使用能否減少並避開訪花風險？保留多樣原生植物、讓花期銜接、維護微棲地和降低不必要的化學暴露，並不是四項互不相干的美化措施，而是在修復同一張網的不同連結。人類從中獲得食物，是重要結果；更根本的目標，則是讓植物與動物的互賴關係保有面對變動的韌性。"
+      ],
+      "glossary": [
+        {
+          "term": "先行條件",
+          "definition": "某項結果發生以前必須先具備的條件。"
+        },
+        {
+          "term": "互惠",
+          "definition": "互動雙方都能取得利益的生物關係。"
+        },
+        {
+          "term": "替代路徑",
+          "definition": "網絡中某條連結受阻時，仍可能完成相近功能的其他連結。"
+        },
+        {
+          "term": "尺度",
+          "definition": "觀察與解釋現象時所採用的範圍或層級。"
+        },
+        {
+          "term": "分母",
+          "definition": "比例中作為比較基準的總體；分母不同的比例不能直接混為一談。"
+        },
+        {
+          "term": "時間差",
+          "definition": "原因發生後，結果隔一段時間才顯現的情況。"
+        },
+        {
+          "term": "資源斷層",
+          "definition": "可用食物或棲地資源在時間上出現中斷。"
+        },
+        {
+          "term": "寄主植物",
+          "definition": "供昆蟲產卵、幼蟲取食或棲息的特定植物。"
+        },
+        {
+          "term": "移動成本",
+          "definition": "生物在棲地間移動所需付出的能量、時間與風險。"
+        },
+        {
+          "term": "韌性",
+          "definition": "系統受擾動後仍能維持功能或恢復的能力。"
+        },
+        {
+          "term": "微棲地",
+          "definition": "範圍較小、具有特定環境條件，可供生物生活或繁殖的場所。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "U.S. Department of Agriculture, Forest Service",
+          "url": "https://www.fs.usda.gov/managing-land/wildflowers/pollinators",
+          "license": "US Government Work/Public Domain；第三方素材可能另有權利，本稿僅取事實改寫。"
+        },
+        {
+          "publisher": "USDA Natural Resources Conservation Service",
+          "url": "https://www.nrcs.usda.gov/conservation-basics/animals/insects-pollinators",
+          "license": "US Government Work/Public Domain；第三方素材可能另有權利，本稿僅取事實改寫。"
+        },
+        {
+          "publisher": "Smithsonian Gardens",
+          "url": "https://gardens.si.edu/gardens/pollinator-garden/why-what-when-where-who-how-pollination/",
+          "license": "授權狀態未於頁面明示；僅核對事實並改寫，不重製長段內容。"
+        },
+        {
+          "publisher": "U.S. Forest Service Research and Development",
+          "url": "https://research.fs.usda.gov/treesearch/53180",
+          "license": "書目與摘要為政府網站公開資訊；期刊全文權利可能另屬出版者，本稿僅取短事實改寫。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "pollinator-network-challenge-q1",
+          "type": "comprehension",
+          "prompt": "本文第三段如何解讀「約四分之三」與「約百分之三十五」兩項數據？",
+          "options": [
+            "兩者分母與意義完全相同，可以互相替換。",
+            "前者指開花植物，後者指糧食作物，且依賴程度不可一概而論。",
+            "兩者都證明所有三餐一旦沒有蜜蜂就會立即消失。",
+            "後者表示其餘糧食作物完全不受任何植物或動物影響。"
+          ],
+          "correctAnswer": "前者指開花植物，後者指糧食作物，且依賴程度不可一概而論。",
+          "rationale": "第三段明確區分兩個比例的分母，並提醒「依賴」不表示所有物種立即絕收，故正解最完整。",
+          "distractorReasons": {
+            "兩者分母與意義完全相同，可以互相替換。": "忽略本文特別指出的分母差異。",
+            "兩者都證明所有三餐一旦沒有蜜蜂就會立即消失。": "把動物授粉者縮成蜜蜂，並把部分依賴誇大為全部立即消失。",
+            "後者表示其餘糧食作物完全不受任何植物或動物影響。": "其餘比例不代表與植物、生態或生產條件毫無關係。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 25,
+            "end": 55,
+            "text": "美國農業部自然資源保育局指出，全球約四分之三的開花植物及約百"
+          }
+        },
+        {
+          "id": "pollinator-network-challenge-q2",
+          "type": "inference",
+          "prompt": "綜合第四、五、六段，某公園新增大量同時開花的外來花卉，卻清除落葉、枯莖與裸地。下列哪項評估最合理？",
+          "options": [
+            "花朵總數增加，必然代表授粉網絡的韌性同步提高。",
+            "成蟲短期訪花可能增加，但資源斷層、寄主與繁殖空間仍可能不足。",
+            "只要外來花顏色多樣，所有原生授粉者都能完成生活史。",
+            "清除不開花部分不會影響授粉者，因為授粉只發生在花上。"
+          ],
+          "correctAnswer": "成蟲短期訪花可能增加，但資源斷層、寄主與繁殖空間仍可能不足。",
+          "rationale": "第五段區分表面花量與跨季節、適地的資源，第六段說明巢址、寄主及越冬空間；整合後可知短期訪花量不足以證明長期韌性。",
+          "distractorReasons": {
+            "花朵總數增加，必然代表授粉網絡的韌性同步提高。": "把單一表面指標當成整體網絡狀態，忽略時間與生活史。",
+            "只要外來花顏色多樣，所有原生授粉者都能完成生活史。": "花色不能保證花形、寄主與各生命階段需求都相符。",
+            "清除不開花部分不會影響授粉者，因為授粉只發生在花上。": "只看授粉行為發生處，忽略授粉者其他生命階段依賴的棲地。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 0,
+            "end": 30,
+            "text": "棲地還包含不開花的部分。有些原生蜂在裸土築巢，有些使用枯木孔"
+          }
+        },
+        {
+          "id": "pollinator-network-challenge-q3",
+          "type": "evidence",
+          "prompt": "若要反駁「只要某一年蜂量回升，就足以證明授粉網已完全復原」，下列哪一段引文最有力？",
+          "options": [
+            "「授粉者是其中關鍵的一棒，卻不是單獨創造果實的魔法師。」",
+            "「授粉較像具有替代路徑與專門連結的網絡。」",
+            "「只用某一年蜂量回升，也不能證明整個授粉網已復原。監測需要跨季節觀察植物、授粉者及其互動。」",
+            "「人類從中獲得食物，是重要結果。」"
+          ],
+          "correctAnswer": "「只用某一年蜂量回升，也不能證明整個授粉網已復原。監測需要跨季節觀察植物、授粉者及其互動。」",
+          "rationale": "此引文直接指出單年、單一類群指標的限制，並提出跨季節且涵蓋互動的較強證據標準。",
+          "distractorReasons": {
+            "「授粉者是其中關鍵的一棒，卻不是單獨創造果實的魔法師。」": "說明授粉者只是結果鏈的一部分，但未直接處理單年監測的證據限制。",
+            "「授粉較像具有替代路徑與專門連結的網絡。」": "呈現網絡性質，卻沒有比較單年蜂量與跨季節資料的支持力。",
+            "「人類從中獲得食物，是重要結果。」": "只陳述人類受益，與授粉網是否復原的判準無關。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 160,
+            "end": 190,
+            "text": "。監測需要跨季節觀察植物、授粉者及其互動，而管理則要依在地證"
+          }
+        }
+      ]
+    }
+  ]
+}

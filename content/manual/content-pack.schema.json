@@ -147,12 +147,13 @@
           "hookQuestion": { "type": "string" },
           "body": {
             "type": "array",
-            "minItems": 2,
-            "maxItems": 5,
+            "minItems": 6,
+            "maxItems": 12,
             "items": { "type": "string" }
           },
           "glossary": {
             "type": "array",
+            "maxItems": 15,
             "items": {
               "type": "object",
               "additionalProperties": false,
@@ -228,8 +229,10 @@
                 "correctAnswer": { "type": "string" },
                 "rationale": { "type": "string" },
                 "distractorReasons": {
-                  "type": "object",
-                  "additionalProperties": { "type": "string" }
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "items": { "type": "string" }
                 },
                 "evidenceSpan": {
                   "type": "object",

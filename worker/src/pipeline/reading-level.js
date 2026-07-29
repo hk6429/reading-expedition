@@ -31,9 +31,11 @@ export function compareDifficultyLevels(guided, challenge) {
     guidedLevel.averageSentenceLength + 1;
   const glossaryLoadHigher =
     challengeLevel.glossaryCount > guidedLevel.glossaryCount;
+  const comparableLength =
+    challengeLevel.characters >= Math.floor(guidedLevel.characters * 0.95);
   return {
     ok:
-      guidedLevel.characters <= challengeLevel.characters &&
+      comparableLength &&
       (meaningfullyLonger || sentenceLoadHigher || glossaryLoadHigher),
     guided: guidedLevel,
     challenge: challengeLevel,

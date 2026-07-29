@@ -1,0 +1,400 @@
+{
+  "source": {
+    "id": "sea-shipping-routes-source",
+    "name": "International Maritime Organization official website",
+    "baseUrl": "https://www.imo.org/",
+    "licenseType": "IMO Website Terms—personal and non-commercial reuse with attribution; derivatives under the same terms",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "sea-shipping-routes-source-item",
+    "canonicalUrl": "https://www.imo.org/en/about/pages/default.aspx",
+    "title": "IMO official web evidence set: Introduction to IMO; Ships' routeing; Terms and conditions of use",
+    "publisher": "International Maritime Organization",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-29T07:56:25+08:00",
+    "contentFingerprint": "sha256:e6040f75450d329b959880bbecc58e8bc4ad4b2dd82e0aa24dd6c79791b84e26",
+    "licenseSnapshot": "IMO 網站資料可在完整標示 IMO 為來源及著作權人、不扭曲原意、清楚揭示改作的前提下，供個人與非商業用途複製、翻譯及改作；衍生作品適用相同條件，商業再利用須另行取得許可。",
+    "extractScope": "核對 IMO 的機構職責、全球貿易海運占比、國際航運標準、船舶定線目的與類型、提案審議程序、氣象定線及網站使用條款；教材僅擷取事實並以繁體中文重新編寫。"
+  },
+  "factPack": {
+    "id": "sea-shipping-routes-fact-pack",
+    "topicDate": "2026-07-29",
+    "category": "world",
+    "facts": [
+      {
+        "id": "sea-shipping-routes-fact-01",
+        "statement": "國際海事組織是聯合國專門機構，負責航運安全與保安，以及防止船舶造成海洋和大氣污染。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-02",
+        "statement": "IMO 表示，國際航運運送超過八成的全球貿易，將貨物送往世界各地的市場與社區。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-03",
+        "statement": "IMO 是國際航運安全、保安及環境表現的全球標準制定機構，目標是建立公平、有效、普遍採納及普遍實施的規範框架。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-04",
+        "statement": "IMO 的措施涵蓋船舶設計、建造、設備、船員配置、操作與處置。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-05",
+        "statement": "船舶定線的目標，是提升船流匯聚、交通密集、空間受限、有障礙物、水深有限或氣象不利海域的航行安全。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-06",
+        "statement": "IMO 採用的定線措施包括分道通航制、雙向航路、建議航線、深水航路、警戒區與避航區。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-07",
+        "statement": "預定航路的做法可追溯至一八九八年北大西洋客輪航運；後來，相關規定納入海上人命安全公約。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-08",
+        "statement": "政府提出的新定線系統或修正案，可由 IMO 的航行、通信與搜救次委員會評估，再向海事安全委員會提出採納建議。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      },
+      {
+        "id": "sea-shipping-routes-fact-09",
+        "statement": "IMO 認為，氣象定線可提供避開惡劣天氣的較佳路徑，協助提升航行安全。",
+        "sourceItemId": "sea-shipping-routes-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.imo.org/en/about/pages/default.aspx",
+      "https://www.imo.org/en/ourwork/safety/pages/shipsrouteing.aspx",
+      "https://www.imo.org/en/about/pages/imo-website-terms-and-conditions-of-use.aspx"
+    ],
+    "sensitivityFlags": [
+      "official-source-translation-and-adaptation",
+      "personal-and-non-commercial-reuse-only",
+      "manual-license-review-required"
+    ],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "sea-shipping-routes",
+  "packages": [
+    {
+      "id": "sea-shipping-routes-guided",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "看不見的海上道路",
+      "hookQuestion": "早餐、平板與機車燃料，為什麼可能都和海運航線有關？",
+      "body": [
+        "清晨，你在餐桌上喝著咖啡，書包裡放著新買的平板，家人準備替機車加油。這些物品看來彼此無關，背後卻可能共享一張看不見的海上網路：原料、燃料與各種商品搭船跨越海洋，再由港口送往市場與社區。國際海事組織指出，超過八成的全球貿易由國際航運運送。海運因此不是遙遠港邊的風景，而是日常生活的底層連結。",
+        "海上沒有畫在水面的柏油路，船舶卻不能隨意穿行。所謂航線，是船舶在港口與海域之間反覆使用的通行路徑；到了繁忙或受地形限制的水域，還需要更明確的船舶定線制度。國際海事組織列出的措施包括分道通航制、雙向航路、建議航線、深水航路、警戒區與避航區。它們各有用途，共同目標是讓船舶在匯流、壅擠或空間受限之處安全航行。",
+        "可以把分道通航制想成海上的車道。相反方向的船流由分隔帶或分隔線隔開，單向船舶在指定通航分道內前進。若船舶吃水較深，操縱空間受限制，經過精確測量、確認海床淨空的深水航路便格外重要；若海域具有特殊危險，或保護生態環境特別重要，則可能設置避航區。航線因此不只是最短的線，也是一套在效率、安全與環境之間取捨的安排。",
+        "這套安排之所以必須跨國，是因為一艘船的旅程往往超出單一國家的管轄範圍。國際海事組織是聯合國專門機構，也是國際航運安全、保安與環境表現的全球標準制定者。各國若各訂一套互不相容的規則，船舶每換一片海域就得重新適應，全球運輸便難以穩定。共同商議、採納與實施的標準，讓不同國籍、不同營運者的船舶可以在可預期的框架下往來。",
+        "船舶定線並非近年才出現。國際海事組織的資料指出，航運公司在一八九八年已為北大西洋客輪採用預定路徑，理由是提升安全；後來，相關規定也納入海上人命安全公約。如今，主要繁忙水域多已設置交通分流或其他定線系統。這段發展提醒我們，航線會隨交通密度、技術與風險認識而調整，不是一畫完成、永久不變的固定線條。",
+        "規則也不是只有航海圖上的箭頭。國際海事組織的措施涵蓋船舶設計、建造、設備、船員配置、操作與最終處置。船舶定線則與航行安全直接相連：交通分流可減少迎面衝突，警戒區提醒船舶提高注意，氣象定線資訊能協助船舶尋找較佳路徑、避開惡劣天氣。當一件商品順利抵達商店，背後不只是船長選路，還有設備、人員、規範與國際合作共同支撐。",
+        "海運的價值也不能只看價格。國際海事組織認為，對多數貨物而言，航運是一種有效率、具成本效益而且可靠的全球運輸方式；它促進商業，也把貨物帶到各地社區。然而，便利並不代表可以忽略代價。船舶活動牽涉海洋與大氣污染風險，所以國際規範同時追求安全、保安、能源效率與環境健全。若業者為降低成本而犧牲這些要求，便可能把便宜建立在他人承受的風險上。",
+        "因此，評估一條海運航線，不能只問貨物有沒有準時到達。還要問：船舶是否遵守共同標準？壅擠水域的路徑是否降低碰撞與擱淺風險？遇到天候或環境敏感區時，是否調整航行方式？這些問題顯示，效率與責任不是二選一。穩定的日常供應，需要安全而可靠的運輸；長期可用的海洋，也需要航運減少污染並提高能源效率。兩者共同決定這張海上網路能否持續運作。",
+        "下次看見貨架上的外國商品，不妨把視線從商品往外推：先到載貨的船，再到連接港口的航線，最後到各國共同維護的規則。航線把遠方變成可抵達的市場，也把不同地方的選擇與風險連在一起。我們享受海運帶來的便利，同時也依賴船員的專業、船舶的安全，以及制度對環境的約束。理解這條連結，便會明白日常消費其實位在一張全球合作網路之中。這也讓我們重新衡量一件商品真正的抵達成本：不只運費，還包括維持安全航行與保護海洋所需的共同投入。"
+      ],
+      "glossary": [
+        {
+          "term": "海上網路",
+          "definition": "由船舶、港口、航線、人員與制度共同形成的全球運輸連結。"
+        },
+        {
+          "term": "航線",
+          "definition": "船舶在港口與海域之間使用的通行路徑。"
+        },
+        {
+          "term": "船舶定線",
+          "definition": "依船流及海域條件規劃船舶通行秩序的制度。"
+        },
+        {
+          "term": "分道通航制",
+          "definition": "把方向相反的船流分開，以降低衝突風險的定線措施。"
+        },
+        {
+          "term": "通航分道",
+          "definition": "在規定範圍內供單一方向船流航行的區域。"
+        },
+        {
+          "term": "深水航路",
+          "definition": "經測量並確認海床淨空，供吃水較深船舶使用的航路。"
+        },
+        {
+          "term": "警戒區",
+          "definition": "船舶必須特別謹慎航行的指定區域。"
+        },
+        {
+          "term": "避航區",
+          "definition": "因特殊危險或環境保護需求而應避免進入的海域。"
+        },
+        {
+          "term": "氣象定線",
+          "definition": "參考天氣條件提供較佳路徑、協助避開惡劣天候的做法。"
+        },
+        {
+          "term": "能源效率",
+          "definition": "以較少能源完成相同運輸工作的能力。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "International Maritime Organization",
+          "url": "https://www.imo.org/en/about/pages/default.aspx",
+          "license": "Personal, non-commercial reuse with full attribution and derivatives under the same terms. This translation was not created by the International Maritime Organization (IMO), and IMO is not responsible for its content or accuracy."
+        },
+        {
+          "publisher": "International Maritime Organization",
+          "url": "https://www.imo.org/en/ourwork/safety/pages/shipsrouteing.aspx",
+          "license": "Personal, non-commercial reuse with full attribution and derivatives under the same terms. This translation was not created by the International Maritime Organization (IMO), and IMO is not responsible for its content or accuracy."
+        },
+        {
+          "publisher": "International Maritime Organization",
+          "url": "https://www.imo.org/en/about/pages/imo-website-terms-and-conditions-of-use.aspx",
+          "license": "Official terms page consulted on 2026-07-29; commercial reuse requires separate permission."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "sea-shipping-routes-guided-q1",
+          "type": "comprehension",
+          "prompt": "依據本文，船舶定線措施最主要的共同目標是什麼？",
+          "options": [
+            "讓所有船舶採取距離最短的路徑",
+            "讓高風險海域中的船舶能較安全地航行",
+            "把所有國家的船舶集中到同一條航道",
+            "讓船舶不必再判斷水深與天氣"
+          ],
+          "correctAnswer": "讓高風險海域中的船舶能較安全地航行",
+          "rationale": "第二段列出多種定線措施後，明確指出它們共同用於提升匯流、壅擠或空間受限海域的航行安全。",
+          "distractorReasons": {
+            "讓所有船舶採取距離最短的路徑": "正文指出航線不只考量距離，未要求一律走最短路徑。",
+            "把所有國家的船舶集中到同一條航道": "定線制度會分流船舶，並非把所有船舶擠入同一路徑。",
+            "讓船舶不必再判斷水深與天氣": "正文強調水深與天候仍是航線判斷的重要條件。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 119,
+            "end": 149,
+            "text": "它們各有用途，共同目標是讓船舶在匯流、壅擠或空間受限之處安全"
+          }
+        },
+        {
+          "id": "sea-shipping-routes-guided-q2",
+          "type": "inference",
+          "prompt": "綜合第一段與第四段，為何全球日常供應需要跨國共同制定航運標準？",
+          "options": [
+            "因為全球貨物流量龐大，跨境船舶若頻繁面對不相容規則，運輸將難以穩定",
+            "因為共同標準能保證每件進口商品的售價完全相同",
+            "因為採用共同標準後，各國便不再需要港口與船員",
+            "因為國際規則的目的，是禁止船舶進入其他國家的海域"
+          ],
+          "correctAnswer": "因為全球貨物流量龐大，跨境船舶若頻繁面對不相容規則，運輸將難以穩定",
+          "rationale": "第一段說明國際航運承擔大量全球貿易，第四段則指出船舶跨境時若遭遇互不相容的規則，運輸難以穩定；整合兩段可知，共同標準是維持日常供應可預期性的條件。",
+          "distractorReasons": {
+            "因為共同標準能保證每件進口商品的售價完全相同": "正文只說標準有助穩定運輸，未聲稱各地商品價格會完全一致。",
+            "因為採用共同標準後，各國便不再需要港口與船員": "共同標準仍須依靠港口、設備與專業船員執行。",
+            "因為國際規則的目的，是禁止船舶進入其他國家的海域": "國際規則用來協調跨境航行，不是全面禁止船舶進入他國海域。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 75,
+            "end": 105,
+            "text": "各國若各訂一套互不相容的規則，船舶每換一片海域就得重新適應，"
+          }
+        },
+        {
+          "id": "sea-shipping-routes-guided-q3",
+          "type": "evidence",
+          "prompt": "若要支持「良好的航線規劃不能只追求最短距離」這項判斷，下列哪一段引文的支持力最強？",
+          "options": [
+            "「海運因此不是遙遠港邊的風景，而是日常生活的底層連結。」",
+            "「相反方向的船流由分隔帶或分隔線隔開。」",
+            "「航線因此不只是最短的線，也是一套在效率、安全與環境之間取捨的安排。」",
+            "「共同商議、採納與實施的標準，讓不同國籍、不同營運者的船舶可以在可預期的框架下往來。」"
+          ],
+          "correctAnswer": "「航線因此不只是最短的線，也是一套在效率、安全與環境之間取捨的安排。」",
+          "rationale": "此引文直接否定只看最短距離，並明列效率、安全及環境三項取捨，對判斷的支持最完整。",
+          "distractorReasons": {
+            "「海運因此不是遙遠港邊的風景，而是日常生活的底層連結。」": "這句能說明海運與生活有關，卻未討論路徑長短或規劃準則。",
+            "「相反方向的船流由分隔帶或分隔線隔開。」": "這句只描述分流方法，不能完整證明航線還須兼顧效率與環境。",
+            "「共同商議、採納與實施的標準，讓不同國籍、不同營運者的船舶可以在可預期的框架下往來。」": "這句支持國際標準的必要性，但沒有直接評估航線是否只應追求最短距離。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 120,
+            "end": 150,
+            "text": "航線因此不只是最短的線，也是一套在效率、安全與環境之間取捨的"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sea-shipping-routes-challenge",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "航線背後的全球治理",
+      "hookQuestion": "海上兩點之間最短的路，為什麼未必是最有效率的航線？",
+      "body": [
+        "一件商品抵達手中時，消費者通常只看見價格、品牌與到貨日期，卻很少看見它曾經通過的海上空間。國際海事組織指出，國際航運承擔超過八成的全球貿易。這個比例揭示的不是單純運量，而是一種結構：各地市場與社區之所以能取得跨境貨物，是因為港口、船舶、船員、航線與共同規則形成了彼此依存的系統。海運一旦受阻，影響便可能沿著供應關係進入日常生活。",
+        "然而，把航線理解成地圖上兩港之間的一條直線，會漏掉真正的難題。海上交通既受航道寬度、水深、障礙物與天候影響，也會在船流匯聚處產生碰撞風險。國際海事組織的船舶定線措施包含分道通航制、雙向航路、建議航線、深水航路、警戒區與避航區。這些制度不是替每艘船指定同一條路，而是依海域條件，把不同風險轉化為可辨識、可遵循的通行安排。",
+        "其中，分道通航制藉由通航分道與分隔區，分開方向相反或近乎相反的船流；深水航路則經過精確測量，為受吃水限制、操縱能力較受拘束的船舶提供海床淨空保障。警戒區要求船舶特別謹慎，避航區則可能源於特殊危險，或避免事故對敏感生態造成傷害。由此可見，航線規劃同時處理流量、船舶差異、自然限制與環境價值，並非只追求距離最短。",
+        "航線制度還呈現一個治理上的矛盾：船舶跨越國界，執行規則的政府卻各有管轄範圍。若標準彼此衝突，業者可能面對不確定成本；若標準過低，又可能以犧牲安全、保安或環境表現換取價格優勢。國際海事組織作為聯合國專門機構，建立力求公平、有效、普遍採納與普遍實施的國際框架。它的功能不只是發布規定，更是讓跨國產業能在共同語言中協調。",
+        "制度的形成也不是由單一機構關門決定。政府若希望建立新的定線系統，或修改既有安排，可向國際海事組織的航行、通信與搜救次委員會提出方案，由其評估後向海事安全委員會提出採納建議。這個程序使航線不只是地方需求的表達，也必須進入跨國審議。它增加協調成本，卻也提高規則被不同國家理解與採行的可能。",
+        "共同框架之所以重要，也因安全不能被拆成單一技術問題。國際海事組織的措施從船舶設計、建造、設備、船員配置，一直延伸到操作與處置；船舶定線只是其中與空間秩序密切相關的一環。即使圖上有正確航路，若設備失效、操作不當或人員能力不足，風險仍可能累積。反過來說，專業船員也需要清楚、可預期的制度，才能在高密度或受限水域作出一致判斷。",
+        "天候更說明效率與安全不是固定答案。國際海事組織承認，氣象條件會影響航行，而氣象定線提供較佳路徑以避開惡劣天氣，可協助提升安全。較佳不必然等於幾何距離最短；繞行可能增加眼前路程，卻降低事故或延誤的可能。相同地，避開環境敏感區可能限制航行自由，卻把生態損害納入決策。判斷航線是否有效率，因而必須把風險與長期代價一起計算。",
+        "這也改變我們理解低成本運輸的方式。國際海事組織將航運描述為多數貨物有效率、具成本效益且可靠的全球運輸方法，但同時強調安全、保安、能源效率與環境健全。若只把便宜視為成功，便可能忽略污染風險由沿海社區或未來世代承擔；若只要求零風險，全球貨物流動也難以維持。成熟的評估不是選擇便利或責任，而是檢查制度能否防止業者以削減安全與環境要求來競爭。",
+        "因此，海運航線連結世界日常生活的方式，既是物質的，也是制度的。物質層面上，船舶把貨物送到各地市場；制度層面上，定線、設備、人員與國際標準使跨境往來具有可預期性。商品抵達並不是故事終點，還應追問其運送是否把風險公平納入。當我們從一件商品看回整套航運系統，就能理解：真正維持全球連結的，不只是海面上的船，更是各方願意共同承擔安全與環境責任。"
+      ],
+      "glossary": [
+        {
+          "term": "彼此依存",
+          "definition": "系統中的不同部分互相倚賴，任一部分受阻都可能影響其他部分。"
+        },
+        {
+          "term": "船舶定線",
+          "definition": "依船流與海域風險建立可辨識、可遵循通行秩序的制度。"
+        },
+        {
+          "term": "分道通航制",
+          "definition": "利用通航分道及分隔區分離相反船流的措施。"
+        },
+        {
+          "term": "海床淨空",
+          "definition": "確認船底與海床或水下障礙物之間具有安全距離。"
+        },
+        {
+          "term": "管轄範圍",
+          "definition": "政府或機構依法可以管理及執行規則的區域或事項。"
+        },
+        {
+          "term": "國際框架",
+          "definition": "由不同國家共同採納、用來協調跨境活動的規範體系。"
+        },
+        {
+          "term": "跨國審議",
+          "definition": "由多國參與評估、討論及決定方案的程序。"
+        },
+        {
+          "term": "空間秩序",
+          "definition": "透過路徑、區域與通行方向安排船舶在海域中的活動。"
+        },
+        {
+          "term": "氣象定線",
+          "definition": "依天氣資訊提供較佳航行路徑、協助避開惡劣天候的做法。"
+        },
+        {
+          "term": "成本效益",
+          "definition": "衡量投入的成本是否換得相稱效益的觀念。"
+        }
+      ],
+      "readingMinutes": 9,
+      "sourceAttribution": [
+        {
+          "publisher": "International Maritime Organization",
+          "url": "https://www.imo.org/en/about/pages/default.aspx",
+          "license": "Personal, non-commercial reuse with full attribution and derivatives under the same terms. This translation was not created by the International Maritime Organization (IMO), and IMO is not responsible for its content or accuracy."
+        },
+        {
+          "publisher": "International Maritime Organization",
+          "url": "https://www.imo.org/en/ourwork/safety/pages/shipsrouteing.aspx",
+          "license": "Personal, non-commercial reuse with full attribution and derivatives under the same terms. This translation was not created by the International Maritime Organization (IMO), and IMO is not responsible for its content or accuracy."
+        },
+        {
+          "publisher": "International Maritime Organization",
+          "url": "https://www.imo.org/en/about/pages/imo-website-terms-and-conditions-of-use.aspx",
+          "license": "Official terms page consulted on 2026-07-29; commercial reuse requires separate permission."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "sea-shipping-routes-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依據第五段，政府提出新的船舶定線方案後，主要會經過哪一項程序？",
+          "options": [
+            "由航行、通信與搜救次委員會評估，再向海事安全委員會提出採納建議",
+            "由各家航運公司自行表決，不必經過國際機構",
+            "直接交由消費者依商品價格決定是否採納",
+            "先由船員永久試航，再取消所有既有國際規則"
+          ],
+          "correctAnswer": "由航行、通信與搜救次委員會評估，再向海事安全委員會提出採納建議",
+          "rationale": "第五段完整交代政府提案、次委員會評估及向海事安全委員會提出採納建議的流程。",
+          "distractorReasons": {
+            "由各家航運公司自行表決，不必經過國際機構": "正文說明方案須進入 IMO 審議，不是由航運公司單獨決定。",
+            "直接交由消費者依商品價格決定是否採納": "商品價格與航線採納程序無直接關係。",
+            "先由船員永久試航，再取消所有既有國際規則": "正文未提永久試航，也未主張取消既有國際規則。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 18,
+            "end": 48,
+            "text": "政府若希望建立新的定線系統，或修改既有安排，可向國際海事組織"
+          }
+        },
+        {
+          "id": "sea-shipping-routes-challenge-q2",
+          "type": "inference",
+          "prompt": "綜合第三段與第七段，為何繞行有時反而能被視為較有效率的航線選擇？",
+          "options": [
+            "因為效率還須計入事故、延誤與環境損害等風險，不能只比較幾何距離",
+            "因為所有較長航線都一定比短航線節省燃料",
+            "因為航線距離越長，船舶遭遇惡劣天氣的機會必然越低",
+            "因為深水航路與避航區的唯一目的都是延長航程"
+          ],
+          "correctAnswer": "因為效率還須計入事故、延誤與環境損害等風險，不能只比較幾何距離",
+          "rationale": "第三段指出航線同時處理自然限制與環境價值，第七段則說繞行雖增加眼前路程，卻可能降低事故、延誤或生態代價；整合兩段可推知，效率是多項風險的綜合評估。",
+          "distractorReasons": {
+            "因為所有較長航線都一定比短航線節省燃料": "正文沒有宣稱所有長航線都省燃料，且這種絕對說法忽略航線條件。",
+            "因為航線距離越長，船舶遭遇惡劣天氣的機會必然越低": "繞行可用來避開惡劣天氣，但不能推出航程越長就必然越安全。",
+            "因為深水航路與避航區的唯一目的都是延長航程": "深水航路重視海床淨空，避航區回應危險或環境需求，延長航程並非唯一目的。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 63,
+            "end": 93,
+            "text": "較佳不必然等於幾何距離最短；繞行可能增加眼前路程，卻降低事故"
+          }
+        },
+        {
+          "id": "sea-shipping-routes-challenge-q3",
+          "type": "evidence",
+          "prompt": "若要支持「維持全球日常供應不只靠船舶，也靠共同治理」這項觀點，下列哪一段引文的支持力最強？",
+          "options": [
+            "「這個比例揭示的不是單純運量，而是一種結構。」",
+            "「警戒區要求船舶特別謹慎。」",
+            "「它增加協調成本，卻也提高規則被不同國家理解與採行的可能。」",
+            "「真正維持全球連結的，不只是海面上的船，更是各方願意共同承擔安全與環境責任。」"
+          ],
+          "correctAnswer": "「真正維持全球連結的，不只是海面上的船，更是各方願意共同承擔安全與環境責任。」",
+          "rationale": "此引文同時指出船舶並非唯一條件，並把全球連結明確歸因於各方共同承擔安全與環境責任，最完整支持題述觀點。",
+          "distractorReasons": {
+            "「這個比例揭示的不是單純運量，而是一種結構。」": "這句提示航運具有系統性，但沒有直接指出共同治理在維持供應中的作用。",
+            "「警戒區要求船舶特別謹慎。」": "這句只說明單一航行區域的操作要求，支持範圍過窄。",
+            "「它增加協調成本，卻也提高規則被不同國家理解與採行的可能。」": "這句能支持跨國協調的價值，卻未直接連結船舶、全球供應與共同責任三者。"
+          },
+          "evidenceSpan": {
+            "paragraph": 9,
+            "start": 131,
+            "end": 161,
+            "text": "真正維持全球連結的，不只是海面上的船，更是各方願意共同承擔安"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -36,7 +36,15 @@ function glossaryIsValid(reading, text) {
   );
 }
 
-export function evaluateContentProfile(reading) {
+export function evaluateContentProfile(reading, limits = {}) {
+  const {
+    vernacularMin = 300,
+    vernacularMax = 600,
+    classicalMin = 120,
+    classicalMax = 300,
+    classicalGlossaryMin = 3,
+    classicalGlossaryMax = 8,
+  } = limits;
   const textType = reading?.textType;
   const text = readingText(reading);
   const characters = countReadingCharacters(reading);
@@ -51,15 +59,18 @@ export function evaluateContentProfile(reading) {
   if (!glossaryIsValid(reading, text)) reasons.push("glossary_invalid");
 
   if (textType === "vernacular") {
-    if (hanCharacters < 300 || hanCharacters > 600) {
+    if (hanCharacters < vernacularMin || hanCharacters > vernacularMax) {
       reasons.push("vernacular_length_out_of_range");
     }
   }
   if (textType === "classical") {
-    if (hanCharacters < 120 || hanCharacters > 300) {
+    if (hanCharacters < classicalMin || hanCharacters > classicalMax) {
       reasons.push("classical_length_out_of_range");
     }
-    if (glossaryCount < 3 || glossaryCount > 8) {
+    if (
+      glossaryCount < classicalGlossaryMin ||
+      glossaryCount > classicalGlossaryMax
+    ) {
       reasons.push("classical_glossary_out_of_range");
     }
   }

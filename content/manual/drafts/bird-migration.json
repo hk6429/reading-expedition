@@ -1,0 +1,400 @@
+{
+  "source": {
+    "id": "bird-migration-source-usgs-bbl",
+    "name": "U.S. Geological Survey Bird Banding Laboratory",
+    "baseUrl": "https://www.usgs.gov/",
+    "licenseType": "U.S. federal government work; page-specific usage statement",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "bird-migration-source-item-usgs-bbl-migration",
+    "canonicalUrl": "https://www.usgs.gov/labs/bird-banding-laboratory/science/what-do-we-learn-birds",
+    "title": "What do we learn from birds?",
+    "publisher": "U.S. Geological Survey, Bird Banding Laboratory",
+    "publishedAt": "2025-06-30",
+    "fetchedAt": "2026-07-29T00:00:00+08:00",
+    "contentFingerprint": "sha256:565e4732880dec8be25668fd07d50a3ec8a1961dc25a10790b67653bcc80d6e6",
+    "licenseSnapshot": "USGS page marks the displayed media as Public Domain; U.S. government-authored material is generally not protected by U.S. copyright, while credited third-party material may have separate restrictions. This draft uses paraphrased facts only.",
+    "extractScope": "Facts about bird banding, individual identification, reconstruction of movements, differing northbound and southbound pathways, and links between nesting and wintering areas. Navigation mechanisms were cross-checked against the Smithsonian National Zoo and Cornell Lab of Ornithology pages listed in sourceLinks."
+  },
+  "factPack": {
+    "id": "bird-migration-fact-pack-2026-07-29",
+    "topicDate": "2026-07-29",
+    "category": "science",
+    "facts": [
+      {
+        "id": "bird-migration-fact-001",
+        "statement": "為鳥加上可識別個體的腳環，並彙整繫放與再次遇見的位置，可以重建個別鳥隻的移動情形。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      },
+      {
+        "id": "bird-migration-fact-002",
+        "statement": "繫放資料顯示，有些鳥南遷與北返時採用不同路徑。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      },
+      {
+        "id": "bird-migration-fact-003",
+        "statement": "繫放與再遇資料能協助辨認繁殖地、度冬地，以及兩者之間的連結。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      },
+      {
+        "id": "bird-migration-fact-004",
+        "statement": "候鳥通常綜合太陽、星空旋轉、地球磁場、偏振光與地景等多種線索判斷方向，而不同物種與情境的依賴程度並不相同。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      },
+      {
+        "id": "bird-migration-fact-005",
+        "statement": "太陽羅盤必須配合鳥的內在生理時鐘，才能補償太陽在一天中位置的改變。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      },
+      {
+        "id": "bird-migration-fact-006",
+        "statement": "靛藍彩鵐的實驗顯示，幼鳥會學習辨認北方天空中恆星繞共同中心旋轉的型態，並以此建立南北方向。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      },
+      {
+        "id": "bird-migration-fact-007",
+        "statement": "鳥類具有感受地球磁場的能力；相關研究提出磁場可提供羅盤方向，並可能參與位置判斷，但生理機制仍有待研究。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      },
+      {
+        "id": "bird-migration-fact-008",
+        "statement": "山脈、河谷、海岸與湖泊等地景可成為導航參照；年輕個體也可能藉探索與經驗逐步修正路線。",
+        "sourceItemId": "bird-migration-source-item-usgs-bbl-migration"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.usgs.gov/programs/bird-banding-laboratory/science/migration",
+      "https://www.usgs.gov/labs/bird-banding-laboratory/science/what-do-we-learn-birds",
+      "https://nationalzoo.si.edu/migratory-birds/neotropical-migratory-bird-faqs",
+      "https://www.allaboutbirds.org/news/the-basics-migration-navigation/"
+    ],
+    "sensitivityFlags": [
+      "The user-provided legacy USGS URL was checked but was not publicly retrievable during verification; the current public USGS Bird Banding Laboratory page is preserved as canonicalUrl.",
+      "Mechanisms of magnetoreception remain under scientific investigation and are described with uncertainty rather than as settled anatomy.",
+      "USGS public-domain status does not automatically apply to separately credited third-party material."
+    ],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "bird-migration",
+  "packages": [
+    {
+      "id": "bird-migration-guided-vernacular-v1",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "候鳥腦中的多重導航系統",
+      "hookQuestion": "沒有地圖、道路和衛星定位，第一次遠行的幼鳥怎麼飛到千里之外？",
+      "body": [
+        "每逢季節轉換，許多候鳥離開繁殖地，飛往食物較充足或氣候較合適的地區。牠們可能越過山脈、河谷、海岸甚至海洋，隔年又回到熟悉的棲地。從地面仰望，鳥群彷彿沿著空中的道路前進；然而天空沒有路標，風向與雲層也不斷改變。科學家因此追問：候鳥究竟如何知道該往哪裡飛，又如何在偏離路線後重新找到目標？研究顯示，答案不是一張天生刻在腦中的精密地圖，而是一套能把多種感覺、內在時鐘與經驗組合起來的導航系統。",
+        "理解這套系統前，可以先區分「定向」與「導航」。定向像拿著羅盤，回答現在應朝哪個方向前進；導航則更像同時擁有地圖，必須判斷自己身在何處、目的地位於何方。只知道向南飛，未必能抵達特定的度冬地；若被強風吹到原路以東，鳥還要察覺偏差並調整航向。候鳥會綜合多種線索，不依賴單一羅盤。某項線索受雲霧遮蔽時，其他感官仍可能接手，使整段旅程不會因一個訊號暫時消失便立刻中斷。",
+        "白天飛行的候鳥可以利用太陽的位置判斷方向，但太陽會由東向西移動，所以牠們不能把某個固定亮點永遠當成南方。實驗指出，鳥的太陽羅盤會配合內在的生理時鐘，依一天中的時間修正判斷。若研究者改變鳥接受光照的時間，使牠的內在時鐘與真實時間錯開，牠選擇的方向也會隨之偏轉。日出與日落時，天空還會形成具有方向性的偏振光圖樣；即使太陽接近地平線，這種光線排列仍可能提供校準羅盤的參考。",
+        "許多小型鳴禽選擇在夜間遷徙，此時星空成為另一座羅盤。以靛藍彩鵐為例，研究者曾在天文館改變牠們看到的星空。結果顯示，鳥不是背下一顆永遠不動的指路星，而是觀察眾星繞著共同中心旋轉的型態，由此建立南北方向。幼鳥必須在成長過程中看見適當的夜空，才能學會這項線索。幼鳥的先天方向會受經驗逐年修正。這說明遺傳可能先提供大致的出發時機與方向，學習則讓導航逐漸變得精細。",
+        "雲層遮住星月時，地球磁場仍遍布四周。許多實驗支持鳥類具有磁覺，可以取得大致的南北方向；研究者也推測，磁場強度、傾角等隨地點改變的特徵，可能幫助某些鳥判斷位置。不過，磁覺究竟由哪些器官與生理反應完成，仍是持續研究的問題。有些假說關注眼睛內受特定光線影響的分子，有些研究則檢驗身體其他部位是否含有能回應磁場的構造。穩妥的說法是：磁場確實是重要線索之一，但不宜把尚未完全釐清的機制說成已經確定。",
+        "飛得較低或在白天移動時，候鳥還能讀取地面的形狀。延伸的海岸、河谷與山脈可提供方向，湖泊、森林邊界或熟悉的棲地也能成為地標。地景不只是指路牌，還關係到休息與補充能量：一條看似較短的直線，若途中缺少安全的停棲地，未必是最好的路線。風也不是單純把鳥推著走。候鳥可能等待合適風向起飛，飛行中則要處理側風造成的漂移。因此，牠們實際採用的道路，是方向、能量、天氣與安全共同作用的結果。",
+        "第一次遷徙的幼鳥常沒有成鳥全程帶領，仍可能依先天傾向啟程；但這不表示牠一開始就擁有成年鳥的全部本領。探索可能造成繞路，沿途看見的地標、成功停棲的位置，以及遭遇逆風後的修正，都能累積成經驗。有些群居或大型鳥類可以向年長個體學習；另一些獨自夜飛的鳥，則較依靠內在方向與環境線索。不同物種採取的策略並不一致，正好提醒我們：「候鳥如何導航」沒有適用所有鳥類的單一答案。",
+        "科學家無法直接詢問飛越千里的鳥看見了什麼，因此必須讓不同證據互相補充。繫放工作替個體加上可辨識的腳環；當同一隻鳥在別處被再次捕捉或通報，前後位置便能重建牠的一段移動。美國地質調查局鳥類繫放實驗室指出，這類資料曾顯示某些物種南下與北返採用不同道路，也能連結特定繁殖地與度冬地。繫放資料能重建個體移動，卻不能直接顯示牠當時看見哪項線索。要解釋導航機制，還須結合改變星空、光照或磁場的控制實驗。",
+        "因此，候鳥找到遷徙道路，較像一名同時查看羅盤、天空、地形與天氣的旅行者，而不是只服從一個神祕感官。先天傾向讓旅程能夠開始，太陽、星空、偏振光與磁場提供方向，地標和經驗協助定位與修正；繫放等長期觀察則讓人類看見路線的結果。多重線索看似複雜，卻帶來重要優勢：環境隨時可能改變，能交叉核對、切換訊號的導航系統，比只依靠一種提示更有韌性。候鳥的長途飛行，正是天生能力、後天學習與變動環境共同完成的作品。"
+      ],
+      "glossary": [
+        {
+          "term": "繁殖地",
+          "definition": "候鳥築巢、求偶並養育幼鳥的地區。"
+        },
+        {
+          "term": "棲地",
+          "definition": "生物生活並取得食物、遮蔽等資源的環境。"
+        },
+        {
+          "term": "定向",
+          "definition": "判斷並維持應前進方向的能力。"
+        },
+        {
+          "term": "生理時鐘",
+          "definition": "生物體內調節晝夜節律與活動時間的機制。"
+        },
+        {
+          "term": "偏振光",
+          "definition": "光波振動方向呈規律排列的光，可形成方向線索。"
+        },
+        {
+          "term": "磁覺",
+          "definition": "感受地球磁場方向或特徵的能力。"
+        },
+        {
+          "term": "傾角",
+          "definition": "地球磁場方向與水平面之間的夾角。"
+        },
+        {
+          "term": "停棲地",
+          "definition": "候鳥遷徙途中休息、躲避危險或補充能量的地點。"
+        },
+        {
+          "term": "繫放",
+          "definition": "為鳥加上可辨識標記並記錄資料，以研究其移動與生存。"
+        },
+        {
+          "term": "度冬地",
+          "definition": "候鳥在非繁殖季停留並度過冬季的地區。"
+        }
+      ],
+      "readingMinutes": 10,
+      "sourceAttribution": [
+        {
+          "publisher": "U.S. Geological Survey, Bird Banding Laboratory",
+          "url": "https://www.usgs.gov/labs/bird-banding-laboratory/science/what-do-we-learn-birds",
+          "license": "Page-specific Sources/Usage notices identify displayed USGS media as Public Domain; facts paraphrased, with third-party credits excluded."
+        },
+        {
+          "publisher": "Smithsonian's National Zoo and Conservation Biology Institute",
+          "url": "https://nationalzoo.si.edu/migratory-birds/neotropical-migratory-bird-faqs",
+          "license": "Copyright status not expressly licensed for reuse on the cited page; used only for verified facts and original Chinese paraphrase."
+        },
+        {
+          "publisher": "Cornell Lab of Ornithology",
+          "url": "https://www.allaboutbirds.org/news/the-basics-migration-navigation/",
+          "license": "Copyrighted institutional educational source; used only for verified facts and original Chinese paraphrase."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "bird-migration-guided-comprehension-001",
+          "type": "comprehension",
+          "prompt": "依據本文，為什麼候鳥使用太陽定向時還需要生理時鐘？",
+          "options": [
+            "為了依時間修正太陽位置改變所造成的方向差異",
+            "為了在夜間記住每一顆星星的固定位置",
+            "為了測量地球磁場在不同地點的強弱",
+            "為了預測停棲地下一季會出現的食物"
+          ],
+          "correctAnswer": "為了依時間修正太陽位置改變所造成的方向差異",
+          "rationale": "第三段說明太陽會在一天中移動，鳥的太陽羅盤必須配合內在生理時鐘，才能依當下時間校正方向。",
+          "distractorReasons": {
+            "為了在夜間記住每一顆星星的固定位置": "錯誤；星空定向是夜間的另一種線索，並非生理時鐘配合太陽的主要功能。",
+            "為了測量地球磁場在不同地點的強弱": "錯誤；磁場強弱屬磁覺可能使用的資訊，文中未說由生理時鐘測量。",
+            "為了預測停棲地下一季會出現的食物": "錯誤；本文未主張生理時鐘能預測停棲地的食物。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 30,
+            "text": "白天飛行的候鳥可以利用太陽的位置判斷方向，但太陽會由東向西移"
+          }
+        },
+        {
+          "id": "bird-migration-guided-inference-002",
+          "type": "inference",
+          "prompt": "綜合第四段與第七段，最適合推論幼鳥導航能力如何發展？",
+          "options": [
+            "完全由成鳥帶領，沒有成鳥便無法開始遷徙",
+            "先天傾向提供起點，學習與探索再逐步修正路線",
+            "幼鳥第一次遷徙已具備不會出錯的完整地圖",
+            "只要看過夜空，所有物種便會採取相同道路"
+          ],
+          "correctAnswer": "先天傾向提供起點，學習與探索再逐步修正路線",
+          "rationale": "第四段指出星空線索需要學習，第七段則說幼鳥可依先天傾向啟程，並從探索、地標與修正中累積經驗，兩段共同支持先天與後天交互作用。",
+          "distractorReasons": {
+            "完全由成鳥帶領，沒有成鳥便無法開始遷徙": "錯誤；第七段明說部分幼鳥沒有成鳥全程帶領仍可啟程。",
+            "幼鳥第一次遷徙已具備不會出錯的完整地圖": "錯誤；文中指出幼鳥可能繞路，能力會隨經驗精細化。",
+            "只要看過夜空，所有物種便會採取相同道路": "錯誤；不同物種依賴的線索與學習方式並不一致。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 0,
+            "end": 30,
+            "text": "第一次遷徙的幼鳥常沒有成鳥全程帶領，仍可能依先天傾向啟程；但"
+          }
+        },
+        {
+          "id": "bird-migration-guided-evidence-003",
+          "type": "evidence",
+          "prompt": "若要支持「只靠繫放紀錄，不能確定候鳥飛行時使用哪一種導航線索」，下列哪一則引文最有支持力？",
+          "options": [
+            "「一條看似較短的直線，若途中缺少安全的停棲地，未必是最好的路線。」",
+            "「不同物種採取的策略並不一致。」",
+            "「繫放資料能重建個體移動，卻不能直接顯示牠當時看見哪項線索。」",
+            "「多重線索看似複雜，卻帶來重要優勢。」"
+          ],
+          "correctAnswer": "「繫放資料能重建個體移動，卻不能直接顯示牠當時看見哪項線索。」",
+          "rationale": "第三個引文直接比較繫放資料能回答的移動結果與不能直接回答的感官機制，對命題的支持最完整。",
+          "distractorReasons": {
+            "「一條看似較短的直線，若途中缺少安全的停棲地，未必是最好的路線。」": "錯誤；此句說明路線選擇與停棲條件，未評估繫放證據的限制。",
+            "「不同物種採取的策略並不一致。」": "錯誤；此句僅指出物種差異，沒有說明繫放紀錄能否辨識線索。",
+            "「多重線索看似複雜，卻帶來重要優勢。」": "錯誤；此句評價多重線索的優勢，與繫放方法的證據界線無直接關係。"
+          },
+          "evidenceSpan": {
+            "paragraph": 8,
+            "start": 137,
+            "end": 166,
+            "text": "繫放資料能重建個體移動，卻不能直接顯示牠當時看見哪項線索。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bird-migration-challenge-vernacular-v1",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "一條航線，許多種答案",
+      "hookQuestion": "候鳥年年抵達相似目的地，是否代表牠們腦中真的藏著一張不會出錯的地圖？",
+      "body": [
+        "人們在地圖上畫出候鳥的遷徙線，常會得到一條俐落的弧線，彷彿鳥從起點鎖定終點後，只須照著固定軌道前進。然而，那條線其實是無數次決定壓縮後的結果：何時起飛、朝哪裡飛、是否順著風、要在哪裡停下，以及偏離後如何修正。高空沒有道路，地面的景物會被雲遮住，夜空與磁場提供的訊息也可能受到環境干擾。若把候鳥的本領說成「天生知道路」，雖然簡潔，卻掩蓋了導航真正值得理解之處——牠們是在不完整而變動的資訊中，持續整合線索。",
+        "科學上通常把定向與導航分開。定向回答「應往哪個方位飛」，功能近似羅盤；導航還必須處理「我在哪裡」與「目的地在哪裡」，近似地圖加羅盤。這個區別可以解釋一種看似矛盾的現象：幼鳥第一次獨自遷徙時，可能依遺傳傾向朝大致正確的方向飛行，卻未必能像有經驗的成鳥那樣，在遭遇側風或被吹離航線後精確補償。先天程序足以啟動旅程，不等於腦中已儲存每一處轉彎；抵達同一終點，也不能反推途中只使用一種方法。",
+        "候鳥會綜合多種線索，不依賴單一羅盤。白天，太陽可提供方向，但它在天空中的位置隨時間變化，因此太陽羅盤必須和生理時鐘共同運作。改變圈養鳥接受光照的時序，會使其內在時間與外界錯開，定向方向也跟著產生可預測的偏差。接近日出或日落時，天空中的偏振光圖樣又可能協助校準方向。這些研究的重點不只是列舉鳥有多少能力，而是透過操弄一項條件，觀察方向是否隨之改變，藉此判斷某項線索是否真正參與導航。",
+        "夜間遷徙的鳴禽另有星空可用。靛藍彩鵐的天文館實驗曾系統性改變鳥看見的夜空，顯示牠們利用恆星繞共同旋轉中心的圖樣建立南北方向，而非單純記住某一顆亮星。幼鳥若在發展的重要階段缺乏適當星空經驗，之後的定向便可能受影響。這項結果使「先天或學習」的二分法失去解釋力：遺傳可以準備學習的能力與遷徙衝動，環境則供應必須辨識的圖樣。幼鳥的先天方向會受經驗逐年修正。成熟導航因而比較像預設規則經反覆校準，而非出生時便完成的地圖。",
+        "即使日月星辰被雲遮蔽，地球磁場仍可能提供另一層參照。行為實驗支持許多鳥類具有磁覺，能以磁場判斷大致方向；磁場的強度、傾角或其他隨地理位置變化的特徵，也可能參與位置判定。不過，「鳥使用磁場」與「科學家已完全知道牠如何感受磁場」是兩個不同命題。研究者提出過與眼睛內光敏分子相關的假說，也檢驗身體中可能回應磁場的構造，但機制仍未完全定論。教材若把某個候選器官寫成唯一確定答案，便會把正在競爭與修正的科學模型誤寫成結案報告。",
+        "多種線索並存的價值，在於它們可以彼此校準，也可以在某項訊息不可靠時調整權重。晴朗白天，太陽與地景可能較容易使用；多雲夜晚，鳥或許更依賴磁場與其他感覺；抵達熟悉區域後，地標的作用又可能上升。這不表示鳥像人一樣有意識地列出選項評分，而是說牠的感覺與神經系統能根據情境產生不同反應。多重系統增加韌性，卻不保證永不出錯：強風可能造成漂移，錯誤的校準也可能在長距離中逐步放大。迷鳥的出現，反而提醒研究者導航是一種受限制的生物能力。",
+        "我們又如何知道空中的路線？美國地質調查局鳥類繫放實驗室彙整繫放與再遇資料。研究人員為個體加上獨特標記；同一隻鳥若在另一地點被捕捉、觀察或通報，前後紀錄便能重建一段移動。長期累積後，資料可連結繁殖地與度冬地，也顯示有些物種南下與北返採取不同通道。繫放資料能重建個體移動，卻不能直接顯示牠當時看見哪項線索。同樣的起終點可能由不同導航策略造成，而兩次紀錄之間也未呈現每一次轉向。因此，路線資料必須與操弄太陽、星空、光照或磁場的實驗互相參照。",
+        "這種證據分工十分重要。繫放與追蹤回答鳥「去了哪裡」，控制實驗較能檢驗某項線索「是否造成方向改變」，比較年齡或經驗的研究則探問能力「如何發展」。任何單一方法都只照亮問題的一面；若僅憑路線重複便斷言鳥擁有精密磁場地圖，或只憑實驗室中的定向反應便推定野外全程都使用同一羅盤，都超出了證據能支持的範圍。科學解釋的可信度，不在於故事聽來多麼神奇，而在於它是否區分觀察、推論與仍待檢驗的機制。",
+        "候鳥跨越千里的道路，因此不是由一個答案畫成。遺傳提供出發時機與初步方向，太陽、星空、偏振光和磁場構成可交叉核對的羅盤，地景、風與停棲條件影響實際選線，學習則讓個體在往返中修正判斷。人類再以繫放、追蹤和控制實驗，從不同尺度拼回這段旅程。最值得注意的並非鳥擁有某種完美的「第六感」，而是牠能在訊息缺漏、環境變動與能量有限的條件下，利用多套不完美的工具完成任務。遷徙的驚人之處，正在這種整合能力，而非一張永不失準的秘密地圖。"
+      ],
+      "glossary": [
+        {
+          "term": "壓縮",
+          "definition": "本文指地圖上的單一線條簡化了旅途中眾多決定與變化。"
+        },
+        {
+          "term": "定向",
+          "definition": "判斷並維持前進方位的能力。"
+        },
+        {
+          "term": "補償",
+          "definition": "察覺風或其他因素造成的偏移後調整航向。"
+        },
+        {
+          "term": "生理時鐘",
+          "definition": "調節生物晝夜節律與活動時序的內在機制。"
+        },
+        {
+          "term": "偏振光",
+          "definition": "振動方向具有規律的光，可提供方向性圖樣。"
+        },
+        {
+          "term": "磁覺",
+          "definition": "感受地球磁場方向或空間特徵的能力。"
+        },
+        {
+          "term": "傾角",
+          "definition": "磁力線方向與地表水平面之間的角度。"
+        },
+        {
+          "term": "權重",
+          "definition": "某項資訊在綜合判斷中所占的相對重要程度。"
+        },
+        {
+          "term": "韌性",
+          "definition": "系統受干擾後仍能維持功能或調整恢復的能力。"
+        },
+        {
+          "term": "繫放",
+          "definition": "替鳥加上可識別標記並記錄資料的研究方法。"
+        },
+        {
+          "term": "控制實驗",
+          "definition": "有系統地改變特定條件，以檢驗其是否造成觀察結果。"
+        }
+      ],
+      "readingMinutes": 11,
+      "sourceAttribution": [
+        {
+          "publisher": "U.S. Geological Survey, Bird Banding Laboratory",
+          "url": "https://www.usgs.gov/labs/bird-banding-laboratory/science/what-do-we-learn-birds",
+          "license": "Page-specific Sources/Usage notices identify displayed USGS media as Public Domain; facts paraphrased, with third-party credits excluded."
+        },
+        {
+          "publisher": "Smithsonian's National Zoo and Conservation Biology Institute",
+          "url": "https://nationalzoo.si.edu/migratory-birds/neotropical-migratory-bird-faqs",
+          "license": "Copyright status not expressly licensed for reuse on the cited page; used only for verified facts and original Chinese paraphrase."
+        },
+        {
+          "publisher": "Cornell Lab of Ornithology",
+          "url": "https://www.allaboutbirds.org/news/the-basics-migration-navigation/",
+          "license": "Copyrighted institutional educational source; used only for verified facts and original Chinese paraphrase."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "bird-migration-challenge-comprehension-001",
+          "type": "comprehension",
+          "prompt": "依據第八、九段，下列何者最能正確配對研究方法與主要可回答的問題？",
+          "options": [
+            "繫放與再遇資料—鳥在每次轉向時看見哪顆星",
+            "控制實驗—某項環境線索是否會改變定向反應",
+            "路線地圖—磁覺由哪一種器官獨自完成",
+            "比較起終點—鳥是否有意識地替線索評分"
+          ],
+          "correctAnswer": "控制實驗—某項環境線索是否會改變定向反應",
+          "rationale": "第九段明確區分證據功能：繫放與追蹤主要回答移動結果，控制實驗則可藉操弄線索檢驗方向反應是否改變。",
+          "distractorReasons": {
+            "繫放與再遇資料—鳥在每次轉向時看見哪顆星": "錯誤；繫放只能提供離散位置，不能呈現鳥每次轉向時看見的星體。",
+            "路線地圖—磁覺由哪一種器官獨自完成": "錯誤；路線地圖不會直接揭示磁覺的生理器官，且本文也未認定單一器官。",
+            "比較起終點—鳥是否有意識地替線索評分": "錯誤；相同起終點不能證明鳥具有像人類一樣的有意識評分過程。"
+          },
+          "evidenceSpan": {
+            "paragraph": 8,
+            "start": 0,
+            "end": 30,
+            "text": "這種證據分工十分重要。繫放與追蹤回答鳥「去了哪裡」，控制實驗"
+          }
+        },
+        {
+          "id": "bird-migration-challenge-inference-002",
+          "type": "inference",
+          "prompt": "綜合第五至七段，作者最可能如何解釋「多重導航系統仍會產生迷鳥」？",
+          "options": [
+            "只要鳥具有磁覺，任何迷航都只能由人為紀錄錯誤造成",
+            "多重線索可提高韌性，但各線索與校準仍受環境干擾和能力限制",
+            "迷鳥證明太陽、星空、磁場及地景從未參與鳥類導航",
+            "鳥必須先完全放棄所有先天方向，才能依經驗修正路線"
+          ],
+          "correctAnswer": "多重線索可提高韌性，但各線索與校準仍受環境干擾和能力限制",
+          "rationale": "第五段保留磁覺機制的不確定性，第六段呈現風、能量與地景的限制，第七段則明說多重系統能增加韌性但不能保證不出錯；三段共同支持第二個選項。",
+          "distractorReasons": {
+            "只要鳥具有磁覺，任何迷航都只能由人為紀錄錯誤造成": "錯誤；磁覺只是線索之一，本文也指出強風與錯誤校準可能導致偏離。",
+            "迷鳥證明太陽、星空、磁場及地景從未參與鳥類導航": "錯誤；迷航不會推翻多項實驗與觀察對這些線索的支持。",
+            "鳥必須先完全放棄所有先天方向，才能依經驗修正路線": "錯誤；文中認為先天傾向與經驗可共同作用，並非必須先放棄先天能力。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 0,
+            "end": 30,
+            "text": "多種線索並存的價值，在於它們可以彼此校準，也可以在某項訊息不"
+          }
+        },
+        {
+          "id": "bird-migration-challenge-evidence-003",
+          "type": "evidence",
+          "prompt": "若要反駁「只要兩隻鳥抵達相同起終點，就能證明牠們使用相同導航策略」，哪一則引文的支持力最強？",
+          "options": [
+            "「直線距離最短，不代表耗能最少。」",
+            "「多重系統增加韌性，卻不保證永不出錯。」",
+            "「同樣的起終點可能由不同導航策略造成，而兩次紀錄之間也未呈現每一次轉向。」",
+            "「科學上通常把定向與導航分開。」"
+          ],
+          "correctAnswer": "「同樣的起終點可能由不同導航策略造成，而兩次紀錄之間也未呈現每一次轉向。」",
+          "rationale": "第三個引文直接指出相同結果可能由不同策略形成，且離散紀錄缺少途中決策資訊，能從兩個層面反駁題述推論。",
+          "distractorReasons": {
+            "「直線距離最短，不代表耗能最少。」": "錯誤；此句比較距離與耗能，沒有直接處理相同起終點能否證明相同策略。",
+            "「多重系統增加韌性，卻不保證永不出錯。」": "錯誤；此句說明多重系統仍可能失誤，對起終點與策略的關係支持較間接。",
+            "「科學上通常把定向與導航分開。」": "錯誤；此句只是界定兩個概念，未比較路線結果與導航策略。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 151,
+            "end": 181,
+            "text": "同樣的起終點可能由不同導航策略造成，而兩次紀錄之間也未呈現每"
+          }
+        }
+      ]
+    }
+  ]
+}

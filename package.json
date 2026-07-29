@@ -15,6 +15,7 @@
     "test:static": "node --test \"test/static/**/*.test.mjs\"",
     "test:e2e": "playwright test",
     "content:new": "node scripts/generate-manual-content.mjs",
+    "content:batch": "node scripts/generate-manual-batch.mjs",
     "content:validate": "node scripts/validate-manual-content.mjs",
     "content:ready": "node scripts/validate-manual-content.mjs --require-count 30",
     "content:sql": "node scripts/render-manual-sql.mjs",

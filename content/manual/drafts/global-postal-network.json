@@ -1,0 +1,453 @@
+{
+  "source": {
+    "id": "global-postal-network-source",
+    "name": "Universal Postal Union official website",
+    "baseUrl": "https://www.upu.int/",
+    "licenseType": "UPU website reuse permission with source acknowledgement; otherwise all rights reserved",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "global-postal-network-source-item",
+    "canonicalUrl": "https://www.upu.int/en/Universal-Postal-Union",
+    "title": "Universal Postal Union",
+    "publisher": "Universal Postal Union",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-29T12:00:00+08:00",
+    "contentFingerprint": "live-verified-upu-pages-2026-07-29",
+    "licenseSnapshot": "UPU 的 Disclaimer 表示，在個別內容未另訂條款時，網站資訊可於標明 UPU 為來源的前提下使用或重製；Copyright 頁面同時標示 ©2020 Universal Postal Union、All rights reserved，並限制未經許可重製網站材料。本草稿因此僅採可核對事實，以繁體中文重新編寫，不複製長段原文，並逐項保留來源連結。",
+    "extractScope": "核對並改寫 UPU 正式網站中關於組織角色、國際地址、國際郵件處理中心、運輸規劃、電子資料、海關合作、安全與國際郵件交換規則的短篇事實。"
+  },
+  "factPack": {
+    "id": "global-postal-network-fact-pack",
+    "topicDate": "2026-07-29",
+    "category": "world",
+    "facts": [
+      {
+        "id": "global-postal-network-fact-01",
+        "statement": "萬國郵政聯盟成立於1874年，總部位於瑞士伯恩；截至查證日共有192個會員國，並為郵政部門合作、國際郵件交換規則及技術協助提供共同平台。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-02",
+        "statement": "完整而正確的地址有助於國際郵件快速、有效地處理；郵遞區號可協助人工或自動分揀，但各國地址格式與郵遞區號制度並不完全相同。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-03",
+        "statement": "國際郵件處理中心是處理郵政業者間郵件的重要設施，可以產生、接收郵件總包，或作為其他國際郵件處理中心之間的轉運中心。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-04",
+        "statement": "每一國際郵件處理中心都有明確的實體位置，由單一組織營運或負責，並處理特定郵件流；UPU 以標準及代碼清單協助網絡辨識這些中心。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-05",
+        "statement": "國際郵件運輸規劃須考量航班與轉運安排、郵量、運能、交換局工作時間、星期與季節變化；寄發交換局製作郵袋等容器標籤時，會納入路由資訊。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-06",
+        "statement": "國際郵件可經航空、鐵路、海運或陸路等方式運輸；郵政業者、承運人及其他供應鏈參與者必須協作，運輸規劃會直接影響服務品質。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-07",
+        "statement": "郵政電子資料交換可連結郵政業者、承運人、海關及其他參與者；共同的技術與訊息標準有助於互通、追蹤、異常處理及資料品質。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-08",
+        "statement": "含有物品的國際郵件可能受進口海關與安全規定約束；目的地海關與安全機關可利用電子預報資料進行事前風險評估，但電子資料不取代既有安全檢查。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-09",
+        "statement": "UPU 的全球郵政模式為原寄郵政、目的地郵政、海關與承運人交換電子預報資料提供框架，並由 UPU 與世界海關組織、國際民航組織及國際航空運輸協會等機構合作發展。",
+        "sourceItemId": "global-postal-network-source-item"
+      },
+      {
+        "id": "global-postal-network-fact-10",
+        "statement": "國際郵件抵達目的國後，仍須由當地郵政網絡依該國的地址制度、作業方式及適用法規分揀與投遞；共同標準的功能是使不同制度能互相銜接，而非使各國採用完全相同的流程。",
+        "sourceItemId": "global-postal-network-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.upu.int/en/Universal-Postal-Union",
+      "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Addressing-Solutions",
+      "https://www.upu.int/en/postal-solutions/programmes-services/standards",
+      "https://www.upu.int/en/postal-solutions/programmes-services/postal-supply-chain",
+      "https://www.upu.int/en/postal-solutions/programmes-services/postal-supply-chain/transport-and-logistics",
+      "https://www.upu.int/en/postal-solutions/programmes-services/postal-supply-chain/customs",
+      "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Postal-Supply-Chain/Postal-Supply-Chain-Integration",
+      "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Quality-of-service/Compliance-to-UPU-Standards",
+      "https://www.upu.int/en/Disclaimer",
+      "https://www.upu.int/en/Copyright"
+    ],
+    "sensitivityFlags": [
+      "postal-security-generalized",
+      "customs-rules-vary-by-destination",
+      "manual-license-review-required"
+    ],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "global-postal-network",
+  "packages": [
+    {
+      "id": "global-postal-network-guided",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "一封信的跨國接力",
+      "hookQuestion": "信封沒有護照，為什麼仍能穿越不同國家的郵政網絡？",
+      "body": [
+        "把一封寫給外國朋友的信投入郵筒，看起來只是一次簡單的投遞。然而，信封離開寄件人的手後，並不是由同一名郵差一路送到國外。它會在多個地點被收集、分揀、裝入郵袋或其他容器，再交給不同機構接力。參與者可能包括原寄國與目的國的郵政業者、國際郵件處理中心、航空公司或其他承運人；遇到必須接受檢查的郵件，海關與安全機關也會加入。這是一條由實體郵件、運輸工具、共同規則與電子資料共同構成的路。",
+        "地址不是裝飾，而是郵政網絡讀取路徑的第一組資料。寄件人必須依目的國的規則寫明收件人、街道、城市、郵遞區號與國名。萬國郵政聯盟指出，完整而正確的地址能提高郵件處理的速度與效率；郵遞區號則能協助人工或自動分揀。不過，各國使用的地址順序、文字與郵遞區號格式並不一致。因此，國際郵件需要共同的地址觀念，也必須尊重目的國自己的寫法。寫對國名只能指出大方向，完整地址才可能把信引到最後一段路。",
+        "信件由當地郵政網絡收取後，會先依目的地分流。國內郵件留在國內路線，跨境郵件則被送往負責國際交換的設施。UPU 所稱的國際郵件處理中心，是郵政業者之間交換郵件的重要節點：有些中心產生寄往國外的總包，有些接收外國寄來的總包，也有些擔任轉運中心。每個中心都有明確位置，由一個組織營運或負責，並處理特定郵件流。中心代碼與作業標準，就像網絡共同使用的站名和語法，讓交接雙方知道郵件從哪裡來、要往哪裡去。",
+        "來到原寄國的國際郵件處理中心後，信件通常不再被視為一個孤立物件，而會與方向、類別及處理需求相近的郵件組成總包，再裝入郵袋等容器。作業人員與系統必須把目的地、路由及處理資訊連結起來。郵袋標籤上的路由資訊並非臨時猜測，而是根據郵政業者事先建立的運輸計畫產生。這些共同格式十分重要：如果每個郵局用自己的符號記錄中心、郵件類別與運輸資料，下一個國家的設備與人員便難以迅速判讀，跨國接力也容易在交界處中斷。",
+        "跨境運輸不是把郵袋交給任何一班飛機就算完成。負責規劃的人員必須考量航班時刻、轉運安排、飛機或其他工具的容量、交換局工作時間、每日與季節郵量，以及優先與非優先郵件的差異。國際郵件也不只搭飛機，還可能使用鐵路、海運或陸路。路線有時直接抵達目的國，有時須經第三地轉運。承運人接手的是一段運輸責任，目的地郵政接手的則是後續處理責任；交接若缺少可辨識的容器、路由或資料，延誤便可能沿著整條供應鏈擴大。",
+        "信在移動，相關資料也可能先行。郵政電子資料交換能在郵政業者、承運人與其他參與者之間傳送標準化訊息，協助追蹤總包、核對交接、發現異常並改善資料品質。這不表示每一封普通信都有可供寄件人查詢的個別追蹤紀錄；服務是否追蹤，仍取決於郵件產品與作業安排。電子資料的主要價值，是讓不同機構對同一批郵件的身分、方向與狀態有較一致的理解。看不見的訊息流，因而成為實體郵袋安全移動的重要搭檔。",
+        "海關是否介入，與郵件內容及目的國規定有關，不能把所有信件一概而論。若國際郵件含有物品，可能須提供寄件人、內容與價值等資料，並受到進口、稅務或安全規定約束。目的地海關與安全機關可利用電子預報資料，在郵件到達前進行風險評估。這些資料是額外的一層判斷工具，不會取消航空安全檢查、海關查驗或相關法律責任。若只是文件，適用要求可能不同；寄件人仍應依寄發郵政與目的國公布的規則準備，而不能僅憑信封大小推定是否需要申報。",
+        "因此，一封信能穿越多國，不是因為世界只有一套郵局。它抵達目的國的國際郵件處理中心後，還要進入當地分揀與投遞系統，依該國地址制度與作業方式逐步縮小範圍，最後交到投遞人員手中。萬國郵政聯盟有192個會員國，負責建立國際郵件交換規則、提出標準並促進合作；真正執行每一段工作的，仍是各地郵政、承運人及依法參與的機關。全球郵政網絡的巧妙之處，正是讓不同制度保留自身做法，又能在共同接口上完成一次次可靠交接。"
+      ],
+      "glossary": [
+        {
+          "term": "郵政網絡",
+          "definition": "由郵政設施、運輸路線、作業規則、資料系統與合作機構連結而成的服務體系。"
+        },
+        {
+          "term": "分揀",
+          "definition": "依地址、目的地、郵件類別或路線將郵件分類。"
+        },
+        {
+          "term": "國際郵件處理中心",
+          "definition": "產生、接收或轉運郵政業者間國際郵件總包的重要設施。"
+        },
+        {
+          "term": "總包",
+          "definition": "郵政作業中，將一批郵件依路向與類別組成的交換單位。"
+        },
+        {
+          "term": "路由",
+          "definition": "郵件或郵袋由原寄地前往目的地所採用的預定路線。"
+        },
+        {
+          "term": "承運人",
+          "definition": "負責航空、鐵路、海運或陸路等運輸環節的機構。"
+        },
+        {
+          "term": "電子資料交換",
+          "definition": "不同機構依共同格式傳送作業資料的方式。"
+        },
+        {
+          "term": "供應鏈",
+          "definition": "郵件從收寄、處理、運輸、查驗到投遞所涉及的一連串參與者與活動。"
+        },
+        {
+          "term": "電子預報資料",
+          "definition": "在國際郵件抵達前傳送、供相關機關進行作業或風險評估的資料。"
+        },
+        {
+          "term": "共同接口",
+          "definition": "讓不同制度能交換資料、辨識郵件並交接責任的共同規則或格式。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/Universal-Postal-Union",
+          "license": "UPU Disclaimer：標明 UPU 為來源且無個別限制時可使用或重製資訊；Copyright：All rights reserved。本稿僅取事實後重新編寫。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Addressing-Solutions",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用地址與郵遞區號的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/postal-solutions/programmes-services/standards",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用國際郵件處理中心與標準的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/postal-solutions/programmes-services/postal-supply-chain/transport-and-logistics",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用運輸規劃、路由與電子資料交換的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/postal-solutions/programmes-services/postal-supply-chain/customs",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用郵政與海關合作的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Postal-Supply-Chain/Postal-Supply-Chain-Integration",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用電子預報資料與全球郵政模式的短篇事實。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "global-postal-network-guided-comprehension-01",
+          "type": "comprehension",
+          "prompt": "根據本文，一封跨境信件離開當地郵政網絡後，最可能先進入哪一類負責國際交換的節點？",
+          "options": [
+            "收件人所在街區的投遞站",
+            "原寄國的國際郵件處理中心",
+            "目的國的海關拍賣場所",
+            "萬國郵政聯盟的伯恩總部"
+          ],
+          "correctAnswer": "原寄國的國際郵件處理中心",
+          "rationale": "第三段說明，跨境郵件會送往負責國際交換的設施，也就是原寄國的國際郵件處理中心；其他選項不是此階段的正常節點。",
+          "distractorReasons": {
+            "收件人所在街區的投遞站": "這是目的國末端投遞可能涉及的地點，不是離開原寄國國內路線後首先承接國際交換的節點。",
+            "目的國的海關拍賣場所": "海關可能依法查驗特定郵件，但本文未說郵件會先進入拍賣場所。",
+            "萬國郵政聯盟的伯恩總部": "UPU 制定規則並促進合作，並不在其總部逐封處理國際信件。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 22,
+            "text": "信件由當地郵政網絡收取後，會先依目的地分流。"
+          }
+        },
+        {
+          "id": "global-postal-network-guided-inference-02",
+          "type": "inference",
+          "prompt": "綜合地址、運輸與目的國投遞三部分，為何「只寫對國名」仍不足以確保信件順利送達？",
+          "options": [
+            "因為國名只能協助購買郵票，不能用於國際分流",
+            "因為跨境郵件一定要由寄件人親自選定每一班飛機",
+            "因為國名只指出大方向，後續分揀與投遞仍需完整且符合目的國規則的地址",
+            "因為各會員國已停止使用街道、城市與郵遞區號"
+          ],
+          "correctAnswer": "因為國名只指出大方向，後續分揀與投遞仍需完整且符合目的國規則的地址",
+          "rationale": "第二段說明完整地址與目的國格式的重要性，第五段呈現跨境路線的多重規劃，第八段又指出信件抵達目的國後仍須逐步縮小投遞範圍。整合三處可知，國名只能完成國際方向辨識，不能取代末端定位資料。",
+          "distractorReasons": {
+            "因為國名只能協助購買郵票，不能用於國際分流": "本文把國名視為路向資料的一部分，沒有說它只能用來購買郵票。",
+            "因為跨境郵件一定要由寄件人親自選定每一班飛機": "運輸路線由郵政業者規劃，寄件人不必也不能逐班安排承運工具。",
+            "因為各會員國已停止使用街道、城市與郵遞區號": "本文指出各國地址制度不同，並未說會員國停止使用這些地址元素。"
+          },
+          "evidenceSpan": {
+            "paragraph": 8,
+            "start": 25,
+            "end": 55,
+            "text": "它抵達目的國的國際郵件處理中心後，還要進入當地分揀與投遞系統"
+          }
+        },
+        {
+          "id": "global-postal-network-guided-evidence-03",
+          "type": "evidence",
+          "prompt": "若要支持「共同標準不是要消除各國制度差異，而是讓差異能銜接」這項判斷，下列哪一段引文的支持力最強？",
+          "options": [
+            "「國際郵件也不只搭飛機，還可能使用鐵路、海運或陸路。」",
+            "「服務是否追蹤，仍取決於郵件產品與作業安排。」",
+            "「全球郵政網絡的巧妙之處，正是讓不同制度保留自身做法，又能在共同接口上完成一次次可靠交接。」",
+            "「若只是文件，適用要求可能不同。」"
+          ],
+          "correctAnswer": "「全球郵政網絡的巧妙之處，正是讓不同制度保留自身做法，又能在共同接口上完成一次次可靠交接。」",
+          "rationale": "正確引文同時包含「保留自身做法」與「共同接口交接」，完整對應判斷的兩個部分；其餘引文只談運輸方式、追蹤差異或海關要求，支持範圍較窄。",
+          "distractorReasons": {
+            "「國際郵件也不只搭飛機，還可能使用鐵路、海運或陸路。」": "這句只能證明運輸方式多元，不能證明制度差異如何透過共同標準銜接。",
+            "「服務是否追蹤，仍取決於郵件產品與作業安排。」": "這句說明追蹤服務依產品而異，沒有比較各國制度與共同接口。",
+            "「若只是文件，適用要求可能不同。」": "這句只指出文件與物品可能適用不同要求，未說明跨國制度如何互通。"
+          },
+          "evidenceSpan": {
+            "paragraph": 8,
+            "start": 154,
+            "end": 184,
+            "text": "全球郵政網絡的巧妙之處，正是讓不同制度保留自身做法，又能在共"
+          }
+        }
+      ]
+    },
+    {
+      "id": "global-postal-network-challenge",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "信封、代碼與國界之間",
+      "hookQuestion": "一封信的旅程，究竟是一條運輸路線，還是一場制度間的翻譯？",
+      "body": [
+        "一封跨國信件看似沿著地圖前進，實際上卻同時穿越三種邊界：地理邊界、組織邊界與資料邊界。信封必須從寄件人所在的國內網絡，轉入原寄國的國際交換節點；實體郵袋可能交給航空、鐵路、海運或陸路承運人；抵達後，又由目的國郵政與依法參與的機關接手。每一次移交，都伴隨一個問題：下一方能否正確辨識這批郵件的來源、去向、類別與處理責任？所以，國際郵政不只是移動物件，更是在不同制度間維持可理解的連續性。",
+        "地址提供第一層可理解性。世界各國對姓名、街道、城市、行政區與郵遞區號的排列方式並不一致，甚至不是每個國家都採用相同形式的郵遞區號。UPU 的地址工作因此一面保存各國規則，一面提供國際地址要素與格式的共同參考。郵遞區號可以協助人工或自動分揀，但它不是脫離其他地址要素便能獨立運作的魔法密碼。若國名正確而街道、城市或收件人資料含混，信件或許能抵達目的國，卻可能在最需要精確定位的末端失去方向。",
+        "標準的力量，不在於消除各國差異，而在於規定差異如何彼此翻譯。國際郵件處理中心就是這種翻譯的關鍵節點。它可能產生寄發總包、接收外國總包，或替其他中心轉運郵件；每個中心有明確實體位置、責任組織與特定郵件流。UPU 的中心代碼、訊息格式與作業標準，讓一個國家的系統能辨識另一個國家的節點。代碼把複雜機構轉成可交換的識別，標準則限定資料應如何表達；兩者共同降低歧義，卻不替任何國家決定所有內部流程。",
+        "信件進入原寄國的國際處理中心後，常與同方向、類別或處理需求的郵件組成總包。此時，單封信的個別旅程被嵌入一個較大的運輸單位。交換局依預先建立的網絡計畫製作郵袋等容器的標籤，將路由資訊帶入後續交接。這項計畫必須回應不斷變動的條件：航班時刻與載量會改變，交換局有工作時間，郵量具有日常與季節波動，優先與非優先郵件也可能採不同安排。路線品質因而不是單一承運人的表現，而是規劃、裝運、轉運與接收能否連成一條沒有斷點的責任鏈。",
+        "實體郵袋向前移動時，資料可能沿另一條路線先行。郵政電子資料交換以共同訊息格式連結郵政業者、承運人、海關及處理代理人，可用於核對交接、掌握總包狀態、處理異常與檢查資料品質。這裡必須區分「作業可見性」和「顧客可查詢的逐件追蹤」：前者是供應鏈參與者對郵件流的共同理解，後者則取決於寄件人選擇的產品與各地服務設計。即使普通信件沒有公開的逐件軌跡，支撐它移動的總包、容器及運輸資料仍可能形成可管理的作業脈絡。",
+        "電子資料使檢查可以提前，但它沒有取消實體查驗與法定責任。對含有物品的國際郵件，進口國可能要求寄件人、內容與價值等資料；目的地海關及安全機關可在郵件抵達前利用電子預報資料進行風險評估。UPU 的全球郵政模式，正是為原寄郵政、目的地郵政、海關與承運人之間的資料交換提供框架。不過，事前資料只是風險判斷的一層，仍須與航空安全檢查、海關程序及各國法律配合。文件與物品可能面對不同要求，因此不能從信封外觀直接推導申報義務。",
+        "這套網絡也揭露效率與主權之間的張力。若每一國完全使用封閉格式，跨境郵件會在交界處反覆翻譯，時間與錯誤成本都可能增加；若把所有規則強制統一，又會忽略各國地址制度、法規、基礎建設與服務選擇的差異。UPU 的角色較接近建立共同語法：它制定國際交換規則、提出標準、促進合作並提供技術協助，實際收寄、運輸、查驗、分揀與投遞仍由各地機構完成。共同語法提升互通性，地方機構則保留依法判斷與執行的責任。",
+        "全球郵政網絡的可靠性，來自共同規則與地方判斷的接力。萬國郵政聯盟成立於1874年，截至查證日有192個會員國；這個規模顯示，可靠交接不可能只依賴兩家郵局的臨時默契。一封信能抵達收件人，是因為地址把人與地方轉成可分揀資料，國際郵件處理中心把國內網絡接上跨境節點，運輸計畫把節點排成路線，電子訊息讓責任與狀態較可辨識，而目的國再以自己的制度完成最後一哩。信封跨越的不是被抹平的國界，而是一連串經過協調、仍保有差異的接口。"
+      ],
+      "glossary": [
+        {
+          "term": "資料邊界",
+          "definition": "資料離開一套格式或系統，進入另一套格式或系統時形成的交界。"
+        },
+        {
+          "term": "可理解性",
+          "definition": "下一個參與者能正確辨識資料意義、郵件方向與處理責任的程度。"
+        },
+        {
+          "term": "標準",
+          "definition": "供不同機構共同遵循的技術、訊息或作業規範。"
+        },
+        {
+          "term": "國際郵件處理中心",
+          "definition": "產生、接收或轉運郵政業者間國際郵件總包的重要節點。"
+        },
+        {
+          "term": "歧義",
+          "definition": "同一資料可能產生兩種以上解釋而無法明確判讀的情況。"
+        },
+        {
+          "term": "總包",
+          "definition": "把一批郵件依路向、類別或處理需求組成的國際交換單位。"
+        },
+        {
+          "term": "責任鏈",
+          "definition": "郵件在規劃、處理、運輸與接收等環節間連續移交責任的關係。"
+        },
+        {
+          "term": "作業可見性",
+          "definition": "供應鏈參與者掌握郵件流、容器、交接與狀態的能力。"
+        },
+        {
+          "term": "電子預報資料",
+          "definition": "郵件抵達前傳送，供海關、安全或郵政機構預先處理與評估的資料。"
+        },
+        {
+          "term": "互通性",
+          "definition": "不同組織、設備與資訊系統依共同規則交換並正確使用資料的能力。"
+        },
+        {
+          "term": "主權",
+          "definition": "國家依其法律與制度決定境內郵政、海關及安全作業的權限。"
+        },
+        {
+          "term": "共同語法",
+          "definition": "本文比喻讓不同郵政制度能辨識彼此資料與完成交接的共同標準。"
+        }
+      ],
+      "readingMinutes": 9,
+      "sourceAttribution": [
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/Universal-Postal-Union",
+          "license": "UPU Disclaimer：標明 UPU 為來源且無個別限制時可使用或重製資訊；Copyright：All rights reserved。本稿僅取事實後重新編寫。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Addressing-Solutions",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用地址制度與分揀功能的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/postal-solutions/programmes-services/standards",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用國際郵件處理中心、代碼及互通標準的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/postal-solutions/programmes-services/postal-supply-chain/transport-and-logistics",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用運輸計畫、容器路由與電子資料交換的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/postal-solutions/programmes-services/postal-supply-chain/customs",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用郵政海關合作與申報資料的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Postal-Supply-Chain/Postal-Supply-Chain-Integration",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用電子預報資料、風險評估與全球郵政模式的短篇事實。"
+        },
+        {
+          "publisher": "Universal Postal Union",
+          "url": "https://www.upu.int/en/Postal-Solutions/Programmes-Services/Quality-of-service/Compliance-to-UPU-Standards",
+          "license": "同受 UPU 網站 Disclaimer 與 Copyright 條款規範；僅使用標準互通與資料品質的短篇事實。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "global-postal-network-challenge-comprehension-01",
+          "type": "comprehension",
+          "prompt": "依本文對國際郵件處理中心的說明，下列何者最符合其功能？",
+          "options": [
+            "統一制定每個國家的國內投遞路線",
+            "產生、接收或轉運郵政業者間的國際郵件總包",
+            "替所有普通信件提供公開的逐件追蹤頁面",
+            "直接決定各國海關應徵收的稅額"
+          ],
+          "correctAnswer": "產生、接收或轉運郵政業者間的國際郵件總包",
+          "rationale": "第三段明列國際郵件處理中心可產生寄發總包、接收外國總包或替其他中心轉運郵件。其功能是跨業者交換節點，不是統一各國內部路線、提供所有逐件追蹤或代替海關課稅。",
+          "distractorReasons": {
+            "統一制定每個國家的國內投遞路線": "本文強調共同標準不會替各國決定所有內部流程。",
+            "替所有普通信件提供公開的逐件追蹤頁面": "第五段區分作業可見性與顧客可查詢的逐件追蹤，並未說所有普通信件都有公開軌跡。",
+            "直接決定各國海關應徵收的稅額": "海關依法執行稅務與查驗，國際郵件處理中心不負責決定各國稅額。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 30,
+            "end": 60,
+            "text": "國際郵件處理中心就是這種翻譯的關鍵節點。它可能產生寄發總包、"
+          }
+        },
+        {
+          "id": "global-postal-network-challenge-inference-02",
+          "type": "inference",
+          "prompt": "綜合第三、第五與第七段，本文把共同標準比作「共同語法」，主要想說明什麼？",
+          "options": [
+            "標準能讓不同機構交換並判讀資料，同時保留各國依法執行的空間",
+            "標準的目的在於把各會員國的地址、法律與郵局改成完全相同",
+            "只要採用電子訊息，實體郵袋與地方機構就不再重要",
+            "共同標準主要用來要求寄件人自行規劃國際運輸路線"
+          ],
+          "correctAnswer": "標準能讓不同機構交換並判讀資料，同時保留各國依法執行的空間",
+          "rationale": "第三段說標準降低歧義但不替各國決定內部流程；第五段說共同訊息連結不同參與者；第七段則明言共同語法提升互通性，而地方機構保留依法判斷與執行的責任。答案須同時統整互通與差異保留兩層意思。",
+          "distractorReasons": {
+            "標準的目的在於把各會員國的地址、法律與郵局改成完全相同": "第七段明確指出強制統一會忽略各國制度、法規與基礎建設差異。",
+            "只要採用電子訊息，實體郵袋與地方機構就不再重要": "第五段仍描述實體郵袋與作業脈絡，第六段也指出電子資料不取消實體查驗。",
+            "共同標準主要用來要求寄件人自行規劃國際運輸路線": "第四段說運輸計畫由交換局與郵政網絡建立，不是由寄件人自行安排。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 165,
+            "end": 193,
+            "text": "共同語法提升互通性，地方機構則保留依法判斷與執行的責任。"
+          }
+        },
+        {
+          "id": "global-postal-network-challenge-evidence-03",
+          "type": "evidence",
+          "prompt": "若要評鑑「電子資料只能強化風險管理，不能取代依法進行的實體程序」這項論點，下列哪一引文提供的文證最完整？",
+          "options": [
+            "「實體郵袋向前移動時，資料可能沿另一條路線先行。」",
+            "「電子資料使檢查可以提前，但它沒有取消實體查驗與法定責任。」",
+            "「郵遞區號可以協助人工或自動分揀。」",
+            "「路線品質因而不是單一承運人的表現。」"
+          ],
+          "correctAnswer": "「電子資料使檢查可以提前，但它沒有取消實體查驗與法定責任。」",
+          "rationale": "正確引文同時指出電子資料的功能與界限，直接支持「強化」而非「取代」的雙層論點。其餘引文分別只談資料先行、地址分揀或運輸責任，無法完整證明風險管理與實體法定程序的關係。",
+          "distractorReasons": {
+            "「實體郵袋向前移動時，資料可能沿另一條路線先行。」": "這句只能證明資料可能先於郵袋傳送，未交代資料不能取代實體程序。",
+            "「郵遞區號可以協助人工或自動分揀。」": "這句支持郵遞區號的分揀功能，與海關或安全風險程序無直接關係。",
+            "「路線品質因而不是單一承運人的表現。」": "這句討論多方共同影響運輸品質，未比較電子資料與實體程序。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 0,
+            "end": 28,
+            "text": "電子資料使檢查可以提前，但它沒有取消實體查驗與法定責任。"
+          }
+        }
+      ]
+    }
+  ]
+}

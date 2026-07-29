@@ -1,0 +1,432 @@
+{
+  "source": {
+    "id": "antarctic-treaty-source",
+    "name": "Antarctic Treaty Secretariat",
+    "baseUrl": "https://www.ats.aq/",
+    "licenseType": "CC BY",
+    "licenseVersion": "4.0",
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "antarctic-treaty-source-item",
+    "canonicalUrl": "https://www.ats.aq/e/antarctictreaty.html",
+    "title": "The Antarctic Treaty",
+    "publisher": "Antarctic Treaty Secretariat",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-29T00:00:00+08:00",
+    "contentFingerprint": "ats-aq-antarctictreaty-2026-07-29-lines-2-16",
+    "licenseSnapshot": "Antarctic Treaty Secretariat copyright page states that ATS material may be used with source attribution and identifies the licence as CC BY 4.0.",
+    "extractScope": "Paraphrased facts and short treaty provisions concerning signature, entry into force, peaceful use, scientific cooperation, territorial claims, inspections and environmental protection."
+  },
+  "factPack": {
+    "id": "antarctic-treaty-fact-pack",
+    "topicDate": "2026-07-29",
+    "category": "world",
+    "facts": [
+      {
+        "id": "antarctic-treaty-fact-01",
+        "statement": "《南極條約》由十二個曾於一九五七至一九五八年國際地球物理年期間在南極及周邊積極從事科學活動的國家，於一九五九年十二月一日在華盛頓簽署。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-02",
+        "statement": "《南極條約》於一九六一年生效。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-03",
+        "statement": "條約第一條規定南極只能用於和平目的，禁止軍事基地、防禦工事、軍事演習及武器試驗等軍事性質措施，但不妨礙軍事人員或設備用於科學研究或其他和平目的。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-04",
+        "statement": "條約第二條保障南極科學調查自由及為此目的所進行的合作。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-05",
+        "statement": "條約第三條要求各方盡可能交換研究計畫資訊、科學人員、科學觀測及研究成果，並使觀測與成果可自由取得。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-06",
+        "statement": "條約第四條保留締約方對南極領土聲索的不同立場，並規定條約有效期間的活動不得成為提出、支持或否定聲索的依據，也不得提出新聲索或擴大既有聲索。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-07",
+        "statement": "條約第七條要求締約方互相通報南極活動，並賦予協商國指定觀察員進行視察的權利。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-08",
+        "statement": "依第七條，經通知姓名的觀察員可在任何時間自由進入南極各區，視察站區、設施、設備，以及在南極裝卸人員或貨物地點的船舶與飛機。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-09",
+        "statement": "除原始簽署國外，其他締約國須以在南極進行實質科學研究表明其利益，才可參與條約決策。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      },
+      {
+        "id": "antarctic-treaty-fact-10",
+        "statement": "一九九一年通過的《南極條約環境保護議定書》把南極指定為獻給和平與科學的自然保護區，並禁止科學研究以外與南極礦產資源有關的活動。",
+        "sourceItemId": "antarctic-treaty-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.ats.aq/e/antarctictreaty.html",
+      "https://www.ats.aq/e/peaceful.html",
+      "https://www.ats.aq/e/science.html",
+      "https://www.ats.aq/e/environmental.html",
+      "https://www.ats.aq/e/copyright.html"
+    ],
+    "sensitivityFlags": [
+      "territorial-claims",
+      "international-governance"
+    ],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "antarctic-treaty",
+  "packages": [
+    {
+      "id": "antarctic-treaty-guided",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "把冰原留給共同的未來",
+      "hookQuestion": "各國沒有解決南極主權爭議，為什麼仍能共同維持和平與科學研究？",
+      "body": [
+        "如果把世界地圖攤開，南極洲常像一塊遠離日常生活的白色空間。然而，這塊大陸並不是沒有政治問題。二十世紀中葉，已有國家提出領土主張，其中有些範圍彼此重疊，也有國家不承認任何主張。各國同時派科學家前往觀測，南極既可能成為合作的實驗場，也可能因主權競爭與軍事部署而緊張。今天人們常說南極被留給和平與科學，這並非自然形成的結果，而是各國用協定暫時管住爭議、建立合作規則的成果。",
+        "一九五七至一九五八年的國際地球物理年，讓不同國家的科學家在南極及其周邊密集合作。這段經驗顯示，即使各國政治立場不同，仍能為共同研究交換資料、安排基地與觀測。十二個曾參與相關南極科學活動的國家，後來在華盛頓談判，於一九五九年十二月一日簽署《南極條約》，條約在一九六一年生效。這份文件沒有把南極交給某一個世界政府，而是讓締約國同意：先遵守共同規則，再處理彼此不同的立場。",
+        "條約第一項核心選擇，是規定南極只能用於和平目的，禁止軍事性質的措施，例如設置軍事基地、修築防禦工事、舉行軍事演習及測試武器。不過，條約並未排除軍事人員或設備參與科學研究或其他和平用途。判斷關鍵因而不只是「誰在現場」，而是人員與設備被拿來做什麼。這種寫法回應了南極運輸與補給可能需要軍方能力的現實，同時把軍事競逐排除在合法用途之外。",
+        "和平並不只靠一句承諾。依條約第七條，各協商國可以指定觀察員，觀察員的姓名須通知其他協商國，並可在任何時間進入南極各區。考察範圍包括站區、設施與設備，也包括在南極裝卸人員或貨物地點的船舶與飛機。各方還要彼此告知南極活動。公開資訊與相互視察，使違規行為較難藏在遙遠冰原之中，也讓「相信我」變成「你可以來查驗」。",
+        "第二項核心選擇，是延續南極科學調查的自由，並促進合作。條約第三條進一步要求，各國盡可能交換研究計畫、科學人員，以及南極觀測所得與研究成果，並使成果可自由取得。科學在此不只是受保護的活動，也是一種合作方法：當氣象、冰層或大氣資料跨越國界流通，單一國家的觀測就能和其他資料拼成更完整的圖像。共同問題因此成為維持對話的理由。",
+        "最棘手的領土爭議，則由第四條設計出一種「先擱置、但不抹去」的安排。條約不要求原有聲索國放棄立場，也不強迫其他國家承認那些立場；條約生效期間的行動，不能用來建立、支持或否定南極主權聲索，也不能創造主權權利；各國不得提出新聲索，也不得擴大既有聲索。換句話說，各方沒有被迫宣布誰輸誰贏，卻都接受不讓現場活動變成搶地工具。",
+        "這項安排的重要性，在於它把合作的門檻降低了。若科學基地的每次增建都被解讀為擴張領土，研究合作很容易陷入猜疑；若參與條約等同放棄原立場，聲索國也可能拒絕加入。第四條保留各方立場，又限制利用新行動改變現狀，使國家能在不同意主權答案時，仍同意和平、科學與查驗程序。協定沒有消滅衝突來源，而是讓衝突不必支配所有互動。",
+        "條約體系後來也把環境責任納入治理。各締約方在一九九一年於馬德里通過《南極條約環境保護議定書》，承諾全面保護南極環境及相關生態系，並把南極指定為獻給和平與科學的自然保護區。議定書禁止與南極礦產資源有關的活動，科學研究除外。這表示科學自由不是毫無邊界的通行證；研究、後勤與其他活動仍要放在環境保護框架下思考。",
+        "南極模式也有不能忽略的限制。條約不是宣告所有國家從此沒有利益差異，領土立場仍被保留；視察與資訊交換是否有效，也仰賴締約方持續執行。參與條約決策的資格還和在南極進行實質科學研究有關，顯示科學既是公共合作，也是制度參與的門檻。因此，把南極描述成完全沒有政治的地方並不精確；更貼切的說法是，政治被一套規則引導，不讓競爭輕易轉成軍事對抗或搶占。",
+        "南極之所以能相對長久地服務和平與科學，靠的不是一紙文件自動生效，而是多種制度彼此扣合：和平用途畫出底線，科研自由與資料交換提供共同任務，主權凍結降低合作代價，通報與視察建立查驗，環境議定書再補上生態界線。這套安排最值得學習之處，或許不是把爭議假裝不存在，而是承認分歧後，仍設計出可共同遵守、可被檢查，也能隨新問題補強的合作秩序。"
+      ],
+      "glossary": [
+        {
+          "term": "領土主張",
+          "definition": "國家宣稱某一地區屬於其主權範圍的立場。"
+        },
+        {
+          "term": "國際地球物理年",
+          "definition": "一九五七至一九五八年間，多國共同進行地球科學觀測與研究的國際合作計畫。"
+        },
+        {
+          "term": "締約國",
+          "definition": "簽署、批准或加入條約並受其規範的國家。"
+        },
+        {
+          "term": "協商國",
+          "definition": "在南極條約協商會議中具有決策參與資格的締約國。"
+        },
+        {
+          "term": "視察",
+          "definition": "由指定觀察員進入相關區域、設施或運輸工具進行查驗。"
+        },
+        {
+          "term": "科學調查",
+          "definition": "透過有系統的觀測、採樣、分析與研究取得知識。"
+        },
+        {
+          "term": "聲索",
+          "definition": "正式主張某項權利；本文主要指對南極領土主權的主張。"
+        },
+        {
+          "term": "生態系",
+          "definition": "生物與其環境彼此作用所構成的整體。"
+        },
+        {
+          "term": "議定書",
+          "definition": "附隨於條約、用來補充或細化規範的國際法律文件。"
+        },
+        {
+          "term": "主權凍結",
+          "definition": "本文對第四條效果的概括說法，指保留既有立場，同時禁止以新活動改變聲索現狀。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/antarctictreaty.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/peaceful.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/science.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/environmental.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/copyright.html",
+          "license": "CC BY 4.0 licence statement"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "antarctic-treaty-guided-q1",
+          "type": "comprehension",
+          "prompt": "依本文所述，《南極條約》的簽署與生效情形何者正確？",
+          "options": [
+            "十二個參與相關南極科學活動的國家於一九五九年在華盛頓簽署，條約於一九六一年生效",
+            "七個領土聲索國於一九五七年在馬德里簽署，條約隔年生效",
+            "所有聯合國會員國於一九六一年在南極簽署，條約立即生效",
+            "十二個國家於一九九一年簽署條約，同時通過環境保護議定書"
+          ],
+          "correctAnswer": "十二個參與相關南極科學活動的國家於一九五九年在華盛頓簽署，條約於一九六一年生效",
+          "rationale": "第二段明確交代簽署國背景、簽署地點與日期，以及條約生效年份。",
+          "distractorReasons": {
+            "七個領土聲索國於一九五七年在馬德里簽署，條約隔年生效": "把國際地球物理年的時間、環境議定書的簽署地點及領土聲索國數量錯誤拼接。",
+            "所有聯合國會員國於一九六一年在南極簽署，條約立即生效": "本文未說由所有聯合國會員國簽署，也未說條約立即生效。",
+            "十二個國家於一九九一年簽署條約，同時通過環境保護議定書": "一九九一年通過的是環境保護議定書，不是原始《南極條約》。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 78,
+            "end": 108,
+            "text": "十二個曾參與相關南極科學活動的國家，後來在華盛頓談判，於一九"
+          }
+        },
+        {
+          "id": "antarctic-treaty-guided-q2",
+          "type": "inference",
+          "prompt": "綜合全文，為何作者認為「擱置領土爭議」有助於維持南極合作？",
+          "options": [
+            "它使所有國家自動放棄原有主張，從此不再有政治分歧",
+            "它保留不同立場，卻限制各國利用新活動改變聲索現狀，降低合作被解讀為搶地或讓步的風險",
+            "它把南極領土平均分配給進行科學研究的國家",
+            "它允許各國以增加基地和軍事設施證明自己的主權"
+          ],
+          "correctAnswer": "它保留不同立場，卻限制各國利用新活動改變聲索現狀，降低合作被解讀為搶地或讓步的風險",
+          "rationale": "第六、七段說明第四條既不抹去原有立場，也不容許用新活動累積主權權利；末段再把主權凍結概括為降低合作代價。",
+          "distractorReasons": {
+            "它使所有國家自動放棄原有主張，從此不再有政治分歧": "第四條保留各方立場，並未使政治分歧自動消失。",
+            "它把南極領土平均分配給進行科學研究的國家": "條約沒有平均分配南極，也沒有以科研作為分地依據。",
+            "它允許各國以增加基地和軍事設施證明自己的主權": "條約禁止軍事性質措施，且不得以新活動建立或擴大聲索。"
+          },
+          "evidenceSpan": {
+            "paragraph": 10,
+            "start": 0,
+            "end": 30,
+            "text": "南極之所以能相對長久地服務和平與科學，靠的不是一紙文件自動生"
+          }
+        },
+        {
+          "id": "antarctic-treaty-guided-q3",
+          "type": "evidence",
+          "prompt": "若要支持「視察制度能讓和平承諾接受實際查驗」這項判斷，下列引文何者支持力最強？",
+          "options": [
+            "「各國同時派科學家前往觀測」",
+            "「判斷關鍵因而不只是『誰在現場』」",
+            "「公開資訊與相互視察，使違規行為較難藏在遙遠冰原之中，也讓『相信我』變成『你可以來查驗』」",
+            "「共同問題因此成為維持對話的理由」"
+          ],
+          "correctAnswer": "「公開資訊與相互視察，使違規行為較難藏在遙遠冰原之中，也讓『相信我』變成『你可以來查驗』」",
+          "rationale": "這段引文直接連結公開資訊、相互視察、降低隱瞞可能性與接受查驗，對題述判斷的支持最完整。",
+          "distractorReasons": {
+            "「各國同時派科學家前往觀測」": "只說各國從事觀測，無法證明和平承諾可受查驗。",
+            "「判斷關鍵因而不只是『誰在現場』」": "只討論判斷軍事設備用途的標準，未說明視察如何運作。",
+            "「共同問題因此成為維持對話的理由」": "說明共同科學問題有助於對話，但沒有涉及視察或查驗。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 109,
+            "end": 139,
+            "text": "公開資訊與相互視察，使違規行為較難藏在遙遠冰原之中，也讓「相"
+          }
+        }
+      ]
+    },
+    {
+      "id": "antarctic-treaty-challenge",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "不是沒有政治，而是約束政治",
+      "hookQuestion": "當主權爭議無法獲得終局答案，國際制度還能如何創造可持續的合作？",
+      "body": [
+        "南極常被稱為獻給和平與科學的大陸，但這句話若只當成理想口號，就會漏掉真正關鍵：和平不是因為遙遠與寒冷而自動出現，科學也不是一進入冰原便脫離政治。二十世紀中葉，多國已對南極提出立場，其中七國有領土聲索，部分範圍重疊；另一些國家不承認聲索。當研究基地、運輸能力與國家利益同時進入同一空間，合作與競爭其實一直並存。《南極條約》的價值，正在於它沒有假裝分歧消失，而是把分歧放進可控制的制度。",
+        "制度的起點是一段成功的合作經驗。一九五七至一九五八年國際地球物理年期間，各國科學家在南極及周邊從事研究，證明跨國觀測能產生共同利益。十二個曾在當地積極進行科學工作的國家，於一九五九年十二月一日在華盛頓簽署條約，一九六一年生效。這段歷史不能簡化成「科學家感動了政治家」；更準確地說，科學合作提供了一套已能運作的關係，使國家看見維持交流比放任衝突更有價值。",
+        "條約第一條先處理最危險的可能性：南極只能用於和平目的。軍事基地、防禦工事、軍事演習與各類武器試驗等軍事性質措施受到禁止。然而，軍事人員與設備若用於科學研究或其他和平目的，並不因此被排除。這個例外不是自相矛盾，而是區分「能力的來源」與「行動的目的」；極地補給可能借助軍方設備，但設備不能因此被轉作威嚇或戰備。規則既設定底線，也保留現實運作空間。",
+        "若只有禁止條款，遠方的行動仍可能難以判斷。第七條因此建立通報與視察：締約方要告知彼此在南極的活動；各協商國可指定觀察員，經通知姓名後，觀察員在任何時間可自由進入任何或所有南極區域。站區、設施、設備，以及在南極裝卸貨物或人員地點的船舶與飛機，都在可視察範圍。查驗不保證各國永遠互信，卻能提高隱瞞成本，把和平承諾轉成可觀察的制度行為。",
+        "第二條與第三條則讓制度不只防止壞事，也持續生產共同利益。南極科學調查自由與合作應延續；各方並應盡可能交換研究計畫資訊、科學人員、觀測與成果，使研究成果可自由取得。這些安排具有雙重作用：在知識面，分散的氣象、冰層與大氣觀測可以相互補足；在關係面，長期交換使各國反覆合作。禁止軍事化提供消極和平，科研合作則形成積極連結，兩者缺一，制度都較脆弱。",
+        "領土問題最能看出條約的設計智慧。第四條沒有裁判哪一國的主張正確，也沒有要求聲索國撤回立場，或要求不承認聲索的國家改變看法。相反地，它保護各方既有立場，同時規定條約有效期間的行動不能成為提出、支持或否定主權聲索的根據，也不能創造主權權利；新聲索與擴大既有聲索都被禁止。制度在這裡追求的不是終局答案，而是避免各方為製造有利事實而競相占用南極。",
+        "這種安排有時被稱作凍結爭議，但「凍結」不等於爭議已解決。它比較像把一場難以裁決的比賽暫停記分，讓參與者能先共同維護場地、交換資料並接受檢查。其政治效果來自一種平衡：若加入合作會被解讀為放棄主張，某些國家就沒有參與誘因；若設站與活動可不斷累積主權證據，合作又會變成競賽。第四條同時阻止這兩種解讀，才為其他條款留下運作空間。",
+        "條約體系並未停在一九五九年的安全與科研框架。一九九一年通過的《南極條約環境保護議定書》，要求全面保護南極環境及其依存與相關生態系，並將南極指定為獻給和平與科學的自然保護區。議定書禁止與礦產資源有關的活動，只有科學研究例外。這層規範重新排列了價值次序：人們不僅要問活動是否和平、是否有研究名義，還要問它如何影響脆弱環境。",
+        "不過，制度成效不能只從條文推導。視察必須有人執行，資訊必須確實交換，環境承諾也要落實在活動管理。條約下的決策參與並非與科研完全分離；除原始簽署國外，國家須以在南極進行實質科學研究表明其利益，才能參與條約決策。這使科學同時具有知識、外交與制度資格的意義，也提醒我們：南極治理不是沒有權力，而是讓權力較多透過研究投入、程序與協商呈現。",
+        "因此，所謂把南極留給和平與科學，並不是一次完成的所有權分配，而是一組互相支撐的約束。和平用途限制手段，科研自由與資料共享累積共同利益，第四條隔離主權競逐，通報視察提供查驗，環境議定書則約束人類活動的代價。它的啟示並非「只要簽約就能消除衝突」，而是：當終極爭議暫時無解，國家仍可先界定禁區、創造合作收益、保留查核權，並讓規則隨新的公共問題擴充。"
+      ],
+      "glossary": [
+        {
+          "term": "領土聲索",
+          "definition": "國家對特定領土提出主權權利的正式主張。"
+        },
+        {
+          "term": "制度",
+          "definition": "用來規範參與者行為的一組規則、程序與組織安排。"
+        },
+        {
+          "term": "防禦工事",
+          "definition": "為軍事防衛而建造的設施。"
+        },
+        {
+          "term": "通報",
+          "definition": "依規則將活動或人員資訊正式告知其他參與方。"
+        },
+        {
+          "term": "消極和平",
+          "definition": "本文指以禁止軍事化等規則降低衝突與暴力的狀態。"
+        },
+        {
+          "term": "積極連結",
+          "definition": "本文指透過科研合作與資料交換持續創造共同利益。"
+        },
+        {
+          "term": "終局答案",
+          "definition": "對爭議作出最終且具決定性的解決。"
+        },
+        {
+          "term": "參與誘因",
+          "definition": "促使國家或其他行動者加入並維持合作的利益或理由。"
+        },
+        {
+          "term": "依存與相關生態系",
+          "definition": "依賴南極環境或與南極環境相互關聯的生態系統。"
+        },
+        {
+          "term": "查核權",
+          "definition": "依制度取得資訊並檢查其他參與方是否遵守規則的權利。"
+        },
+        {
+          "term": "科研自由",
+          "definition": "依共同規則進行科學調查，並交流觀測與研究成果的自由。"
+        }
+      ],
+      "readingMinutes": 9,
+      "sourceAttribution": [
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/antarctictreaty.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/peaceful.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/science.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/environmental.html",
+          "license": "CC BY 4.0; facts paraphrased with attribution"
+        },
+        {
+          "publisher": "Antarctic Treaty Secretariat",
+          "url": "https://www.ats.aq/e/copyright.html",
+          "license": "CC BY 4.0 licence statement"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "antarctic-treaty-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依第六段，條約第四條如何處理南極領土聲索？",
+          "options": [
+            "裁定七個聲索國平分南極，並撤銷其他國家的立場",
+            "要求聲索國撤回主張，再由科學組織管理南極",
+            "保留各方既有立場，但禁止以條約期間的活動建立、支持或否定聲索，也禁止新增或擴大聲索",
+            "承認最早設立研究站的國家取得設站區域主權"
+          ],
+          "correctAnswer": "保留各方既有立場，但禁止以條約期間的活動建立、支持或否定聲索，也禁止新增或擴大聲索",
+          "rationale": "第六段指出第四條不裁決主權歸屬，而是同時保護既有立場並限制新活動對聲索現狀的影響。",
+          "distractorReasons": {
+            "裁定七個聲索國平分南極，並撤銷其他國家的立場": "第四條沒有平分南極，也未撤銷不承認聲索者的立場。",
+            "要求聲索國撤回主張，再由科學組織管理南極": "條約沒有要求聲索國撤回主張，亦非把治理權交給科學組織。",
+            "承認最早設立研究站的國家取得設站區域主權": "條約明定期間內的活動不能創造主權權利，設站不會自動產生主權。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 61,
+            "end": 91,
+            "text": "相反地，它保護各方既有立場，同時規定條約有效期間的行動不能成"
+          }
+        },
+        {
+          "id": "antarctic-treaty-challenge-q2",
+          "type": "inference",
+          "prompt": "綜合第三至第五段，下列何者最能說明作者所謂制度的「雙重作用」？",
+          "options": [
+            "只靠禁止軍事措施便可永久消除國家利益衝突",
+            "一方面限制軍事化並建立查驗，另一方面藉科研與資料交換持續創造共同利益",
+            "先允許各國軍事競賽，再由科學家判定何者違規",
+            "把所有設備交由單一國家管理，使科學資料不再跨國流通"
+          ],
+          "correctAnswer": "一方面限制軍事化並建立查驗，另一方面藉科研與資料交換持續創造共同利益",
+          "rationale": "第三、四段處理軍事限制及視察查驗，第五段說明科研自由與交換如何形成共同利益；最佳答案須跨段整合兩組機制。",
+          "distractorReasons": {
+            "只靠禁止軍事措施便可永久消除國家利益衝突": "作者指出制度仍須持續執行，並未主張單一禁令能永久消除利益衝突。",
+            "先允許各國軍事競賽，再由科學家判定何者違規": "條約禁止軍事性質措施，科學家也不是裁決軍事競賽的機構。",
+            "把所有設備交由單一國家管理，使科學資料不再跨國流通": "條約要求交換資訊及成果，並非集中設備或阻止資料流通。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 81,
+            "end": 111,
+            "text": "這些安排具有雙重作用：在知識面，分散的氣象、冰層與大氣觀測可"
+          }
+        },
+        {
+          "id": "antarctic-treaty-challenge-q3",
+          "type": "evidence",
+          "prompt": "若要反駁「南極和平只是因為各國簽了一紙條約」的說法，下列引文何者能提供最完整的文證？",
+          "options": [
+            "「制度的起點是一段成功的合作經驗」",
+            "「這個例外不是自相矛盾」",
+            "「『凍結』不等於爭議已解決」",
+            "「和平用途限制手段，科研自由與資料共享累積共同利益，第四條隔離主權競逐，通報視察提供查驗，環境議定書則約束人類活動的代價」"
+          ],
+          "correctAnswer": "「和平用途限制手段，科研自由與資料共享累積共同利益，第四條隔離主權競逐，通報視察提供查驗，環境議定書則約束人類活動的代價」",
+          "rationale": "該引文同時列出軍事限制、科研合作、主權安排、視察及環境規範，最能證明南極秩序仰賴多項相互支撐的機制，而非只有簽署文件。",
+          "distractorReasons": {
+            "「制度的起點是一段成功的合作經驗」": "只交代合作經驗的起點，未呈現制度持續運作所需的多項機制。",
+            "「這個例外不是自相矛盾」": "只說明軍事設備和平用途例外的邏輯，涵蓋範圍過窄。",
+            "「『凍結』不等於爭議已解決」": "能指出領土爭議仍存在，卻沒有說明和平秩序如何被維持。"
+          },
+          "evidenceSpan": {
+            "paragraph": 10,
+            "start": 42,
+            "end": 72,
+            "text": "和平用途限制手段，科研自由與資料共享累積共同利益，第四條隔離"
+          }
+        }
+      ]
+    }
+  ]
+}

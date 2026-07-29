@@ -1,0 +1,347 @@
+{
+  "source": {
+    "id": "cultural-property-protection-source-unesco",
+    "name": "UNESCO",
+    "baseUrl": "https://www.unesco.org",
+    "licenseType": "copyright",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "cultural-property-protection-source-item-unesco",
+    "canonicalUrl": "https://www.unesco.org/en/fight-illicit-trafficking",
+    "title": "Fight Illicit Trafficking of Cultural Property",
+    "publisher": "UNESCO",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-29T00:00:00+08:00",
+    "contentFingerprint": "cultural-property-protection-unesco-verified-2026-07-29",
+    "licenseSnapshot": "UNESCO official webpages and convention texts; used only for factual synthesis and short evidence-aligned extracts.",
+    "extractScope": "Facts concerning the public cultural value of cultural property, illicit trafficking, inventories, export certificates, international cooperation, the 1954 Hague Convention and the 1970 Convention."
+  },
+  "factPack": {
+    "id": "cultural-property-protection-fact-pack",
+    "topicDate": "2026-07-29",
+    "category": "world",
+    "facts": [
+      {
+        "id": "cultural-property-protection-fact-01",
+        "statement": "文化財產除市場價格外，也承載歷史脈絡、社群記憶、身分認同與研究資訊；偷竊、祕密挖掘及非法搬運可能使物件與其出處及脈絡分離。",
+        "sourceItemId": "cultural-property-protection-source-item-unesco"
+      },
+      {
+        "id": "cultural-property-protection-fact-02",
+        "statement": "1954年海牙公約聚焦武裝衝突情況下具有重要性的可動產與不動產文化財產，保護包括事前保障與衝突中的尊重。",
+        "sourceItemId": "cultural-property-protection-source-item-unesco"
+      },
+      {
+        "id": "cultural-property-protection-fact-03",
+        "statement": "1970年公約處理文化財產的非法進口、非法出口及所有權非法移轉，並以國家措施與國際合作防止非法流通、促進返還或歸還。",
+        "sourceItemId": "cultural-property-protection-source-item-unesco"
+      },
+      {
+        "id": "cultural-property-protection-fact-04",
+        "statement": "1970年公約要求締約方採行文化財產保護服務、重要文化財產清冊、出口證明、教育、監督及合作等措施。",
+        "sourceItemId": "cultural-property-protection-source-item-unesco"
+      },
+      {
+        "id": "cultural-property-protection-fact-05",
+        "statement": "文化財產並非一律禁止合法移動；依法核准的保存移置、研究、博物館借展或合法交易，應與偷竊、劫掠、祕密挖掘及非法跨境移轉區分。",
+        "sourceItemId": "cultural-property-protection-source-item-unesco"
+      },
+      {
+        "id": "cultural-property-protection-fact-06",
+        "statement": "持有人自稱善意購買，不能自動補足缺失的來源資料，也不能取代對所有權鏈、出口許可及相關文件的查證。",
+        "sourceItemId": "cultural-property-protection-source-item-unesco"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.unesco.org/en/fight-illicit-trafficking",
+      "https://www.unesco.org/en/legal-affairs/convention-protection-cultural-property-event-armed-conflict-regulations-execution-convention",
+      "https://www.unesco.org/en/legal-affairs/convention-means-prohibiting-and-preventing-illicit-import-export-and-transfer-ownership-cultural"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "cultural-property-protection",
+  "packages": [
+    {
+      "id": "cultural-property-protection-guided",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "文化財產為什麼不能當成普通商品搬運？",
+      "hookQuestion": "一件古物已經有人付錢買下，為什麼搬走前仍要查明它從哪裡來？",
+      "body": [
+        "走進博物館，看見陶器、古書或祭祀用具時，我們可能先注意它是否漂亮、值多少錢。但文化財產不只是可以標價的物品。它也保存製作技術、使用方式、時代環境，以及一個社群如何記得自己的過去。同一件器物若知道在何處、與哪些遺物一起出土，研究者便能理解當時的生活、技術與交流；若只剩孤立物件，許多線索便無法重建。因此，保護文化財產不是否定私人收藏或市場，而是承認它另有不能只用價格衡量的公共文化價值。",
+        "文化財產的種類很多。依聯合國教科文組織相關公約的範圍，可包括具有歷史、藝術、考古或科學重要性的建築、遺址、藝術品、手稿、書籍、檔案與收藏等。這些財產有不動產，例如建築與遺址；也有可動產，例如雕塑、文獻或考古出土物。分類很重要，因為不同危險需要不同保護方式：建築無法收入庫房，物件卻可能被偷竊、藏匿或拆散，迅速越過國界，最後出現在拍賣、收藏或網路交易市場。",
+        "武裝衝突會使文化財產面臨轟炸、破壞、掠奪與挪用。聯合國教科文組織一九五四年《武裝衝突情況下保護文化財產公約》聚焦這種情境，保障可動產與不動產，核心是事前保障與衝突中的尊重。締約方應在和平時期準備防護，衝突時避免把文化財產及其周邊用於可能使它遭受毀損的目的，也不得任意對它採取敵對行動。公約並要求制止偷竊、劫掠、挪用與破壞，但它的焦點並不是規定和平時期所有物件如何買賣。",
+        "和平時期也有另一類威脅：偷竊、祕密挖掘、非法出口、非法進口與所有權非法移轉。聯合國教科文組織一九七〇年公約處理這些問題，要求各國依公約與國內制度採取措施，並透過國際合作防止文化財產非法流通、協助返還或歸還。它與一九五四年公約彼此相關，卻不能混為一談：一九七〇年公約主要處理非法進出口及所有權非法移轉；一九五四年公約主要處理武裝衝突中的保障與尊重。",
+        "為什麼非法搬運的傷害特別大？考古物若被祕密挖走，周圍土層、位置、相鄰物件與排列關係可能一併消失。這些出處與脈絡能幫助研究者回答年代、用途及人群活動等問題，也是社群把物件與地方記憶相連的依據。即使物件外表完好，研究資訊仍可能已被切斷；日後即使找回，也未必能完全復原。這就像從一本書撕下一頁，只留下漂亮插圖，卻失去前後篇章，使讀者無法理解它在整個故事中的位置。",
+        "建立並更新重要文化財產清冊，是保護工作的重要基礎。清冊可以記錄名稱、材質、尺寸、特徵、位置與保護狀態等辨識資料，讓主管機關知道哪些物件需要關注。物件失竊時，警方、海關、博物館與專家也較容易比對和追查。清冊不是替物件排出市場身價，也不會僅憑登錄就回答所有權爭議；它的主要作用是保留文化財產的身分資料，使保護、通報與查證有所依據。",
+        "出口證明是另一道關卡。一九七〇年公約要求締約方設置適當證明，讓核准出口的文化財產帶有出口國的許可；沒有證明者，不能假定只是少一張普通收據。海關、博物館、收藏者與交易者應查驗來源、所有權紀錄及必要文件，遇到疑點則向主管機關確認。這不表示文化財產永遠不能離開原址：依法核准的保存移置、研究、博物館借展或合法交易，仍可能成立；關鍵是移動是否合法、可以追溯，並符合適用規範。",
+        "單一國家很難獨力處理跨境流通。來源國掌握清冊、出口規定與失竊情形，進口國則可能在邊境、市場或館藏中發現可疑物件；警方、海關、文化機關、博物館與專家也各有不同能力。透過通報、查證、教育、專業協助及國與國之間的合作，才能阻止非法移轉，並在符合公約與法律的程序下推動返還。合作不是看到外國文物就立即扣押，而是先辨認物件、核對文件與權利主張，再由有權機關依制度處理。",
+        "保護制度也需要一般民眾理解。若買家只問價格，不問出處，來源不明的物件就可能繼續有市場；若參觀者願意追問展示物如何取得，博物館與交易者也會更重視來源紀錄。公眾教育因此不是要求每個人都成為法律專家，而是培養基本警覺：來歷含糊、證明缺漏或故事前後矛盾時，不要急著購買、轉售或替它宣傳。尊重查證程序，正是減少非法需求的一種方式。",
+        "一般民眾還能採取具體行動。旅遊時不要購買來源不明的古物，不參與未經許可的挖掘；在網路或市集看見疑似失竊品，可保存公開資訊並向適當機關反映，不自行搶回，也不散播未查證的指控。參觀展覽時，除了問「它值多少」，還能問「它從哪裡來、如何到此、資料是否完整」。文化財產可以有所有人，也可能合法移動，但其歷史脈絡、社群記憶與研究價值，使每一次搬運與交易都伴隨查證及照顧的責任。"
+      ],
+      "glossary": [
+        {
+          "term": "文化財產",
+          "definition": "因歷史、藝術、考古、文學或科學等重要性而受到辨識與保護的可動產或不動產。"
+        },
+        {
+          "term": "出處與脈絡",
+          "definition": "物件原來的位置、環境、相關物件、所有權及流通歷程等資訊。"
+        },
+        {
+          "term": "清冊",
+          "definition": "記錄文化財產身分、特徵、位置與保護狀態，以利管理及查證的資料。"
+        },
+        {
+          "term": "出口證明",
+          "definition": "由主管機關用來證明特定文化財產獲准出口的文件。"
+        },
+        {
+          "term": "非法移轉",
+          "definition": "違反適用法律或公約執行措施的進口、出口或所有權移轉。"
+        }
+      ],
+      "readingMinutes": 7,
+      "sourceAttribution": [
+        {
+          "publisher": "UNESCO",
+          "url": "https://www.unesco.org/en/fight-illicit-trafficking",
+          "license": "UNESCO official website; facts and short extracts only."
+        },
+        {
+          "publisher": "UNESCO",
+          "url": "https://www.unesco.org/en/legal-affairs/convention-protection-cultural-property-event-armed-conflict-regulations-execution-convention",
+          "license": "Official convention text; facts and short extracts only."
+        },
+        {
+          "publisher": "UNESCO",
+          "url": "https://www.unesco.org/en/legal-affairs/convention-means-prohibiting-and-preventing-illicit-import-export-and-transfer-ownership-cultural",
+          "license": "Official convention text; facts and short extracts only."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "cultural-property-protection-guided-comprehension-01",
+          "type": "comprehension",
+          "prompt": "依本文說明，一九五四年公約的主要焦點是什麼？",
+          "options": [
+            "規定所有文化財產的市場價格",
+            "保障與尊重武裝衝突中的可動產及不動產文化財產",
+            "禁止所有博物館借展與研究移置",
+            "處理和平時期每一筆私人商品交易"
+          ],
+          "correctAnswer": "保障與尊重武裝衝突中的可動產及不動產文化財產",
+          "rationale": "第三段明確說明一九五四年公約聚焦武裝衝突，核心是事前保障與衝突中的尊重。",
+          "distractorReasons": {
+            "規定所有文化財產的市場價格": "本文未說公約負責制定市場價格。",
+            "禁止所有博物館借展與研究移置": "本文明確指出合法借展或研究移置並非一律禁止。",
+            "處理和平時期每一筆私人商品交易": "本文指出一九五四年公約的焦點不是和平時期所有買賣。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 17,
+            "text": "武裝衝突會使文化財產面臨轟炸、破壞"
+          }
+        },
+        {
+          "id": "cultural-property-protection-guided-inference-02",
+          "type": "inference",
+          "prompt": "根據文章，為什麼物件外表完好仍可能已遭受重要損失？",
+          "options": [
+            "因為市場一定會拒絕外表完好的物件",
+            "因為離開原址可能使土層、位置與相鄰物等研究脈絡消失",
+            "因為文化財產一經移動就必定失去所有權",
+            "因為清冊會自動取消物件的市場價值"
+          ],
+          "correctAnswer": "因為離開原址可能使土層、位置與相鄰物等研究脈絡消失",
+          "rationale": "第五段說明祕密挖掘或非法搬運可能切斷出處與脈絡；損失不一定呈現在物件外觀上。",
+          "distractorReasons": {
+            "因為市場一定會拒絕外表完好的物件": "本文未說市場必然拒絕這類物件。",
+            "因為文化財產一經移動就必定失去所有權": "本文強調合法移動可能成立，移動不會當然消滅所有權。",
+            "因為清冊會自動取消物件的市場價值": "清冊用於辨識與查證，不會自動取消市場價值。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 0,
+            "end": 14,
+            "text": "為什麼非法搬運的傷害特別大？"
+          }
+        },
+        {
+          "id": "cultural-property-protection-guided-evidence-03",
+          "type": "evidence",
+          "prompt": "哪一項最能支持「文化財產並非完全不得移動」？",
+          "options": [
+            "建築無法收入庫房",
+            "單一國家很難獨力處理跨境流通",
+            "依法核准的研究、借展或合法交易仍可能成立",
+            "清冊可以記錄物件的名稱與材質"
+          ],
+          "correctAnswer": "依法核准的研究、借展或合法交易仍可能成立",
+          "rationale": "第七段直接區分合法移動與非法搬運，說明符合規範的研究、借展或交易仍可能進行。",
+          "distractorReasons": {
+            "建築無法收入庫房": "這只說明不動產與可動產的差異。",
+            "單一國家很難獨力處理跨境流通": "這說明國際合作的必要，未直接證明合法移動可以成立。",
+            "清冊可以記錄物件的名稱與材質": "這說明清冊功能，未回答能否合法移動。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 0,
+            "end": 10,
+            "text": "出口證明是另一道關卡"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cultural-property-protection-challenge",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "當文化財產進入市場：價格、權利與公共記憶的拉鋸",
+      "hookQuestion": "如果買家確實不知物件曾被非法搬運，付了錢是否就足以終止追查？",
+      "body": [
+        "把文化財產視為商品，並非全然錯誤：有些物件確實具有所有權，能在法律容許的範圍內買賣、借展或移置。然而，商品邏輯習慣以可交換性、價格與持有人處分自由來理解物件；文化財產卻同時保存歷史脈絡、社群記憶與研究資訊。當一件出土物與原來的地點、土層及相鄰物分離，它或許仍能在市場上升值，公共知識卻可能永久減損。問題因此不是文化與市場只能選一邊，而是市場行為是否承擔保存脈絡與查明來源的義務。",
+        "這項區分也說明國際規範為何有不同任務。一九五四年《武裝衝突情況下保護文化財產公約》面向戰爭造成的特殊危險，涵蓋具有重要性的可動產與不動產文化財產，要求和平時期先行保障，並在衝突中予以尊重。它要求避免使文化財產暴露於毀損風險的使用與敵對行動，也要求防止偷竊、劫掠、挪用及破壞。這套制度不能被簡化成一般藝術市場的交易規則，其核心情境是武裝衝突。",
+        "一九七〇年公約則針對文化財產的非法進口、非法出口與所有權非法移轉。它要求締約方建立文化財產保護服務、清冊與出口證明等制度，採取教育及監督措施，並展開國際合作。公約承認非法流通會使來源國的文化遺產貧乏，也把合作視為有效保護方法。兩部公約可能在衝突造成的流失問題上相遇，但分析時仍須分清：緊急保障與戰時尊重是一條軸線，跨境流通、權利移轉與返還合作是另一條軸線。",
+        "來源國的文化主張與目前持有人的權利，有時會形成張力。來源國可能指出物件未經許可出境、來自偷竊或祕密挖掘，並主張返還；持有人則可能提出購買契約、繼承關係或其他權利依據。公約提供合作架構，但具體結果仍須依適用的國際規範、各國法律、證據與程序判斷。不能只因物件具有文化價值，就推定任何私人權利都不存在；也不能只因手上有交易文件，就斷言早先的非法出口或失竊已被洗去。",
+        "這正是善意購買不能自動消除來源查證責任的原因。買方也許真的不知道物件曾被偷竊或非法出口，但主觀上不知道，並不會讓缺失的來源紀錄自行出現，也不會使早先受損的權利與文化脈絡自動復原。負責任的判斷應追問物件何時、從何地、經何人轉手，出口是否經主管機關核准，所有權鏈是否連續，說法與文件能否互相印證。查證不是預先認定持有人有罪，而是避免後來的交易掩蓋前一階段的問題。",
+        "清冊與出口證明因此不只是行政表格。清冊保存物件的可辨識特徵、位置與保護狀態，使失竊通報、邊境查驗及館藏比對有共同基礎；出口證明則顯示主管機關是否准許特定物件出境。兩者共同維持可追溯性，讓合法移動與非法搬運得以區分。博物館借展、修復運送、研究移置或依法成立的交易，並不因文化財產身分而當然禁止；但若缺乏必要文件與來源紀錄，就不應把市場上看得到誤當成法律上必然清白。",
+        "保護還有時間尺度的差異。武裝衝突造成迫切危險時，首要工作可能是預先保障、避免敵對行動與危險使用、制止劫掠，必要時使可動產獲得安全照護。這些是減少眼前毀損與散失的緊急保護。衝突結束或物件流入他國後，問題卻不會自動終止；確認身分、交換資料、釐清權利、提出返還請求及安排保存，往往需要較長時間的國際合作。緊急措施守住物件，長期程序則努力修復被切斷的法律、知識與社群關係。",
+        "緊急保護與長期返還不能互相取代。只把物件暫時移到安全地點，若沒有清楚紀錄保管原因、位置與移交過程，日後可能反而難以證明來源；只等待完整返還程序，又可能來不及阻止眼前的破壞。較穩健的做法，是在危機中同步保存辨識資料與權利紀錄，危機後再由相關國家、機構、專家及權利人依程序查核。速度與正當程序之間不是單選題，而是不同階段各有優先工作。",
+        "返還也不只是把物件從甲地送回乙地。若沒有穩定保存、專業運送、文件核驗與機構合作，移動本身可能再帶來損害；若忽略社群如何理解該物件，形式上的交付也未必恢復文化連結。因此，公共文化價值要求程序同時照顽物質安全、研究資訊、合法權利與社群記憶。這是一種比單次成交更長的責任鏈：出口國、進口國、持有人、交易者、博物館與執法機關，都只掌握其中一部分資訊與能力。",
+        "面對一件來歷不清的文化物件，成熟的問題不只是誰付了錢或誰現在保管，還包括它是否遭非法移出、證據是否完整、哪些人承受知識與記憶的損失，以及何種程序能兼顧權利與修復。文化財產可以依法流動，甚至藉借展促進理解；真正需要阻止的是偷竊、劫掠、祕密挖掘及違法跨境移轉。當市場願意接受來源查證、清冊、出口證明與合作程序，交易自由才不會以抹去歷史為代價。"
+      ],
+      "glossary": [
+        {
+          "term": "商品邏輯",
+          "definition": "主要從價格、交換、所有權與持有人處分自由理解物件的思考方式。"
+        },
+        {
+          "term": "公共文化價值",
+          "definition": "文化財產對社群記憶、歷史理解、研究與後代共同利益所具有的價值。"
+        },
+        {
+          "term": "善意購買",
+          "definition": "買方主張交易時不知道物件涉及失竊、非法出口或其他權利問題的情形。"
+        },
+        {
+          "term": "來源查證",
+          "definition": "核對物件出處、所有權鏈、出口許可、流通紀錄及相關文件的過程。"
+        },
+        {
+          "term": "返還合作",
+          "definition": "相關國家、機構與權利人透過資料交換、權利釐清和法定程序處理文化財產回歸的合作。"
+        },
+        {
+          "term": "可追溯性",
+          "definition": "能沿著文件、清冊與移轉紀錄查明物件來源及流通歷程的性質。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "UNESCO",
+          "url": "https://www.unesco.org/en/fight-illicit-trafficking",
+          "license": "UNESCO official website; facts and short extracts only."
+        },
+        {
+          "publisher": "UNESCO",
+          "url": "https://www.unesco.org/en/legal-affairs/convention-protection-cultural-property-event-armed-conflict-regulations-execution-convention",
+          "license": "Official convention text; facts and short extracts only."
+        },
+        {
+          "publisher": "UNESCO",
+          "url": "https://www.unesco.org/en/legal-affairs/convention-means-prohibiting-and-preventing-illicit-import-export-and-transfer-ownership-cultural",
+          "license": "Official convention text; facts and short extracts only."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "cultural-property-protection-challenge-comprehension-01",
+          "type": "comprehension",
+          "prompt": "文章如何區分一九五四年公約與一九七〇年公約？",
+          "options": [
+            "前者處理武裝衝突中的保障與尊重，後者處理非法進出口及所有權非法移轉",
+            "前者只處理私人收藏，後者只處理建築修復",
+            "兩者都禁止任何形式的合法借展",
+            "兩者都只負責決定文化財產的市場價格"
+          ],
+          "correctAnswer": "前者處理武裝衝突中的保障與尊重，後者處理非法進出口及所有權非法移轉",
+          "rationale": "第三、四段分別界定兩部公約的核心情境與任務，並指出兩條保護軸線可能相遇但不能混同。",
+          "distractorReasons": {
+            "前者只處理私人收藏，後者只處理建築修復": "文章未作此種區分。",
+            "兩者都禁止任何形式的合法借展": "文章明確說明合法借展並非當然禁止。",
+            "兩者都只負責決定文化財產的市場價格": "兩部公約都不是市場定價制度。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 0,
+            "end": 17,
+            "text": "來源國的文化主張與目前持有人的權利"
+          }
+        },
+        {
+          "id": "cultural-property-protection-challenge-inference-02",
+          "type": "inference",
+          "prompt": "為何作者認為持有人提出購買契約，仍不能單獨終止來源查證？",
+          "options": [
+            "因為私人契約在任何情況下都無效",
+            "因為文化財產永遠只能由來源國持有",
+            "因為目前交易文件未必能排除先前失竊、非法出口或所有權鏈中斷",
+            "因為只要價格高，物件就必然是非法取得"
+          ],
+          "correctAnswer": "因為目前交易文件未必能排除先前失竊、非法出口或所有權鏈中斷",
+          "rationale": "第五至第七段指出，現在持有文件不會自動洗去先前問題；善意需由合理查詢與連續資料支持。",
+          "distractorReasons": {
+            "因為私人契約在任何情況下都無效": "文章承認私人權利可能存在，並未主張契約一律無效。",
+            "因為文化財產永遠只能由來源國持有": "文章要求兼顧來源國主張與持有人權利，未主張來源國永遠獨占。",
+            "因為只要價格高，物件就必然是非法取得": "高價不能補正來源缺口，但高價本身也不證明非法。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 0,
+            "end": 17,
+            "text": "來源國的文化主張與目前持有人的權利"
+          }
+        },
+        {
+          "id": "cultural-property-protection-challenge-evidence-03",
+          "type": "evidence",
+          "prompt": "哪一項最能證明作者把文化財產保護視為跨越不同時間階段的工作？",
+          "options": [
+            "普通商品的買方通常關心品質與價格",
+            "較高價格不能補正來源紀錄的缺口",
+            "緊急措施守住物件，長期程序修復被切斷的關係",
+            "文化財產有時能依法進行博物館借展"
+          ],
+          "correctAnswer": "緊急措施守住物件，長期程序修復被切斷的關係",
+          "rationale": "第九段明確區分危機中的緊急保護與危機後持續進行的查證、返還及合作。",
+          "distractorReasons": {
+            "普通商品的買方通常關心品質與價格": "這是商品與文化財產的比較，未呈現時間階段。",
+            "較高價格不能補正來源紀錄的缺口": "這說明來源查證，未直接對照緊急與長期工作。",
+            "文化財產有時能依法進行博物館借展": "這證明合法移動可能成立，未說明跨階段保護。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 0,
+            "end": 11,
+            "text": "保護還有時間尺度的差異"
+          }
+        }
+      ]
+    }
+  ]
+}

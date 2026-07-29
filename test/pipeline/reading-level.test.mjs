@@ -13,7 +13,9 @@ test("登樓卷必須在篇幅、句子負荷或詞彙負荷至少一項明顯�
   const guided = reading("甲乙丙丁。".repeat(60));
   const easierChallenge = reading("甲乙。".repeat(100));
   const longerChallenge = reading("甲乙丙丁。".repeat(72));
+  const denserChallenge = reading("甲乙丙丁戊己庚辛。".repeat(32));
 
   assert.equal(compareDifficultyLevels(guided, easierChallenge).ok, false);
   assert.equal(compareDifficultyLevels(guided, longerChallenge).ok, true);
+  assert.equal(compareDifficultyLevels(guided, denserChallenge).ok, true);
 });

@@ -1,0 +1,212 @@
+[
+  {
+    "slug": "unesco-world-heritage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "世界遺產為什麼需要跨國共同守護",
+    "preferredSource": "https://whc.unesco.org/en/about/"
+  },
+  {
+    "slug": "sdg-clean-water",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "乾淨飲水如何成為全球共同目標",
+    "preferredSource": "https://sdgs.un.org/goals/goal6"
+  },
+  {
+    "slug": "global-postal-network",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "一封信如何穿越不同國家的郵政網絡",
+    "preferredSource": "https://www.upu.int/en/Universal-Postal-Union"
+  },
+  {
+    "slug": "sea-shipping-routes",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海運航線如何連結世界的日常生活",
+    "preferredSource": "https://www.imo.org/en/About/Pages/Default.aspx"
+  },
+  {
+    "slug": "utc-world-time",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "世界如何用協調世界時一起校準時間",
+    "preferredSource": "https://www.bipm.org/en/time-metrology"
+  },
+  {
+    "slug": "svalbard-seed-vault",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "全球種子庫為何替未來保存農作物多樣性",
+    "preferredSource": "https://www.croptrust.org/work/svalbard-global-seed-vault/"
+  },
+  {
+    "slug": "antarctic-treaty",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "南極洲如何透過國際協定留給和平與科學",
+    "preferredSource": "https://www.ats.aq/e/antarctictreaty.html"
+  },
+  {
+    "slug": "satellite-rescue-beacons",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "衛星搜救系統如何讓各國合作尋找遇險者",
+    "preferredSource": "https://www.cospas-sarsat.int/en/"
+  },
+  {
+    "slug": "world-food-waste",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "減少糧食損失與浪費為何需要整條供應鏈合作",
+    "preferredSource": "https://www.fao.org/platform-food-loss-waste/en/"
+  },
+  {
+    "slug": "cultural-property-protection",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "文化財產為什麼不能被當成普通商品任意搬運",
+    "preferredSource": "https://www.unesco.org/en/fight-illicit-trafficking"
+  },
+  {
+    "slug": "moon-phases",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "月亮為什麼每天看起來不一樣",
+    "preferredSource": "https://science.nasa.gov/moon/moon-phases/"
+  },
+  {
+    "slug": "plate-tectonics",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "板塊運動如何塑造地震與山脈",
+    "preferredSource": "https://pubs.usgs.gov/gip/dynamic/"
+  },
+  {
+    "slug": "water-cycle",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "水循環不是一個簡單圓圈",
+    "preferredSource": "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
+  },
+  {
+    "slug": "coral-reef-ecosystem",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "珊瑚礁如何成為海中的立體城市",
+    "preferredSource": "https://oceanservice.noaa.gov/education/tutorial_corals/"
+  },
+  {
+    "slug": "bird-migration",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "候鳥如何找到跨越千里的遷徙道路",
+    "preferredSource": "https://www.usgs.gov/programs/bird-banding-laboratory/science/migration"
+  },
+  {
+    "slug": "pollinator-network",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "授粉者如何支撐植物與人類的食物網",
+    "preferredSource": "https://www.fs.usda.gov/managing-land/wildflowers/pollinators"
+  },
+  {
+    "slug": "deep-sea-vents",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "沒有陽光的深海熱泉旁為何仍有生命",
+    "preferredSource": "https://oceanexplorer.noaa.gov/facts/vents.html"
+  },
+  {
+    "slug": "aurora-lights",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "極光如何把太陽活動畫在天空上",
+    "preferredSource": "https://www.swpc.noaa.gov/phenomena/aurora"
+  },
+  {
+    "slug": "ocean-microplastics",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "微塑膠為何難以從海洋環境中消失",
+    "preferredSource": "https://marinedebris.noaa.gov/discover-issue/microplastics"
+  },
+  {
+    "slug": "circadian-rhythm",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "人體生理時鐘如何知道白天與黑夜",
+    "preferredSource": "https://nigms.nih.gov/education/fact-sheets/Pages/circadian-rhythms.aspx"
+  },
+  {
+    "slug": "oracle-bone-writing",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "甲骨文字如何讓現代人讀見商代生活",
+    "preferredSource": "https://museum.sinica.edu.tw/"
+  },
+  {
+    "slug": "movable-type-printing",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "活字印刷如何改變知識複製的方法",
+    "preferredSource": "https://www.npm.gov.tw/"
+  },
+  {
+    "slug": "maritime-trade-ceramics",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "一只外銷瓷器如何保存海上交流的線索",
+    "preferredSource": "https://www.npm.gov.tw/"
+  },
+  {
+    "slug": "museum-conservation",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "博物館修護師如何在保存與原貌之間做決定",
+    "preferredSource": "https://www.npm.gov.tw/"
+  },
+  {
+    "slug": "historic-map-reading",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "古地圖不精準，為什麼仍能說出重要歷史",
+    "preferredSource": "https://memory.culture.tw/"
+  },
+  {
+    "slug": "peach-blossom-spring",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "從桃花源記思考理想世界與現實選擇",
+    "preferredSource": "https://zh.wikisource.org/wiki/桃花源記"
+  },
+  {
+    "slug": "oil-seller",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "從賣油翁思考熟練、天分與謙遜",
+    "preferredSource": "https://zh.wikisource.org/wiki/賣油翁"
+  },
+  {
+    "slug": "cao-gui-debate",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "從曹劌論戰思考判斷時機與承擔公共責任",
+    "preferredSource": "https://ctext.org/chun-qiu-zuo-zhuan/zhuang-gong-shi-nian/zh"
+  },
+  {
+    "slug": "xunzi-learning",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "從荀子勸學思考累積、工具與學習方法",
+    "preferredSource": "https://ctext.org/xunzi/encouraging-learning/zh"
+  },
+  {
+    "slug": "yueyang-tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "從岳陽樓記思考個人情緒與公共關懷",
+    "preferredSource": "https://zh.wikisource.org/wiki/岳陽樓記"
+  }
+]

@@ -14,7 +14,7 @@ const requiredCount =
 const explicitFiles = args.filter(
   (arg, index) =>
     arg !== "--require-count" &&
-    index !== requireCountIndex + 1,
+    (requireCountIndex < 0 || index !== requireCountIndex + 1),
 );
 const files =
   explicitFiles.length > 0
@@ -29,6 +29,14 @@ const failures = [];
 const seenIds = new Set();
 const seenContentKeys = new Set();
 const categoryCounts = { world: 0, science: 0, humanities: 0 };
+const MANUAL_PROFILE_LIMITS = {
+  vernacularMin: 1300,
+  vernacularMax: 1700,
+  classicalMin: 500,
+  classicalMax: 900,
+  classicalGlossaryMin: 8,
+  classicalGlossaryMax: 15,
+};
 
 function fail(file, message) {
   failures.push(`${path.relative(root, file)}: ${message}`);
@@ -118,7 +126,7 @@ for (const file of files) {
     ) {
       fail(file, `${reading.difficulty} 必須是通過硬門檻的待審稿`);
     }
-    const profile = evaluateContentProfile(reading);
+    const profile = evaluateContentProfile(reading, MANUAL_PROFILE_LIMITS);
     if (!profile.ok) {
       fail(
         file,

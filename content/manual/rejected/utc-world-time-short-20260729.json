@@ -1,0 +1,364 @@
+{
+  "source": {
+    "id": "utc-world-time-source",
+    "name": "BIPM Time Metrology",
+    "baseUrl": "https://www.bipm.org",
+    "licenseType": "CC BY",
+    "licenseVersion": "4.0",
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "utc-world-time-source-item",
+    "canonicalUrl": "https://www.bipm.org/en/time-metrology",
+    "title": "BIPM technical services: Time Metrology",
+    "publisher": "International Bureau of Weights and Measures (BIPM)",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-29",
+    "contentFingerprint": "sha256:8c6a6d8eff45d7568750c30298ef518c4d41080e5bf5824519a444f6884e1986",
+    "licenseSnapshot": "BIPM 網站資料除另有標示外採 CC BY 4.0，重用時須標示 BIPM 與原始來源；2026-07-29 核對於 https://www.bipm.org/en/copyright。",
+    "extractScope": "根據頁面中 UTC、UTC(k)、Circular T、UTCr 與 TT(BIPM) 的簡介擷取並改寫事實，未重製長段落。"
+  },
+  "factPack": {
+    "id": "utc-world-time-fact-pack",
+    "topicDate": "2026-07-29",
+    "category": "world",
+    "facts": [
+      {
+        "id": "utc-world-time-fact-01",
+        "statement": "BIPM 時間部負責實現與傳播 UTC、UTCr 與 TT 等國際時間尺度，供不同用途使用。",
+        "sourceItemId": "utc-world-time-source-item"
+      },
+      {
+        "id": "utc-world-time-fact-02",
+        "statement": "UTC 是國際參考時間尺度，也是協調傳播標準頻率與時間訊號的基礎。",
+        "sourceItemId": "utc-world-time-source-item"
+      },
+      {
+        "id": "utc-world-time-fact-03",
+        "statement": "UTC 由國際原子時 TAI 配合閏秒形成；閏秒依 IERS 的建議插入，使 UTC 與地球自轉所得時間保持約略一致。",
+        "sourceItemId": "utc-world-time-source-item"
+      },
+      {
+        "id": "utc-world-time-fact-04",
+        "statement": "UTC 與 TAI 的正式定義於 2018 年由國際度量衡大會採納。",
+        "sourceItemId": "utc-world-time-source-item"
+      },
+      {
+        "id": "utc-world-time-fact-05",
+        "statement": "各國計量機構或天文臺維持稱為 UTC(k) 的 UTC 實體實現，並將時鐘資料送交 BIPM，共同貢獻 UTC。",
+        "sourceItemId": "utc-world-time-source-item"
+      },
+      {
+        "id": "utc-world-time-fact-06",
+        "statement": "BIPM 每月透過 Circular T 公布每五日一筆的 UTC 與 UTC(k) 差值。",
+        "sourceItemId": "utc-world-time-source-item"
+      },
+      {
+        "id": "utc-world-time-fact-07",
+        "statement": "UTCr 提供較快速的結果：BIPM 每週三公布，每一日一筆差值，讓參與實驗室能以比月度 Circular T 更短的間隔監測時鐘。",
+        "sourceItemId": "utc-world-time-source-item"
+      },
+      {
+        "id": "utc-world-time-fact-08",
+        "statement": "TT(BIPM) 是地球時的一種實現，每年一月事後計算，主要用於重視長期頻率穩定與高準確度的科學應用。",
+        "sourceItemId": "utc-world-time-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://www.bipm.org/en/time-metrology",
+      "https://www.bipm.org/en/copyright"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "utc-world-time",
+  "packages": [
+    {
+      "id": "utc-world-time-guided",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "全世界怎麼把時間對準？",
+      "hookQuestion": "當各地鐘錶不在同一座房間裡，世界如何確認大家所說的「現在」是同一刻？",
+      "body": [
+        "清晨，臺灣的機場準備讓班機起飛；歐洲的資料中心正在記錄交易；遠洋上的衛星系統持續傳送定位訊號。這些活動相隔遙遠，卻都需要回答同一個問題：現在究竟是幾點？若每個地方只相信牆上的鐘，微小誤差便可能逐漸累積，讓事件先後、通訊同步與科學觀測發生混亂。因此，世界需要一把共同的時間尺。",
+        "這把時間尺叫做「協調世界時」，英文縮寫是 UTC。它不是某一只放在巴黎或倫敦的超級時鐘，而是一個國際參考時間尺度，也是各地傳播標準頻率與時間訊號的基礎。人們日常看見的時區時間，可以依 UTC 加上或減去固定時差來表示；不同城市鐘面顯示的數字雖然不同，背後仍能指向同一瞬間。",
+        "UTC 的穩定基礎來自國際原子時 TAI。原子鐘利用原子躍遷頻率作為規律節拍，能提供高度穩定的計時；然而，人類的「一天」也長久依照地球自轉來理解。地球自轉並非永遠完全均勻，所以原子節拍與地球轉動所表示的時間可能逐漸出現差距。UTC 的設計，正是在這兩種需求之間搭橋。",
+        "依國際度量衡局 BIPM 的說明，UTC 由 TAI 配合插入閏秒而得到。是否需要插入閏秒，依國際地球自轉與參考系統服務 IERS 的建議處理，目的是讓 UTC 與依地球自轉得到的時間維持約略一致。UTC 與 TAI 的正式定義，則在二○一八年由國際度量衡大會採納。這套安排顯示，標準時間既要穩，也要能回應地球這座並不完美的天然時鐘。",
+        "共同時間不是只靠一個機構單獨「宣布」就完成。許多國家的計量機構或天文臺都維持自己的 UTC 實體實現，寫成 UTC(k)，其中 k 代表某個實驗室。這些機構把時鐘資料送到 BIPM，參與形成 UTC。換句話說，UTC 是國際合作算出的參考尺度；各地則用自己的設備，讓這個尺度在現實世界中可以被使用。",
+        "那麼，各地怎麼知道自己的 UTC(k) 與共同尺度差了多少？BIPM 每月發布 Circular T，列出 UTC 與各 UTC(k) 的差值，資料間隔為五日。實驗室可以根據這份結果檢查本地時鐘是否偏快或偏慢。這種「先比較、再修正」的工作，像許多樂手定期對著共同音準調音；重點不是每件樂器完全相同，而是合奏時有可依循的基準。",
+        "每月一次的結果對某些工作仍不夠快，因此還有快速協調世界時 UTCr。參與的實驗室可利用它，以比 Circular T 更短的間隔監看時鐘操控情形。BIPM 每週三發布 UTCr，內容提供每日間隔的 UTC 與 UTC(k) 差值。Circular T 與 UTCr 的節奏不同：前者提供正式的月度比較，後者讓實驗室更快發現走勢並調整。",
+        "BIPM 也計算 TT(BIPM)，它是「地球時」的一種實現。這項結果每年一月在事後計算，根據一級與二級頻率標準對 TAI 頻率的評估加權形成，主要服務需要長期頻率穩定與高準確度的科學研究。由此可見，世界不是只有一種時間產品；不同尺度與發布速度，是為了回應導航、通訊、計量和科學研究的不同需求。",
+        "當你看見手機自動校時，背後不只是網路傳來一串數字。那串數字之所以能被信任，是因為許多國家的時鐘持續觀測、交換資料、接受比較，再由國際機構形成共同基準。全球校時的核心，不是要求每座鐘永遠毫無誤差，而是建立可追溯的合作方法：知道共同尺度怎麼形成，也知道本地時鐘離它多遠。",
+        "所以，UTC 更像一場長期合奏，而不是孤獨的鐘聲。原子鐘提供穩定節拍，地球自轉提醒人類時間仍與自然相連，各國實驗室貢獻資料，BIPM 則負責實現、比較與發布。世界能在不同時區中協同行動，靠的正是把「現在」變成一項能共同維護、檢查與修正的公共標準。"
+      ],
+      "glossary": [
+        {
+          "term": "協調世界時",
+          "definition": "國際參考時間尺度，也是協調傳播標準頻率與時間訊號的基礎。"
+        },
+        {
+          "term": "國際原子時",
+          "definition": "以原子標準形成的時間尺度，為 UTC 的穩定基礎。"
+        },
+        {
+          "term": "原子鐘",
+          "definition": "利用原子躍遷頻率提供高度穩定節拍的計時裝置。"
+        },
+        {
+          "term": "閏秒",
+          "definition": "為使 UTC 與地球自轉時間約略一致而依建議插入的時間調整。"
+        },
+        {
+          "term": "UTC(k)",
+          "definition": "由某一國家計量機構或天文臺維持的 UTC 實體實現。"
+        },
+        {
+          "term": "Circular T",
+          "definition": "BIPM 每月發布、列出 UTC 與各 UTC(k) 差值的公報。"
+        },
+        {
+          "term": "UTCr",
+          "definition": "以較短週期發布比較結果，協助實驗室更頻繁監測時鐘的快速時間尺度。"
+        },
+        {
+          "term": "地球時",
+          "definition": "供天文與科學計算使用的時間概念；TT(BIPM) 是其中一種實現。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "International Bureau of Weights and Measures (BIPM)",
+          "url": "https://www.bipm.org/en/time-metrology",
+          "license": "CC BY 4.0；須標示 BIPM 與原始來源。授權條款核對於 https://www.bipm.org/en/copyright。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "utc-world-time-guided-q1",
+          "type": "comprehension",
+          "prompt": "依本文說明，各地實驗室如何參與形成並使用 UTC？",
+          "options": [
+            "各自決定時間，不交換資料",
+            "把時鐘資料送交 BIPM，並維持本地 UTC(k)",
+            "只在閏秒出現時才啟動原子鐘",
+            "直接以 TT(BIPM) 取代所有民用時間"
+          ],
+          "correctAnswer": "把時鐘資料送交 BIPM，並維持本地 UTC(k)",
+          "rationale": "第五段明確說明各國機構維持 UTC(k)，並將時鐘資料送交 BIPM，參與形成 UTC。",
+          "distractorReasons": {
+            "各自決定時間，不交換資料": "錯誤；本文強調國際交換資料與共同計算。",
+            "只在閏秒出現時才啟動原子鐘": "錯誤；原子鐘不是只在閏秒出現時才啟動。",
+            "直接以 TT(BIPM) 取代所有民用時間": "錯誤；TT(BIPM) 主要供特定科學用途，並未取代民用時間。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 0,
+            "end": 30,
+            "text": "共同時間不是只靠一個機構單獨「宣布」就完成。許多國家的計量機"
+          }
+        },
+        {
+          "id": "utc-world-time-guided-q2",
+          "type": "inference",
+          "prompt": "綜合第六、七段，BIPM 同時發布 Circular T 與 UTCr，最合理的原因是什麼？",
+          "options": [
+            "讓各國自行挑選互不相容的時間",
+            "用不同更新速度兼顧正式比較與快速監測",
+            "證明每座原子鐘永遠不會出現偏差",
+            "以每週資料取消所有月度結果"
+          ],
+          "correctAnswer": "用不同更新速度兼顧正式比較與快速監測",
+          "rationale": "第六段說 Circular T 提供月度、五日間隔的差值，第七段說 UTCr 每週發布每日間隔資料；兩者合看可知用途互補。",
+          "distractorReasons": {
+            "讓各國自行挑選互不相容的時間": "錯誤；兩項產品都以共同尺度作為比較基準。",
+            "證明每座原子鐘永遠不會出現偏差": "錯誤；需要持續比較本身就表示時鐘仍可能出現差值。",
+            "以每週資料取消所有月度結果": "錯誤；文中明說兩者節奏與功能不同，沒有取消關係。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 115,
+            "end": 145,
+            "text": "Circular T 與 UTCr 的節奏不同：前者提供正式"
+          }
+        },
+        {
+          "id": "utc-world-time-guided-q3",
+          "type": "evidence",
+          "prompt": "若要支持「全球校時依靠可追溯的合作，而非一座完美時鐘」這項觀點，下列哪一段引文最有力？",
+          "options": [
+            "「人們日常看見的時區時間，可以依 UTC 加上或減去固定時差來表示」",
+            "「原子鐘利用原子躍遷頻率作為規律節拍」",
+            "「許多國家的時鐘持續觀測、交換資料、接受比較，再由國際機構形成共同基準」",
+            "「這項結果每年一月在事後計算」"
+          ],
+          "correctAnswer": "「許多國家的時鐘持續觀測、交換資料、接受比較，再由國際機構形成共同基準」",
+          "rationale": "第三個選項同時包含多國參與、資料交換、比較與共同基準，最完整支持「合作」及「可追溯」兩個關鍵。",
+          "distractorReasons": {
+            "「人們日常看見的時區時間，可以依 UTC 加上或減去固定時差來表示」": "支持時區換算，但沒有呈現共同維護與比較機制。",
+            "「原子鐘利用原子躍遷頻率作為規律節拍」": "說明原子鐘的節拍來源，未證明全球合作。",
+            "「這項結果每年一月在事後計算」": "只交代 TT(BIPM) 的計算時間，與論點關聯薄弱。"
+          },
+          "evidenceSpan": {
+            "paragraph": 9,
+            "start": 40,
+            "end": 70,
+            "text": "許多國家的時鐘持續觀測、交換資料、接受比較，再由國際機構形成"
+          }
+        }
+      ]
+    },
+    {
+      "id": "utc-world-time-challenge",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "「現在」是一項國際協議",
+      "hookQuestion": "當穩定的原子節拍與不均勻的地球自轉無法完全重合，我們該把哪一個稱為真正的時間？",
+      "body": [
+        "「現在」看似是自然給定的答案，其實也是全球共同製作的結果。一筆跨國交易的先後、兩座天文臺的觀測紀錄、遠距通訊的同步，都必須把事件安放在可比較的時間軸上。若各地只報自己的鐘面讀數，卻說不清它與共同基準的關係，時間就只是地方性的主張，難以成為跨國協作的證據。",
+        "協調世界時 UTC 正是這條共同時間軸。BIPM 將它說明為國際參考時間尺度，也是協調傳播標準頻率與時間訊號的基礎。這裡的關鍵不只是「準時」，而是「可比」：不同時區可以顯示不同鐘點，卻仍透過與 UTC 的固定關係指向同一瞬間。於是，地方時間的差異不必消失，世界仍能共享事件的先後秩序。",
+        "但共同基準面臨一組根本張力。國際原子時 TAI 以原子標準提供高度穩定的節拍，適合累積連續秒數；人類的日常時間觀念，卻又繫於地球自轉所形成的晝夜。地球自轉並非絕對均勻，兩套節奏因此可能逐漸分離。若只追求原子尺度的均勻，鐘面可能慢慢離開太陽日；若只追隨地球轉動，計時穩定性又會受影響。",
+        "UTC 的制度設計沒有宣稱消除張力，而是管理張力。它由 TAI 配合閏秒形成；是否插入閏秒，依 IERS 的建議處理，使 UTC 與地球自轉所得時間保持約略一致。UTC 與 TAI 的正式定義在二○一八年由國際度量衡大會採納。這不只是技術細節，也揭示標準的性質：國際標準既倚靠可重現的物理現象，也需要明確程序決定如何協調不同目標。",
+        "更值得注意的是，UTC 不是一座能直接抬到世界各地展示的鐘。各國計量機構或天文臺維持 UTC 的實體實現，記為 UTC(k)，並把時鐘資料送交 BIPM。BIPM 負責實現與傳播國際尺度，各地設備則把尺度落實為可使用的訊號。中心與地方不是命令與服從的單向關係：沒有各地資料，國際尺度失去共同投入；沒有共同計算，各地讀數也缺少可比座標。",
+        "這套系統的可信度，來自差異被公開描述，而非差異被假裝不存在。BIPM 每月在 Circular T 公布 UTC 與 UTC(k) 的差值，間隔為五日。實驗室看到本地尺度相對共同尺度偏移多少，便能檢查與操控時鐘。換言之，校準不是把所有鐘一次調成相同後便永遠結束，而是建立重複比較、留下紀錄、再據以修正的循環。",
+        "然而，正式月報的節奏未必能滿足即時監測。快速協調世界時 UTCr 因而提供較快速的解答：BIPM 每週三發布結果，列出每日間隔的 UTC 與 UTC(k) 差值，讓參與實驗室以比 Circular T 更短的週期觀察時鐘走勢。兩種產品並非互相競爭；Circular T 提供月度基準，UTCr 強化過程中的回饋速度，呈現「正式追溯」與「快速操控」的功能分工。",
+        "時間尺度還會因科學問題而分化。TT(BIPM) 是國際天文學聯合會所定義地球時的一種實現，每年一月才在事後計算；它以一級與二級頻率標準對 TAI 頻率的評估加權形成，主要用於要求長期頻率穩定與高準確度的科學應用。它的存在提醒我們：更新最快不必然最適合，等待更多資料再計算，反而可能服務另一種準確需求。",
+        "從 UTC、UTCr 到 TT(BIPM)，我們看見的不是三個互相排斥的答案，而是一組針對不同任務設計的時間工具。跨國社會需要共同座標，實驗室需要較快回饋，長期科學研究則重視延後計算所換得的品質。判斷一項時間尺度是否「好」，不能只問它多久更新，還要問它服務誰、如何形成、能否追溯，以及誤差如何被揭露。",
+        "因此，全球校時是一種制度化的協調能力。原子標準提供穩定，地球自轉保留時間與自然週期的關係，各地實驗室供應資料與實體實現，BIPM 組織比較並發布結果。共同時間的權威不在於宣稱絕對無誤，而在於參與者能沿著資料、差值與發布程序，檢驗某個地方的「現在」如何連回世界共同維護的尺度。"
+      ],
+      "glossary": [
+        {
+          "term": "地方性的主張",
+          "definition": "只在本地成立、尚未說明與共同基準關係的時間讀數。"
+        },
+        {
+          "term": "協調世界時",
+          "definition": "供全球比較事件先後並傳播標準頻率與時間訊號的國際參考時間尺度。"
+        },
+        {
+          "term": "國際原子時",
+          "definition": "以原子標準提供穩定連續節拍、作為 UTC 基礎的時間尺度。"
+        },
+        {
+          "term": "根本張力",
+          "definition": "文中指原子節拍的均勻性與地球自轉時間之間難以同時完全滿足的衝突。"
+        },
+        {
+          "term": "閏秒",
+          "definition": "依建議插入 UTC，以維持它與地球自轉時間約略一致的調整。"
+        },
+        {
+          "term": "實體實現",
+          "definition": "由實際設備維持、讓抽象時間尺度能在現實中使用的版本。"
+        },
+        {
+          "term": "Circular T",
+          "definition": "BIPM 每月發布 UTC 與 UTC(k) 差值的正式公報。"
+        },
+        {
+          "term": "UTCr",
+          "definition": "以週為發布週期、提供每日間隔差值以加快監測回饋的時間尺度。"
+        },
+        {
+          "term": "地球時",
+          "definition": "天文與科學計算使用的時間概念，TT(BIPM) 是其一種實現。"
+        },
+        {
+          "term": "制度化",
+          "definition": "把合作方式固定為可重複遵循、檢查與追溯的程序。"
+        }
+      ],
+      "readingMinutes": 9,
+      "sourceAttribution": [
+        {
+          "publisher": "International Bureau of Weights and Measures (BIPM)",
+          "url": "https://www.bipm.org/en/time-metrology",
+          "license": "CC BY 4.0；須標示 BIPM 與原始來源。授權條款核對於 https://www.bipm.org/en/copyright。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "utc-world-time-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依本文，UTC(k) 在全球校時系統中扮演什麼角色？",
+          "options": [
+            "取代 UTC，成為各國互不相干的法定時間",
+            "由各地機構維持 UTC 的實體實現，並提供資料參與共同尺度",
+            "只用來決定何時插入閏秒",
+            "每年一月才由天文學聯合會事後計算"
+          ],
+          "correctAnswer": "由各地機構維持 UTC 的實體實現，並提供資料參與共同尺度",
+          "rationale": "第五段指出 UTC(k) 是各國機構維持的實體實現，並將資料送交 BIPM，連接地方設備與國際尺度。",
+          "distractorReasons": {
+            "取代 UTC，成為各國互不相干的法定時間": "錯誤；UTC(k) 與共同 UTC 保持可比關係，不是互不相干。",
+            "只用來決定何時插入閏秒": "錯誤；閏秒依 IERS 建議處理，並非 UTC(k) 的唯一用途。",
+            "每年一月才由天文學聯合會事後計算": "錯誤；每年一月事後計算的是 TT(BIPM)。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 30,
+            "end": 60,
+            "text": "各國計量機構或天文臺維持 UTC 的實體實現，記為 UTC("
+          }
+        },
+        {
+          "id": "utc-world-time-challenge-q2",
+          "type": "inference",
+          "prompt": "綜合第三、四、八段，本文最可能同意下列哪一項判斷？",
+          "options": [
+            "時間尺度只要更新最快，就必然最準確",
+            "單一尺度可以同時完美滿足所有用途",
+            "時間標準是在不同目標間依程序做出可檢驗的安排",
+            "地球自轉完全均勻，因此不需要任何協調"
+          ],
+          "correctAnswer": "時間標準是在不同目標間依程序做出可檢驗的安排",
+          "rationale": "第三、四段呈現原子穩定與地球自轉之間的張力及閏秒程序，第八段又說延後計算可服務另一種準確需求，合起來支持依目的與程序安排尺度。",
+          "distractorReasons": {
+            "時間尺度只要更新最快，就必然最準確": "錯誤；第八段明說更新最快不必然最適合。",
+            "單一尺度可以同時完美滿足所有用途": "錯誤；不同尺度正是為不同任務分工。",
+            "地球自轉完全均勻，因此不需要任何協調": "錯誤；第三段明說地球自轉並非絕對均勻。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 113,
+            "end": 143,
+            "text": "這不只是技術細節，也揭示標準的性質：國際標準既倚靠可重現的物"
+          }
+        },
+        {
+          "id": "utc-world-time-challenge-q3",
+          "type": "evidence",
+          "prompt": "若要評鑑「共同時間的權威來自可檢驗程序，而非宣稱零誤差」這項論點，下列哪一引文的支持力最強？",
+          "options": [
+            "「不同時區可以顯示不同鐘點」",
+            "「地球自轉並非絕對均勻」",
+            "「BIPM 每週三發布結果」",
+            "「參與者能沿著資料、差值與發布程序，檢驗某個地方的『現在』如何連回世界共同維護的尺度」"
+          ],
+          "correctAnswer": "「參與者能沿著資料、差值與發布程序，檢驗某個地方的『現在』如何連回世界共同維護的尺度」",
+          "rationale": "第四個選項直接把資料、差值、發布程序、檢驗與共同尺度串成完整追溯鏈，對論點的兩部分都有直接支持。",
+          "distractorReasons": {
+            "「不同時區可以顯示不同鐘點」": "只顯示時區差異，沒有說明權威如何建立。",
+            "「地球自轉並非絕對均勻」": "指出自然時間不均勻，卻未呈現可檢驗程序。",
+            "「BIPM 每週三發布結果」": "提供一項發布頻率事實，但不足以單獨證明整條追溯關係。"
+          },
+          "evidenceSpan": {
+            "paragraph": 10,
+            "start": 95,
+            "end": 125,
+            "text": "參與者能沿著資料、差值與發布程序，檢驗某個地方的「現在」如何"
+          }
+        }
+      ]
+    }
+  ]
+}

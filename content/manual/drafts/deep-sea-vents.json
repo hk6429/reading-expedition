@@ -1,0 +1,410 @@
+{
+  "source": {
+    "id": "deep-sea-vents-source-noaa",
+    "name": "NOAA Ocean Exploration",
+    "baseUrl": "https://oceanexplorer.noaa.gov/",
+    "licenseType": "public-domain-unless-noted",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "deep-sea-vents-source-item-noaa-overview",
+    "canonicalUrl": "https://oceanexplorer.noaa.gov/education/hydrothermal-vents-volcanoes/",
+    "title": "Hydrothermal Vents and Volcanoes",
+    "publisher": "NOAA Ocean Exploration",
+    "publishedAt": null,
+    "fetchedAt": "2026-07-29T12:00:00+08:00",
+    "contentFingerprint": "deep-sea-vents-noaa-overview-2026-07-29-formation-chemosynthesis-food-web",
+    "licenseSnapshot": "NOAA Ocean Exploration FAQ states that, unless otherwise noted, information on its website is in the public domain and may be distributed freely; attribution to NOAA Ocean Exploration is requested. This draft uses paraphrased factual information only and does not reuse credited third-party images or extended passages.",
+    "extractScope": "Facts concerning hydrothermal-vent formation, mineral precipitation, chemosynthesis, microbial primary production, symbiosis, food-web structure, environmental gradients, and habitat change."
+  },
+  "factPack": {
+    "id": "deep-sea-vents-fact-pack",
+    "topicDate": "2026-07-29",
+    "category": "science",
+    "facts": [
+      {
+        "id": "deep-sea-vents-fact-01",
+        "statement": "深海熱泉常形成於板塊張裂中心或隱沒帶附近；海水沿海洋地殼裂隙下滲，受熱後攜帶化學物質重新湧向海床。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      },
+      {
+        "id": "deep-sea-vents-fact-02",
+        "statement": "高溫熱泉流體與寒冷海水混合時，礦物會沉澱並形成煙囪；黑煙囪的外觀主要來自含硫化鐵的細小顆粒。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      },
+      {
+        "id": "deep-sea-vents-fact-03",
+        "statement": "深海熱泉生態系於一九七七年在加拉巴哥群島附近的研究中被觀察，顯示大型食物網不必以當地陽光為直接能源。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      },
+      {
+        "id": "deep-sea-vents-fact-04",
+        "statement": "化學合成微生物利用無機物參與化學反應時釋出的能量固定無機碳、製造有機物，並構成熱泉食物網的生產基礎。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      },
+      {
+        "id": "deep-sea-vents-fact-05",
+        "statement": "熱泉微生物可形成菌毯、懸浮於水中，或與管蟲、貽貝等動物建立共生關係，使有機物進入不同攝食路徑。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      },
+      {
+        "id": "deep-sea-vents-fact-06",
+        "statement": "多數熱泉大型生物不是生活在最燙的噴流內，而是分布於高溫流體與寒冷海水交會形成的溫度及化學梯度中。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      },
+      {
+        "id": "deep-sea-vents-fact-07",
+        "statement": "熱泉局部輸入可供化學反應利用的物質，因此熱泉附近常形成比周圍深海海床更密集的生物群落。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      },
+      {
+        "id": "deep-sea-vents-fact-08",
+        "statement": "熱泉流路、流量及化學成分會隨板塊與火山活動改變；噴流停止或新出口形成時，相關生物群落也會衰退或重新建立。",
+        "sourceItemId": "deep-sea-vents-source-item-noaa-overview"
+      }
+    ],
+    "sourceLinks": [
+      "https://oceanexplorer.noaa.gov/facts/vents.html",
+      "https://oceanexplorer.noaa.gov/education/hydrothermal-vents-volcanoes/",
+      "https://oceanexplorer.noaa.gov/edu/materials/hydrothermal-vents-fact-sheet.pdf",
+      "https://oceanexplorer.noaa.gov/edu/materials/chemosynthesis-fact-sheet.pdf",
+      "https://www.pmel.noaa.gov/eoi/nemo/explorer/concepts/chemosynthesis.html",
+      "https://oceanexplorer.noaa.gov/faqs/"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "deep-sea-vents",
+  "packages": [
+    {
+      "id": "deep-sea-vents-guided",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "黑暗海底的生命綠洲",
+      "hookQuestion": "沒有陽光的深海，第一口食物從哪裡來？",
+      "body": [
+        "想像一艘深海探測器緩緩下沉。陽光先由亮白變成藍黑，最後完全消失。海底水溫低、壓力大，從海面落下的食物也很有限；照一般經驗，這裡似乎不該聚集大量生物。然而，探測器靠近海底裂縫時，鏡頭前竟出現管蟲、貝類、蝦、蟹與大片微生物。牠們圍著冒出熱水的煙囪狀構造生活，形成黑暗中的生命綠洲。問題也跟著浮現：沒有陽光，食物網最初的能量究竟從哪裡來？",
+        "這些構造稱為深海熱泉，常見於板塊張裂或隱沒作用活躍之處。冰冷海水沿海洋地殼裂隙向下滲透，靠近熾熱岩石或岩漿後受熱，再攜帶從岩石取得的化學物質向上湧出。熱泉流體和近冰點的海水混合時，溫度與化學條件突然改變，溶在流體裡的礦物便沉澱、堆積，逐漸形成煙囪。含硫化鐵的細小顆粒會使流體看起來像黑煙，因此有些煙囪被稱為黑煙囪，但那並不是燃燒產生的煙。",
+        "科學家在一九七七年於加拉巴哥群島附近觀察到深海熱泉及繁盛群落時，原本預期的荒涼景象被推翻。這項發現的重要性不只在於找到新動物，更在於辨認出一套不由當地陽光直接驅動的食物網。研究者若只看管蟲外形，仍無法解答能量問題；還必須採集流體、分析化學成分，並研究微生物與動物的關係，才能把海底地質活動和生命聚集連起來。",
+        "海面附近的食物網通常以光合作用為起點：植物、藻類或某些細菌利用陽光，把二氧化碳轉成有機物。深海熱泉附近沒有足夠陽光，這條路走不通，卻不代表生命沒有其他方法。某些細菌與古菌能利用硫化氫、氫或其他無機物發生化學反應時釋放的能量，固定無機碳並製造有機物，這個過程稱為化學合成。陽光不是在黑暗中被替代成另一種光，而是由化學反應供應製造食物所需的能量。",
+        "化學合成微生物扮演初級生產者，是熱泉食物網的地基。有些在岩石或海床表面形成菌毯，帽貝等動物會刮食它們；有些懸浮在水中，被貝類濾食；另一些則住進動物體內，形成共生關係。以巨型管蟲為例，成體沒有一般動物用來攝食的口與消化道，體內的共生微生物取得管蟲運來的化學物質與氧，合成有機物並供應宿主。微生物得到棲身與原料，管蟲獲得營養，雙方的合作把海底流體中的化學能送進動物身體。",
+        "不過，說熱泉生物靠「熱」生活並不精確。噴出的流體可能極熱，多數生物並非住在最燙的出口內，而是在熱流體與冷海水交會形成的溫度梯度中活動。那裡同時帶來可供反應的化學物質與海水中的氧，卻也可能含有對一般生物有毒的成分。熱泉生物必須調節體內作用、選擇合適位置，或依靠共生微生物，才能利用資源並避開傷害。因此，熱泉既是能量入口，也是需要適應的危險環境。",
+        "從微生物開始，能量沿著多條路徑移動。蝸牛、帽貝等啃食菌毯，貽貝濾取水中的微生物，某些動物直接仰賴體內共生者；蝦、蟹或魚又捕食較小動物。這些關係交織成食物網，而非一條筆直食物鏈。熱泉之外的深海生物多半等待上層海洋沉降的有機碎屑，來源稀疏；熱泉卻在當地持續輸入化學物質，使微生物能就地生產有機物，因此常出現與周圍海床形成強烈對比的高密度生物群。",
+        "這座綠洲也不是永遠穩定。板塊與火山活動可能堵住舊通道、開啟新裂縫，熱泉流量與化學成分會改變，甚至停止。當化學能供應下降，以它為基礎的群落也會衰退；新熱泉出現後，微生物與能移動或散播的動物又可能逐步建立群落。由此可見，生物聚集的位置不只由水深決定，也由地質活動、流體化學、生物適應及彼此關係共同塑造。海底岩石的變動，能一路影響微生物，再影響捕食者。",
+        "所以，「沒有陽光仍有生命」並不是生命不需要能量，而是能量入口不只一種。深海熱泉把地球內部活動、海水循環與生物生產連在一起：海水進入裂隙、受熱並取得化學物質；微生物把化學反應的能量轉進有機物；其他生物再透過攝食或共生取得營養。這項發現修正了人們以為所有食物網都由陽光直接起動的想像，也提醒我們，判斷一處環境能否支持生命，不能只問「有沒有光」，還要問「是否有可利用的能量、物質與穩定到足以建立關係的條件」。"
+      ],
+      "glossary": [
+        {
+          "term": "深海熱泉",
+          "definition": "海水進入海洋地殼裂隙、受熱並攜帶化學物質後，重新從海床湧出的系統。"
+        },
+        {
+          "term": "板塊張裂",
+          "definition": "兩個板塊彼此分離，使新的裂隙或海洋地殼形成的地質作用。"
+        },
+        {
+          "term": "隱沒作用",
+          "definition": "一個板塊向另一個板塊下方沉入地球內部的作用。"
+        },
+        {
+          "term": "黑煙囪",
+          "definition": "含硫化鐵等細小礦物顆粒的熱泉流體湧出時，外觀如黑煙的煙囪狀構造。"
+        },
+        {
+          "term": "化學合成",
+          "definition": "生物利用無機物化學反應所釋放的能量固定碳並製造有機物的過程。"
+        },
+        {
+          "term": "古菌",
+          "definition": "與細菌不同的一大類微生物，其中部分種類能進行化學合成。"
+        },
+        {
+          "term": "初級生產者",
+          "definition": "能把無機碳轉成有機物，為食物網引入可利用物質與能量的生物。"
+        },
+        {
+          "term": "菌毯",
+          "definition": "大量微生物聚集並覆蓋岩石或海床表面所形成的薄層。"
+        },
+        {
+          "term": "共生關係",
+          "definition": "不同生物長期密切生活，且至少一方能從關係中獲益的互動。"
+        },
+        {
+          "term": "溫度梯度",
+          "definition": "溫度隨位置或距離逐步變化的現象。"
+        },
+        {
+          "term": "食物網",
+          "definition": "生態系中多條攝食與能量傳遞路徑交織形成的關係網絡。"
+        },
+        {
+          "term": "有機碎屑",
+          "definition": "生物遺體、排泄物或其他有機材料形成的細碎物質。"
+        }
+      ],
+      "readingMinutes": 8,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA Ocean Exploration",
+          "url": "https://oceanexplorer.noaa.gov/education/hydrothermal-vents-volcanoes/",
+          "license": "Public domain unless otherwise noted; NOAA attribution requested."
+        },
+        {
+          "publisher": "NOAA Ocean Exploration",
+          "url": "https://oceanexplorer.noaa.gov/edu/materials/hydrothermal-vents-fact-sheet.pdf",
+          "license": "NOAA government educational material; public domain unless otherwise noted; third-party credited media excluded."
+        },
+        {
+          "publisher": "NOAA Pacific Marine Environmental Laboratory",
+          "url": "https://www.pmel.noaa.gov/eoi/nemo/explorer/concepts/chemosynthesis.html",
+          "license": "NOAA government website information used as paraphrased facts; public-domain status subject to any item-specific notice."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "deep-sea-vents-guided-q1",
+          "type": "comprehension",
+          "prompt": "根據本文，深海熱泉食物網最初可利用的有機物主要如何產生？",
+          "options": [
+            "由上層海洋的大量植物直接沉入熱泉",
+            "由微生物利用化學反應的能量製造",
+            "由極熱流體直接轉變成動物的食物",
+            "由黑煙囪燃燒礦物後釋出養分"
+          ],
+          "correctAnswer": "由微生物利用化學反應的能量製造",
+          "rationale": "第四段說明，某些細菌與古菌利用無機物反應釋放的能量固定無機碳並製造有機物；這才是熱泉食物網的生產起點。",
+          "distractorReasons": {
+            "由上層海洋的大量植物直接沉入熱泉": "錯誤。文章指出熱泉外的深海才較依賴上層沉降物，並未說大量植物直接沉入熱泉。",
+            "由極熱流體直接轉變成動物的食物": "錯誤。熱只能造成環境與反應條件，不能直接成為動物食物。",
+            "由黑煙囪燃燒礦物後釋出養分": "錯誤。黑煙是礦物顆粒造成的外觀，不是燃燒現象。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 78,
+            "end": 108,
+            "text": "某些細菌與古菌能利用硫化氫、氫或其他無機物發生化學反應時釋放"
+          }
+        },
+        {
+          "id": "deep-sea-vents-guided-q2",
+          "type": "inference",
+          "prompt": "綜合熱泉形成、微生物生產與群落變動三部分，下列哪項推論最合理？",
+          "options": [
+            "只要海底溫度升高，任何地方都會形成相同群落",
+            "熱泉動物的數量只由水深決定，與流體無關",
+            "地質作用若改變化學物質供應，食物網也可能跟著重組",
+            "化學合成一旦開始，群落便不再受火山活動影響"
+          ],
+          "correctAnswer": "地質作用若改變化學物質供應，食物網也可能跟著重組",
+          "rationale": "第二段說明地質作用產生熱泉流體，第四、五段說明微生物把其中的化學能導入食物網，第八段則指出供應下降或新熱泉出現時群落會衰退或重建。",
+          "distractorReasons": {
+            "只要海底溫度升高，任何地方都會形成相同群落": "錯誤。高溫不是充分條件，還需要可利用的物質、生物轉換能力與適當環境。",
+            "熱泉動物的數量只由水深決定，與流體無關": "錯誤。文章明示地質活動、流體化學、生物適應與生物關係共同塑造群落。",
+            "化學合成一旦開始，群落便不再受火山活動影響": "錯誤。熱泉通道及供應會隨板塊與火山活動改變，群落仍受其影響。"
+          },
+          "evidenceSpan": {
+            "paragraph": 8,
+            "start": 51,
+            "end": 81,
+            "text": "當化學能供應下降，以它為基礎的群落也會衰退；新熱泉出現後，微"
+          }
+        },
+        {
+          "id": "deep-sea-vents-guided-q3",
+          "type": "evidence",
+          "prompt": "若要反駁「熱泉動物只是住在滾燙熱水裡，直接靠熱獲得食物」的說法，下列哪段引文的支持力最強？",
+          "options": [
+            "「形成黑暗中的生命綠洲」",
+            "「溶在流體裡的礦物便沉澱、堆積」",
+            "「多數生物並非住在最燙的出口內，而是在熱流體與冷海水交會形成的溫度梯度中活動」",
+            "「蝦、蟹或魚又捕食較小動物」"
+          ],
+          "correctAnswer": "「多數生物並非住在最燙的出口內，而是在熱流體與冷海水交會形成的溫度梯度中活動」",
+          "rationale": "最佳引文直接否定「住在最燙出口」的空間判斷；搭配本文對化學合成的解釋，也能區分高溫環境與食物能量來源。",
+          "distractorReasons": {
+            "「形成黑暗中的生命綠洲」": "支持力不足。這句只能證明生物密集，不能判斷牠們住在哪種溫度或如何取得食物。",
+            "「溶在流體裡的礦物便沉澱、堆積」": "支持力不足。這句解釋煙囪形成，未處理動物的棲息位置與營養來源。",
+            "「蝦、蟹或魚又捕食較小動物」": "支持力較弱。這句能證明部分動物靠捕食，但無法直接反駁所有熱泉動物都住在滾燙流體中的主張。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 19,
+            "end": 49,
+            "text": "噴出的流體可能極熱，多數生物並非住在最燙的出口內，而是在熱流"
+          }
+        }
+      ]
+    },
+    {
+      "id": "deep-sea-vents-challenge",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "把地球內部的能量接上食物網",
+      "hookQuestion": "一座海底煙囪，如何把地質作用轉成可供生命利用的能量？",
+      "body": [
+        "在永夜般的深海，探測器燈光照見一幅看似矛盾的景象：荒涼海床旁，一座噴吐黑色流體的煙囪周圍擠滿管蟲、貝類、蝦與蟹。若把「太陽供能」視為所有生態系的唯一劇本，這片繁盛便難以解釋。然而真正需要修正的，不是生命必須取得能量這項原則，而是我們對能量來源的想像。深海熱泉顯示，同一個生態功能可以由不同機制完成；理解它，必須把地質、化學與生物三條線索接在一起。",
+        "第一條線索藏在海洋地殼。板塊張裂或隱沒作用造成裂隙，冰冷海水向下滲入，接近熱岩或岩漿後升溫，並在與岩石反應時失去或取得不同物質。浮力使高溫、富含礦物的流體重新上升，從海床出口湧出。它一接觸近冰點海水，溫度與化學條件急變，礦物便從溶液中沉澱，層層砌成煙囪。所謂黑煙囪的「煙」，主要是細小礦物顆粒造成的視覺效果，不是海底燃燒。這段過程把地球內部的熱與岩石中的物質送到海床。",
+        "但熱本身不能直接成為動物的食物。關鍵轉折發生在微生物：某些細菌與古菌可利用硫化氫、氫、亞鐵或氨等無機物參與反應時釋出的能量，將無機碳固定成有機物，稱為化學合成。光合作用與化學合成都能讓初級生產者製造有機物，差別在於驅動過程的能量來源。這項比較很重要，因為若只說生物「吃熱泉中的化學物質」，容易把能量來源、碳來源與食物混成一件事；更精確的說法是，微生物利用化學反應取得能量，再把無機碳轉入可供生物利用的有機物。",
+        "第二個轉折是共生。化學合成微生物可覆在海床形成菌毯、懸浮於水中，也可住在動物組織內。菌毯被帽貝等動物刮食，水中微生物被貝類濾食；住在宿主體內的微生物，則用宿主送來的反應物生產有機物。巨型管蟲成體沒有口與一般消化道，卻能靠體內共生者取得營養。宿主提供住所並運送硫化氫與氧等物質，共生者回饋有機物。這不是動物違反「必須取得食物」的規則，而是取得食物的工作由合作夥伴在體內完成。",
+        "第三條線索來自空間差異。熱泉出口的流體可能極熱，也含有通常對生物有害的成分；多數大型生物並不住在最燙的流體中，而聚集於熱流體和冷海水混合的邊界。這裡形成溫度與化學濃度的梯度：離出口太近，熱與毒性可能超出承受範圍；太遠，能驅動化學合成的物質又可能不足。生物的分布因此像是在收益與風險之間尋找位置。微尺度的距離差異會改變反應物供應，進而影響微生物生產與動物棲地，不能把整個熱泉區當成條件一致的「熱水池」。",
+        "微生物製造的有機物隨後進入多路交織的食物網。刮食者取食菌毯，濾食者攔取水中微生物，擁有共生者的動物從體內獲得營養，捕食者再取食這些消費者。熱泉外的深海海床多依賴從上層海洋沉降的有機物，供應較分散；熱泉則在局部送入化學反應所需物質，讓初級生產可以就地發生，因而形成密集群落。可是「不依賴陽光」不等於與太陽毫無關係：某些化學合成反應需要的氧，源頭仍可能與海表光合作用及海洋循環有關。較穩妥的結論是，熱泉食物網的直接初級生產不以當地陽光為能源。",
+        "若只拍下一張繁盛照片，還會忽略時間。熱泉受板塊與火山活動控制，流路可能改道、堵塞或新生，流量和化學成分也會變動。當噴流停止，依賴化學能輸入的生產下降，原有群落便可能衰退；新的出口形成後，微生物先建立生產基礎，能游動或幼生可散播的動物再陸續抵達。於是，熱泉生態不是固定舞臺，而是會開啟、轉移與關閉的斑塊。物種能否延續，不只看個體能否耐熱，也看牠能否找到新棲地、與共生者共同遷移，並在變動前完成繁殖與散播。",
+        "這套解釋也示範科學如何處理反常現象。最初的疑問是「黑暗中為何有高密度生命」，證據卻來自不同尺度：地質觀測交代流體從何而來，化學分析辨認可用反應物，微生物研究說明初級生產，動物的攝食與共生關係則補上能量如何傳遞。任何單一線索都不足以回答全題。若只有高溫，無法推出食物網；若只有硫化氫，也不能保證有生物能利用；若只有動物照片，更無法判定牠們的營養來源。跨層次證據連成因果鏈後，「沒有陽光」才不再等於「沒有生命」。",
+        "深海熱泉給人的真正啟示，不是生命可以憑空出現，而是生命會利用環境中可轉換的能量與物質，並透過適應及關係把短暫資源組織成生態系。海水循環把岩石物質帶出，微生物把化學能接入有機物，攝食與共生再把能量分配給其他生物；同時，極端溫度、有毒物質與地質變動限制了這套系統。判斷其他未知環境是否可能有生命時，因此不能只尋找陽光或熟悉動物，而要分別追問：能量梯度是否存在、是否有生物可執行轉換、產物能否進入食物網，以及環境能否維持足夠時間。"
+      ],
+      "glossary": [
+        {
+          "term": "永夜",
+          "definition": "此處形容陽光無法到達、長期黑暗的深海環境。"
+        },
+        {
+          "term": "生態功能",
+          "definition": "生物或過程在生態系中完成的作用，例如生產有機物或傳遞能量。"
+        },
+        {
+          "term": "浮力",
+          "definition": "流體受到向上托舉的作用；高溫流體密度較低時可因此上升。"
+        },
+        {
+          "term": "無機碳",
+          "definition": "存在於二氧化碳等無機物中的碳，可被初級生產者固定成有機物。"
+        },
+        {
+          "term": "反應物",
+          "definition": "參與化學反應並在過程中被消耗或改變的物質。"
+        },
+        {
+          "term": "微尺度",
+          "definition": "非常小的空間範圍；熱泉附近短距離內即可出現巨大環境差異。"
+        },
+        {
+          "term": "直接初級生產",
+          "definition": "初級生產者在當地把無機碳轉成有機物的生產過程。"
+        },
+        {
+          "term": "幼生",
+          "definition": "許多海洋動物生命史中的早期階段，常能隨海水散播至新棲地。"
+        },
+        {
+          "term": "斑塊",
+          "definition": "分散在較大環境中、條件與周圍不同的局部棲地。"
+        },
+        {
+          "term": "反常現象",
+          "definition": "與既有預期不一致，因而需要蒐集證據重新解釋的觀察結果。"
+        },
+        {
+          "term": "因果鏈",
+          "definition": "多個前因與後果依序連接而成的解釋結構。"
+        },
+        {
+          "term": "能量梯度",
+          "definition": "可利用能量隨空間位置產生差異，並可能驅動物質轉換的狀態。"
+        }
+      ],
+      "readingMinutes": 9,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA Ocean Exploration",
+          "url": "https://oceanexplorer.noaa.gov/education/hydrothermal-vents-volcanoes/",
+          "license": "Public domain unless otherwise noted; NOAA attribution requested."
+        },
+        {
+          "publisher": "NOAA Ocean Exploration",
+          "url": "https://oceanexplorer.noaa.gov/edu/materials/chemosynthesis-fact-sheet.pdf",
+          "license": "NOAA government educational material; public domain unless otherwise noted; third-party credited media excluded."
+        },
+        {
+          "publisher": "NOAA Ocean Exploration",
+          "url": "https://oceanexplorer.noaa.gov/edu/materials/hydrothermal-vents-fact-sheet.pdf",
+          "license": "NOAA government educational material; public domain unless otherwise noted; third-party credited media excluded."
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "deep-sea-vents-challenge-q1",
+          "type": "comprehension",
+          "prompt": "第三段為何特別區分化學合成中的能量來源、碳來源與食物？",
+          "options": [
+            "為了說明微生物直接吞食高溫流體",
+            "為了避免把化學反應供能與有機物生成混為一談",
+            "為了證明光合作用和化學合成使用相同能源",
+            "為了主張所有熱泉動物都能自行固定無機碳"
+          ],
+          "correctAnswer": "為了避免把化學反應供能與有機物生成混為一談",
+          "rationale": "第三段指出，微生物從無機物反應取得能量，再把無機碳固定成有機物；區分三者能避免把「化學物質」籠統地當成動物直接吃下的食物。",
+          "distractorReasons": {
+            "為了說明微生物直接吞食高溫流體": "錯誤。文章明確指出熱本身不能直接成為動物食物，也未描述微生物吞食流體。",
+            "為了證明光合作用和化學合成使用相同能源": "錯誤。兩者都能製造有機物，但驅動過程的能量來源不同。",
+            "為了主張所有熱泉動物都能自行固定無機碳": "錯誤。固定無機碳的是特定微生物，不是所有熱泉動物。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 80,
+            "end": 110,
+            "text": "光合作用與化學合成都能讓初級生產者製造有機物，差別在於驅動過"
+          }
+        },
+        {
+          "id": "deep-sea-vents-challenge-q2",
+          "type": "inference",
+          "prompt": "綜合第二、五、七段，若新形成的熱泉出口與舊出口距離很遠，下列哪項最可能成為群落重建的限制？",
+          "options": [
+            "煙囪是否能產生真正的燃燒火焰",
+            "生物或幼生能否抵達適宜梯度，並取得反應物或共生夥伴",
+            "當地是否有足以讓大型植物生長的陽光",
+            "所有生物是否都能直接忍受最燙的噴流"
+          ],
+          "correctAnswer": "生物或幼生能否抵達適宜梯度，並取得反應物或共生夥伴",
+          "rationale": "新出口雖可由地質作用提供流體，但群落建立還需要生物抵達、在合適的溫度與化學梯度中生活，並形成攝食或共生關係。這是跨段整合後才能得到的推論。",
+          "distractorReasons": {
+            "煙囪是否能產生真正的燃燒火焰": "錯誤。黑煙是礦物顆粒造成的視覺效果，群落不需要燃燒火焰。",
+            "當地是否有足以讓大型植物生長的陽光": "錯誤。熱泉的直接初級生產不以當地陽光為能源，也不依靠大型植物。",
+            "所有生物是否都能直接忍受最燙的噴流": "錯誤。多數大型生物避開最燙流體，能直接耐受最高溫並非共同必要條件。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 151,
+            "end": 181,
+            "text": "物種能否延續，不只看個體能否耐熱，也看牠能否找到新棲地、與共"
+          }
+        },
+        {
+          "id": "deep-sea-vents-challenge-q3",
+          "type": "evidence",
+          "prompt": "若有人僅憑一張管蟲密集的照片便宣稱「高溫本身建立了完整食物網」，下列哪段引文最能評鑑此證據的不足？",
+          "options": [
+            "「這段過程把地球內部的熱與岩石中的物質送到海床」",
+            "「菌毯被帽貝等動物刮食，水中微生物被貝類濾食」",
+            "「熱泉則在局部送入化學反應所需物質，讓初級生產可以就地發生」",
+            "「若只有高溫，無法推出食物網；若只有硫化氫，也不能保證有生物能利用；若只有動物照片，更無法判定牠們的營養來源」"
+          ],
+          "correctAnswer": "「若只有高溫，無法推出食物網；若只有硫化氫，也不能保證有生物能利用；若只有動物照片，更無法判定牠們的營養來源」",
+          "rationale": "最佳引文逐一比較高溫、化學物質與照片的證明範圍，直接指出單一觀察無法建立從地質流體到微生物生產及動物營養的完整因果鏈。",
+          "distractorReasons": {
+            "「這段過程把地球內部的熱與岩石中的物質送到海床」": "支持力有限。此句只證明熱與物質可被帶到海床，尚未證明生物能轉換或利用它們。",
+            "「菌毯被帽貝等動物刮食，水中微生物被貝類濾食」": "支持力有限。此句證明兩種攝食關係，卻不能單獨交代食物網的初始能量來源。",
+            "「熱泉則在局部送入化學反應所需物質，讓初級生產可以就地發生」": "支持力較強但仍不完整。它說明局部生產條件，未直接評鑑照片與高溫證據的侷限。"
+          },
+          "evidenceSpan": {
+            "paragraph": 8,
+            "start": 105,
+            "end": 135,
+            "text": "任何單一線索都不足以回答全題。若只有高溫，無法推出食物網；若"
+          }
+        }
+      ]
+    }
+  ]
+}
