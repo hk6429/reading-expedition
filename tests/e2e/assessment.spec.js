@@ -96,6 +96,7 @@ test("手機作答時隱藏共用浮動元件且策略卡保持滿寬", async ({
   await page.goto("/#/quiz/water-sharing-guided-v1");
   await page.evaluate(() => {
     for (const id of ["danai-family-classroom", "danai-learning-passport"]) {
+      if (document.getElementById(id)) continue;
       const host = document.createElement("div");
       host.id = id;
       document.body.append(host);
