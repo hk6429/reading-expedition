@@ -286,6 +286,15 @@ export async function renderClassroomManagement(
             await onAuthenticationInvalid();
             return;
           }
+          if (revokeResponse?.status === 404) {
+            delete rememberedCodes[classroomId];
+            saveRememberedCodes(storage, rememberedCodes);
+            await load({
+              message: "班級已停用，畫面已同步最新狀態。",
+              focusTarget: "[data-create-classroom]",
+            });
+            return;
+          }
           if (!revokeResponse?.ok) {
             confirmButton.disabled = false;
             root.querySelector("[data-classroom-message]").textContent =

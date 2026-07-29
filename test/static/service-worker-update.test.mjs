@@ -21,3 +21,11 @@ test("導覽與程式骨架採網路優先，離線時才回快取", () => {
     /fetch\(request\)[\s\S]+caches\.match\(request\)/,
   );
 });
+
+test("教師與班級 API 永遠直接讀正式資料，不使用舊快取", () => {
+  assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);
+  assert.match(
+    serviceWorker,
+    /url\.pathname\.startsWith\("\/api\/"\)[\s\S]+fetch\(event\.request\)/,
+  );
+});

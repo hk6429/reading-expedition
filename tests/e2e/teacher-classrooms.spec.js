@@ -305,6 +305,52 @@ test("教師驗證失效時引導重新登入而非誤報網路問題", async ({
   ).toBeVisible();
 });
 
+test("舊畫面重複停用已關閉班級時會重新同步狀態", async ({ page }) => {
+  let alreadyRevoked = false;
+  await page.addInitScript(() => {
+    sessionStorage.setItem("reading-expedition.csrf", "csrf-demo");
+  });
+  await page.route("**/api/v1/teacher/classrooms", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        classrooms: [
+          {
+            id: "class-already-revoked",
+            createdAt: "2026-07-29T00:00:00Z",
+            expiresAt: "2027-01-25T00:00:00Z",
+            revokedAt: alreadyRevoked ? "2026-07-29T03:30:00Z" : null,
+            anonymousParticipants: 0,
+            validReadings: 0,
+          },
+        ],
+      }),
+    });
+  });
+  await page.route(
+    "**/api/v1/teacher/classrooms/class-already-revoked",
+    async (route) => {
+      alreadyRevoked = true;
+      await route.fulfill({
+        status: 404,
+        contentType: "application/json",
+        body: JSON.stringify({
+          error: { code: "classroom_not_found" },
+        }),
+      });
+    },
+  );
+
+  await page.goto("/#/teacher/classes");
+  await page.locator("[data-revoke-classroom]").click();
+  await page.getByRole("button", { name: "確定停用" }).click();
+
+  await expect(
+    page.getByText("班級已停用，畫面已同步最新狀態。"),
+  ).toBeVisible();
+  await expect(page.getByText("已停用", { exact: true })).toBeVisible();
+});
+
 test("教師可安全登出並清除本機工作階段", async ({ page }) => {
   await page.addInitScript(() => {
     sessionStorage.setItem("reading-expedition.csrf", "csrf-demo");

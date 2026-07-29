@@ -1,4 +1,4 @@
-const VERSION = "reading-expedition-v11";
+const VERSION = "reading-expedition-v12";
 const CACHE_PREFIX = "reading-expedition-";
 const SHELL = [
   "/",
@@ -102,6 +102,11 @@ self.addEventListener("fetch", (event) => {
           );
         }),
     );
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/")) {
+    event.respondWith(fetch(event.request));
     return;
   }
 
