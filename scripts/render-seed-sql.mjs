@@ -8,7 +8,9 @@ const outputFile =
     ? path.resolve(cliArgs[outputIndex + 1])
     : null;
 const cliFiles = cliArgs.filter(
-  (_argument, index) => index !== outputIndex && index !== outputIndex + 1,
+  (_argument, index) =>
+    outputIndex < 0 ||
+    (index !== outputIndex && index !== outputIndex + 1),
 );
 const fixtures =
   cliFiles.length > 0
@@ -51,12 +53,13 @@ for (const fixture of fixtures) {
   allowed_usage = ${value(fixture.source.allowedUsage)},
   status = 'active',
   last_checked_at = ${value(fixture.sourceItem.fetchedAt)}
-WHERE id = ${value(fixture.source.id)};`);
+WHERE base_url = ${value(fixture.source.baseUrl)};`);
 rows.push(`INSERT OR IGNORE INTO source_items (
   id, source_id, canonical_url, title, publisher, published_at, fetched_at,
   content_fingerprint, license_snapshot, extract_scope
 ) VALUES (
-  ${value(fixture.sourceItem.id)}, ${value(fixture.source.id)},
+  ${value(fixture.sourceItem.id)},
+  (SELECT id FROM sources WHERE base_url = ${value(fixture.source.baseUrl)}),
   ${value(fixture.sourceItem.canonicalUrl)}, ${value(fixture.sourceItem.title)},
   ${value(fixture.sourceItem.publisher)}, ${value(fixture.sourceItem.publishedAt)},
   ${value(fixture.sourceItem.fetchedAt)}, ${value(fixture.sourceItem.contentFingerprint)},
@@ -70,7 +73,10 @@ rows.push(`INSERT OR IGNORE INTO source_items (
   fetched_at = ${value(fixture.sourceItem.fetchedAt)},
   content_fingerprint = ${value(fixture.sourceItem.contentFingerprint)},
   license_snapshot = ${value(fixture.sourceItem.licenseSnapshot)},
-  extract_scope = ${value(fixture.sourceItem.extractScope)}
+  extract_scope = ${value(fixture.sourceItem.extractScope)},
+  source_id = (
+    SELECT id FROM sources WHERE base_url = ${value(fixture.source.baseUrl)}
+  )
 WHERE id = ${value(fixture.sourceItem.id)};`);
 rows.push(`INSERT OR IGNORE INTO fact_packs (
   id, topic_date, category, facts_json, source_links_json,
@@ -91,8 +97,12 @@ rows.push(`INSERT OR IGNORE INTO fact_packs (
 WHERE id = ${value(fixture.factPack.id)};`);
 
   for (const reading of fixture.packages) {
+    const publicationStatus =
+      reading.publicationStatus === "manual_review"
+        ? "review"
+        : reading.publicationStatus;
     const publishedAt =
-      reading.publicationStatus === "published"
+      publicationStatus === "published"
         ? fixture.sourceItem.fetchedAt
         : null;
     rows.push(`INSERT OR IGNORE INTO reading_packages (
@@ -104,7 +114,7 @@ WHERE id = ${value(fixture.factPack.id)};`);
     ${value(reading.difficulty)}, ${value(reading.textType)}, ${value(reading.title)}, ${value(reading.hookQuestion)},
     ${json(reading.body)}, ${json(reading.glossary)}, ${reading.readingMinutes},
     ${json(reading.sourceAttribution)}, ${reading.qualityScore},
-    ${value(reading.hardGateStatus)}, ${value(reading.publicationStatus)},
+    ${value(reading.hardGateStatus)}, ${value(publicationStatus)},
     ${reading.version}, ${value(publishedAt)}
   );`);
     rows.push(`UPDATE reading_packages SET
@@ -117,7 +127,7 @@ WHERE id = ${value(fixture.factPack.id)};`);
     source_attribution_json = ${json(reading.sourceAttribution)},
     quality_score = ${reading.qualityScore},
     hard_gate_status = ${value(reading.hardGateStatus)},
-    publication_status = ${value(reading.publicationStatus)},
+    publication_status = ${value(publicationStatus)},
     published_at = ${value(publishedAt)}
   WHERE id = ${value(reading.id)};`);
     for (const item of reading.assessment) {

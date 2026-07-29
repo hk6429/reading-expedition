@@ -58,10 +58,22 @@ test("手動草稿固定待審，29組內容不能通過30組匯入門檻", () =
 test("30組正式內容要求世界、科學、人文各10組", () => {
   const validator = read("scripts/validate-manual-content.mjs");
   const batch = read("scripts/generate-manual-batch.mjs");
+  const scheduleSlots = fs
+    .readdirSync(new URL("content/manual/drafts/", root))
+    .filter((name) => name.endsWith(".json"))
+    .map((name) =>
+      JSON.parse(read(`content/manual/drafts/${name}`)),
+    )
+    .map(
+      (draft) =>
+        `${draft.factPack.topicDate}:${draft.factPack.category}:${draft.factPack.version}`,
+    );
   assert.match(validator, /world/);
   assert.match(validator, /science/);
   assert.match(validator, /humanities/);
   assert.match(validator, /count !== 10/);
+  assert.match(validator, /日期與類別時段重複/);
+  assert.equal(new Set(scheduleSlots).size, 30);
   assert.match(batch, /concurrency = 3/);
   assert.match(batch, /topics\.json/);
 });
@@ -101,4 +113,21 @@ test("手動長文採白話1300至1700字、文言500至900字", () => {
   assert.equal(reasons.type, "array");
   assert.equal(reasons.minItems, 4);
   assert.equal(reasons.maxItems, 4);
+});
+
+test("SQL 匯入以來源網址解析既有來源 ID，避免共用網域造成外鍵失敗", () => {
+  const renderer = read("scripts/render-seed-sql.mjs");
+  assert.match(
+    renderer,
+    /SELECT id FROM sources WHERE base_url = \$\{value\(fixture\.source\.baseUrl\)\}/,
+  );
+  assert.match(
+    renderer,
+    /WHERE base_url = \$\{value\(fixture\.source\.baseUrl\)\}/,
+  );
+  assert.match(
+    renderer,
+    /reading\.publicationStatus === "manual_review"[\s\S]*\? "review"/,
+  );
+  assert.match(renderer, /outputIndex < 0/);
 });

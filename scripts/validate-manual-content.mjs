@@ -28,6 +28,7 @@ const files =
 const failures = [];
 const seenIds = new Set();
 const seenContentKeys = new Set();
+const seenScheduleSlots = new Set();
 const categoryCounts = { world: 0, science: 0, humanities: 0 };
 const MANUAL_PROFILE_LIMITS = {
   vernacularMin: 1300,
@@ -94,6 +95,19 @@ for (const file of files) {
     fail(file, `不支援的類別：${fixture.factPack.category}`);
   } else {
     categoryCounts[fixture.factPack.category] += 1;
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fixture.factPack.topicDate ?? "")) {
+    fail(file, "factPack.topicDate 必須是 YYYY-MM-DD");
+  } else {
+    const scheduleSlot = [
+      fixture.factPack.topicDate,
+      fixture.factPack.category,
+      fixture.factPack.version,
+    ].join(":");
+    if (seenScheduleSlots.has(scheduleSlot)) {
+      fail(file, `日期與類別時段重複：${scheduleSlot}`);
+    }
+    seenScheduleSlots.add(scheduleSlot);
   }
   if (seenContentKeys.has(fixture.contentKey)) {
     fail(file, `contentKey 重複：${fixture.contentKey}`);
