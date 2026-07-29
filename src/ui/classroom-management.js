@@ -124,7 +124,6 @@ export async function renderClassroomManagement(
     request = fetch,
     csrfToken,
     storage = window.sessionStorage,
-    confirmAction = (message) => window.confirm(message),
   } = {},
 ) {
   let rememberedCodes = readRememberedCodes(storage);
@@ -235,40 +234,62 @@ export async function renderClassroomManagement(
     });
 
     root.querySelectorAll("[data-revoke-classroom]").forEach((button) => {
-      button.addEventListener("click", async () => {
-        if (
-          !confirmAction(
-            `確定停用「${button.getAttribute("aria-label").replace(/^停用/, "")}」嗎？已加入的學生也會失去參與權限。`,
-          )
-        ) {
-          return;
-        }
-        button.disabled = true;
+      button.addEventListener("click", () => {
         const classroomId = button.dataset.revokeClassroom;
-        let revokeResponse;
-        try {
-          revokeResponse = await request(
-            `/api/v1/teacher/classrooms/${classroomId}`,
-            {
-              method: "DELETE",
-              headers: { "x-csrf-token": csrfToken },
-            },
-          );
-        } catch {
-          revokeResponse = null;
-        }
-        if (!revokeResponse?.ok) {
-          button.disabled = false;
-          root.querySelector("[data-classroom-message]").textContent =
-            "班級停用失敗，請確認網路後重新載入。";
-          return;
-        }
-        delete rememberedCodes[classroomId];
-        saveRememberedCodes(storage, rememberedCodes);
-        await load({
-          message: "班級已停用，原有班級碼與學生權杖皆已失效。",
-          focusTarget: "[data-create-classroom]",
+        const card = button.closest(".classroom-card");
+        button.hidden = true;
+        card.insertAdjacentHTML(
+          "beforeend",
+          `
+            <div class="classroom-revoke-confirm" data-revoke-confirm role="group" aria-label="停用班級確認">
+              <p><strong>確定停用這個班級？</strong></p>
+              <p>停用後，原班級碼與已加入學生的參與權限都會立即失效。</p>
+              <div>
+                <button type="button" data-confirm-revoke>確定停用</button>
+                <button type="button" data-cancel-revoke>取消</button>
+              </div>
+            </div>
+          `,
+        );
+        const confirmPanel = card.querySelector("[data-revoke-confirm]");
+        confirmPanel
+          .querySelector("[data-cancel-revoke]")
+          .addEventListener("click", () => {
+            confirmPanel.remove();
+            button.hidden = false;
+            button.focus();
+          });
+        const confirmButton = confirmPanel.querySelector(
+          "[data-confirm-revoke]",
+        );
+        confirmButton.addEventListener("click", async () => {
+          confirmButton.disabled = true;
+          let revokeResponse;
+          try {
+            revokeResponse = await request(
+              `/api/v1/teacher/classrooms/${classroomId}`,
+              {
+                method: "DELETE",
+                headers: { "x-csrf-token": csrfToken },
+              },
+            );
+          } catch {
+            revokeResponse = null;
+          }
+          if (!revokeResponse?.ok) {
+            confirmButton.disabled = false;
+            root.querySelector("[data-classroom-message]").textContent =
+              "班級停用失敗，請確認網路後重新載入。";
+            return;
+          }
+          delete rememberedCodes[classroomId];
+          saveRememberedCodes(storage, rememberedCodes);
+          await load({
+            message: "班級已停用，原有班級碼與學生權杖皆已失效。",
+            focusTarget: "[data-create-classroom]",
+          });
         });
+        confirmButton.focus();
       });
     });
     if (focusTarget) {

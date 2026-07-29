@@ -2,6 +2,87 @@ import { expect, test } from "@playwright/test";
 
 test.use({ serviceWorkers: "block" });
 
+async function contrastRatio(locator, surfaceSelector) {
+  return locator.evaluate((element, selector) => {
+    function rgb(value) {
+      return value
+        .match(/\d+(?:\.\d+)?/g)
+        .slice(0, 3)
+        .map(Number);
+    }
+    function luminance(value) {
+      const channels = rgb(value).map((channel) => {
+        const normalized = channel / 255;
+        return normalized <= 0.04045
+          ? normalized / 12.92
+          : ((normalized + 0.055) / 1.055) ** 2.4;
+      });
+      return (
+        0.2126 * channels[0] +
+        0.7152 * channels[1] +
+        0.0722 * channels[2]
+      );
+    }
+    const foreground = getComputedStyle(element).color;
+    const background = getComputedStyle(element.closest(selector)).backgroundColor;
+    const light = Math.max(luminance(foreground), luminance(background));
+    const dark = Math.min(luminance(foreground), luminance(background));
+    return (light + 0.05) / (dark + 0.05);
+  }, surfaceSelector);
+}
+
+test("夜讀模式下班級管理文字仍可清楚閱讀", async ({ page }) => {
+  await page.addInitScript(() => {
+    sessionStorage.setItem("reading-expedition.csrf", "csrf-demo");
+  });
+  await page.route("**/api/v1/teacher/classrooms", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        classrooms: [
+          {
+            id: "class-night",
+            createdAt: "2026-07-28T00:00:00Z",
+            expiresAt: "2027-01-24T00:00:00Z",
+            revokedAt: null,
+            anonymousParticipants: 2,
+            validReadings: 5,
+          },
+        ],
+      }),
+    });
+  });
+
+  await page.goto("/#/read/water-sharing-guided-v1");
+  const nightButton = page.getByRole("button", { name: "夜讀" });
+  if (!(await nightButton.isVisible())) {
+    await page.getByRole("button", { name: "顯示設定" }).click();
+  }
+  await nightButton.click();
+  await page.goto("/#/teacher/classes");
+
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-reading-mode",
+    "night",
+  );
+  await expect
+    .poll(() =>
+      contrastRatio(
+        page.getByRole("heading", { level: 2, name: "班級管理" }),
+        ".classroom-manager",
+      ),
+    )
+    .toBeGreaterThanOrEqual(4.5);
+  await expect
+    .poll(() =>
+      contrastRatio(
+        page.getByRole("heading", { level: 3, name: /建立於/ }),
+        ".classroom-card",
+      ),
+    )
+    .toBeGreaterThanOrEqual(4.5);
+});
+
 test("教師建立、複製並停用匿名班級", async ({ page }) => {
   let classroom = null;
   let copiedCode = "";
@@ -67,8 +148,6 @@ test("教師建立、複製並停用匿名班級", async ({ page }) => {
       });
     },
   );
-  page.on("dialog", async (dialog) => dialog.accept());
-
   await page.goto("/#/teacher/classes");
   await page.getByLabel("教師管理密鑰").fill("teacher-secret");
   await page.getByRole("button", { name: "進入校閱臺" }).click();
@@ -98,6 +177,11 @@ test("教師建立、複製並停用匿名班級", async ({ page }) => {
   );
 
   await page.getByRole("button", { name: /停用班級/ }).click();
+  await expect(
+    page.getByText("確定停用這個班級？", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("已停用", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "確定停用" }).click();
   await expect(page.getByText("已停用", { exact: true })).toBeVisible();
 });
 

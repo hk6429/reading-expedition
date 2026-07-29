@@ -36,12 +36,16 @@ function packageRecord(id, difficulty, title) {
   };
 }
 
-test("教師登入後可並排校閱雙難度、切換預覽並發布", async ({ page }) => {
+test("教師登入後先看清單，點選後只載入單篇校閱內容", async ({ page }) => {
   const records = [
     packageRecord("water-guided", "guided", "一滴水的旅程"),
     packageRecord("water-challenge", "challenge", "城市如何分配水"),
   ];
+  records[0].facts = [
+    { statement: "安全用水是基本需要。", sourceItemId: "s1" },
+  ];
   let published = false;
+  const detailRequests = [];
 
   await page.route("**/api/v1/teacher/session", async (route) => {
     await route.fulfill({
@@ -79,6 +83,7 @@ test("教師登入後可並排校閱雙難度、切換預覽並發布", async ({
   });
   await page.route("**/api/v1/teacher/review/*", async (route) => {
     const id = route.request().url().split("/").at(-1);
+    detailRequests.push(id);
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({ package: records.find((record) => record.id === id) }),
@@ -90,12 +95,23 @@ test("教師登入後可並排校閱雙難度、切換預覽並發布", async ({
   await page.getByRole("button", { name: "進入校閱臺" }).click();
 
   await expect(page.getByRole("heading", { name: "今日待審讀卷" })).toBeVisible();
-  await expect(page.locator(".review-detail")).toHaveCount(2);
-  await expect(page.getByText("答案：水資源需要兼顧基本需求與公平分配。")).toHaveCount(2);
+  await expect(page.locator(".review-list-item")).toHaveCount(2);
+  await expect(page.locator(".review-detail")).toHaveCount(0);
+  expect(detailRequests).toEqual([]);
 
-  await page.locator(".review-detail").first().getByRole("button", { name: "桌面" }).click();
+  await page
+    .getByRole("button", { name: "開啟審查：一滴水的旅程" })
+    .click();
+  await expect(page.locator(".review-detail")).toHaveCount(1);
+  await expect(
+    page.getByText("答案：水資源需要兼顧基本需求與公平分配。"),
+  ).toHaveCount(1);
+  await expect(page.getByText("安全用水是基本需要。")).toBeVisible();
+  expect(detailRequests).toEqual(["water-guided"]);
+
+  await page.locator(".review-detail").getByRole("button", { name: "桌面" }).click();
   await expect(page.locator(".student-preview--desktop")).toBeVisible();
-  await page.locator(".review-detail").first().getByRole("button", { name: "核准發布" }).click();
+  await page.locator(".review-detail").getByRole("button", { name: "核准發布" }).click();
   await expect(page.locator("[data-review-message]")).toContainText(
     "已建立發布紀錄",
   );
@@ -158,6 +174,9 @@ test("待審為空時清楚說明，切換已發布後顯示正式文章", async
   await expect(
     page.getByRole("heading", { name: "已發布讀卷" }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "開啟審查：已發布的水源讀卷" })
+    .click();
   await expect(
     page.getByRole("heading", {
       level: 2,

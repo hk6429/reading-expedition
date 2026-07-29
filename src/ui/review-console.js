@@ -83,6 +83,29 @@ function assessmentMarkup(items) {
     .join("");
 }
 
+function reviewListMarkup(packages) {
+  return packages
+    .map(
+      (packageRecord) => `
+        <article class="review-list-item">
+          <div>
+            <p class="chapter-label">${escapeHtml(packageRecord.difficulty === "guided" ? "行舟卷" : "登樓卷")}</p>
+            <h2>${escapeHtml(packageRecord.title)}</h2>
+            <p>${escapeHtml(packageRecord.contentKey ?? "閱讀任務")}</p>
+          </div>
+          <div class="review-list-item__action">
+            <span class="quality-seal quality-seal--compact" aria-label="品質分數 ${Number(packageRecord.qualityScore) || 0}">
+              ${Number(packageRecord.qualityScore) || 0}
+              <small>品質分</small>
+            </span>
+            <button class="primary-action" type="button" data-open-review="${escapeHtml(packageRecord.id)}" aria-label="開啟審查：${escapeHtml(packageRecord.title)}">開啟審查</button>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
 function detailMarkup(packageRecord, { reviewable = true } = {}) {
   const characters = packageRecord.body
     .map((paragraph) =>
@@ -110,7 +133,7 @@ function detailMarkup(packageRecord, { reviewable = true } = {}) {
           <h3>來源與授權</h3>
           <ul>${sourceMarkup(packageRecord.sourceAttribution)}</ul>
           <h3>已核對事實</h3>
-          <ul>${packageRecord.facts.map((fact) => `<li>${escapeHtml(fact.claim)}</li>`).join("")}</ul>
+          <ul>${packageRecord.facts.map((fact) => `<li>${escapeHtml(fact.statement ?? fact.claim ?? "")}</li>`).join("")}</ul>
           ${assessmentMarkup(packageRecord.assessment)}
         </section>
         <section>
@@ -254,13 +277,7 @@ export async function renderReviewConsole(
       return;
     }
     const { packages } = await listResponse.json();
-    const details = await Promise.all(
-      packages.map(async ({ id }) => {
-        const response = await request(`/api/v1/teacher/review/${id}`);
-        return response.ok ? (await response.json()).package : null;
-      }),
-    );
-    const available = details.filter(Boolean);
+    const available = Array.isArray(packages) ? packages : [];
     root.innerHTML = `
       <section class="review-shell">
         <header class="review-heading">
@@ -277,61 +294,97 @@ export async function renderReviewConsole(
             <button type="button" data-teacher-logout>安全登出</button>
           </nav>
         </header>
-        ${
-          available.length
-            ? `<div class="review-pair">${available
-                .map((record) =>
-                  detailMarkup(record, {
-                    reviewable: activeStatus === "review",
-                  }),
-                )
-                .join("")}</div>`
+        <div data-review-content>
+          ${
+            available.length
+              ? `<div class="review-list">${reviewListMarkup(available)}</div>`
             : `<section class="review-empty">
                 <p class="chapter-label">目前 0 篇</p>
                 <h2>${statusCopy.empty}</h2>
                 <p>${activeStatus === "review" ? "新文章完成產生並送審後，會出現在這裡；現有正式文章可從「已發布」查看。" : "切換其他狀態即可查看不同階段的讀卷。"}</p>
                 ${activeStatus === "review" ? '<a class="primary-link" href="#/teacher?status=published">查看已發布讀卷</a>' : '<a class="primary-link" href="#/teacher?status=review">回到待審讀卷</a>'}
               </section>`
-        }
+          }
+        </div>
         <p class="form-message" data-review-message role="status"></p>
       </section>
     `;
     attachLogout();
 
-    root.querySelectorAll("[data-preview-mode]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const detail = button.closest(".review-detail");
-        const index = [...root.querySelectorAll(".review-detail")].indexOf(detail);
-        detail.querySelector("[data-student-preview]").innerHTML =
-          renderStudentPreview(available[index], button.dataset.previewMode);
-      });
-    });
-    root.querySelectorAll("[data-review-action]").forEach((form, index) => {
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const data = new FormData(form);
-        const action = event.submitter.value;
-        const response = await request(
-          `/api/v1/teacher/review/${available[index].id}/action`,
-          {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-              "x-csrf-token": csrfToken,
-            },
-            body: JSON.stringify({
-              action,
-              expectedVersion: available[index].version,
-              reasonCode: data.get("reasonCode") || undefined,
-              note: data.get("note") || undefined,
-            }),
-          },
+    const reviewContent = root.querySelector("[data-review-content]");
+    const message = root.querySelector("[data-review-message]");
+
+    async function openReview(summary, trigger) {
+      trigger.disabled = true;
+      message.textContent = "正在開啟讀卷……";
+      let detailResponse;
+      try {
+        detailResponse = await request(
+          `/api/v1/teacher/review/${summary.id}`,
         );
-        root.querySelector("[data-review-message]").textContent = response.ok
-          ? action === "published"
-            ? "已建立發布紀錄。"
-            : "已退回修正。"
-          : "操作未完成，請重新載入確認版本。";
+      } catch {
+        detailResponse = null;
+      }
+      if (!detailResponse?.ok) {
+        trigger.disabled = false;
+        message.textContent = "讀卷暫時無法開啟，請確認網路後再試。";
+        return;
+      }
+      const record = (await detailResponse.json()).package;
+      reviewContent.innerHTML = `
+        <button class="review-back" type="button" data-review-back>← 返回${statusCopy.title}</button>
+        ${detailMarkup(record, {
+          reviewable: activeStatus === "review",
+        })}
+      `;
+      message.textContent = "";
+      reviewContent
+        .querySelector("[data-review-back]")
+        .addEventListener("click", () => showReview(activeStatus));
+      reviewContent.querySelectorAll("[data-preview-mode]").forEach((button) => {
+        button.addEventListener("click", () => {
+          reviewContent.querySelector("[data-student-preview]").innerHTML =
+            renderStudentPreview(record, button.dataset.previewMode);
+        });
+      });
+      reviewContent
+        .querySelector("[data-review-action]")
+        ?.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const form = event.currentTarget;
+          const data = new FormData(form);
+          const action = event.submitter.value;
+          const response = await request(
+            `/api/v1/teacher/review/${record.id}/action`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-csrf-token": csrfToken,
+              },
+              body: JSON.stringify({
+                action,
+                expectedVersion: record.version,
+                reasonCode: data.get("reasonCode") || undefined,
+                note: data.get("note") || undefined,
+              }),
+            },
+          );
+          message.textContent = response.ok
+            ? action === "published"
+              ? "已建立發布紀錄。"
+              : "已退回修正。"
+            : "操作未完成，請重新載入確認版本。";
+        });
+      reviewContent.querySelector("[data-review-back]").focus();
+    }
+
+    root.querySelectorAll("[data-open-review]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const summary = available.find(
+          ({ id }) => id === button.dataset.openReview,
+        );
+        if (summary) openReview(summary, button);
       });
     });
   }
