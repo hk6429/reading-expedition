@@ -16,6 +16,7 @@ export default async function handler(request, response) {
       headers.set(key, Array.isArray(value) ? value.join(", ") : value);
     }
   }
+  headers.set("accept-encoding", "identity");
   const body =
     ["GET", "HEAD"].includes(request.method)
       ? undefined

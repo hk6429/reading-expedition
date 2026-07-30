@@ -13,6 +13,7 @@ export async function onRequest(context) {
   const headers = new Headers(context.request.headers);
   headers.delete("host");
   headers.delete("x-forwarded-host");
+  headers.set("accept-encoding", "identity");
   return fetch(target, {
     method: context.request.method,
     headers,

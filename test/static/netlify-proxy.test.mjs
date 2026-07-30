@@ -28,7 +28,7 @@ test("Netlify 只將 /api 路徑代理到 HTTPS 環境來源", async () => {
     target.href,
     "https://api.example.test/api/v1/daily?date=2026-07-28",
   );
-  assert.equal(forwardedHeaders.has("accept-encoding"), false);
+  assert.equal(forwardedHeaders.get("accept-encoding"), "identity");
 });
 
 test("Netlify 未設定安全 API 來源時拒絕代理", async () => {

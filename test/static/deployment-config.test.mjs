@@ -26,9 +26,12 @@ test("三平台統一發布 dist 且 API 來源只來自環境變數", () => {
   assert.match(netlify, /publish = "dist"/);
   assert.match(netlify, /\/\.netlify\/functions\/api\/:splat/);
   assert.match(netlifyProxy, /READING_API_ORIGIN/);
+  assert.match(netlifyProxy, /accept-encoding", "identity"/);
   assert.match(build, /process\.env\.NETLIFY !== "true"/);
   assert.match(vercelProxy, /READING_API_ORIGIN/);
+  assert.match(vercelProxy, /accept-encoding", "identity"/);
   assert.match(cloudflare, /READING_API_ORIGIN/);
+  assert.match(cloudflare, /accept-encoding", "identity"/);
   assert.doesNotMatch(
     `${vercel}${vercelProxy}${netlify}${netlifyProxy}${cloudflare}`,
     /workers\.dev/,

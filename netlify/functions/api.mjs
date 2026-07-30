@@ -39,7 +39,7 @@ export function createNetlifyApiProxy({
     target.search = incoming.search;
     const headers = new Headers(request.headers);
     headers.delete("host");
-    headers.delete("accept-encoding");
+    headers.set("accept-encoding", "identity");
     const response = await fetchImpl(target, {
       method: request.method,
       headers,
