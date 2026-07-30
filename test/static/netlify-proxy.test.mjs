@@ -7,16 +7,19 @@ import {
 
 test("Netlify 只將 /api 路徑代理到 HTTPS 環境來源", async () => {
   let target;
+  let forwardedHeaders;
   const proxy = createNetlifyApiProxy({
     apiOrigin: "https://api.example.test",
-    fetchImpl: async (url) => {
+    fetchImpl: async (url, options) => {
       target = url;
+      forwardedHeaders = options.headers;
       return Response.json({ ok: true });
     },
   });
   const response = await proxy(
     new Request(
       "https://site.example.test/.netlify/functions/api/v1/daily?date=2026-07-28",
+      { headers: { "accept-encoding": "br, gzip" } },
     ),
   );
 
@@ -25,6 +28,7 @@ test("Netlify 只將 /api 路徑代理到 HTTPS 環境來源", async () => {
     target.href,
     "https://api.example.test/api/v1/daily?date=2026-07-28",
   );
+  assert.equal(forwardedHeaders.has("accept-encoding"), false);
 });
 
 test("Netlify 未設定安全 API 來源時拒絕代理", async () => {
