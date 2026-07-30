@@ -56,29 +56,6 @@
         function removePublicCounter() {
           document.querySelector(counterSelector)?.remove();
           document.getElementById("danai-public-counter")?.remove();
-          document.getElementById("mobile-counter-controls")?.remove();
-        }
-
-        function prepareMobileCounter(counter) {
-          if (!window.matchMedia("(max-width: 64rem)").matches) return;
-          counter.style.display = "none";
-          counter.style.transform = "scale(.86)";
-          counter.style.transformOrigin = "right bottom";
-          const controls = document.createElement("div");
-          controls.id = "mobile-counter-controls";
-          controls.className = "mobile-counter-controls";
-          controls.innerHTML = `
-            <a href="https://self-learning-orbit.pages.dev/" aria-label="返回自學星圖">自學星圖</a>
-            <button type="button" aria-expanded="false">到訪統計</button>
-          `;
-          controls.querySelector("button").addEventListener("click", (event) => {
-            const open =
-              event.currentTarget.getAttribute("aria-expanded") !== "true";
-            event.currentTarget.setAttribute("aria-expanded", String(open));
-            event.currentTarget.textContent = open ? "收起統計" : "到訪統計";
-            counter.style.display = open ? "" : "none";
-          });
-          document.body.append(controls);
         }
 
         function loadPublicCounter() {
@@ -95,7 +72,6 @@
           counterScript.dataset.site = "reading-expedition";
           counterScript.addEventListener("load", () => {
             const counter = document.getElementById("danai-public-counter");
-            if (counter) prepareMobileCounter(counter);
             if (
               counter &&
               document.documentElement.dataset.publicCounter === "hide"

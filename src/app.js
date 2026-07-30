@@ -144,10 +144,7 @@ function setPublicCounterVisible(visible, focusContext = "") {
   const shouldShow = visible && anonymousStatisticsEnabled();
   document.documentElement.dataset.publicCounter = shouldShow ? "show" : "hide";
   const counter = document.getElementById("danai-public-counter");
-  const mobileControls = document.getElementById("mobile-counter-controls");
   if (counter) counter.style.display = shouldShow ? "" : "none";
-  if (mobileControls) mobileControls.style.display = shouldShow ? "" : "none";
-  if (counter && shouldShow && mobileControls) counter.style.display = "none";
 }
 
 function durationBucket(reading) {

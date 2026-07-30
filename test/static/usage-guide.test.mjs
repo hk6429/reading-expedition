@@ -14,7 +14,7 @@ test("首頁提供可直接開啟的師生使用說明", () => {
   assert.match(app, /renderUsageGuide/);
 });
 
-test("首頁載入自學星圖返回入口與獨立到訪計數器", () => {
+test("首頁載入統一收合的自學星圖共用工具", () => {
   const html = read("index.html");
   const app = read("src/app.js");
   const styles = read("styles.css");
@@ -24,9 +24,9 @@ test("首頁載入自學星圖返回入口與獨立到訪計數器", () => {
   );
   assert.match(html, /dataset\.site = "reading-expedition"/);
   assert.match(html, /\["localhost", "127\.0\.0\.1"\]/);
-  assert.match(html, /max-width: 64rem/);
-  assert.match(html, /自學星圖/);
-  assert.match(html, /到訪統計/);
+  assert.doesNotMatch(html, /prepareMobileCounter|mobile-counter-controls/);
+  assert.doesNotMatch(app, /mobile-counter-controls/);
+  assert.doesNotMatch(styles, /mobile-counter-controls/);
   assert.match(app, /data-focus-context/);
   assert.match(styles, /#danai-family-classroom/);
   assert.match(styles, /#danai-learning-passport/);

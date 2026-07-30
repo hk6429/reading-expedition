@@ -2746,10 +2746,6 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   font-variant-numeric: tabular-nums;
 }
 
-.mobile-counter-controls {
-  display: none;
-}
-
 @keyframes cinnabar-seal {
   from {
     opacity: 0;
@@ -2758,36 +2754,6 @@ html[data-focus-context="assessment"] #danai-learning-passport {
 }
 
 @media (max-width: 63.99rem) {
-  .mobile-counter-controls {
-    position: fixed;
-    right: max(0.75rem, env(safe-area-inset-right));
-    bottom: max(0.75rem, env(safe-area-inset-bottom));
-    z-index: 80;
-    display: flex;
-    gap: 0.35rem;
-    padding: 0.35rem;
-    border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--night-ink) 92%, transparent);
-    box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.22);
-  }
-
-  .mobile-counter-controls a,
-  .mobile-counter-controls button {
-    min-height: 2.75rem;
-    padding: 0.55rem 0.8rem;
-    border: 0;
-    border-radius: 999px;
-    color: var(--paper);
-    background: transparent;
-    font-weight: 800;
-    text-decoration: none;
-  }
-
-  .mobile-counter-controls button {
-    background: var(--cinnabar);
-  }
-
   .reading-event-log li {
     grid-template-columns: 1fr;
     gap: 0.2rem;
