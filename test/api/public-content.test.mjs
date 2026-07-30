@@ -16,6 +16,8 @@ test("daily API 只回已發布閱讀摘要且不洩漏答案", async () => {
             contentKey: "2026-07-28-water",
             category: "world",
             difficulty: "guided",
+            level: "launch",
+            supportMode: "guided",
             title: "城市如何分配有限水源？",
             hookQuestion: "如果水不夠，每個人都該一樣多嗎？",
             readingMinutes: 6,
@@ -37,6 +39,8 @@ test("daily API 只回已發布閱讀摘要且不洩漏答案", async () => {
   assert.deepEqual(requestedDates, ["2026-07-28"]);
   assert.equal(payload.date, "2026-07-28");
   assert.equal(payload.readings[0].title, "城市如何分配有限水源？");
+  assert.equal(payload.readings[0].level, "launch");
+  assert.equal(payload.readings[0].supportMode, "guided");
   assert.doesNotMatch(JSON.stringify(payload), /correctAnswer|答案|rationale/);
 });
 
@@ -112,6 +116,8 @@ test("reading API 提供正文與題目外觀，但不提供答案", async () =>
               contentKey: "2026-07-28-water",
               category: "world",
               difficulty: "guided",
+              level: "launch",
+              supportMode: "guided",
               hookQuestion: "分配一樣多，就是公平嗎？",
               title: "城市如何分配有限水源？",
               body: ["清晨，水庫的刻度又下降了一格。"],
@@ -168,6 +174,8 @@ test("reading API 提供正文與題目外觀，但不提供答案", async () =>
 
   assert.equal(response.status, 200);
   assert.equal(payload.reading.hookQuestion, "分配一樣多，就是公平嗎？");
+  assert.equal(payload.reading.level, "launch");
+  assert.equal(payload.reading.supportMode, "guided");
   assert.equal(payload.reading.body[0], "清晨，水庫的刻度又下降了一格。");
   assert.equal(payload.reading.readingStrategy.name, "因果證據鏈閱讀法");
   assert.equal(payload.reading.assessment[0].prompt, "文章主要討論什麼？");

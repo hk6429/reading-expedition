@@ -4,16 +4,21 @@ function safeScore(value) {
 
 export function growReadingAbilities(
   current = {},
-  { completed, evidenceSubmitted, revisedCount = 0 },
+  { completed, items = [] },
 ) {
   const next = {
     comprehension: safeScore(current.comprehension),
     inference: safeScore(current.inference),
     evidence: safeScore(current.evidence),
   };
-  if (!completed || !evidenceSubmitted) return next;
-  next.comprehension += 1;
-  next.inference += 1;
-  next.evidence += 1 + (revisedCount > 0 ? 1 : 0);
+  if (!completed) return next;
+  for (const item of items) {
+    if (
+      item?.firstCorrect &&
+      Object.hasOwn(next, item.type)
+    ) {
+      next[item.type] += 1;
+    }
+  }
   return next;
 }

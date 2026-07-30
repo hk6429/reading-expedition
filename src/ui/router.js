@@ -1,4 +1,15 @@
-export function createRouter({ onHome, onRead, onQuiz, onCity, onCityInvest, onGuide, onTeacher, onClass }) {
+export function createRouter({
+  onHome,
+  onRead,
+  onQuiz,
+  onCity,
+  onCityInvest,
+  onGuide,
+  onTeacher,
+  onClass,
+  onPlacement,
+  onFamily,
+}) {
   async function renderRoute(render) {
     await render();
     window.scrollTo(0, 0);
@@ -10,6 +21,14 @@ export function createRouter({ onHome, onRead, onQuiz, onCity, onCityInvest, onG
   }
 
   async function navigate() {
+    if (window.location.hash === "#/placement") {
+      if (onPlacement) await renderRoute(onPlacement);
+      return;
+    }
+    if (window.location.hash === "#/family") {
+      if (onFamily) await renderRoute(onFamily);
+      return;
+    }
     if (window.location.hash === "#/guide") {
       if (onGuide) await renderRoute(onGuide);
       return;

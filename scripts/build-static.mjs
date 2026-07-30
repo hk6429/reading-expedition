@@ -22,7 +22,7 @@ for (const entry of entries) {
   });
 }
 
-if (process.env.READING_API_ORIGIN) {
+if (process.env.READING_API_ORIGIN && process.env.NETLIFY !== "true") {
   const apiOrigin = new URL(process.env.READING_API_ORIGIN);
   if (apiOrigin.protocol !== "https:") {
     throw new TypeError("READING_API_ORIGIN must use HTTPS");

@@ -9,7 +9,7 @@ export const waterMarginTheme = Object.freeze({
     humanities: "眾生航線",
   }),
   difficultyLabels: Object.freeze({
-    guided: "行舟卷",
-    challenge: "登樓卷",
+    guided: "引導模式",
+    challenge: "獨立模式",
   }),
 });

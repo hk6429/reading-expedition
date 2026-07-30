@@ -21,7 +21,7 @@ test("核心閱讀資料保持中性，水滸名稱由主題層映射", () => {
 
   assert.equal(reading.category, "world");
   assert.equal(waterMarginTheme.categoryLabels[reading.category], "四海航線");
-  assert.equal(waterMarginTheme.difficultyLabels[reading.difficulty], "行舟卷");
+  assert.equal(waterMarginTheme.difficultyLabels[reading.difficulty], "引導模式");
   assert.doesNotMatch(JSON.stringify(reading), /梁山|宋江|墨磚|四海航線|行舟卷/);
 });
 

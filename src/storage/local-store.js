@@ -1,8 +1,9 @@
 import {
-  LOCAL_ALLOWED_KEYS,
   LOCAL_SCHEMA_VERSION,
   LOCAL_STORAGE_KEY,
 } from "./schema.js";
+import { createAbilityMastery } from "../domain/ability-mastery.js";
+import { assertLearningState } from "./state-validator.js";
 
 export function createDefaultState(deviceId = crypto.randomUUID()) {
   return {
@@ -32,6 +33,14 @@ export function createDefaultState(deviceId = crypto.randomUUID()) {
       inference: 0,
       evidence: 0,
     },
+    abilityMastery: createAbilityMastery(),
+    diagnosticHistory: [],
+    placement: {
+      completed: false,
+      correctCount: null,
+      recommendedLevel: null,
+      completedAt: null,
+    },
     preferences: {
       mode: "paper",
       fontScale: 1,
@@ -39,27 +48,14 @@ export function createDefaultState(deviceId = crypto.randomUUID()) {
       reducedMotion: false,
       textures: true,
       muted: true,
+      selectedLevel: "launch",
+      supportMode: "guided",
+      recommendedLevel: null,
+      lastLevelPromptCount: 0,
     },
     weeklyGoal: null,
     offlineQueue: [],
   };
-}
-
-function assertState(state) {
-  if (!state || typeof state !== "object" || Array.isArray(state)) {
-    throw new TypeError("state must be an object");
-  }
-  for (const key of Object.keys(state)) {
-    if (!LOCAL_ALLOWED_KEYS.includes(key)) {
-      throw new TypeError(`${key} is not allowed in local learning state`);
-    }
-  }
-  if (state.schemaVersion !== LOCAL_SCHEMA_VERSION) {
-    throw new TypeError("Unsupported local schema version");
-  }
-  if (typeof state.deviceId !== "string" || state.deviceId.length < 8) {
-    throw new TypeError("deviceId must be an anonymous identifier");
-  }
 }
 
 function historyFromCompletedReadings(completedReadings = {}) {
@@ -100,6 +96,7 @@ function normalizeState(state) {
   return {
     ...defaults,
     ...state,
+    schemaVersion: LOCAL_SCHEMA_VERSION,
     readingHistory,
     city: {
       ...defaults.city,
@@ -128,6 +125,31 @@ function normalizeState(state) {
       inference: 0,
       evidence: readingHistory.length,
     },
+    abilityMastery: {
+      ...defaults.abilityMastery,
+      ...state.abilityMastery,
+      skills: {
+        ...defaults.abilityMastery.skills,
+        ...state.abilityMastery?.skills,
+      },
+      revisionStrength: Array.isArray(
+        state.abilityMastery?.revisionStrength,
+      )
+        ? state.abilityMastery.revisionStrength
+        : [],
+      unlockedEquipment: Array.isArray(
+        state.abilityMastery?.unlockedEquipment,
+      )
+        ? state.abilityMastery.unlockedEquipment
+        : [],
+    },
+    diagnosticHistory: Array.isArray(state.diagnosticHistory)
+      ? state.diagnosticHistory
+      : [],
+    placement: {
+      ...defaults.placement,
+      ...state.placement,
+    },
     preferences: {
       ...defaults.preferences,
       ...state.preferences,
@@ -153,7 +175,7 @@ export function createLocalStore(
       if (raw === null) return createDefaultState(createDeviceId());
       try {
         const parsed = JSON.parse(raw);
-        assertState(parsed);
+        assertLearningState(parsed, { allowLegacy: true });
         return normalizeState(parsed);
       } catch {
         storage.setItem("reading-expedition:backup:invalid", raw);
@@ -161,7 +183,7 @@ export function createLocalStore(
       }
     },
     save(state) {
-      assertState(state);
+      assertLearningState(state);
       storage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
     },
     clear() {
@@ -172,7 +194,7 @@ export function createLocalStore(
     },
     restore(raw) {
       const parsed = JSON.parse(raw);
-      assertState(parsed);
+      assertLearningState(parsed, { allowLegacy: true });
       const restored = normalizeState(parsed);
       storage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(restored));
       return restored;

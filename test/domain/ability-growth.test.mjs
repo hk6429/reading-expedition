@@ -3,18 +3,21 @@ import test from "node:test";
 
 import { growReadingAbilities } from "../../src/domain/ability-growth.js";
 
-test("有效閱讀同時累積理解、推論與文證，修正成功額外強化文證", () => {
+test("舊版能力點數只由第一次答對的題型累積，不讓修正混入", () => {
   const current = { comprehension: 2, inference: 1, evidence: 3 };
   const completed = growReadingAbilities(current, {
     completed: true,
-    evidenceSubmitted: true,
-    revisedCount: 1,
+    items: [
+      { type: "comprehension", firstCorrect: true },
+      { type: "inference", firstCorrect: false, finalCorrect: true },
+      { type: "evidence", firstCorrect: true },
+    ],
   });
 
   assert.deepEqual(completed, {
     comprehension: 3,
-    inference: 2,
-    evidence: 5,
+    inference: 1,
+    evidence: 4,
   });
   assert.deepEqual(current, {
     comprehension: 2,
@@ -27,7 +30,7 @@ test("未完成有效閱讀不增加能力", () => {
   assert.deepEqual(
     growReadingAbilities(
       { comprehension: 0, inference: 0, evidence: 0 },
-      { completed: false, evidenceSubmitted: false, revisedCount: 0 },
+      { completed: false, items: [] },
     ),
     { comprehension: 0, inference: 0, evidence: 0 },
   );

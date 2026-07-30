@@ -203,6 +203,7 @@ export function renderAssessment(
   closeEvidence.type = "button";
   closeEvidence.textContent = "回到題目";
   let evidenceTrigger = null;
+  const evidenceViewedIds = new Set();
   closeEvidence.addEventListener("click", () => {
     evidencePanel.hidden = true;
     evidenceTrigger?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -230,6 +231,7 @@ export function renderAssessment(
       firstResults,
       finalResults: latestResults,
       attempt: latestAttempt,
+      evidenceViewedIds: [...evidenceViewedIds],
     });
   });
   completion.append(completionTitle, completionCopy);
@@ -347,6 +349,7 @@ export function renderAssessment(
         evidence.className = "evidence-link";
         evidence.textContent = `查看第${itemResult.evidenceSpan.paragraph}段線索`;
         evidence.addEventListener("click", () => {
+          evidenceViewedIds.add(itemResult.id);
           evidenceTrigger = evidence;
           const paragraph =
             reading.body[itemResult.evidenceSpan.paragraph - 1];

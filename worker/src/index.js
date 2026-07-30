@@ -4,6 +4,7 @@ import { createReviewApi } from "./api/review.js";
 import { createClassroomApi } from "./api/classroom.js";
 import { createEventsApi } from "./api/events.js";
 import { createTeacherSessionApi } from "./api/teacher-session.js";
+import { createFamilyPassportApi } from "./api/family-passport.js";
 import { createReadingRepository } from "./db/repository.js";
 
 export default {
@@ -17,6 +18,7 @@ export default {
     const publicationApi = createPublicationApi({ repository });
     const classroomApi = createClassroomApi({ repository });
     const eventsApi = createEventsApi({ repository });
+    const familyPassportApi = createFamilyPassportApi({ repository });
     return createApi({
       repository,
       teacherSessionApi,
@@ -24,6 +26,7 @@ export default {
       publicationApi,
       classroomApi,
       eventsApi,
+      familyPassportApi,
     }).fetch(request);
   },
 };

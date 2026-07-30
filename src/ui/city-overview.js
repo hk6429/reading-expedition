@@ -1,6 +1,7 @@
 import { buildingCatalog } from "../data/building-catalog.js";
 import { chapterForActiveDay } from "../data/chapter-catalog.js";
 import { resolveHistoryChapterProgress } from "../domain/active-days.js";
+import { ABILITY_EQUIPMENT } from "../domain/ability-mastery.js";
 import { journeyRewardForActiveDay } from "../domain/journey-progression.js";
 import { createChapterCard } from "./chapter-card.js";
 
@@ -69,24 +70,36 @@ function createAbilityPanel(state) {
         <p class="eyebrow">閱讀本領</p>
         <h2 id="ability-heading">我正在長出的三種能力</h2>
       </div>
-      <p>不是排名，也不比較答對率；完成、回看文證與修正都算成長。</p>
+      <p>裝備只記錄第一次作答就成功展現的能力；修正成功會另外保存，不混入解鎖進度。</p>
     </div>
     <div class="ability-grid">
       ${ABILITIES.map(([id, label, description]) => {
-        const score = state.abilityGrowth[id] ?? 0;
-        const level = Math.floor(score / 5) + 1;
-        const step = score % 5;
+        const successes =
+          state.abilityMastery?.skills?.[id]?.successes ?? [];
+        const score = successes.length;
+        const uniqueReadings = new Set(
+          successes.map(({ readingId }) => readingId),
+        ).size;
+        const equipment = ABILITY_EQUIPMENT[id];
+        const unlocked =
+          state.abilityMastery?.unlockedEquipment?.includes(
+            equipment.id,
+          ) ?? false;
+        const step = Math.min(score, 3);
         return `
-          <article class="ability-card">
-            <div><span>${label}</span><strong>第 ${level} 階</strong></div>
-            <div class="ability-track" role="progressbar" aria-label="${label}本階進度" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${step}">
-              <span style="width:${(step / 5) * 100}%"></span>
+          <article class="ability-card equipment-card${unlocked ? " is-unlocked" : ""}">
+            <div><span>${label}</span><strong>${unlocked ? "已解鎖" : `${step}／3`}</strong></div>
+            <h3>${equipment.name}</h3>
+            <div class="ability-track" role="progressbar" aria-label="${label}裝備解鎖進度" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${step}">
+              <span style="width:${(step / 3) * 100}%"></span>
             </div>
-            <p>${description}・累積 ${score} 點</p>
+            <p>${description}</p>
+            <small>${unlocked ? `這件裝備代表：${equipment.description}` : `還需在至少兩篇文章中，第一次作答成功展現 3 次。目前來自 ${uniqueReadings} 篇。`}</small>
           </article>
         `;
       }).join("")}
     </div>
+    <p class="revision-strength">回看原文後修正成功：${state.abilityMastery?.revisionStrength?.length ?? 0} 次。這代表願意重新找證據的韌性，但不會取代第一次理解。</p>
   `;
   return section;
 }

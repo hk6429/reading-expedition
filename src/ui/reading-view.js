@@ -1,5 +1,6 @@
 import { waterMarginTheme } from "../theme/water-margin.js";
 import { createReadingControls } from "./reading-controls.js";
+import { READING_LEVELS } from "../domain/reading-level.js";
 
 const MENTOR_GUIDES = Object.freeze({
   world: {
@@ -40,20 +41,73 @@ function paragraphText(paragraph) {
   return typeof paragraph === "string" ? paragraph : paragraph?.text ?? "";
 }
 
-function createInlineGlossary(items) {
-  const aside = document.createElement("aside");
-  aside.className = "inline-glossary";
-  aside.setAttribute("aria-label", "本段詞語提示");
-  for (const item of items) {
-    const details = document.createElement("details");
-    const summary = document.createElement("summary");
-    summary.textContent = item.term;
-    const definition = document.createElement("p");
-    definition.textContent = item.definition;
-    details.append(summary, definition);
-    aside.append(details);
+function glossaryExample(item) {
+  if (typeof item.example === "string" && item.example.trim()) {
+    return item.example.trim();
   }
-  return aside;
+  const definition = String(item.definition ?? "").replace(/[。；;]$/, "");
+  return `例：這一段的「${item.term}」，可以理解為${definition}。`;
+}
+
+function appendInteractiveParagraph(block, text, glossaryItems) {
+  const paragraph = document.createElement("p");
+  paragraph.className = "reading-paragraph";
+  const cards = [];
+  const sorted = [...glossaryItems].sort(
+    (a, b) => b.term.length - a.term.length,
+  );
+  let cursor = 0;
+  let cardIndex = 0;
+  while (cursor < text.length) {
+    const match = sorted
+      .map((item) => ({ item, index: text.indexOf(item.term, cursor) }))
+      .filter(({ index }) => index >= 0)
+      .sort((a, b) => a.index - b.index)[0];
+    if (!match) {
+      paragraph.append(text.slice(cursor));
+      break;
+    }
+    if (match.index > cursor) paragraph.append(text.slice(cursor, match.index));
+    const cardId = `glossary-${crypto.randomUUID()}-${cardIndex}`;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "inline-term-button";
+    button.textContent = match.item.term;
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-controls", cardId);
+    const card = document.createElement("aside");
+    card.id = cardId;
+    card.className = "inline-term-card";
+    card.hidden = true;
+    card.setAttribute("aria-label", `${match.item.term}的文中解釋`);
+    const title = document.createElement("strong");
+    title.textContent = `${match.item.term}・文中義`;
+    const definition = document.createElement("p");
+    definition.textContent = match.item.definition;
+    const example = document.createElement("p");
+    example.className = "inline-term-example";
+    example.textContent = glossaryExample(match.item);
+    const close = document.createElement("button");
+    close.type = "button";
+    close.textContent = "收起解釋";
+    close.addEventListener("click", () => {
+      card.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+      button.focus();
+    });
+    button.addEventListener("click", () => {
+      const opening = card.hidden;
+      card.hidden = !opening;
+      button.setAttribute("aria-expanded", String(opening));
+      if (opening) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    card.append(title, definition, example, close);
+    paragraph.append(button);
+    cards.push(card);
+    cursor = match.index + match.item.term.length;
+    cardIndex += 1;
+  }
+  block.append(paragraph, ...cards);
 }
 
 export function renderReading(
@@ -89,10 +143,12 @@ export function renderReading(
 
   const side = document.createElement("aside");
   side.className = "reading-side";
+  const level = reading.level ?? state.preferences.selectedLevel ?? "tower";
+  const supportMode = state.preferences.supportMode ?? "guided";
   side.innerHTML = `
     <a class="back-link" href="#/">← 返回三條航線</a>
     <p class="chapter-label">${waterMarginTheme.categoryLabels[reading.category]}</p>
-    <p class="reading-difficulty">${waterMarginTheme.difficultyLabels[reading.difficulty]}</p>
+    <p class="reading-difficulty">${READING_LEVELS[level]?.label ?? "登樓"}・${supportMode === "guided" ? "引導模式" : "獨立模式"}</p>
   `;
 
   const article = document.createElement("article");
@@ -142,6 +198,10 @@ export function renderReading(
   }
   if (reading.readingMinutes > 10) header.append(paceNote);
   article.append(header, mentorGuide, midpointCheckpoint);
+  if (supportMode === "independent") {
+    mentorGuide.hidden = true;
+    midpointCheckpoint.hidden = true;
+  }
 
   const paragraphs = document.createElement("div");
   paragraphs.className = "reading-body";
@@ -149,7 +209,7 @@ export function renderReading(
     const block = document.createElement("section");
     block.className = "reading-block";
     block.dataset.paragraph = String(index);
-    if (reading.difficulty === "guided") {
+    if (supportMode === "guided") {
       const scaffold = document.createElement("p");
       scaffold.className = "paragraph-scaffold";
       scaffold.textContent = guidedScaffoldLabel(
@@ -159,16 +219,11 @@ export function renderReading(
       );
       block.append(scaffold);
     }
-    const paragraph = document.createElement("p");
-    paragraph.className = "reading-paragraph";
-    paragraph.textContent = paragraphText(text);
-    block.append(paragraph);
+    const copy = paragraphText(text);
     const nearbyGlossary = reading.glossary.filter(({ term }) =>
-      paragraph.textContent.includes(term),
+      copy.includes(term),
     );
-    if (nearbyGlossary.length) {
-      block.append(createInlineGlossary(nearbyGlossary));
-    }
+    appendInteractiveParagraph(block, copy, nearbyGlossary);
     paragraphs.append(block);
   });
   const savedPosition = state.readingProgress[reading.id];

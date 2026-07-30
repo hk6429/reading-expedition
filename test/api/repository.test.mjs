@@ -31,6 +31,8 @@ test("repository 依日期取得已發布文章並解析結構欄位", async () 
       category: "world",
       topic_date: "2026-07-28",
       difficulty: "guided",
+      reading_level: "launch",
+      support_mode: "guided",
       text_type: "plain",
       title: "城市如何分配有限水源？",
       hook_question: "如果水不夠，每個人都該一樣多嗎？",
@@ -50,6 +52,8 @@ test("repository 依日期取得已發布文章並解析結構欄位", async () 
   assert.deepEqual(readings[0].sourceAttribution, [
     { publisher: "公開資料站" },
   ]);
+  assert.equal(readings[0].level, "launch");
+  assert.equal(readings[0].supportMode, "guided");
   assert.match(db.calls[0].sql, /publication_status = 'published'/);
   assert.deepEqual(db.calls[0].bindings, ["2026-07-28"]);
 });
@@ -231,4 +235,43 @@ test("repository 列出匿名班級統計並同步停用班級與權杖", async 
   assert.match(calls[1].sql, /UPDATE classrooms/);
   assert.match(calls[2].sql, /UPDATE classroom_tokens/);
   assert.equal(batches[0].length, 2);
+});
+
+test("repository 刪除家庭時依序實體移除狀態、孩子、sessions 與護照", async () => {
+  const calls = [];
+  const batches = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+      };
+    },
+    async batch(statements) {
+      batches.push(statements);
+      return statements.map(() => ({ meta: { changes: 1 } }));
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  await repository.revokeFamily("family-1");
+
+  assert.equal(batches[0].length, 4);
+  assert.match(calls[0].sql, /DELETE FROM family_child_states/);
+  assert.match(calls[1].sql, /DELETE FROM family_children/);
+  assert.match(calls[2].sql, /DELETE FROM family_sessions/);
+  assert.match(calls[3].sql, /DELETE FROM family_passports/);
+  assert.deepEqual(
+    calls.map(({ bindings }) => bindings),
+    [
+      ["family-1"],
+      ["family-1"],
+      ["family-1"],
+      ["family-1"],
+    ],
+  );
 });

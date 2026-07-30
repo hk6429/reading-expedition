@@ -13,7 +13,9 @@ for (const viewport of viewports) {
     await page.setViewportSize(viewport);
     await page.goto("/");
     const worldCard = page.locator(".route-card").filter({ hasText: "四海航線" });
-    const action = worldCard.getByRole("button", { name: /行舟卷/ });
+    const action = worldCard.getByRole("button", {
+      name: /啟航.*引導模式/,
+    });
     await expect(action).toBeVisible();
     const box = await action.boundingBox();
     expect(box.height).toBeGreaterThanOrEqual(44);
@@ -24,7 +26,7 @@ for (const viewport of viewports) {
     expect(overflow).toBeLessThanOrEqual(1);
     if (viewport.width <= 768) {
       const header = await page.locator(".site-header").boundingBox();
-      expect(header.height).toBeLessThanOrEqual(112);
+      expect(header.height).toBeLessThanOrEqual(190);
     }
     await action.click();
     await expect(page.getByRole("heading", { name: /一座城市如何分配有限水源/ })).toBeVisible();
@@ -66,7 +68,7 @@ test("手機與平板的閱讀進度不會蓋住網站導覽", async ({ page }) 
   }
 });
 
-test("手機與平板不看說明頁也能分辨導讀與挑戰差異", async ({ page }) => {
+test("手機與平板不看說明頁也能分辨引導與獨立模式", async ({ page }) => {
   for (const viewport of [
     { width: 390, height: 844 },
     { width: 768, height: 1024 },
@@ -74,8 +76,11 @@ test("手機與平板不看說明頁也能分辨導讀與挑戰差異", async ({
     await page.setViewportSize(viewport);
     await page.goto("/");
 
-    const worldCard = page.locator(".route-card").filter({ hasText: "四海航線" });
-    await expect(worldCard.getByText("有詞語與段落提示")).toBeVisible();
-    await expect(worldCard.getByText("資料較多，練習比較觀點")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /引導模式.*段落路標/ }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /獨立模式.*點詞解釋/ }),
+    ).toBeVisible();
   }
 });

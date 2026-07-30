@@ -43,7 +43,12 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
   await expect(
     page.locator(".reading-event-log q"),
   ).toContainText("當水情、需求或節水成果改變");
-  await expect(page.getByText("累積 1 點")).toHaveCount(3);
+  await expect(
+    page.locator(".equipment-card > div > strong"),
+  ).toHaveText(["1／3", "1／3", "1／3"]);
+  await expect(page.getByText("定錨腰牌")).toBeVisible();
+  await expect(page.getByText("連線羽扇")).toBeVisible();
+  await expect(page.getByText("文證放大鏡")).toBeVisible();
 
   await page.reload();
   await expect(page.getByText("聚義書樓")).toBeVisible();

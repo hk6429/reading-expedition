@@ -17,6 +17,7 @@ export function createApi({
   publicationApi = null,
   classroomApi = null,
   eventsApi = null,
+  familyPassportApi = null,
   clock = () => new Date(),
 }) {
   if (!repository || typeof repository.getPublishedDaily !== "function") {
@@ -33,6 +34,86 @@ export function createApi({
         request.method === "POST"
       ) {
         return eventsApi.collect(request);
+      }
+      if (
+        familyPassportApi &&
+        url.pathname === "/api/v1/family/passports" &&
+        request.method === "POST"
+      ) {
+        return familyPassportApi.create(request);
+      }
+      if (
+        familyPassportApi &&
+        url.pathname === "/api/v1/family/session" &&
+        request.method === "POST"
+      ) {
+        return familyPassportApi.login(request);
+      }
+      if (
+        familyPassportApi &&
+        url.pathname.startsWith("/api/v1/family/")
+      ) {
+        const requireCsrf = request.method !== "GET";
+        const authorization = await familyPassportApi.authorize(request, {
+          requireCsrf,
+        });
+        if (!authorization.ok) {
+          return familyPassportApi.unauthorizedResponse();
+        }
+        if (
+          url.pathname === "/api/v1/family/session" &&
+          request.method === "DELETE"
+        ) {
+          return familyPassportApi.logout(request);
+        }
+        if (
+          url.pathname === "/api/v1/family/passports/current" &&
+          request.method === "GET"
+        ) {
+          return familyPassportApi.current(authorization.familyId);
+        }
+        if (
+          url.pathname === "/api/v1/family/passports/current" &&
+          request.method === "DELETE"
+        ) {
+          return familyPassportApi.deleteFamily(authorization.familyId);
+        }
+        if (
+          url.pathname === "/api/v1/family/children" &&
+          request.method === "POST"
+        ) {
+          return familyPassportApi.createChild(
+            request,
+            authorization.familyId,
+          );
+        }
+        const childStateMatch =
+          /^\/api\/v1\/family\/children\/([a-zA-Z0-9-]+)\/state$/.exec(
+            url.pathname,
+          );
+        if (childStateMatch && request.method === "GET") {
+          return familyPassportApi.childState(
+            authorization.familyId,
+            childStateMatch[1],
+          );
+        }
+        if (childStateMatch && request.method === "PUT") {
+          return familyPassportApi.updateChildState(
+            request,
+            authorization.familyId,
+            childStateMatch[1],
+          );
+        }
+        const childMatch =
+          /^\/api\/v1\/family\/children\/([a-zA-Z0-9-]+)$/.exec(
+            url.pathname,
+          );
+        if (childMatch && request.method === "DELETE") {
+          return familyPassportApi.deleteChild(
+            authorization.familyId,
+            childMatch[1],
+          );
+        }
       }
       if (
         classroomApi &&

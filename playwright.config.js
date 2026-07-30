@@ -12,7 +12,7 @@ export default defineConfig({
   webServer: externalBaseURL
     ? undefined
     : {
-        command: "npm run dev:web",
+        command: "node scripts/e2e-static-server.mjs",
         url: "http://127.0.0.1:8788",
         reuseExistingServer: true,
         timeout: 60_000,

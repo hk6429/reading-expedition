@@ -31,7 +31,7 @@ async function contrastRatio(locator) {
   });
 }
 
-test("首頁顯示三條航線並可在兩次點擊內開始文章", async ({ page }) => {
+test("首頁顯示啟航三條航線並可直接開始文章", async ({ page }) => {
   await page.goto("/");
 
   await expect(
@@ -40,10 +40,10 @@ test("首頁顯示三條航線並可在兩次點擊內開始文章", async ({ pa
   await expect(page.getByRole("article")).toHaveCount(3);
 
   const worldCard = page.getByRole("article").filter({ hasText: "四海航線" });
-  await expect(worldCard).toContainText("行舟卷");
-  await expect(worldCard).toContainText("登樓卷");
+  await expect(worldCard).toContainText("啟航");
+  await expect(worldCard).toContainText("引導模式");
 
-  await worldCard.getByRole("button", { name: /行舟卷/ }).click();
+  await worldCard.getByRole("button", { name: /啟航.*引導模式/ }).click();
   await expect(page).toHaveURL(/#\/read\/water-sharing-guided-v1$/);
 });
 
@@ -58,7 +58,7 @@ test("正式 API 當日尚無文章時仍提供安全示範讀卷", async ({ pag
   await page.goto("/");
   await expect(page.locator(".route-card")).toHaveCount(3);
   await expect(
-    page.getByRole("button", { name: /行舟卷/ }).first(),
+    page.getByRole("button", { name: /啟航.*引導模式/ }).first(),
   ).toBeVisible();
 });
 

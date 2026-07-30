@@ -118,7 +118,7 @@ function reviewListMarkup(packages) {
       (packageRecord) => `
         <article class="review-list-item">
           <div>
-            <p class="chapter-label">${escapeHtml(packageRecord.difficulty === "guided" ? "行舟卷" : "登樓卷")}</p>
+            <p class="chapter-label">${escapeHtml(packageRecord.difficulty === "guided" ? "引導模式" : "獨立模式")}</p>
             <h2>${escapeHtml(packageRecord.title)}</h2>
             <p>${escapeHtml(packageRecord.contentKey ?? "閱讀任務")}</p>
           </div>
@@ -148,7 +148,7 @@ function detailMarkup(packageRecord, { reviewable = true } = {}) {
     <section class="review-detail">
       <header class="review-detail__header">
         <div>
-          <p class="chapter-label">${escapeHtml(packageRecord.difficulty === "guided" ? "行舟卷" : "登樓卷")}・版本 ${packageRecord.version}</p>
+          <p class="chapter-label">${escapeHtml(packageRecord.difficulty === "guided" ? "引導模式" : "獨立模式")}・版本 ${packageRecord.version}</p>
           <h2>${escapeHtml(packageRecord.title)}</h2>
           <p>${textType}・${characters} 字・${packageRecord.glossary.length} 則${packageRecord.textType === "classical" ? "注釋" : "詞語旁批"}</p>
         </div>

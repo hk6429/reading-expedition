@@ -2,7 +2,9 @@
 
 ## 架構
 
-Cloudflare Worker 是唯一內容與教師 API；Cloudflare Pages、Vercel、Netlify 都發布同一份 `dist/`。三個前端以同源 `/api` 代理 Worker，避免把後端網址寫進 bundle，也維持教師安全 cookie 與 CSRF 流程。
+Cloudflare Worker 是唯一內容、教師與家庭護照 API；Cloudflare Pages、Vercel、Netlify 都發布同一份 `dist/`。三個前端以同源 `/api` 代理 Worker，避免把後端網址寫進 bundle，也維持教師與家庭護照的安全 cookie、CSRF 流程。
+
+三平台各自使用 host-only cookie，因此同一組家庭護照碼第一次在不同網域使用時，必須各登入一次；登入後共用中央 D1 的孩子、閱讀紀錄與裝備資料，不會在瀏覽器間共享 cookie。
 
 ## 環境變數名稱
 
@@ -34,13 +36,19 @@ Preview D1 與正式 D1 必須是不同資料庫；Preview Worker 只能綁 Prev
 
 ## 正式順序
 
-1. 對正式 D1 套用 migration。
+1. 對正式 D1 套用 migration，包含第 0009 號家庭護照與閱讀分級 migration。
 2. 部署中央 Cloudflare Worker。
 3. 以人工種子內容完成教師校閱與發布。
 4. 部署 Cloudflare Pages。
 5. 部署 Vercel Production。
 6. 部署 Netlify Production。
 7. 對三站加 cache-busting query 逐站驗收。
+
+三個前端的 `/api` 路徑分工如下：
+
+- Cloudflare Pages：建置時產生 `_redirects`，代理至 Worker。
+- Vercel：由 `vercel.ts` 的 rewrite 代理至 Worker。
+- Netlify：只使用 `netlify/functions/api.mjs`，建置時不產生會與函式競爭的 `_redirects`。
 
 ## 驗證
 
@@ -51,6 +59,15 @@ npm run build
 npm run test:e2e
 git diff --check
 ```
+
+正式站還要逐站驗證：
+
+1. 首頁能看到「程度測讀」與「家庭護照」，Service Worker 為目前版本。
+2. 建立一組暫時家庭護照，確認回應含安全 cookie 與 CSRF，但日誌不輸出護照碼。
+3. 在另外兩個網域用同一護照碼各登入一次，確認能讀到相同孩子。
+4. 從第二個網域同步狀態，第三個網域能讀到新版本。
+5. 用舊版本寫入時必須回傳衝突，不能覆蓋較新的資料。
+6. 刪除暫時家庭後，三個網域的原 session 都應失效。
 
 ## 正式網址
 

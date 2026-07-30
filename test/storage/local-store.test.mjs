@@ -65,8 +65,12 @@ test("保存時拒絕規格禁止的個資欄位", () => {
 
 test("舊版狀態載入時補上事件簿、能力成長與章回解鎖，不清除既有城市", () => {
   const legacy = createDefaultState("device-123");
+  legacy.schemaVersion = 1;
   delete legacy.readingHistory;
   delete legacy.abilityGrowth;
+  delete legacy.abilityMastery;
+  delete legacy.diagnosticHistory;
+  delete legacy.placement;
   delete legacy.city.storyUnlocks;
   legacy.completedReadings["water-sharing-guided-v1"] = {
     date: "2026-07-28",
@@ -88,6 +92,11 @@ test("舊版狀態載入時補上事件簿、能力成長與章回解鎖，不�
     inference: 0,
     evidence: 1,
   });
+  assert.equal(loaded.schemaVersion, 2);
+  assert.deepEqual(loaded.diagnosticHistory, []);
+  assert.deepEqual(loaded.abilityMastery.unlockedEquipment, []);
+  assert.equal(loaded.preferences.selectedLevel, "launch");
+  assert.equal(loaded.preferences.supportMode, "guided");
   assert.equal(loaded.readingHistory.length, 1);
   assert.equal(loaded.readingHistory[0].date, "2026-07-28");
 });

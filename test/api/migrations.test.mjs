@@ -4,8 +4,8 @@ import test from "node:test";
 
 const projectRoot = new URL("../../", import.meta.url);
 
-test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、稽核事件與班級去重", async () => {
-  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql] = await Promise.all([
+test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭護照、稽核事件與班級去重", async () => {
+  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql, familySql] = await Promise.all([
     readFile(new URL("migrations/0001_content.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0002_review.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0003_class_aggregate.sql", projectRoot), "utf8"),
@@ -21,8 +21,12 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、稽核�
       new URL("migrations/0008_reading_strategy.sql", projectRoot),
       "utf8",
     ),
+    readFile(
+      new URL("migrations/0009_family_passport_and_levels.sql", projectRoot),
+      "utf8",
+    ),
   ]);
-  const sql = `${contentSql}\n${reviewSql}\n${classSql}\n${textTypeSql}\n${classDedupeSql}`;
+  const sql = `${contentSql}\n${reviewSql}\n${classSql}\n${textTypeSql}\n${classDedupeSql}\n${familySql}`;
 
   for (const table of [
     "sources",
@@ -34,6 +38,10 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、稽核�
     "teacher_sessions",
     "class_aggregates",
     "pipeline_runs",
+    "family_passports",
+    "family_sessions",
+    "family_children",
+    "family_child_states",
   ]) {
     assert.match(sql, new RegExp(`CREATE TABLE ${table}`));
   }
@@ -56,4 +64,8 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、稽核�
     /classroom_id,\s*participant_id,\s*content_id/,
   );
   assert.match(strategySql, /ADD COLUMN reading_strategy_json TEXT NOT NULL/);
+  assert.match(familySql, /ADD COLUMN reading_level TEXT NOT NULL DEFAULT 'tower'/);
+  assert.match(familySql, /ADD COLUMN support_mode TEXT NOT NULL DEFAULT 'independent'/);
+  assert.match(familySql, /passport_code_hash TEXT NOT NULL UNIQUE/);
+  assert.match(familySql, /state_json TEXT NOT NULL/);
 });

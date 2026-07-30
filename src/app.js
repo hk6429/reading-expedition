@@ -1,5 +1,10 @@
 import { demoAnswerKeys } from "./data/demo-answer-key.js";
 import { demoDailyReadings } from "./data/demo-daily.js";
+import { levelAnswerKeys } from "./data/level-answer-keys.js";
+import {
+  levelDailyReadings,
+  levelReadingsById,
+} from "./data/level-readings.js";
 import {
   demoReadingsById,
   withDemoReadingStrategy,
@@ -11,7 +16,8 @@ import {
   rewardVerifiedReading,
 } from "./domain/city.js";
 import { countHistoryActiveDays } from "./domain/active-days.js";
-import { growReadingAbilities } from "./domain/ability-growth.js";
+import { recordAbilityEvidence } from "./domain/ability-mastery.js";
+import { buildDiagnosticRecord } from "./domain/family-report.js";
 import { createAnonymousDeviceId } from "./domain/device-identity.js";
 import {
   appendVerifiedReading,
@@ -19,6 +25,7 @@ import {
 } from "./domain/reading-history.js";
 import { createReadingSession } from "./domain/reading-session.js";
 import { createLocalStore } from "./storage/local-store.js";
+import { createFamilyClient } from "./storage/family-client.js";
 import { createSyncQueue } from "./storage/sync-queue.js";
 import { createClassContributionQueue } from "./storage/class-contribution-queue.js";
 import { renderAssessment } from "./ui/assessment-view.js";
@@ -28,6 +35,8 @@ import { renderHome } from "./ui/home-view.js";
 import { renderReading } from "./ui/reading-view.js";
 import { renderReviewConsole } from "./ui/review-console.js";
 import { renderClassView } from "./ui/class-view.js";
+import { renderFamilyView } from "./ui/family-view.js";
+import { renderPlacement } from "./ui/placement-view.js";
 import { renderUsageGuide } from "./ui/usage-guide.js";
 import { createRouter } from "./ui/router.js";
 
@@ -47,9 +56,64 @@ document.documentElement.style.setProperty(
   state.preferences.fontScale,
 );
 store.save(state);
-const session = createReadingSession(state, (next) => store.save(next));
 const syncQueue = createSyncQueue(window.localStorage);
 const classContributionQueue = createClassContributionQueue(window.localStorage);
+const familyClient = createFamilyClient({
+  fetchImpl: window.fetch.bind(window),
+  storage: window.localStorage,
+});
+let familySyncTimer = null;
+
+function renderFamilySyncStatus() {
+  const chip = document.querySelector("#family-sync-chip");
+  const child = familyClient.activeChild();
+  if (!chip || !child) {
+    if (chip) chip.hidden = true;
+    return;
+  }
+  const sync = familyClient.syncStatus();
+  chip.hidden = false;
+  chip.dataset.status = sync.status;
+  chip.textContent = {
+    idle: `${child.alias}・只存本機`,
+    pending: `${child.alias}・已存本機，等待同步`,
+    synced: `${child.alias}・雲端已同步`,
+    conflict: `${child.alias}・另一部裝置有新紀錄，請到家庭護照處理`,
+    error: `${child.alias}・已存本機，雲端待重試`,
+  }[sync.status] ?? `${child.alias}・同步狀態待確認`;
+}
+
+function queueFamilySync(next) {
+  if (!familyClient.activeChild()) {
+    renderFamilySyncStatus();
+    return;
+  }
+  familyClient.markPending();
+  renderFamilySyncStatus();
+  window.clearTimeout(familySyncTimer);
+  familySyncTimer = window.setTimeout(async () => {
+    try {
+      await familyClient.syncActiveChild(next);
+    } catch {
+      // 狀態會保留在本機，並由頁首與家庭護照顯示待處理原因。
+    }
+    renderFamilySyncStatus();
+  }, 900);
+}
+
+function persistState(next, { syncFamily = true } = {}) {
+  store.save(next);
+  if (syncFamily) queueFamilySync(next);
+}
+
+const session = createReadingSession(state, persistState);
+renderFamilySyncStatus();
+if (
+  familyClient.activeChild() &&
+  ["pending", "error"].includes(familyClient.syncStatus().status)
+) {
+  queueFamilySync(state);
+}
 const CLASS_TOKEN_KEY = "reading-expedition.class-token";
 const ANONYMOUS_STATISTICS_KEY =
   "reading-expedition.anonymous-statistics";
@@ -164,29 +228,57 @@ flushEvents();
 flushClassContributions();
 
 async function loadDaily() {
-  const safeDemoReadings = demoDailyReadings.filter(
-    ({ id }) => demoReadingsById[id],
-  );
+  const safeDemoReadings = demoDailyReadings
+    .filter(({ id }) =>
+      ["water-sharing-guided-v1", "water-cycle-guided-v1"].includes(id),
+    )
+    .map((reading) => ({
+      ...reading,
+      level: "launch",
+      supportMode: "guided",
+    }));
+  const localReadings = [...safeDemoReadings, ...levelDailyReadings];
   try {
-    const response = await fetch("/api/v1/daily");
+    const response = await fetch(`/api/v1/daily?date=${localToday()}`);
     if (!response.ok) throw new Error("daily API unavailable");
     const payload = await response.json();
-    return Array.isArray(payload.readings) && payload.readings.length
-      ? payload.readings
-      : safeDemoReadings;
+    const remoteReadings = Array.isArray(payload.readings)
+      ? payload.readings.map((reading) => ({
+          ...reading,
+          level: reading.level ?? "tower",
+          supportMode:
+            reading.supportMode ??
+            (reading.difficulty === "guided" ? "guided" : "independent"),
+        }))
+      : [];
+    return [...new Map(
+      [...localReadings, ...remoteReadings].map((reading) => [
+        reading.id,
+        reading,
+      ]),
+    ).values()];
   } catch {
-    return safeDemoReadings;
+    return localReadings;
   }
 }
 
 async function loadReading(id) {
+  const localReading =
+    levelReadingsById[id] ??
+    (demoReadingsById[id]
+      ? {
+          ...demoReadingsById[id],
+          level: "launch",
+          supportMode: "guided",
+        }
+      : null);
   try {
     const response = await fetch(`/api/v1/readings/${id}`);
     if (!response.ok) throw new Error("reading API unavailable");
     const payload = await response.json();
     return withDemoReadingStrategy(payload.reading);
   } catch {
-    return demoReadingsById[id] ?? null;
+    return localReading;
   }
 }
 
@@ -203,15 +295,18 @@ async function submitAssessment(reading, answers) {
     if (!response.ok) throw new Error("assessment API unavailable");
     return await response.json();
   } catch {
-    const answerKey = demoAnswerKeys[reading.id];
+    const answerKey =
+      levelAnswerKeys[reading.id] ?? demoAnswerKeys[reading.id];
     if (!answerKey) throw new Error("assessment unavailable");
     return gradeAssessment(answerKey, answers);
   }
 }
 
-function taipeiToday() {
+function localToday() {
   return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Taipei",
+    timeZone:
+      familyClient.timeZone() ??
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -225,7 +320,7 @@ function exportLearningState() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `梁山閱征記-${taipeiToday()}.json`;
+  link.download = `梁山閱征記-${localToday()}.json`;
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -248,6 +343,14 @@ const router = createRouter({
       await loadDaily(),
       state.completedReadings,
       state.readingHistory,
+      {
+        preferences: state.preferences,
+        onPreferencesChange: (preferences, { navigate = true } = {}) => {
+          state.preferences = preferences;
+          persistState(state);
+          if (navigate) router.navigate();
+        },
+      },
     );
   },
   async onRead(id) {
@@ -267,7 +370,7 @@ const router = createRouter({
     queueEvent("reading_opened", reading);
     renderReading(main, reading, {
       state,
-      saveState: (next) => store.save(next),
+      saveState: persistState,
       session,
     });
   },
@@ -280,8 +383,12 @@ const router = createRouter({
     }
     renderAssessment(main, reading, {
       submitAnswers: (answers) => submitAssessment(reading, answers),
-      onComplete: ({ firstResults, finalResults }) => {
-        const date = taipeiToday();
+      onComplete: ({
+        firstResults,
+        finalResults,
+        evidenceViewedIds,
+      }) => {
+        const date = localToday();
         const previous = state.completedReadings[reading.id];
         const repeatedSameDay = previous?.date === date;
         const firstCorrect = firstResults.filter(({ correct }) => correct).length;
@@ -333,12 +440,38 @@ const router = createRouter({
             date,
           });
         }
+        const diagnosticRecord = buildDiagnosticRecord({
+          reading,
+          date,
+          supportMode:
+            reading.supportMode ?? state.preferences.supportMode,
+          firstResults,
+          finalResults,
+          evidenceViewedIds,
+        });
+        state.diagnosticHistory = [
+          ...state.diagnosticHistory.filter(
+            (record) =>
+              !(
+                record.readingId === reading.id &&
+                record.date === date
+              ),
+          ),
+          diagnosticRecord,
+        ];
         if (historyResult.added) {
-          state.abilityGrowth = growReadingAbilities(state.abilityGrowth, {
-            completed: true,
-            evidenceSubmitted: true,
-            revisedCount,
-          });
+          state.abilityMastery = recordAbilityEvidence(
+            state.abilityMastery,
+            diagnosticRecord,
+          );
+          state.abilityGrowth = Object.fromEntries(
+            Object.entries(state.abilityMastery.skills).map(
+              ([skill, progress]) => [
+                skill,
+                progress.successes.length,
+              ],
+            ),
+          );
         }
         state.completedReadings[reading.id] = {
           date,
@@ -372,7 +505,7 @@ const router = createRouter({
             period: isoWeekKey(date),
           });
         }
-        store.save(state);
+        persistState(state);
         flushEvents();
         flushClassContributions();
         window.location.hash = `#/city/invest/${reading.id}`;
@@ -397,13 +530,13 @@ const router = createRouter({
       reading,
       evidence: completion.evidence,
       date: completion.date,
-      saveState: (next) => store.save(next),
+      saveState: persistState,
     });
   },
   async onCity() {
     setPublicCounterVisible(true);
     renderCityOverview(main, state, {
-      saveState: (next) => store.save(next),
+      saveState: persistState,
       exportState: exportLearningState,
       restoreState: restoreLearningState,
     });
@@ -429,6 +562,22 @@ const router = createRouter({
     setPublicCounterVisible(false);
     await renderClassView(main, {
       contributionQueue: classContributionQueue,
+    });
+  },
+  async onPlacement() {
+    setPublicCounterVisible(false);
+    renderPlacement(main, {
+      state,
+      saveState: persistState,
+    });
+  },
+  async onFamily() {
+    setPublicCounterVisible(false);
+    await renderFamilyView(main, {
+      familyClient,
+      localState: state,
+      localStore: store,
+      reload: () => window.location.reload(),
     });
   },
 });

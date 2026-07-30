@@ -1,4 +1,4 @@
-export const LOCAL_SCHEMA_VERSION = 1;
+export const LOCAL_SCHEMA_VERSION = 2;
 export const LOCAL_STORAGE_KEY = "reading-expedition:v1";
 export const LOCAL_ALLOWED_KEYS = Object.freeze([
   "schemaVersion",
@@ -9,6 +9,9 @@ export const LOCAL_ALLOWED_KEYS = Object.freeze([
   "city",
   "collections",
   "abilityGrowth",
+  "abilityMastery",
+  "diagnosticHistory",
+  "placement",
   "preferences",
   "weeklyGoal",
   "offlineQueue",

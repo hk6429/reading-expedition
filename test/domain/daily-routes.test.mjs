@@ -4,31 +4,57 @@ import test from "node:test";
 import { groupDailyRoutes } from "../../src/domain/daily-routes.js";
 
 const readings = [
-  { id: "w-g", category: "world", difficulty: "guided" },
-  { id: "w-c", category: "world", difficulty: "challenge" },
-  { id: "s-g", category: "science", difficulty: "guided" },
-  { id: "s-c", category: "science", difficulty: "challenge" },
-  { id: "h-g", category: "humanities", difficulty: "guided" },
-  { id: "h-c", category: "humanities", difficulty: "challenge" },
+  { id: "w-launch", category: "world", level: "launch" },
+  { id: "s-launch", category: "science", level: "launch" },
+  { id: "h-launch", category: "humanities", level: "launch" },
+  {
+    id: "w-tower-guided",
+    category: "world",
+    level: "tower",
+    supportMode: "guided",
+  },
+  {
+    id: "w-tower-independent",
+    category: "world",
+    level: "tower",
+    supportMode: "independent",
+  },
 ];
 
-test("每日六篇整理成三條平權航線與雙難度", () => {
-  const routes = groupDailyRoutes(readings);
+test("首頁依啟航、行舟、登樓文章庫篩選，不混用不同程度", () => {
+  const routes = groupDailyRoutes(readings, {
+    level: "launch",
+    supportMode: "guided",
+  });
 
   assert.deepEqual(
-    routes.map(({ category }) => category),
-    ["world", "science", "humanities"],
+    routes.map(({ category, reading }) => [category, reading.id]),
+    [
+      ["world", "w-launch"],
+      ["science", "s-launch"],
+      ["humanities", "h-launch"],
+    ],
   );
-  for (const route of routes) {
-    assert.equal(route.versions.guided.category, route.category);
-    assert.equal(route.versions.challenge.category, route.category);
-  }
 });
 
-test("缺少任一難度時仍保留航線，但不捏造假選項", () => {
-  const routes = groupDailyRoutes(readings.filter(({ id }) => id !== "s-c"));
-  const science = routes.find(({ category }) => category === "science");
+test("同程度有多篇時優先選符合引導或獨立模式的文章", () => {
+  const guided = groupDailyRoutes(readings, {
+    level: "tower",
+    supportMode: "guided",
+  });
+  const independent = groupDailyRoutes(readings, {
+    level: "tower",
+    supportMode: "independent",
+  });
 
-  assert.equal(science.versions.guided.id, "s-g");
-  assert.equal(science.versions.challenge, null);
+  assert.equal(guided[0].reading.id, "w-tower-guided");
+  assert.equal(independent[0].reading.id, "w-tower-independent");
+});
+
+test("缺少某航線時不捏造假文章", () => {
+  const routes = groupDailyRoutes(readings, {
+    level: "tower",
+    supportMode: "guided",
+  });
+  assert.deepEqual(routes.map(({ category }) => category), ["world"]);
 });

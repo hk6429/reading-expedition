@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("學生可閱讀行舟卷、調整夜讀並保存進度", async ({ page }) => {
+test("學生可閱讀啟航文章、調整夜讀並保存進度", async ({ page }) => {
   await page.goto("/#/read/water-sharing-guided-v1");
 
   await expect(
@@ -32,7 +32,9 @@ test("學生可閱讀行舟卷、調整夜讀並保存進度", async ({ page }) 
 
 test("從首頁深處開啟文章仍從標題開始", async ({ page }) => {
   await page.goto("/");
-  const routeButton = page.getByRole("button", { name: /行舟卷/ }).first();
+  const routeButton = page
+    .getByRole("button", { name: /啟航.*引導模式/ })
+    .first();
   await routeButton.scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, 500));
   expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
@@ -47,7 +49,7 @@ test("從首頁深處開啟文章仍從標題開始", async ({ page }) => {
   await expect(page.getByText("帶著這個問題讀")).toBeVisible();
 });
 
-test("行舟卷用段落鷹架與就近詞語提示支援導讀", async ({ page }) => {
+test("引導模式提供段落路標，獨立模式保留點詞解釋", async ({ page }) => {
   await page.goto("/#/read/water-sharing-guided-v1");
 
   await expect(page.locator(".paragraph-scaffold")).toHaveCount(4);
@@ -56,22 +58,43 @@ test("行舟卷用段落鷹架與就近詞語提示支援導讀", async ({ page 
   );
   const termBlock = page.locator(".reading-block").filter({ hasText: "分配者" });
   await expect(termBlock.getByText("分配", { exact: true })).toBeVisible();
-  await expect(termBlock.getByText("把有限資源依照規則分給不同對象。")).toBeHidden();
+  await expect(
+    termBlock.getByText("把有限資源依照規則分給不同對象。", {
+      exact: true,
+    }),
+  ).toBeHidden();
   await termBlock.getByText("分配", { exact: true }).click();
-  await expect(termBlock.getByText("把有限資源依照規則分給不同對象。")).toBeVisible();
+  await expect(
+    termBlock.getByText("把有限資源依照規則分給不同對象。", {
+      exact: true,
+    }),
+  ).toBeVisible();
 
-  await page.goto("/#/read/water-sharing-challenge-v1");
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: /獨立模式.*點詞解釋/ })
+    .click();
+  await expect(
+    page.getByRole("button", { name: /獨立模式.*點詞解釋/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page
+    .getByRole("article")
+    .filter({ hasText: "四海航線" })
+    .getByRole("button", { name: /啟航.*獨立模式/ })
+    .click();
   await expect(page.locator(".paragraph-scaffold")).toHaveCount(0);
   const challengeTerm = page
     .locator(".reading-block")
-    .filter({ hasText: "節水能力" })
+    .filter({ hasText: "分配者" })
     .first();
   await expect(
-    challengeTerm.getByText("節水能力", { exact: true }),
+    challengeTerm.getByText("分配", { exact: true }),
   ).toBeVisible();
-  await challengeTerm.getByText("節水能力", { exact: true }).click();
+  await challengeTerm.getByText("分配", { exact: true }).click();
   await expect(
-    challengeTerm.getByText("能否透過設備、流程或行為調整而減少用水。"),
+    challengeTerm.getByText("把有限資源依照規則分給不同對象。", {
+      exact: true,
+    }),
   ).toBeVisible();
 });
 

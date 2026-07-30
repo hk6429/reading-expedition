@@ -13,6 +13,10 @@ function mapPublishedReading(row) {
     topicDate: row.topic_date,
     category: row.category,
     difficulty: row.difficulty,
+    level: row.reading_level ?? "tower",
+    supportMode:
+      row.support_mode ??
+      (row.difficulty === "guided" ? "guided" : "independent"),
     textType: row.text_type,
     title: row.title,
     hookQuestion: row.hook_question,
@@ -48,6 +52,10 @@ function mapReviewPackage(row, assessment = []) {
     contentKey: row.content_key,
     category: row.category,
     difficulty: row.difficulty,
+    level: row.reading_level ?? "tower",
+    supportMode:
+      row.support_mode ??
+      (row.difficulty === "guided" ? "guided" : "independent"),
     textType: row.text_type,
     title: row.title,
     hookQuestion: row.hook_question,
@@ -530,6 +538,8 @@ export function createReadingRepository(db) {
              rp.content_key,
              fp.category,
              rp.difficulty,
+             rp.reading_level,
+             rp.support_mode,
              rp.text_type,
              rp.title,
              rp.quality_score,
@@ -697,6 +707,262 @@ export function createReadingRepository(db) {
         .bind(tokenHash)
         .run();
     },
+    async createFamilyPassport(record) {
+      await db
+        .prepare(
+          `INSERT INTO family_passports
+             (id, passport_code_hash, time_zone, created_at)
+           VALUES (?, ?, ?, ?)`,
+        )
+        .bind(
+          record.id,
+          record.codeHash,
+          record.timeZone,
+          record.createdAt,
+        )
+        .run();
+    },
+    async findFamilyByCodeHash(codeHash) {
+      const row = await db
+        .prepare(
+          `SELECT id, passport_code_hash, time_zone, created_at, revoked_at
+           FROM family_passports
+           WHERE passport_code_hash = ?
+           LIMIT 1`,
+        )
+        .bind(codeHash)
+        .first();
+      return row
+        ? {
+            id: row.id,
+            codeHash: row.passport_code_hash,
+            timeZone: row.time_zone,
+            createdAt: row.created_at,
+            revokedAt: row.revoked_at,
+          }
+        : null;
+    },
+    async getFamilyPassport(familyId) {
+      const row = await db
+        .prepare(
+          `SELECT id, passport_code_hash, time_zone, created_at, revoked_at
+           FROM family_passports
+           WHERE id = ?
+           LIMIT 1`,
+        )
+        .bind(familyId)
+        .first();
+      return row
+        ? {
+            id: row.id,
+            codeHash: row.passport_code_hash,
+            timeZone: row.time_zone,
+            createdAt: row.created_at,
+            revokedAt: row.revoked_at,
+          }
+        : null;
+    },
+    async createFamilySession(record) {
+      await db
+        .prepare(
+          `INSERT INTO family_sessions
+             (id, family_id, token_hash, csrf_hash, expires_at, created_at)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          record.id,
+          record.familyId,
+          record.tokenHash,
+          record.csrfHash,
+          record.expiresAt,
+          record.createdAt,
+        )
+        .run();
+    },
+    async getFamilySession(tokenHash) {
+      const row = await db
+        .prepare(
+          `SELECT
+             fs.id,
+             fs.family_id,
+             fs.token_hash,
+             fs.csrf_hash,
+             fs.expires_at,
+             fs.revoked_at,
+             fp.revoked_at AS family_revoked_at
+           FROM family_sessions fs
+           JOIN family_passports fp ON fp.id = fs.family_id
+           WHERE fs.token_hash = ?
+           LIMIT 1`,
+        )
+        .bind(tokenHash)
+        .first();
+      if (!row || row.family_revoked_at) return null;
+      return {
+        id: row.id,
+        familyId: row.family_id,
+        tokenHash: row.token_hash,
+        csrfHash: row.csrf_hash,
+        expiresAt: row.expires_at,
+        revokedAt: row.revoked_at,
+      };
+    },
+    async revokeFamilySession(tokenHash) {
+      await db
+        .prepare(
+          `UPDATE family_sessions
+           SET revoked_at = CURRENT_TIMESTAMP
+           WHERE token_hash = ? AND revoked_at IS NULL`,
+        )
+        .bind(tokenHash)
+        .run();
+    },
+    async listFamilyChildren(familyId) {
+      const { results = [] } = await db
+        .prepare(
+          `SELECT
+             fc.id,
+             fc.alias,
+             fc.created_at,
+             fc.updated_at,
+             fcs.version AS state_version,
+             fcs.updated_at AS state_updated_at
+           FROM family_children fc
+           JOIN family_child_states fcs ON fcs.child_id = fc.id
+           WHERE fc.family_id = ?
+           ORDER BY fc.created_at`,
+        )
+        .bind(familyId)
+        .all();
+      return results.map((row) => ({
+        id: row.id,
+        alias: row.alias,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+        stateVersion: Number(row.state_version),
+        stateUpdatedAt: row.state_updated_at,
+      }));
+    },
+    async createFamilyChild(record) {
+      await db.batch([
+        db
+          .prepare(
+            `INSERT INTO family_children
+               (id, family_id, alias, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?)`,
+          )
+          .bind(
+            record.id,
+            record.familyId,
+            record.alias,
+            record.createdAt,
+            record.createdAt,
+          ),
+        db
+          .prepare(
+            `INSERT INTO family_child_states
+               (child_id, state_json, version, updated_at)
+             VALUES (?, ?, 1, ?)`,
+          )
+          .bind(
+            record.id,
+            JSON.stringify(record.state),
+            record.createdAt,
+          ),
+      ]);
+    },
+    async getFamilyChildState(familyId, childId) {
+      const row = await db
+        .prepare(
+          `SELECT
+             fcs.child_id,
+             fcs.state_json,
+             fcs.version,
+             fcs.updated_at
+           FROM family_child_states fcs
+           JOIN family_children fc ON fc.id = fcs.child_id
+           WHERE fc.family_id = ? AND fc.id = ?
+           LIMIT 1`,
+        )
+        .bind(familyId, childId)
+        .first();
+      return row
+        ? {
+            childId: row.child_id,
+            state: parseJsonField(row.state_json, "state_json"),
+            version: Number(row.version),
+            updatedAt: row.updated_at,
+          }
+        : null;
+    },
+    async updateFamilyChildState(
+      familyId,
+      childId,
+      state,
+      expectedVersion,
+    ) {
+      const update = await db
+        .prepare(
+          `UPDATE family_child_states
+           SET state_json = ?,
+               version = version + 1,
+               updated_at = CURRENT_TIMESTAMP
+           WHERE child_id = ?
+             AND version = ?
+             AND EXISTS (
+               SELECT 1
+               FROM family_children fc
+               WHERE fc.id = family_child_states.child_id
+                 AND fc.family_id = ?
+             )`,
+        )
+        .bind(
+          JSON.stringify(state),
+          childId,
+          expectedVersion,
+          familyId,
+        )
+        .run();
+      if (!update.meta?.changes) return null;
+      return this.getFamilyChildState(familyId, childId);
+    },
+    async deleteFamilyChild(familyId, childId) {
+      const deletion = await db
+        .prepare(
+          `DELETE FROM family_children
+           WHERE id = ? AND family_id = ?`,
+        )
+        .bind(childId, familyId)
+        .run();
+      return Number(deletion.meta?.changes) > 0;
+    },
+    async revokeFamily(familyId) {
+      await db.batch([
+        db
+          .prepare(
+            `DELETE FROM family_child_states
+             WHERE child_id IN (
+               SELECT id FROM family_children WHERE family_id = ?
+             )`,
+          )
+          .bind(familyId),
+        db
+          .prepare(
+            `DELETE FROM family_children WHERE family_id = ?`,
+          )
+          .bind(familyId),
+        db
+          .prepare(
+            `DELETE FROM family_sessions WHERE family_id = ?`,
+          )
+          .bind(familyId),
+        db
+          .prepare(
+            `DELETE FROM family_passports WHERE id = ?`,
+          )
+          .bind(familyId),
+      ]);
+    },
     async getPublishedDaily(topicDate) {
       const statement = db
         .prepare(
@@ -706,6 +972,8 @@ export function createReadingRepository(db) {
              fp.topic_date,
              fp.category,
              rp.difficulty,
+             rp.reading_level,
+             rp.support_mode,
              rp.text_type,
              rp.title,
              rp.hook_question,
@@ -741,6 +1009,8 @@ export function createReadingRepository(db) {
              fp.topic_date,
              fp.category,
              rp.difficulty,
+             rp.reading_level,
+             rp.support_mode,
              rp.text_type,
              rp.title,
              rp.hook_question,
@@ -829,6 +1099,10 @@ export function createReadingRepository(db) {
         contentKey: row.content_key,
         category: row.category,
         difficulty: row.difficulty,
+        level: row.reading_level ?? "tower",
+        supportMode:
+          row.support_mode ??
+          (row.difficulty === "guided" ? "guided" : "independent"),
         textType: row.text_type,
         title: row.title,
         hookQuestion: row.hook_question,

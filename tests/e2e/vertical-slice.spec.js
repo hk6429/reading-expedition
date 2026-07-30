@@ -15,7 +15,9 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
   await page.goto("/");
 
   const worldCard = page.getByRole("article").filter({ hasText: "四海航線" });
-  await worldCard.getByRole("button", { name: /行舟卷/ }).click();
+  await worldCard
+    .getByRole("button", { name: /啟航.*引導模式/ })
+    .click();
   await expect(
     page.getByRole("heading", { name: "一座城市如何分配有限水源？" }),
   ).toBeVisible();

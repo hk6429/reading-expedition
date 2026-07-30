@@ -9,7 +9,7 @@ test("文字放大 200% 仍可操作，主要流程可用鍵盤啟動", async ({
   const button = page
     .getByRole("article")
     .filter({ hasText: "四海航線" })
-    .getByRole("button", { name: /行舟卷/ });
+    .getByRole("button", { name: /啟航.*引導模式/ });
   await expect(button).toBeVisible();
   await button.focus();
   await page.keyboard.press("Enter");
