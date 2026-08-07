@@ -65,6 +65,7 @@
   "packages": [
     {
       "id": "peach-blossom-spring-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "classical",
       "title": "桃源可尋乎",
@@ -234,6 +235,7 @@
     },
     {
       "id": "peach-blossom-spring-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "classical",
       "title": "桃源之界與人間之責",

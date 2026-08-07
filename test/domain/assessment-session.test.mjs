@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  assessmentOutcome,
   createAssessmentSession,
   gradeAssessment,
 } from "../../src/domain/assessment-session.js";
@@ -64,4 +65,28 @@ test("學生送出後可修正一次，第二次修正會被拒絕", async () =>
   const second = await session.submit();
   assert.equal(second.canRevise, false);
   await assert.rejects(() => session.submit(), /already final/);
+});
+
+test("三題答對兩題即達標，未達標不開放下一篇", () => {
+  assert.deepEqual(
+    assessmentOutcome([
+      { correct: true },
+      { correct: false },
+      { correct: true },
+    ]),
+    {
+      total: 3,
+      correctCount: 2,
+      requiredCorrectCount: 2,
+      passed: true,
+    },
+  );
+  assert.equal(
+    assessmentOutcome([
+      { correct: false },
+      { correct: false },
+      { correct: true },
+    ]).passed,
+    false,
+  );
 });

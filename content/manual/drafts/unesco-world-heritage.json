@@ -86,6 +86,7 @@
   "packages": [
     {
       "id": "unesco-world-heritage-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "為什麼世界遺產不能只由一國守護？",
@@ -252,6 +253,7 @@
     },
     {
       "id": "unesco-world-heritage-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "國界之內，世界之責",

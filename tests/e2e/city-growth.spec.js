@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
 test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ page }) => {
   await page.goto("/#/quiz/water-sharing-guided-v1");
@@ -19,7 +19,7 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
     })
     .check();
   await page.getByRole("button", { name: "送出 3 題" }).click();
-  await page.getByRole("button", { name: "把知識帶回浮城" }).click();
+  await page.getByRole("button", { name: "查看成果與下一步" }).click();
 
   await expect(page.getByText("帶回 5 塊墨磚")).toBeVisible();
   await page

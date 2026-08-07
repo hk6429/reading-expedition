@@ -72,6 +72,7 @@
   "packages": [
     {
       "id": "oracle-bone-writing-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "龜甲與獸骨上的商代生活簿",
@@ -261,6 +262,7 @@
     },
     {
       "id": "oracle-bone-writing-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "把占問讀成歷史：甲骨證據的三重尺度",

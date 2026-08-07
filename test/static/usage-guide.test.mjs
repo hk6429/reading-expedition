@@ -36,7 +36,8 @@ test("使用說明分別提供學生四步與教師四步", () => {
   const guide = read("src/ui/usage-guide.js");
   assert.match(guide, /學生篇/);
   assert.match(guide, /教師篇/);
-  assert.match(guide, /選一條航線/);
+  assert.match(guide, /確認個人紀錄/);
+  assert.match(guide, /三題答對兩題達標/);
   assert.match(guide, /校閱後再發布/);
   assert.match(guide, /建立匿名班級/);
   assert.match(guide, /不要求姓名、學號、Email/);

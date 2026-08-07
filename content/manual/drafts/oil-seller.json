@@ -55,6 +55,7 @@
   "packages": [
     {
       "id": "oil-seller-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "classical",
       "title": "熟藝與謙心",
@@ -231,6 +232,7 @@
     },
     {
       "id": "oil-seller-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "classical",
       "title": "技進於熟，德成於謙",

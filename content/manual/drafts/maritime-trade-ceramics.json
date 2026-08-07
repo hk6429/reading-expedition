@@ -66,6 +66,7 @@
   "packages": [
     {
       "id": "maritime-trade-ceramics-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "瓶頸上的兩叢花：一只瓷器留下的航海線索",
@@ -232,6 +233,7 @@
     },
     {
       "id": "maritime-trade-ceramics-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "無聲的航海檔案：從外銷瓷辨認交流與證據的邊界",

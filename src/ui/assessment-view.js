@@ -1,4 +1,7 @@
-import { createAssessmentSession } from "../domain/assessment-session.js";
+import {
+  assessmentOutcome,
+  createAssessmentSession,
+} from "../domain/assessment-session.js";
 
 const COMPETENCY_LABELS = Object.freeze({
   comprehension: "找重點",
@@ -150,7 +153,7 @@ function createReadingStrategyPanel(strategy) {
 export function renderAssessment(
   container,
   reading,
-  { submitAnswers, onComplete },
+  { submitAnswers, onComplete, requiresConnection = false },
 ) {
   container.replaceChildren();
   container.className = "assessment-view";
@@ -163,7 +166,8 @@ export function renderAssessment(
       <p class="chapter-label">讀完後想一想・不計速度</p>
       <h1>用 3 題確認你讀懂了什麼</h1>
       <p class="assessment-reading-title">${reading.title}</p>
-      <p>依序找重點、想意思、找證據。答錯可以回看並修正一次。</p>
+      <p><strong>達標條件：三題答對至少兩題。</strong>依序找重點、想意思、找證據；未達標時可回看並修正一次。</p>
+      ${requiresConnection ? '<p class="assessment-connection-note">這篇正式讀卷的評分需要網路連線；離線時已選答案會留在這一頁，恢復連線後可再送出。</p>' : ""}
     </header>
   `;
 
@@ -215,29 +219,51 @@ export function renderAssessment(
   completion.className = "assessment-completion";
   completion.hidden = true;
   const completionTitle = document.createElement("h2");
-  completionTitle.textContent = "文證已帶回";
+  completionTitle.textContent = "作答完成";
   const completionCopy = document.createElement("p");
   completionCopy.textContent =
     "不論第一次是否答對，你都完成了閱讀、查找與修正。";
   const cityButton = document.createElement("button");
   cityButton.type = "button";
   cityButton.className = "primary-action";
-  cityButton.textContent = "把知識帶回浮城";
+  cityButton.textContent = "查看成果與下一步";
+  let completionDestination = "#/";
   let firstResults = null;
   let latestResults = null;
   let latestAttempt = 0;
+  let latestOutcome = null;
   cityButton.addEventListener("click", () => {
-    onComplete({
-      firstResults,
-      finalResults: latestResults,
-      attempt: latestAttempt,
-      evidenceViewedIds: [...evidenceViewedIds],
-    });
+    window.location.hash = completionDestination;
   });
   completion.append(completionTitle, completionCopy);
+  const completionDetails = document.createElement("ul");
+  completionDetails.className = "assessment-result-summary";
   const strategyPanel = createReadingStrategyPanel(reading.readingStrategy);
   if (strategyPanel) completion.append(strategyPanel);
   completion.append(cityButton);
+
+  const backLink = wrapper.querySelector(".assessment-header a");
+  let assessmentFinished = false;
+  backLink.addEventListener("click", (event) => {
+    if (
+      !assessmentFinished &&
+      form.querySelector('input[type="radio"]:checked') &&
+      !window.confirm("尚未送出的作答會消失。確定回到文章嗎？")
+    ) {
+      event.preventDefault();
+    }
+  });
+  const warnBeforeUnload = (event) => {
+    if (
+      assessmentFinished ||
+      !form.querySelector('input[type="radio"]:checked')
+    ) {
+      return;
+    }
+    event.preventDefault();
+    event.returnValue = "";
+  };
+  window.addEventListener("beforeunload", warnBeforeUnload);
 
   const session = createAssessmentSession({
     itemIds: reading.assessment.map(({ id }) => id),
@@ -366,7 +392,7 @@ export function renderAssessment(
         feedback.append(status, reason, mentor, evidence);
       });
 
-      if (result.canRevise) {
+      if (result.canRevise && !assessmentOutcome(result.results).passed) {
         revisionIndexes = result.results
           .map((item, index) => (item.correct ? -1 : index))
           .filter((index) => index >= 0);
@@ -383,13 +409,50 @@ export function renderAssessment(
       const revisedCount = firstResults.filter(
         (item, index) => !item.correct && latestResults[index]?.correct,
       ).length;
-      completionCopy.textContent =
-        revisedCount > 0
-          ? `你回到原文並修正了 ${revisedCount} 題。吳用說：願意重找證據，就是閱讀本領正在長大。`
-          : "三位領航伙伴已把你的理解與文證收入航圖，準備帶回浮城。";
+      latestOutcome = assessmentOutcome(latestResults);
+      assessmentFinished = true;
+      window.removeEventListener("beforeunload", warnBeforeUnload);
+      completionTitle.textContent = latestOutcome.passed
+        ? "答題達標，這一篇讀懂了"
+        : "這一篇先停下來整理";
+      completionCopy.textContent = latestOutcome.passed
+        ? revisedCount > 0
+          ? `你回到原文並修正了 ${revisedCount} 題，最後答對 ${latestOutcome.correctCount}／${latestOutcome.total} 題，可以選擇下一篇挑戰。`
+          : `你答對 ${latestOutcome.correctCount}／${latestOutcome.total} 題，閱讀與答題紀錄已保存。`
+        : `目前答對 ${latestOutcome.correctCount}／${latestOutcome.total} 題，還差 ${latestOutcome.requiredCorrectCount - latestOutcome.correctCount} 題達標。紀錄會保留，你可以回讀後再挑戰，或今天先結束。`;
+      completionDestination = await onComplete({
+        firstResults,
+        finalResults: latestResults,
+        attempt: latestAttempt,
+        evidenceViewedIds: [...evidenceViewedIds],
+        assessmentOutcome: latestOutcome,
+      });
+      cityButton.textContent = latestOutcome.passed
+        ? "查看成果與下一步"
+        : "回到文章，重新挑戰";
       form.hidden = true;
       evidencePanel.hidden = true;
       completion.hidden = false;
+      if (!latestOutcome.passed) {
+        completionDetails.replaceChildren(
+          ...latestResults.map((itemResult) => {
+            const item = document.createElement("li");
+            const question = reading.assessment.find(
+              ({ id }) => id === itemResult.id,
+            );
+            const skill = COMPETENCY_LABELS[question?.type] ?? "閱讀理解";
+            item.textContent = itemResult.correct
+              ? `${skill}：已答對`
+              : `${skill}：尚待加強。${itemResult.diagnostic}`;
+            return item;
+          }),
+        );
+        completion.insertBefore(completionDetails, strategyPanel ?? cityButton);
+        const restLink = document.createElement("a");
+        restLink.href = "#/rest";
+        restLink.textContent = "今天先到這裡，明天再來";
+        completion.append(restLink);
+      }
       completionTitle.tabIndex = -1;
       focusSection(completionTitle);
     } catch (cause) {

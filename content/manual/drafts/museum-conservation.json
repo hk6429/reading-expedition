@@ -78,6 +78,7 @@
   "packages": [
     {
       "id": "museum-conservation-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "修得越新越好嗎？",
@@ -265,6 +266,7 @@
     },
     {
       "id": "museum-conservation-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "修護師保存的是哪一個過去？",

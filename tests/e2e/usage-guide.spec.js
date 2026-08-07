@@ -1,9 +1,10 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
 test("手機可從頁首開啟師生使用說明並看見兩種操作流程", async ({
   page,
 }) => {
   await page.goto("/");
+  await page.getByText("更多", { exact: true }).click();
   await page.getByRole("link", { name: "師生使用說明" }).click();
 
   await expect(

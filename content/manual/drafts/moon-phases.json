@@ -86,6 +86,7 @@
   "packages": [
     {
       "id": "moon-phases-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "月亮沒有變形：看懂每天不同的月相",
@@ -255,6 +256,7 @@
     },
     {
       "id": "moon-phases-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "月相是一種視角：從亮面到證據的推理",

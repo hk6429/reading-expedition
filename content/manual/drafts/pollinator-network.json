@@ -88,6 +88,7 @@
   "packages": [
     {
       "id": "pollinator-network-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "一朵花後面的食物網",
@@ -272,6 +273,7 @@
     },
     {
       "id": "pollinator-network-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "授粉不是單線服務：從互惠到韌性的網絡",

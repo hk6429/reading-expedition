@@ -80,6 +80,7 @@
   "packages": [
     {
       "id": "water-cycle-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "水循環為什麼不是一個圓圈？",
@@ -243,6 +244,7 @@
     },
     {
       "id": "water-cycle-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "離開圓圈：在尺度與取捨中讀懂水循環",

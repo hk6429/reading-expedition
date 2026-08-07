@@ -1,0 +1,356 @@
+{
+  "source": {
+    "id": "sudden-harbor-wave-launch-source",
+    "name": "NOAA National Ocean Service",
+    "baseUrl": "https://oceanservice.noaa.gov",
+    "licenseType": "public-domain-us-government",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "sudden-harbor-wave-launch-source-item",
+    "canonicalUrl": "https://oceanservice.noaa.gov/facts/meteotsunami.html",
+    "title": "What is a meteotsunami?",
+    "publisher": "NOAA National Ocean Service",
+    "publishedAt": null,
+    "fetchedAt": "2026-08-06T00:00:00+08:00",
+    "contentFingerprint": "noaa-nos-sudden-harbor-wave-launch-live-2026-08-06",
+    "licenseSnapshot": "NOAA 為美國聯邦政府機構；本草稿只使用該頁可核對的政府事實並原創改寫，排除頁面中的第三方圖片、影片與商標。",
+    "extractScope": "氣象海嘯的風暴與氣壓成因、傳播與沿岸放大、和地震海嘯及港灣振盪的差異，以及預報困難。"
+  },
+  "factPack": {
+    "id": "sudden-harbor-wave-launch-fact-pack",
+    "topicDate": "2026-08-10",
+    "category": "world",
+    "facts": [
+      {
+        "id": "sudden-harbor-wave-launch-fact-1",
+        "statement": "氣象海嘯是由快速移動天氣系統所伴隨的氣壓擾動驅動的大浪。",
+        "sourceItemId": "sudden-harbor-wave-launch-source-item"
+      },
+      {
+        "id": "sudden-harbor-wave-launch-fact-2",
+        "statement": "風暴造成的波浪向岸邊移動，可能在淺大陸棚、港口、海灣或其他海岸地形處放大。",
+        "sourceItemId": "sudden-harbor-wave-launch-source-item"
+      },
+      {
+        "id": "sudden-harbor-wave-launch-fact-3",
+        "statement": "單一氣象海嘯能傳播很遠並影響大範圍海岸。",
+        "sourceItemId": "sudden-harbor-wave-launch-source-item"
+      },
+      {
+        "id": "sudden-harbor-wave-launch-fact-4",
+        "statement": "氣象海嘯的特徵與地震海嘯很難區分，也可能和暴潮或港灣振盪混淆，因此預測與警告具有挑戰。",
+        "sourceItemId": "sudden-harbor-wave-launch-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://oceanservice.noaa.gov/facts/meteotsunami.html"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "sudden-harbor-wave-launch",
+  "packages": [
+    {
+      "id": "sudden-harbor-wave-launch-guided",
+      "level": "launch",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "遠方風暴送進港灣的一串大浪",
+      "hookQuestion": "港邊眼前沒有明顯風雨，為什麼仍不能只靠天空判斷海面安全？",
+      "body": [
+        "站在港邊時，我們常先看頭頂的天空，再判斷海面是否安全。可是，有些大浪的起點可能在別處。氣象海嘯就是由風暴造成的一串波浪，它能移動很遠，影響大範圍海岸。",
+        "氣象海嘯不是主要由海底地震引起。它常和快速移動的天氣事件有關，例如強烈雷雨、颮線或其他風暴鋒面。這些天氣系統帶來氣壓擾動，推動海面形成波浪。",
+        "波浪形成後會往岸邊傳播。當它遇到較淺的大陸棚，或進入港口、海灣等海岸地形，浪可能被放大。於是，遠方開始的變化，到了岸邊可能變得更明顯。",
+        "這也解釋了為什麼不能只看港口上方是否正在下雨。單一氣象海嘯可以走很遠；眼前較平靜的天色，不能證明遠方沒有能推動波浪的快速天氣事件。",
+        "氣象海嘯和地震海嘯都會形成向前傳播的長波，外在特徵很難區分。不過，兩者主要起因不同：一個和大氣壓力擾動有關，另一個通常和地震活動有關。",
+        "港灣振盪也可能和氣象海嘯同時出現，但兩者不是同一件事。港灣振盪多是水位在封閉或半封閉水域來回擺動；氣象海嘯則能出現在開放海岸，並向前傳播。",
+        "因為外表相似，氣象海嘯也可能被誤認為地震海嘯、暴潮或港灣振盪。這讓預測和發布警告變得困難。NOAA科學家仍在辨認容易產生氣象海嘯的大氣條件。",
+        "遇到港灣突然湧浪時，重要的不是替現象猜一個名字，而是先離開危險水邊並依警報行動。閱讀本文時，則要抓住三段因果：風暴擾動海面、波浪遠距傳播、沿岸地形可能放大。"
+      ],
+      "glossary": [
+        {
+          "term": "氣象海嘯",
+          "definition": "由快速天氣事件伴隨的氣壓擾動所推動的大浪。"
+        },
+        {
+          "term": "氣壓擾動",
+          "definition": "大氣壓力在時間或空間上快速改變的現象。"
+        },
+        {
+          "term": "大陸棚",
+          "definition": "大陸邊緣向海延伸的較淺海底區域。"
+        },
+        {
+          "term": "港灣振盪",
+          "definition": "水體在封閉或半封閉水域中來回擺動的現象。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "浪源路徑三段法",
+        "purpose": "依浪的起點、遠距傳播與沿岸放大三段閱讀，避免只用港邊當下天色判斷成因。",
+        "steps": [
+          {
+            "label": "找浪源",
+            "instruction": "先圈出強烈雷雨、颮線、風暴鋒面與氣壓擾動，確認推動海面的天氣事件。",
+            "example": "第二段說快速天氣系統帶來氣壓擾動，接著推動海面形成波浪。"
+          },
+          {
+            "label": "追傳播",
+            "instruction": "標出波浪從形成處往岸邊移動的句子，說明遠方事件如何影響另一段海岸。",
+            "example": "單一氣象海嘯可以走很遠，所以港邊天色不能代表整條傳播路線。"
+          },
+          {
+            "label": "看放大",
+            "instruction": "找出大陸棚、港口和海灣，判斷海岸地形在波浪接近岸邊時扮演的角色。",
+            "example": "波浪遇到淺大陸棚或進入港灣後可能放大，使岸邊變化更加明顯。"
+          }
+        ],
+        "structureMap": "文章先說遠方風暴能製造波浪，再追蹤波浪傳播與地形放大，接著比較相似現象，最後回到安全判斷。",
+        "expertTip": "成因與眼前天氣不是同一位置的資訊；判斷前先確認波浪是否可能從遠方傳來。",
+        "selfCheck": "我能否用起點、傳播、放大三個詞，完整解釋港灣突然湧浪的可能過程？"
+      },
+      "readingMinutes": 5,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/meteotsunami.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "sudden-harbor-wave-launch-guided-q1",
+          "type": "comprehension",
+          "prompt": "依本文，氣象海嘯主要由什麼驅動？",
+          "options": [
+            "快速天氣事件帶來的氣壓擾動",
+            "海底地震造成的地殼移動",
+            "船隻同時駛進港口",
+            "月光照在海面上的亮度"
+          ],
+          "correctAnswer": "快速天氣事件帶來的氣壓擾動",
+          "rationale": "第二段明確指出快速天氣系統帶來氣壓擾動，進而推動海面成波。",
+          "distractorReasons": {
+            "海底地震造成的地殼移動": "地震是另一類海嘯的主要成因。",
+            "船隻同時駛進港口": "正文未把船隻進港列為氣象海嘯成因。",
+            "月光照在海面上的亮度": "月光亮度不會形成本文所述氣壓擾動。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 48,
+            "end": 60,
+            "text": "這些天氣系統帶來氣壓擾動"
+          }
+        },
+        {
+          "id": "sudden-harbor-wave-launch-guided-q2",
+          "type": "inference",
+          "prompt": "為何港邊沒有下雨仍不能直接排除氣象海嘯？",
+          "options": [
+            "波浪可由遠方事件形成並長距離傳播",
+            "氣象海嘯只在完全無雲時形成",
+            "所有港灣每天固定出現大浪",
+            "大浪一定由港內船隻製造"
+          ],
+          "correctAnswer": "波浪可由遠方事件形成並長距離傳播",
+          "rationale": "第一、四段指出氣象海嘯能移動很遠，因此眼前天色不足以代表遠方浪源。",
+          "distractorReasons": {
+            "氣象海嘯只在完全無雲時形成": "正文沒有只在無雲時形成的規則。",
+            "所有港灣每天固定出現大浪": "氣象海嘯不是港灣每天固定發生的現象。",
+            "大浪一定由港內船隻製造": "本文的成因是快速天氣事件，不是港內船隻。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 23,
+            "end": 34,
+            "text": "單一氣象海嘯可以走很遠"
+          }
+        },
+        {
+          "id": "sudden-harbor-wave-launch-guided-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能支持『沿岸地形可能讓波浪變大』？",
+          "options": [
+            "遇到較淺的大陸棚，或進入港口、海灣等海岸地形，浪可能被放大。",
+            "氣象海嘯不是主要由海底地震引起。",
+            "外在特徵很難區分。",
+            "NOAA科學家仍在辨認大氣條件。"
+          ],
+          "correctAnswer": "遇到較淺的大陸棚，或進入港口、海灣等海岸地形，浪可能被放大。",
+          "rationale": "第一項直接列出較淺大陸棚、港口與海灣，並說明浪可能被放大。",
+          "distractorReasons": {
+            "氣象海嘯不是主要由海底地震引起。": "此句比較成因，沒有說明地形放大。",
+            "外在特徵很難區分。": "外觀相似與浪高放大不是同一問題。",
+            "NOAA科學家仍在辨認大氣條件。": "研究工作本身不能直接證明地形作用。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 23,
+            "end": 43,
+            "text": "或進入港口、海灣等海岸地形，浪可能被放大"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sudden-harbor-wave-launch-challenge",
+      "level": "launch",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "氣壓擾動如何變成沿岸危險長波",
+      "hookQuestion": "同樣像海嘯的大浪，如何從天空的變化一路抵達港灣？",
+      "body": [
+        "港灣突然湧入大浪，不一定表示附近海底剛發生地震。氣象海嘯是一串由風暴驅動的長波，通常比地震海嘯小、破壞也較少，卻仍可能造成危險。它能走很遠，所以浪源與受影響海岸未必位在同一處天氣之下。",
+        "關鍵起點是快速移動天氣事件伴隨的氣壓擾動。強烈雷雨、颮線與其他風暴鋒面，都可能使空氣壓力快速改變。大氣的變化推動海面，形成向岸邊前進的波，而不是只讓水在原地上下晃動。",
+        "波浪的後續大小還受海岸條件影響。當波進入淺大陸棚，再接近入口狹窄的港口、海灣或其他海岸地形時，振幅可能被放大。這是一條跨層次因果鏈：天空提供擾動，海洋負責傳播，地形改變到岸表現。",
+        "氣象海嘯和地震海嘯的外在特徵幾乎難以區分，因為兩者都能形成向前移動的長波。區別重點在驅動來源：前者來自大氣壓力擾動，後者主要由地震活動引發。只看浪的模樣，未必能辨認成因。",
+        "另一個容易混淆的現象是港灣振盪。它屬於駐波，水位擺動週期通常超過三小時，常受限於封閉或半封閉水域。氣象海嘯則是行進波，週期約在兩分鐘到兩小時之間，也常見於開放海岸。兩者甚至可能同時出現。",
+        "風與氣壓都能參與兩種現象，但重要程度不同。風通常對港灣振盪較重要，氣壓則常在氣象海嘯形成中扮演重要角色。這不是說某一因素絕對不存在，而是比較哪一種作用較突出。",
+        "面對這類事件，閱讀者要同時處理成因、傳播、地形與比較四組證據。不能因港邊未下雨就否定遠方風暴，也不能因浪形像海嘯就斷定發生地震。較可靠的結論必須把波浪路徑與其他可能現象一併檢查。"
+      ],
+      "glossary": [
+        {
+          "term": "氣象海嘯",
+          "definition": "由快速天氣事件伴隨的氣壓擾動所驅動的長波。"
+        },
+        {
+          "term": "氣壓擾動",
+          "definition": "空氣壓力快速改變並能推動海面的現象。"
+        },
+        {
+          "term": "振幅",
+          "definition": "波動離開平均位置的程度，可反映波浪大小。"
+        },
+        {
+          "term": "港灣振盪",
+          "definition": "封閉或半封閉水域中的水位來回擺動。"
+        },
+        {
+          "term": "駐波",
+          "definition": "波形像停在固定位置來回振動的波。"
+        },
+        {
+          "term": "行進波",
+          "definition": "波形會向前傳播並把擾動帶往其他位置的波。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "異象證據比較法",
+        "purpose": "整合成因、傳播、週期與水域條件，比較氣象海嘯和三種外觀相似的沿岸現象。",
+        "steps": [
+          {
+            "label": "建因果鏈",
+            "instruction": "把氣壓擾動、海面成波、遠距傳播與地形放大依時間先後排成完整路徑。",
+            "example": "快速風暴改變氣壓，海面形成行進波；波到淺大陸棚和港灣後可能放大。"
+          },
+          {
+            "label": "比較特徵",
+            "instruction": "用驅動來源、波的型態、週期長短與出現水域，比較氣象海嘯及港灣振盪。",
+            "example": "氣象海嘯是兩分鐘至兩小時的行進波；港灣振盪多是超過三小時的駐波。"
+          },
+          {
+            "label": "限制推論",
+            "instruction": "檢查結論是否只憑當地天色或浪形，補上遠方浪源與相似現象的其他可能性。",
+            "example": "港邊晴朗不能排除遠方風暴，浪形像海嘯也不能單獨證明海底發生地震。"
+          }
+        ],
+        "structureMap": "文章從風暴氣壓擾動建立傳播與放大鏈，再以成因、週期和水域比較地震海嘯、港灣振盪及暴潮，最後說明預報限制。",
+        "expertTip": "比較相似現象時，要找能區別的特徵；共同特徵只能說它們相像，不能單獨證明是哪一種。",
+        "selfCheck": "我能否提出兩項以上可區分氣象海嘯與港灣振盪的證據，而不只看浪高？"
+      },
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/meteotsunami.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "sudden-harbor-wave-launch-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依本文，氣象海嘯到岸時可能在哪些地方被放大？",
+          "options": [
+            "淺大陸棚、港口或海灣",
+            "只有深海中央",
+            "山頂與沙漠",
+            "所有河流上游"
+          ],
+          "correctAnswer": "淺大陸棚、港口或海灣",
+          "rationale": "第三段直接列出淺大陸棚、港口、海灣等會影響波浪的沿岸條件。",
+          "distractorReasons": {
+            "只有深海中央": "正文談的是接近岸邊的淺水與海岸地形。",
+            "山頂與沙漠": "山頂和沙漠不是本文波浪傳播的海岸條件。",
+            "所有河流上游": "來源沒有說所有河流上游都會放大氣象海嘯。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 16,
+            "end": 24,
+            "text": "當波進入淺大陸棚"
+          }
+        },
+        {
+          "id": "sudden-harbor-wave-launch-challenge-q2",
+          "type": "inference",
+          "prompt": "若只看浪形，為何難以判定是氣象海嘯還是地震海嘯？",
+          "options": [
+            "兩者都能形成向前移動的長波",
+            "兩者都一定由同一場地震造成",
+            "兩者只會在封閉湖泊發生",
+            "兩者週期與成因完全相同"
+          ],
+          "correctAnswer": "兩者都能形成向前移動的長波",
+          "rationale": "第五段指出兩者外在特徵近似，都能形成向前移動的長波，但驅動來源不同。",
+          "distractorReasons": {
+            "兩者都一定由同一場地震造成": "氣象海嘯由大氣壓力擾動驅動。",
+            "兩者只會在封閉湖泊發生": "氣象海嘯也常見於開放海岸。",
+            "兩者週期與成因完全相同": "兩者驅動成因不同，不能說完全相同。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 23,
+            "end": 36,
+            "text": "兩者都能形成向前移動的長波"
+          }
+        },
+        {
+          "id": "sudden-harbor-wave-launch-challenge-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能支持『氣象海嘯與港灣振盪不能只看是否有風』？",
+          "options": [
+            "風與氣壓都能參與兩種現象，但重要程度不同。",
+            "氣象海嘯曾達一點八三公尺以上。",
+            "一次事件能影響很長一段海岸。",
+            "港灣突然湧入大浪不一定有地震。"
+          ],
+          "correctAnswer": "風與氣壓都能參與兩種現象，但重要程度不同。",
+          "rationale": "第一項同時指出風和氣壓可參與兩者，真正差異在作用重要程度，直接反駁單靠有無風區分。",
+          "distractorReasons": {
+            "氣象海嘯曾達一點八三公尺以上。": "浪高資料不能區分風的角色。",
+            "一次事件能影響很長一段海岸。": "影響範圍與是否有風不是同一判準。",
+            "港灣突然湧入大浪不一定有地震。": "此句比較地震成因，未比較兩種氣象現象。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 0,
+            "end": 12,
+            "text": "風與氣壓都能參與兩種現象"
+          }
+        }
+      ]
+    }
+  ]
+}

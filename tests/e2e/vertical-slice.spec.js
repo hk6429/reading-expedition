@@ -1,6 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
-test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) => {
+test("學生從首頁完成閱讀、達標與建城", async ({ page }) => {
   const contributions = [];
   await page.addInitScript(() => {
     localStorage.setItem("reading-expedition.class-token", "a".repeat(43));
@@ -14,14 +14,13 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
   });
   await page.goto("/");
 
-  const worldCard = page.getByRole("article").filter({ hasText: "四海航線" });
-  await worldCard
-    .getByRole("button", { name: /啟航.*引導模式/ })
-    .click();
+  await page.goto("/#/read/water-sharing-guided-v1");
   await expect(
     page.getByRole("heading", { name: "一座城市如何分配有限水源？" }),
   ).toBeVisible();
 
+  await page.locator(".reading-paragraph").last().scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: "前往 3 題問答" })).toBeEnabled();
   await page.getByRole("button", { name: "前往 3 題問答" }).click();
   await page
     .getByRole("radio", { name: "以各方目前申報的用水量作為主要依據" })
@@ -39,15 +38,8 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
     })
     .check();
   await page.getByRole("button", { name: "送出 3 題" }).click();
-  await expect(
-    page.getByRole("button", { name: "查看第3段線索" }),
-  ).toBeVisible();
-
-  await page
-    .getByRole("radio", { name: "基本需要、影響與節水能力" })
-    .check();
-  await page.getByRole("button", { name: "完成修正" }).click();
-  await page.getByRole("button", { name: "把知識帶回浮城" }).click();
+  await expect(page.getByText("答題達標，這一篇讀懂了")).toBeVisible();
+  await page.getByRole("button", { name: "查看成果與下一步" }).click();
   await expect.poll(() => contributions.length).toBe(1);
   expect(contributions[0]).toMatchObject({
     authorization: `Bearer ${"a".repeat(43)}`,
@@ -63,6 +55,12 @@ test("學生從首頁完成閱讀、文證、修正與建城", async ({ page }) 
     .getByRole("button", { name: /投入天下驛站/ })
     .click();
   await expect(page.getByText("天下驛站升到第 1 階")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "下一步，由你決定" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "今天先到這裡，明天再來" }),
+  ).toBeVisible();
 
   await page.reload();
   await expect(page.getByText("天下驛站・第 1 階")).toBeVisible();

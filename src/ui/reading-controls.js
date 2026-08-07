@@ -4,7 +4,11 @@ const MODES = Object.freeze([
   { id: "night", label: "夜讀" },
 ]);
 
-export function createReadingControls(preferences, onChange) {
+export function createReadingControls(
+  preferences,
+  onChange,
+  { onSupportModeChange } = {},
+) {
   const aside = document.createElement("aside");
   aside.className = "reading-controls";
   aside.setAttribute("aria-label", "閱讀顯示設定");
@@ -48,6 +52,29 @@ export function createReadingControls(preferences, onChange) {
     modeGroup.append(button);
   }
   panel.append(modeGroup);
+
+  if (onSupportModeChange) {
+    const supportLabel = document.createElement("p");
+    supportLabel.className = "control-label";
+    supportLabel.textContent = "陪讀方式";
+    const supportGroup = document.createElement("div");
+    supportGroup.className = "support-mode-group";
+    for (const [mode, label] of [
+      ["guided", "引導"],
+      ["independent", "獨立"],
+    ]) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      button.setAttribute(
+        "aria-pressed",
+        String(preferences.supportMode === mode),
+      );
+      button.addEventListener("click", () => onSupportModeChange(mode));
+      supportGroup.append(button);
+    }
+    panel.append(supportLabel, supportGroup);
+  }
 
   const sizeGroup = document.createElement("div");
   sizeGroup.className = "font-size-group";

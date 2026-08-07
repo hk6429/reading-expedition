@@ -36,6 +36,13 @@ test("人工種子一次建立來源、事實包、雙難度與六題", async ()
     ).length,
     2,
   );
+  const readingStatements = statements.filter(({ sql }) =>
+    /INSERT(?: OR IGNORE)? INTO reading_packages/.test(sql),
+  );
+  assert.match(readingStatements[0].sql, /reading_level, support_mode/);
+  assert.equal(readingStatements[0].bindings[4], "tower");
+  assert.equal(readingStatements[0].bindings[5], "guided");
+  assert.equal(readingStatements[1].bindings[5], "independent");
   assert.equal(
     statements.filter(({ sql }) =>
       /INSERT(?: OR IGNORE)? INTO assessment_items/.test(sql),

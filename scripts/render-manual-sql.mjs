@@ -12,11 +12,7 @@ const files = fs
 
 const validation = spawnSync(
   process.execPath,
-  [
-    path.join(root, "scripts", "validate-manual-content.mjs"),
-    "--require-count",
-    "30",
-  ],
+  [path.join(root, "scripts", "validate-manual-content.mjs")],
   {
     cwd: root,
     encoding: "utf8",

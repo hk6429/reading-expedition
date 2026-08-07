@@ -75,6 +75,7 @@
   "packages": [
     {
       "id": "aurora-lights-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "天空收到太陽的來信",
@@ -245,6 +246,7 @@
     },
     {
       "id": "aurora-lights-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "極光不是太陽的自拍照",

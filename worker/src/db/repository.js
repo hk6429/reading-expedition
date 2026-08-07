@@ -30,6 +30,25 @@ function mapPublishedReading(row) {
   };
 }
 
+function mapPublishedReadingMetadata(row) {
+  return {
+    id: row.id,
+    contentKey: row.content_key,
+    topicDate: row.topic_date,
+    category: row.category,
+    difficulty: row.difficulty,
+    level: row.reading_level ?? "tower",
+    supportMode:
+      row.support_mode ??
+      (row.difficulty === "guided" ? "guided" : "independent"),
+    textType: row.text_type,
+    title: row.title,
+    hookQuestion: row.hook_question,
+    readingMinutes: row.reading_minutes,
+    version: row.version,
+  };
+}
+
 function mapAssessmentItem(row) {
   return {
     id: row.id,
@@ -455,14 +474,15 @@ export function createReadingRepository(db) {
         db
           .prepare(
             `INSERT INTO fact_packs
-               (id, topic_date, category, facts_json, source_links_json,
+               (id, topic_date, category, reading_level, facts_json, source_links_json,
                 sensitivity_flags_json, verification_status, version)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           )
           .bind(
             bundle.factPack.id,
             bundle.factPack.topicDate,
             bundle.factPack.category,
+            bundle.packages[0]?.level ?? "tower",
             JSON.stringify(bundle.factPack.facts),
             JSON.stringify(bundle.factPack.sourceItemIds),
             JSON.stringify(bundle.factPack.sensitivityFlags),
@@ -475,17 +495,19 @@ export function createReadingRepository(db) {
           db
             .prepare(
               `INSERT INTO reading_packages
-                 (id, content_key, fact_pack_id, difficulty, text_type, title, hook_question,
+                 (id, content_key, fact_pack_id, difficulty, reading_level, support_mode, text_type, title, hook_question,
                   body, glossary_json, reading_minutes, source_attribution_json,
                   quality_score, hard_gate_status, publication_status, version,
                   published_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             )
             .bind(
               packageRecord.id,
               bundle.contentKey,
               bundle.factPack.id,
               packageRecord.difficulty,
+              packageRecord.level ?? "tower",
+              packageRecord.difficulty === "guided" ? "guided" : "independent",
               packageRecord.textType,
               packageRecord.title,
               packageRecord.hookQuestion,
@@ -643,6 +665,80 @@ export function createReadingRepository(db) {
       if (!update.meta?.changes) return null;
       return loadReviewPackage(id);
     },
+    async listBatchPublicationCandidates({ ids, contentKeyPrefix }) {
+      let predicate;
+      let bindings;
+      if (Array.isArray(ids)) {
+        predicate = `rp.id IN (${ids.map(() => "?").join(", ")})`;
+        bindings = ids;
+      } else {
+        predicate = "rp.content_key LIKE ?";
+        bindings = [`${contentKeyPrefix}%`];
+      }
+      const { results = [] } = await db
+        .prepare(
+          `SELECT
+             rp.id,
+             rp.content_key,
+             rp.publication_status,
+             rp.hard_gate_status,
+             rp.quality_score,
+             rp.version
+           FROM reading_packages rp
+           WHERE rp.publication_status = 'review'
+             AND ${predicate}
+           ORDER BY rp.id`,
+        )
+        .bind(...bindings)
+        .all();
+      return results.map((row) => ({
+        id: row.id,
+        contentKey: row.content_key,
+        publicationStatus: row.publication_status,
+        hardGateStatus: row.hard_gate_status,
+        qualityScore: row.quality_score,
+        version: row.version,
+      }));
+    },
+    async publishReviewPackages(packages) {
+      const requested = JSON.stringify(
+        packages.map(({ id, version }) => ({ id, version })),
+      );
+      const result = await db
+        .prepare(
+          `WITH requested AS (
+             SELECT
+               json_extract(value, '$.id') AS id,
+               json_extract(value, '$.version') AS version
+             FROM json_each(?)
+           ), eligible AS (
+             SELECT rp.id
+             FROM reading_packages rp
+             JOIN requested request
+               ON request.id = rp.id AND request.version = rp.version
+             WHERE rp.publication_status = 'review'
+               AND rp.hard_gate_status = 'passed'
+               AND rp.quality_score >= 92
+           )
+           UPDATE reading_packages
+           SET publication_status = 'published',
+               version = version + 1,
+               published_at = CURRENT_TIMESTAMP,
+               updated_at = CURRENT_TIMESTAMP
+           WHERE id IN (SELECT id FROM eligible)
+             AND (SELECT COUNT(*) FROM eligible) = json_array_length(?)`,
+        )
+        .bind(requested, requested)
+        .run();
+      if (Number(result.meta?.changes) !== packages.length) {
+        return null;
+      }
+      return packages.map((item) => ({
+        ...item,
+        publicationStatus: "published",
+        version: item.version + 1,
+      }));
+    },
     async appendReviewEvent(event) {
       await db
         .prepare(
@@ -661,6 +757,28 @@ export function createReadingRepository(db) {
           event.afterHash,
         )
         .run();
+    },
+    async appendReviewEvents(events) {
+      await db.batch(
+        events.map((event) =>
+          db
+            .prepare(
+              `INSERT INTO review_events
+                 (id, package_id, actor_id, action, reason_code, note, before_hash, after_hash)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            )
+            .bind(
+              event.id,
+              event.packageId,
+              event.actorId,
+              event.action,
+              event.reasonCode,
+              event.note,
+              event.beforeHash,
+              event.afterHash,
+            ),
+        ),
+      );
     },
     async createTeacherSession(session) {
       await db
@@ -1000,6 +1118,37 @@ export function createReadingRepository(db) {
       const { results = [] } = await statement.all();
       return results.map(mapPublishedReading);
     },
+    async listPublishedReadings({ level, limit, offset }) {
+      const statement = db
+        .prepare(
+          `SELECT
+             rp.id,
+             rp.content_key,
+             fp.topic_date,
+             fp.category,
+             rp.difficulty,
+             rp.reading_level,
+             rp.support_mode,
+             rp.text_type,
+             rp.title,
+             rp.hook_question,
+             rp.reading_minutes,
+             rp.version,
+             COUNT(*) OVER() AS total_count
+           FROM reading_packages rp
+           JOIN fact_packs fp ON fp.id = rp.fact_pack_id
+           WHERE rp.publication_status = 'published'
+             AND rp.reading_level = ?
+           ORDER BY fp.topic_date DESC, rp.content_key, rp.difficulty
+           LIMIT ? OFFSET ?`,
+        )
+        .bind(level, limit, offset);
+      const { results = [] } = await statement.all();
+      return {
+        readings: results.map(mapPublishedReadingMetadata),
+        total: Number(results[0]?.total_count ?? 0),
+      };
+    },
     async getLatestPublishedDaily(topicDate) {
       const statement = db
         .prepare(
@@ -1027,7 +1176,6 @@ export function createReadingRepository(db) {
                JOIN fact_packs fp2 ON fp2.id = rp2.fact_pack_id
                WHERE rp2.publication_status = 'published'
                  AND fp2.topic_date <= ?
-                 AND fp2.topic_date >= date(?, '-7 days')
              )
            ORDER BY
              CASE fp.category
@@ -1040,7 +1188,7 @@ export function createReadingRepository(db) {
                ELSE 2
              END`,
         )
-        .bind(topicDate, topicDate);
+        .bind(topicDate);
       const { results = [] } = await statement.all();
       return results.map(mapPublishedReading);
     },
@@ -1052,6 +1200,8 @@ export function createReadingRepository(db) {
              rp.content_key,
              fp.category,
              rp.difficulty,
+             rp.reading_level,
+             rp.support_mode,
              rp.text_type,
              rp.title,
              rp.hook_question,

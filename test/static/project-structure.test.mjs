@@ -11,5 +11,5 @@ test("首頁提供繁體中文、響應式設定與無 JavaScript 說明", async
   assert.match(html, /name="viewport"/);
   assert.match(html, /src="\.\/src\/app\.js"/);
   assert.match(html, /href="\.\/styles\.css"/);
-  assert.match(html, /<noscript>[\s\S]*每天十分鐘/);
+  assert.match(html, /<noscript>[\s\S]*一次一篇，讀懂再往前/);
 });

@@ -51,6 +51,7 @@
   "packages": [
     {
       "id": "community-clues-guided-v1",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "classical",
       "title": "一張舊照片，能告訴我們什麼？",
@@ -182,6 +183,7 @@
     },
     {
       "id": "community-clues-challenge-v1",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "classical",
       "title": "第一手資料會不會也有盲點？",

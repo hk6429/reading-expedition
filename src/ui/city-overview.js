@@ -118,7 +118,7 @@ function createJourneyPanel(state) {
         <p class="eyebrow">三十日航圖</p>
         <h2 id="journey-heading">${progress.activeDay}／30 個活躍日</h2>
       </div>
-      <p>不用連續；每天第一篇推進主線，額外閱讀仍會收藏進城市。</p>
+      <p>不用連續；每個活躍日第一篇達標閱讀推進主線，額外閱讀仍會收藏進城市。</p>
     </div>
     <div class="journey-track" aria-label="三十日航程進度">
       ${Array.from({ length: 30 }, (_, index) => {
@@ -145,9 +145,11 @@ function createGoalPanel(state, saveState) {
   const weekStart = new Date(today);
   weekStart.setHours(0, 0, 0, 0);
   weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-  const completedThisWeek = state.readingHistory.filter(
-    ({ date }) => new Date(`${date}T00:00:00`) >= weekStart,
-  ).length;
+  const completedThisWeek = new Set(
+    state.readingHistory
+      .filter(({ date }) => new Date(`${date}T00:00:00`) >= weekStart)
+      .map(({ readingId }) => readingId),
+  ).size;
   section.innerHTML = `
     <p class="eyebrow">無壓力習慣契約</p>
     <h2 id="goal-heading">這週想讀幾篇？</h2>
@@ -174,7 +176,7 @@ function createGoalPanel(state, saveState) {
   return section;
 }
 
-function createReadingLog(history = []) {
+function createReadingLog(history = [], completedReadings = {}) {
   const section = document.createElement("section");
   section.className = "reading-event-log paper-panel";
   const events = [...history].slice(-8).reverse();
@@ -187,8 +189,11 @@ function createReadingLog(history = []) {
       events.length
         ? `<ol>${events
             .map(
-              (event) =>
-                `<li><time>${escapeHtml(event.date)}</time><strong>${escapeHtml(event.title ?? "已完成的讀卷")}</strong><q>${escapeHtml(event.evidence)}</q></li>`,
+              (event) => {
+                const completion = completedReadings[event.readingId];
+                const score = completion?.finalCorrectCount;
+                return `<li><time>${escapeHtml(event.date)}</time><strong>${escapeHtml(event.title ?? "已完成的讀卷")}</strong>${score === undefined ? "" : `<span class="reading-log-score">答對 ${score} 題・已達標</span>`}<q>${escapeHtml(event.evidence)}</q></li>`;
+              },
             )
             .join("")}</ol>`
         : "<p>完成第一篇閱讀後，文證會出現在這裡。</p>"
@@ -218,7 +223,7 @@ export function renderCityOverview(
           <span>${state.city.materials.fellowshipSeals} 枚聚義印</span>
         </div>
         <div class="city-overview__actions">
-          <a class="primary-link" href="#/">繼續今日航線</a>
+          <a class="primary-link" href="#/">繼續下一篇挑戰</a>
           <button type="button" data-export-city>下載我的閱征紀錄</button>
           <label class="restore-record">
             復原閱征紀錄
@@ -262,7 +267,7 @@ export function renderCityOverview(
 
   container.append(
     buildings,
-    createReadingLog(state.readingHistory),
+    createReadingLog(state.readingHistory, state.completedReadings),
     createAbilityPanel(state),
     createJourneyPanel(state),
     chapter,

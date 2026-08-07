@@ -80,6 +80,7 @@
   "packages": [
     {
       "id": "ocean-microplastics-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "碎了，為什麼還不算消失？",
@@ -259,6 +260,7 @@
     },
     {
       "id": "ocean-microplastics-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "消失的錯覺：海洋如何重新分配塑膠",

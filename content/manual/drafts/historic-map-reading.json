@@ -88,6 +88,7 @@
   "packages": [
     {
       "id": "historic-map-reading-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "不準的古地圖，藏著什麼真歷史？",
@@ -259,6 +260,7 @@
     },
     {
       "id": "historic-map-reading-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "誤差不是沉默：從古地圖讀出權力與知識的邊界",

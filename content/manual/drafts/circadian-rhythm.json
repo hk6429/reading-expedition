@@ -89,6 +89,7 @@
   "packages": [
     {
       "id": "circadian-rhythm-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "身體裡的晨昏校時站",
@@ -265,6 +266,7 @@
     },
     {
       "id": "circadian-rhythm-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "誰把天色翻譯成身體時間？",

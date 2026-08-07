@@ -129,6 +129,46 @@ body {
   justify-content: flex-end;
 }
 
+.more-nav {
+  position: relative;
+}
+
+.more-nav summary {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgb(29 26 23 / 18%);
+  border-radius: 999px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font-size: 0.86rem;
+  list-style: none;
+}
+
+.more-nav summary::-webkit-details-marker {
+  display: none;
+}
+
+.more-nav > div {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  z-index: 30;
+  display: grid;
+  width: 11rem;
+  gap: 0.35rem;
+  padding: 0.55rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.9rem;
+  background: var(--paper-primary);
+  box-shadow: 0 0.8rem 2rem rgb(17 28 36 / 20%);
+}
+
+.placement-skip-note {
+  margin: 0.45rem 0 0;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
 .teacher-entry {
   padding: 0.45rem 0.75rem;
   border: 1px solid rgb(29 26 23 / 18%);
@@ -1683,6 +1723,18 @@ main h1[tabindex="-1"]:focus {
   font-size: 2rem;
 }
 
+.assessment-connection-note,
+.assessment-result-summary {
+  padding: 0.8rem 1rem;
+  border-left: 4px solid var(--cinnabar);
+  background: color-mix(in srgb, var(--cinnabar) 8%, transparent);
+}
+
+.assessment-result-summary {
+  display: grid;
+  gap: 0.45rem;
+}
+
 .reading-strategy-panel {
   margin: 1.5rem 0;
   padding: clamp(1rem, 3vw, 1.5rem);
@@ -2922,6 +2974,111 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   margin-top: 0.8rem;
 }
 
+.reading-status {
+  display: inline-flex;
+  width: fit-content;
+  margin: 0.65rem 0 0 0.45rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  color: var(--mineral-green);
+  background: color-mix(in srgb, var(--mineral-green) 12%, transparent);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.inventory-summary {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border-left: 0.3rem solid var(--ochre-600);
+  background: color-mix(in srgb, var(--ochre-600) 10%, transparent);
+}
+
+.bookshelf-view {
+  display: grid;
+  gap: 1rem;
+  width: min(100% - 2rem, 72rem);
+  margin: 0 auto 6rem;
+}
+
+.bookshelf-hero,
+.inventory-complete {
+  padding: clamp(1rem, 4vw, 2rem);
+}
+
+.bookshelf-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.bookshelf-controls label {
+  display: grid;
+  gap: 0.25rem;
+  color: var(--ink-muted);
+  font-weight: 800;
+}
+
+.bookshelf-controls input,
+.bookshelf-controls select {
+  min-height: 44px;
+  min-width: 10rem;
+}
+
+.bookshelf-controls input {
+  min-width: min(20rem, 80vw);
+}
+
+.bookshelf-controls button.is-selected {
+  color: var(--paper-primary);
+  border-color: var(--cinnabar);
+  background: var(--cinnabar);
+}
+
+.bookshelf-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.bookshelf-card[hidden],
+.bookshelf-no-matches[hidden] {
+  display: none;
+}
+
+.bookshelf-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 16%, transparent);
+  border-radius: 1rem 0.25rem;
+  background: var(--panel-background);
+}
+
+.bookshelf-card.is-completed {
+  border-color: color-mix(in srgb, var(--mineral-green) 45%, transparent);
+}
+
+.bookshelf-card h2 {
+  margin: 0.25rem 0;
+  font-family: "Noto Serif TC", "Songti TC", serif;
+}
+
+.bookshelf-card .reading-status {
+  margin: 0;
+}
+
+.reading-log-score {
+  color: var(--mineral-green);
+  font-weight: 800;
+}
+
 .route-level-badge {
   min-height: auto;
   padding: 0.35rem 0.65rem;
@@ -2941,6 +3098,27 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   background: color-mix(in srgb, var(--ochre-600) 18%, transparent);
   font: inherit;
   font-weight: 800;
+}
+
+.reading-mode-badge,
+.quiz-readiness {
+  color: var(--ink-muted);
+  font-weight: 800;
+}
+
+.support-mode-group {
+  display: flex;
+}
+
+.support-mode-group button {
+  flex: 1;
+}
+
+@media (pointer: coarse) {
+  .inline-term-button {
+    min-height: 48px;
+    padding-inline: 0.35rem;
+  }
 }
 
 .inline-term-card {
@@ -3157,6 +3335,25 @@ html[data-focus-context="assessment"] #danai-learning-passport {
     text-align: center;
   }
 
+  .more-nav summary {
+    display: grid;
+    min-height: 44px;
+    padding: 0.35rem;
+    place-items: center;
+    font-size: 0.88rem;
+  }
+
+  .more-nav > div {
+    position: fixed;
+    top: auto;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    width: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0.8rem;
+  }
+
   .family-card-actions,
   .family-overview-actions {
     grid-template-columns: 1fr;
@@ -3172,7 +3369,7 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   .site-nav {
     width: 100%;
     max-width: none;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .site-nav a {
@@ -3197,6 +3394,12 @@ html[data-focus-context="assessment"] #danai-learning-passport {
     flex-direction: column;
   }
 
+  .inventory-summary,
+  .bookshelf-card {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
   .level-recommendation > div:last-child {
     display: grid;
   }
@@ -3205,4 +3408,65 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   .family-view {
     width: min(100% - 1rem, 42rem);
   }
+}
+
+.backup-reminder,
+.journey-choice,
+.rest-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.backup-reminder {
+  width: min(42rem, calc(100% - 1rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  overflow: auto;
+  border: 2px solid color-mix(in srgb, var(--cinnabar) 58%, transparent);
+  color: var(--ink-primary);
+  background: var(--paper-primary);
+  box-shadow: 0 1.5rem 5rem rgb(17 28 36 / 42%);
+}
+
+.backup-reminder::backdrop {
+  background: rgb(17 28 36 / 74%);
+  backdrop-filter: blur(3px);
+}
+
+.backup-reminder__identity {
+  width: fit-content;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ochre-600) 18%, transparent);
+  font-weight: 800;
+}
+
+.backup-reminder__status {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--mineral-green);
+  font-weight: 800;
+}
+
+.backup-reminder__actions,
+.journey-choice__actions,
+.rest-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.journey-choice {
+  margin-top: 1.5rem;
+}
+
+.rest-view {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+}
+
+.rest-panel {
+  width: min(680px, 100%);
 }

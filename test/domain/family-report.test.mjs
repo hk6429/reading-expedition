@@ -67,12 +67,17 @@ test("家長報告先呈現週趨勢、卡關能力與下一步", () => {
         ],
       },
     ],
+    level: "launch",
+    levelCompletedCount: 1,
+    levelTotalCount: 30,
   });
 
   assert.equal(report.completedCount, 1);
   assert.equal(report.stuckSkill, "evidence");
   assert.match(report.nextAction, /原文/);
   assert.equal(report.rows[0].childAlias, "小舟");
+  assert.equal(report.levelCompletedCount, 1);
+  assert.equal(report.rows[0].levelTotalCount, 30);
 });
 
 test("CSV 有 UTF-8 BOM，支援單一孩子與全家庭資料", () => {
@@ -107,6 +112,7 @@ test("CSV 有 UTF-8 BOM，支援單一孩子與全家庭資料", () => {
 
   assert.equal(csv.charCodeAt(0), 0xfeff);
   assert.match(csv, /child_id,child_alias,date,title/);
+  assert.match(csv, /next_action,level_completed_count,level_total_count/);
   assert.match(csv, /"城市，水與選擇"/);
   assert.match(csv, /child-2/);
 });

@@ -82,6 +82,7 @@
   "packages": [
     {
       "id": "plate-tectonics-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "地表不是拼好就不動：板塊、地震與山脈",
@@ -251,6 +252,7 @@
     },
     {
       "id": "plate-tectonics-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "山脈與地震的共同語法：從分布圖讀出地球的運動",

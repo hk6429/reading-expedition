@@ -1,212 +1,2402 @@
 [
   {
-    "slug": "unesco-world-heritage",
+    "slug": "north-atlantic-winter-link-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "世界遺產為什麼需要跨國共同守護",
-    "preferredSource": "https://whc.unesco.org/en/about/"
+    "topic": "遠方海流也會改變歐洲冬天的冷暖",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/amoc.html"
   },
   {
-    "slug": "sdg-clean-water",
+    "slug": "floating-trash-circle-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "乾淨飲水如何成為全球共同目標",
-    "preferredSource": "https://sdgs.un.org/goals/goal6"
+    "topic": "海上的漂流物為什麼會在大片海域繞圈",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/gyre.html"
   },
   {
-    "slug": "global-postal-network",
+    "slug": "sudden-harbor-wave-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "一封信如何穿越不同國家的郵政網絡",
-    "preferredSource": "https://www.upu.int/en/Universal-Postal-Union"
+    "topic": "晴天的港灣為什麼也可能突然湧進大浪",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/meteotsunami.html"
   },
   {
-    "slug": "sea-shipping-routes",
+    "slug": "dead-trees-by-sea-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "海運航線如何連結世界的日常生活",
-    "preferredSource": "https://www.imo.org/en/About/Pages/Default.aspx"
+    "topic": "海邊成片枯樹如何透露海水正在逼近",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ghost-forest.html"
   },
   {
-    "slug": "utc-world-time",
+    "slug": "sunny-day-street-flood-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "世界如何用協調世界時一起校準時間",
-    "preferredSource": "https://www.bipm.org/en/time-metrology"
+    "topic": "沒有下雨的日子，沿海街道也可能淹水",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/high-tide-flooding.html"
   },
   {
-    "slug": "svalbard-seed-vault",
+    "slug": "slow-ocean-ripples-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "全球種子庫為何替未來保存農作物多樣性",
-    "preferredSource": "https://www.croptrust.org/work/svalbard-global-seed-vault/"
+    "topic": "海面上有些波浪要用幾個月才走過大洋",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/rossby-wave.html"
   },
   {
-    "slug": "antarctic-treaty",
+    "slug": "harbor-water-ruler-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "南極洲如何透過國際協定留給和平與科學",
-    "preferredSource": "https://www.ats.aq/e/antarctictreaty.html"
+    "topic": "港邊的水位尺每天記下哪些海面變化",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/tide-gauge.html"
   },
   {
-    "slug": "satellite-rescue-beacons",
+    "slug": "highest-tide-preview-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "衛星搜救系統如何讓各國合作尋找遇險者",
-    "preferredSource": "https://www.cospas-sarsat.int/en/"
+    "topic": "一年中最高的潮水為何像未來海岸的預告",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/kingtide.html"
   },
   {
-    "slug": "world-food-waste",
+    "slug": "sea-level-not-even-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "減少糧食損失與浪費為何需要整條供應鏈合作",
-    "preferredSource": "https://www.fao.org/platform-food-loss-waste/en/"
+    "topic": "海平面上升為什麼不是每個港口都一樣",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/sealevel-global-local.html"
   },
   {
-    "slug": "cultural-property-protection",
+    "slug": "muddy-water-clue-launch",
+    "level": "launch",
     "category": "world",
     "textType": "vernacular",
-    "topic": "文化財產為什麼不能被當成普通商品任意搬運",
-    "preferredSource": "https://www.unesco.org/en/fight-illicit-trafficking"
+    "topic": "河口水色變混濁時可能發生了什麼事",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/turbidity.html"
   },
   {
-    "slug": "moon-phases",
+    "slug": "wind-gives-wave-energy-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "風如何把力量交給海面形成波浪",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/wavesinocean.html"
+  },
+  {
+    "slug": "storm-water-pileup-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "颱風靠岸時海水為什麼會被推得更高",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/stormsurge-stormtide.html"
+  },
+  {
+    "slug": "near-moon-high-tide-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "月球離地球較近時，潮水一定特別高嗎",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/perigean-spring-tide.html"
+  },
+  {
+    "slug": "great-lakes-small-tides-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "北美五大湖沒有連著海，為什麼仍有微小潮汐",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/gltides.html"
+  },
+  {
+    "slug": "ocean-spinning-patch-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海面上一圈旋轉的水會帶著什麼一起旅行",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/eddy.html"
+  },
+  {
+    "slug": "gulf-warm-loop-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "墨西哥灣裡的暖流為什麼會彎成一個大圈",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/loopcurrent.html"
+  },
+  {
+    "slug": "global-ocean-conveyor-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "一團海水如何展開跨越各大洋的漫長旅程",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/conveyor.html"
+  },
+  {
+    "slug": "rip-current-escape-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "在海邊被離岸流帶走時，為什麼不該直線游回岸上",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ripcurrent.html"
+  },
+  {
+    "slug": "cold-water-rises-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "沿岸表層水被風吹走後，哪裡的水會補上來",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/upwelling.html"
+  },
+  {
+    "slug": "unexpected-giant-wave-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "平穩海面為什麼可能突然出現異常巨浪",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/roguewaves.html"
+  },
+  {
+    "slug": "slow-growing-shark-launch",
+    "level": "launch",
     "category": "science",
     "textType": "vernacular",
-    "topic": "月亮為什麼每天看起來不一樣",
-    "preferredSource": "https://science.nasa.gov/moon/moon-phases/"
+    "topic": "格陵蘭鯊魚為什麼長得慢又活得久",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/greenland-shark.html"
   },
   {
-    "slug": "plate-tectonics",
+    "slug": "drifting-plankton-launch",
+    "level": "launch",
     "category": "science",
     "textType": "vernacular",
-    "topic": "板塊運動如何塑造地震與山脈",
-    "preferredSource": "https://pubs.usgs.gov/gip/dynamic/"
+    "topic": "無法逆流游動的小生物為何被稱為浮游生物",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/plankton.html"
   },
   {
-    "slug": "water-cycle",
+    "slug": "twice-daily-habitat-launch",
+    "level": "launch",
     "category": "science",
     "textType": "vernacular",
-    "topic": "水循環不是一個簡單圓圈",
-    "preferredSource": "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
+    "topic": "每天一半泡水一半曝曬的潮間帶，生物怎麼生活",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/intertidal-zone.html"
   },
   {
-    "slug": "coral-reef-ecosystem",
+    "slug": "sand-color-origin-launch",
+    "level": "launch",
     "category": "science",
     "textType": "vernacular",
-    "topic": "珊瑚礁如何成為海中的立體城市",
-    "preferredSource": "https://oceanservice.noaa.gov/education/tutorial_corals/"
+    "topic": "海灘沙子的顏色為什麼會因地點而不同",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/sand.html"
   },
   {
-    "slug": "bird-migration",
+    "slug": "warm-nest-sex-launch",
+    "level": "launch",
     "category": "science",
     "textType": "vernacular",
-    "topic": "候鳥如何找到跨越千里的遷徙道路",
-    "preferredSource": "https://www.usgs.gov/programs/bird-banding-laboratory/science/migration"
+    "topic": "有些爬蟲類的性別為什麼由孵化溫度決定",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/temperature-dependent.html"
   },
   {
-    "slug": "pollinator-network",
+    "slug": "sound-travels-underwater-launch",
+    "level": "launch",
     "category": "science",
     "textType": "vernacular",
-    "topic": "授粉者如何支撐植物與人類的食物網",
-    "preferredSource": "https://www.fs.usda.gov/managing-land/wildflowers/pollinators"
+    "topic": "聲音在海水裡為什麼能傳得又快又遠",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ocean-noise.html"
   },
   {
-    "slug": "deep-sea-vents",
-    "category": "science",
-    "textType": "vernacular",
-    "topic": "沒有陽光的深海熱泉旁為何仍有生命",
-    "preferredSource": "https://oceanexplorer.noaa.gov/facts/vents.html"
-  },
-  {
-    "slug": "aurora-lights",
-    "category": "science",
-    "textType": "vernacular",
-    "topic": "極光如何把太陽活動畫在天空上",
-    "preferredSource": "https://www.swpc.noaa.gov/phenomena/aurora"
-  },
-  {
-    "slug": "ocean-microplastics",
-    "category": "science",
-    "textType": "vernacular",
-    "topic": "微塑膠為何難以從海洋環境中消失",
-    "preferredSource": "https://marinedebris.noaa.gov/discover-issue/microplastics"
-  },
-  {
-    "slug": "circadian-rhythm",
-    "category": "science",
-    "textType": "vernacular",
-    "topic": "人體生理時鐘如何知道白天與黑夜",
-    "preferredSource": "https://nigms.nih.gov/education/fact-sheets/Pages/circadian-rhythms.aspx"
-  },
-  {
-    "slug": "oracle-bone-writing",
+    "slug": "coral-night-calendar-launch",
+    "level": "launch",
     "category": "humanities",
     "textType": "vernacular",
-    "topic": "甲骨文字如何讓現代人讀見商代生活",
-    "preferredSource": "https://museum.sinica.edu.tw/"
+    "topic": "人們如何從月相與水溫守候珊瑚產卵之夜",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/coral-spawning.html"
   },
   {
-    "slug": "movable-type-printing",
+    "slug": "tiny-plastic-daily-trace-launch",
+    "level": "launch",
     "category": "humanities",
     "textType": "vernacular",
-    "topic": "活字印刷如何改變知識複製的方法",
-    "preferredSource": "https://www.npm.gov.tw/"
+    "topic": "衣服纖維與塑膠碎片如何留下看不見的日常足跡",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/microplastics.html"
   },
   {
-    "slug": "maritime-trade-ceramics",
+    "slug": "barnacle-on-boat-launch",
+    "level": "launch",
     "category": "humanities",
     "textType": "vernacular",
-    "topic": "一只外銷瓷器如何保存海上交流的線索",
-    "preferredSource": "https://www.npm.gov.tw/"
+    "topic": "船底黏滿藤壺，為什麼會改變航行與維修",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/barnacles.html"
   },
   {
-    "slug": "museum-conservation",
+    "slug": "nautilus-shell-chambers-launch",
+    "level": "launch",
     "category": "humanities",
     "textType": "vernacular",
-    "topic": "博物館修護師如何在保存與原貌之間做決定",
-    "preferredSource": "https://www.npm.gov.tw/"
+    "topic": "鸚鵡螺殼裡一格一格的空間各有什麼用途",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/nautilus.html"
   },
   {
-    "slug": "historic-map-reading",
+    "slug": "farm-raised-seafood-table-launch",
+    "level": "launch",
     "category": "humanities",
     "textType": "vernacular",
-    "topic": "古地圖不精準，為什麼仍能說出重要歷史",
-    "preferredSource": "https://memory.culture.tw/"
+    "topic": "餐桌上的魚蝦有多少來自養殖而不是捕撈",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/aquaculture.html"
   },
   {
-    "slug": "peach-blossom-spring",
+    "slug": "whale-fall-afterlife-launch",
+    "level": "launch",
     "category": "humanities",
-    "textType": "classical",
-    "topic": "從桃花源記思考理想世界與現實選擇",
+    "textType": "vernacular",
+    "topic": "鯨魚沉入深海後，牠的身體如何養活另一個世界",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/whale-fall.html"
+  },
+  {
+    "slug": "acidification-not-acid-ocean-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "海洋酸化並不等於海水變成強酸",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/acidification.html"
+  },
+  {
+    "slug": "seagrass-underwater-meadow-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "海草不是海藻，水下草原也會開花結果",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/underwaterplants.html"
+  },
+  {
+    "slug": "marsh-between-land-sea-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "鹽沼如何在陸地與海水之間形成獨特風景",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/saltmarsh.html"
+  },
+  {
+    "slug": "species-travels-with-people-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "生物如何搭著船與貨物來到原本沒有牠的地方",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/invasive.html"
+  },
+  {
+    "slug": "glowing-sea-stories-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "夜海發光的景象如何從傳說走進科學觀察",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/biolum.html"
+  },
+  {
+    "slug": "kelp-food-and-shelter-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "大型海藻如何同時成為食物、材料與海中棲所",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/kelplives.html"
+  },
+  {
+    "slug": "invisible-ocean-garden-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "肉眼難見的浮游植物為什麼能支撐海洋故事的開端",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/phyto.html"
+  },
+  {
+    "slug": "mangrove-roots-and-village-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "紅樹林的盤根如何連起潮間帶生物與沿岸生活",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/mangroves.html"
+  },
+  {
+    "slug": "mercury-long-day-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "水星的一天為什麼比它的一年還長",
+    "preferredSource": "https://science.nasa.gov/mercury/facts/"
+  },
+  {
+    "slug": "venus-backward-spin-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "金星為什麼朝著多數行星相反的方向自轉",
+    "preferredSource": "https://science.nasa.gov/venus/venus-facts/"
+  },
+  {
+    "slug": "earth-liquid-water-home-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "地球表面為什麼能長期保有液態水",
+    "preferredSource": "https://science.nasa.gov/earth/facts/"
+  },
+  {
+    "slug": "mars-red-dust-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "火星表面為什麼看起來是紅色的",
+    "preferredSource": "https://science.nasa.gov/mars/facts/"
+  },
+  {
+    "slug": "jupiter-great-red-spot-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "木星上的大紅斑為什麼能持續那麼久",
+    "preferredSource": "https://science.nasa.gov/jupiter/jupiter-facts/"
+  },
+  {
+    "slug": "saturn-ring-particles-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "土星環其實由無數大小不同的碎片組成",
+    "preferredSource": "https://science.nasa.gov/saturn/facts/"
+  },
+  {
+    "slug": "uranus-sideways-seasons-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "天王星躺著自轉，四季會變成什麼模樣",
+    "preferredSource": "https://science.nasa.gov/uranus/facts/"
+  },
+  {
+    "slug": "neptune-fast-winds-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "離太陽很遠的海王星為什麼仍吹著猛烈強風",
+    "preferredSource": "https://science.nasa.gov/neptune/neptune-facts/"
+  },
+  {
+    "slug": "pluto-heart-glacier-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "冥王星的心形區域為什麼是一片氮冰冰川",
+    "preferredSource": "https://science.nasa.gov/dwarf-planets/pluto/facts/"
+  },
+  {
+    "slug": "sunlight-eight-minutes-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "太陽發出的光要走多久才抵達地球",
+    "preferredSource": "https://science.nasa.gov/sun/facts/"
+  },
+  {
+    "slug": "moon-same-face-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "月球為什麼總用同一面朝向地球",
+    "preferredSource": "https://science.nasa.gov/moon/facts/"
+  },
+  {
+    "slug": "asteroid-not-all-round-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "小行星為什麼常呈現不規則形狀",
+    "preferredSource": "https://science.nasa.gov/solar-system/asteroids/facts/"
+  },
+  {
+    "slug": "comet-tail-direction-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "彗星尾巴為什麼總大致背向太陽",
+    "preferredSource": "https://science.nasa.gov/solar-system/comets/facts/"
+  },
+  {
+    "slug": "star-color-temperature-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "星星的顏色如何透露表面溫度",
+    "preferredSource": "https://science.nasa.gov/universe/stars/"
+  },
+  {
+    "slug": "galaxy-shapes-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "星系為什麼有螺旋、橢圓與不規則等外形",
+    "preferredSource": "https://science.nasa.gov/universe/galaxies/"
+  },
+  {
+    "slug": "planet-star-dimming-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "遙遠行星經過恆星前方時，微小變暗如何洩漏它的存在",
+    "preferredSource": "https://science.nasa.gov/exoplanets/"
+  },
+  {
+    "slug": "daily-movement-health-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "走路、騎車和做家事也能累積每天的身體活動",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/physical-activity"
+  },
+  {
+    "slug": "tap-water-safe-journey-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "一杯自來水從水源到水龍頭要經過哪些安全關卡",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/drinking-water"
+  },
+  {
+    "slug": "air-pollution-invisible-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "看不見的空氣污染仍會進入呼吸系統",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health"
+  },
+  {
+    "slug": "climate-affects-health-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "氣候變遷除了變熱，也會影響飲水、食物與疾病",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/climate-change-and-health"
+  },
+  {
+    "slug": "teen-emotion-support-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "青少年情緒困擾何時需要可信任的大人與專業協助",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health"
+  },
+  {
+    "slug": "safe-listening-volume-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "耳機音量與聆聽時間要如何一起控制",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss"
+  },
+  {
+    "slug": "food-safety-chain-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "食物從市場到餐桌，哪幾個步驟最需要防止污染",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/food-safety"
+  },
+  {
+    "slug": "antibiotics-not-for-colds-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "一般感冒為什麼不該自行服用抗生素",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance"
+  },
+  {
+    "slug": "lead-exposure-at-home-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "老舊油漆、塵土與回收作業可能把鉛帶進生活",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/lead-poisoning-and-health"
+  },
+  {
+    "slug": "old-phone-afterlife-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "淘汰的手機離開抽屜後可能走向哪些地方",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/electronic-waste-(e-waste)"
+  },
+  {
+    "slug": "nature-supports-health-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "多樣的生物如何支撐乾淨水源、食物與藥物",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/biodiversity"
+  },
+  {
+    "slug": "safe-road-system-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "道路安全不只靠駕駛小心，也需要車速、車輛與街道設計",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries"
+  },
+  {
+    "slug": "drowning-quiet-danger-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "溺水往往安靜又快速，和戲劇中的掙扎畫面不同",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/drowning"
+  },
+  {
+    "slug": "balanced-plate-variety-launch",
+    "level": "launch",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "健康飲食為什麼需要多樣食物而不是迷信單一超級食物",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+  },
+  {
+    "slug": "clear-water-not-always-safe-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "看起來清澈的水不一定適合直接飲用",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/groundwater-quality"
+  },
+  {
+    "slug": "water-between-rocks-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "地下水藏在岩石與砂礫的空隙，不是地下大河",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/aquifers-and-groundwater"
+  },
+  {
+    "slug": "rain-snow-hail-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "從雲落下的水不只有雨，也可能是雪與冰雹",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/precipitation-and-water-cycle"
+  },
+  {
+    "slug": "leaf-water-release-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "植物會從葉片把根部吸收的水送回空氣",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/evapotranspiration-and-water-cycle"
+  },
+  {
+    "slug": "puddle-disappears-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "雨後水窪沒有流走，水去了哪裡",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/evaporation-and-water-cycle"
+  },
+  {
+    "slug": "raindrop-shape-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "真正的雨滴為什麼不像圖畫裡的淚滴",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/rain-and-precipitation"
+  },
+  {
+    "slug": "cold-cup-water-drops-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "冰杯外面的水珠不是從杯子裡漏出來的",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/condensation-and-water-cycle"
+  },
+  {
+    "slug": "well-water-level-falls-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "抽水速度超過補注時，井裡的水位會慢慢下降",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/groundwater-decline-and-depletion"
+  },
+  {
+    "slug": "snow-stores-water-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "山上的積雪像季節水庫，先存水再融化",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/ice-snow-and-glaciers-and-water-cycle"
+  },
+  {
+    "slug": "water-sample-snapshot-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "一瓶水樣只能告訴我們採樣當下的一小段故事",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/water-quality-sampling-techniques"
+  },
+  {
+    "slug": "river-water-underground-share-launch",
+    "level": "launch",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "河裡流的水有一部分其實先走過地下",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/rivers-contain-groundwater"
+  },
+  {
+    "slug": "museum-object-workday-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "一件物品進入博物館後，會經過哪些人的手",
+    "preferredSource": "https://collections.nmth.gov.tw/Article.aspx?a=236"
+  },
+  {
+    "slug": "object-label-identity-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "文物上的編號為什麼像一張不會掉的身分證",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=217"
+  },
+  {
+    "slug": "storage-room-climate-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "文物庫房為什麼需要控制溫度、濕度與光線",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=162"
+  },
+  {
+    "slug": "museum-cannot-keep-everything-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "博物館為什麼不能把所有老東西都收藏起來",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=141"
+  },
+  {
+    "slug": "digital-image-permission-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "典藏影像可以上網看，為什麼使用時仍可能需要申請",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=137"
+  },
+  {
+    "slug": "scan-preserves-details-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "掃描如何把脆弱史料的細節留在數位檔案裡",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=211"
+  },
+  {
+    "slug": "jadeite-cabbage-details-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "翠玉白菜上的菜葉、昆蟲與裂紋各能看見什麼",
+    "preferredSource": "https://digitalarchive.npm.gov.tw/Collection/Detail?dep=U&id=3"
+  },
+  {
+    "slug": "peach-grove-hidden-path-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "漁人沿著溪流走進陌生地方，故事如何一步步打開",
     "preferredSource": "https://zh.wikisource.org/wiki/桃花源記"
   },
   {
-    "slug": "oil-seller",
+    "slug": "oil-through-coin-launch",
+    "level": "launch",
     "category": "humanities",
-    "textType": "classical",
-    "topic": "從賣油翁思考熟練、天分與謙遜",
+    "textType": "vernacular",
+    "topic": "賣油翁讓油穿過錢孔，想證明的是什麼",
     "preferredSource": "https://zh.wikisource.org/wiki/賣油翁"
   },
   {
-    "slug": "cao-gui-debate",
+    "slug": "weather-changes-feeling-launch",
+    "level": "launch",
     "category": "humanities",
-    "textType": "classical",
-    "topic": "從曹劌論戰思考判斷時機與承擔公共責任",
-    "preferredSource": "https://ctext.org/chun-qiu-zuo-zhuan/zhuang-gong-shi-nian/zh"
-  },
-  {
-    "slug": "xunzi-learning",
-    "category": "humanities",
-    "textType": "classical",
-    "topic": "從荀子勸學思考累積、工具與學習方法",
-    "preferredSource": "https://ctext.org/xunzi/encouraging-learning/zh"
-  },
-  {
-    "slug": "yueyang-tower",
-    "category": "humanities",
-    "textType": "classical",
-    "topic": "從岳陽樓記思考個人情緒與公共關懷",
+    "textType": "vernacular",
+    "topic": "同一座岳陽樓遇到陰雨與晴光，人的心情如何跟著改變",
     "preferredSource": "https://zh.wikisource.org/wiki/岳陽樓記"
+  },
+  {
+    "slug": "small-room-rich-life-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "房子不華麗，主人用哪些生活細節說明自己過得充實",
+    "preferredSource": "https://zh.wikisource.org/wiki/陋室銘"
+  },
+  {
+    "slug": "lotus-character-metaphor-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "蓮花的外形與生長環境如何被寫成一個人的品格",
+    "preferredSource": "https://zh.wikisource.org/wiki/愛蓮說"
+  },
+  {
+    "slug": "joy-in-mountain-and-people-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "醉翁真正喜愛的是酒、山水，還是一起出遊的人",
+    "preferredSource": "https://zh.wikisource.org/wiki/醉翁亭記"
+  },
+  {
+    "slug": "moonlight-like-water-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "蘇軾為什麼把庭院月光寫成清澈的水",
+    "preferredSource": "https://zh.wikisource.org/wiki/記承天寺夜遊"
+  },
+  {
+    "slug": "minister-final-advice-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "諸葛亮出征前為什麼要反覆勸後主親賢遠佞",
+    "preferredSource": "https://zh.wikisource.org/wiki/出師表"
+  },
+  {
+    "slug": "gathering-by-stream-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "蘭亭聚會有哪些人物、活動與春日景色",
+    "preferredSource": "https://zh.wikisource.org/wiki/蘭亭集序"
+  },
+  {
+    "slug": "teacher-not-only-older-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "韓愈為什麼認為老師不一定比學生年長",
+    "preferredSource": "https://zh.wikisource.org/wiki/師說"
+  },
+  {
+    "slug": "snake-catcher-choice-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "捕蛇如此危險，蔣氏一家為什麼仍不願放棄",
+    "preferredSource": "https://zh.wikisource.org/wiki/捕蛇者說"
+  },
+  {
+    "slug": "five-willows-daily-life-launch",
+    "level": "launch",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "五柳先生從讀書、飲酒與居家生活表現出什麼性格",
+    "preferredSource": "https://zh.wikisource.org/wiki/五柳先生傳"
+  },
+  {
+    "slug": "atlantic-overturning-engine-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "暖水北送與冷水下沉如何串起大西洋環流",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/amoc.html"
+  },
+  {
+    "slug": "wind-current-gyre-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "盛行風與地球自轉如何共同形成環流圈",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/gyre.html"
+  },
+  {
+    "slug": "pressure-driven-tsunami-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "氣壓擾動如何把海面推成氣象海嘯",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/meteotsunami.html"
+  },
+  {
+    "slug": "saltwater-ghost-forest-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海平面上升與鹽水入侵為何會造出幽靈森林",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ghost-forest.html"
+  },
+  {
+    "slug": "high-tide-flood-frequency-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海平面升高為何讓滿潮淹水愈來愈常發生",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/high-tide-flooding.html"
+  },
+  {
+    "slug": "rossby-wave-climate-signal-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "羅士比波如何傳遞海洋中的熱量與氣候訊號",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/rossby-wave.html"
+  },
+  {
+    "slug": "tide-gauge-long-record-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "驗潮站如何把短暫潮汐和長期海平面趨勢分開",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/tide-gauge.html"
+  },
+  {
+    "slug": "king-tide-alignment-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "日月引力與海岸地形如何疊加成王潮",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/kingtide.html"
+  },
+  {
+    "slug": "local-land-sea-balance-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "地層升降與洋流如何改變一地的相對海平面",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/sealevel-global-local.html"
+  },
+  {
+    "slug": "sediment-light-foodweb-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "懸浮泥沙如何改變水下光線與食物網",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/turbidity.html"
+  },
+  {
+    "slug": "wave-energy-not-water-trip-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海浪前進時，能量與海水各自怎麼移動",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/wavesinocean.html"
+  },
+  {
+    "slug": "surge-tide-compound-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "暴潮碰上滿潮為何會放大沿岸淹水",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/stormsurge-stormtide.html"
+  },
+  {
+    "slug": "perigee-syzygy-tide-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "近地點、朔望與海岸地形如何共同影響大潮",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/perigean-spring-tide.html"
+  },
+  {
+    "slug": "lake-seiche-versus-tide-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "湖面風暴振盪與天文潮要如何從觀測中分辨",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/gltides.html"
+  },
+  {
+    "slug": "eddy-heat-nutrient-transport-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "中尺度渦旋如何搬運熱量、鹽分與營養鹽",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/eddy.html"
+  },
+  {
+    "slug": "loop-current-hurricane-fuel-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "環流暖水層如何為颶風增強提供能量",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/loopcurrent.html"
+  },
+  {
+    "slug": "density-conveyor-cycle-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "溫度與鹽度差異如何驅動全球海洋輸送帶",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/conveyor.html"
+  },
+  {
+    "slug": "rip-current-channel-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "碎浪、水深與沙洲缺口如何形成狹長離岸流",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ripcurrent.html"
+  },
+  {
+    "slug": "upwelling-fishery-chain-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "湧升流如何把深層營養送入漁場食物網",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/upwelling.html"
+  },
+  {
+    "slug": "rogue-wave-superposition-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "不同方向的波如何短暫疊加成瘋狗浪",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/roguewaves.html"
+  },
+  {
+    "slug": "eye-protein-shark-age-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "科學家如何利用眼睛中的蛋白質估算鯊魚年齡",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/greenland-shark.html"
+  },
+  {
+    "slug": "plankton-bloom-conditions-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "陽光、營養鹽與水溫如何控制浮游生物增長",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/plankton.html"
+  },
+  {
+    "slug": "intertidal-stress-zones-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "乾燥、浪擊與競爭如何讓潮間帶生物分區",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/intertidal-zone.html"
+  },
+  {
+    "slug": "rock-shell-sand-cycle-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "岩石風化、生物碎屑與海浪如何共同製造沙灘",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/sand.html"
+  },
+  {
+    "slug": "temperature-sex-ratio-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "胚胎發育的溫度門檻如何改變族群性別比",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/temperature-dependent.html"
+  },
+  {
+    "slug": "noise-masks-animal-calls-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "船舶噪音如何遮蔽鯨豚尋伴與覓食的聲音",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ocean-noise.html"
+  },
+  {
+    "slug": "shared-coral-observation-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "潛水員與科學家如何用共同紀錄比較各地珊瑚生殖時間",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/coral-spawning.html"
+  },
+  {
+    "slug": "microplastic-word-boundary-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "微塑膠的尺寸定義如何影響採樣、比較與公共溝通",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/microplastics.html"
+  },
+  {
+    "slug": "barnacle-glue-design-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "人們如何從藤壺牢固附著的方式尋找材料設計靈感",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/barnacles.html"
+  },
+  {
+    "slug": "spiral-shell-metaphor-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "鸚鵡螺的螺旋外形為何常被藝術與設計借用",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/nautilus.html"
+  },
+  {
+    "slug": "aquaculture-food-culture-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "水產養殖如何改變沿海工作、飲食習慣與市場選擇",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/aquaculture.html"
+  },
+  {
+    "slug": "whale-fall-stage-names-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "科學家如何用不同階段描述鯨落從屍體到礁石的變化",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/whale-fall.html"
+  },
+  {
+    "slug": "ph-language-public-understanding-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "一個看似微小的酸鹼值變化，為何需要用比喻協助大眾理解",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/acidification.html"
+  },
+  {
+    "slug": "coastal-meadow-language-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "把海草床稱作水下草原，如何幫助也可能限制我們的理解",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/underwaterplants.html"
+  },
+  {
+    "slug": "wetland-wasteland-shift-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "人們為何曾把鹽沼視為荒地，後來又改稱重要棲地",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/saltmarsh.html"
+  },
+  {
+    "slug": "invasive-label-consequence-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "「外來」與「入侵」兩個詞如何影響人們對物種的態度",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/invasive.html"
+  },
+  {
+    "slug": "bioluminescence-description-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "不同文化與科學語言如何描述生物發出的冷光",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/biolum.html"
+  },
+  {
+    "slug": "kelp-coast-livelihood-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "海帶森林的盛衰如何改變沿岸飲食與工作",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/kelplives.html"
+  },
+  {
+    "slug": "phytoplankton-earth-narrative-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "把浮游植物稱為地球重要製氧者時，怎樣說才不會過度簡化",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/phyto.html"
+  },
+  {
+    "slug": "mangrove-value-change-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "紅樹林從被嫌棄的泥灘變成保育象徵，反映哪些價值改變",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/mangroves.html"
+  },
+  {
+    "slug": "mercury-temperature-swing-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "幾乎沒有大氣的水星，晝夜溫差為何如此巨大",
+    "preferredSource": "https://science.nasa.gov/mercury/facts/"
+  },
+  {
+    "slug": "venus-runaway-greenhouse-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "濃厚二氧化碳大氣如何讓金星陷入失控溫室效應",
+    "preferredSource": "https://science.nasa.gov/venus/venus-facts/"
+  },
+  {
+    "slug": "earth-spheres-interaction-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "大氣、海洋、岩石與生命如何彼此交換物質與能量",
+    "preferredSource": "https://science.nasa.gov/earth/facts/"
+  },
+  {
+    "slug": "mars-lost-water-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "河谷、礦物與極冠如何拼出火星曾有液態水的證據",
+    "preferredSource": "https://science.nasa.gov/mars/facts/"
+  },
+  {
+    "slug": "jupiter-belt-storms-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "快速自轉與大氣對流如何形成木星條帶和風暴",
+    "preferredSource": "https://science.nasa.gov/jupiter/jupiter-facts/"
+  },
+  {
+    "slug": "saturn-ring-gaps-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "衛星引力與粒子碰撞如何雕刻土星環的縫隙",
+    "preferredSource": "https://science.nasa.gov/saturn/facts/"
+  },
+  {
+    "slug": "uranus-tilt-origin-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "巨大撞擊能否解釋天王星側躺與衛星系統的形成",
+    "preferredSource": "https://science.nasa.gov/uranus/facts/"
+  },
+  {
+    "slug": "neptune-internal-heat-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "海王星內部熱源如何推動大氣活動",
+    "preferredSource": "https://science.nasa.gov/neptune/neptune-facts/"
+  },
+  {
+    "slug": "pluto-active-surface-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "揮發性冰循環如何讓遙遠冥王星表面保持活動",
+    "preferredSource": "https://science.nasa.gov/dwarf-planets/pluto/facts/"
+  },
+  {
+    "slug": "solar-fusion-energy-path-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "核心核融合產生的能量如何穿過太陽內部到達表面",
+    "preferredSource": "https://science.nasa.gov/sun/facts/"
+  },
+  {
+    "slug": "tidal-locking-process-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "地球潮汐力如何逐步讓月球自轉與公轉同步",
+    "preferredSource": "https://science.nasa.gov/moon/facts/"
+  },
+  {
+    "slug": "asteroid-family-collisions-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "碰撞碎裂如何形成軌道相近的小行星家族",
+    "preferredSource": "https://science.nasa.gov/solar-system/asteroids/facts/"
+  },
+  {
+    "slug": "comet-heating-jets-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "彗核接近太陽時，冰昇華如何噴出氣體與塵埃",
+    "preferredSource": "https://science.nasa.gov/solar-system/comets/facts/"
+  },
+  {
+    "slug": "stellar-mass-life-cycle-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "恆星質量為什麼決定它的壽命與結局",
+    "preferredSource": "https://science.nasa.gov/universe/stars/"
+  },
+  {
+    "slug": "galaxy-merger-change-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "星系碰撞如何觸發恆星形成並改變結構",
+    "preferredSource": "https://science.nasa.gov/universe/galaxies/"
+  },
+  {
+    "slug": "transit-wobble-comparison-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "凌日與恆星擺動兩種方法各能測出系外行星哪些特徵",
+    "preferredSource": "https://science.nasa.gov/exoplanets/"
+  },
+  {
+    "slug": "activity-environment-gap-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "道路、安全感與休閒空間如何造成不同群體的活動差距",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/physical-activity"
+  },
+  {
+    "slug": "water-service-inequality-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "水源污染、基礎建設與收入如何共同造成飲水落差",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/drinking-water"
+  },
+  {
+    "slug": "fine-particles-source-path-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "交通、燃燒與工業排放如何形成細懸浮微粒並影響健康",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health"
+  },
+  {
+    "slug": "climate-health-cascade-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "極端天氣如何沿著居住、醫療與供應鏈放大健康衝擊",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/climate-change-and-health"
+  },
+  {
+    "slug": "mental-health-risk-protection-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "家庭、同儕、校園與網路環境如何同時形成風險與保護力量",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health"
+  },
+  {
+    "slug": "hearing-loss-prevention-access-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "噪音、感染與醫療可近性如何造成可預防的聽力損失",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss"
+  },
+  {
+    "slug": "cross-contamination-mechanism-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "生熟食交叉接觸如何讓病原沿著器具與雙手擴散",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/food-safety"
+  },
+  {
+    "slug": "resistance-selection-spread-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "抗生素使用如何篩選耐藥菌，並在人、動物與環境間傳播",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance"
+  },
+  {
+    "slug": "lead-child-development-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "鉛如何進入人體並傷害兒童正在發展的神經系統",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/lead-poisoning-and-health"
+  },
+  {
+    "slug": "e-waste-toxic-pathways-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "不安全拆解電子廢棄物如何讓有害物質進入空氣、土壤與人體",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/electronic-waste-(e-waste)"
+  },
+  {
+    "slug": "biodiversity-disease-links-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "棲地改變為何可能重組人、家畜與野生動物接觸的疾病風險",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/biodiversity"
+  },
+  {
+    "slug": "speed-injury-severity-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "碰撞速度為何同時影響事故發生機率與傷害程度",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries"
+  },
+  {
+    "slug": "drowning-risk-layers-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "水域環境、看顧、救生能力與災害如何層層改變溺水風險",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/drowning"
+  },
+  {
+    "slug": "food-environment-choice-voyage",
+    "level": "voyage",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "價格、廣告與取得便利性如何塑造看似個人的飲食選擇",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+  },
+  {
+    "slug": "water-quality-indicators-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "溫度、酸鹼值、溶氧與微生物如何分別透露水質",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/groundwater-quality"
+  },
+  {
+    "slug": "aquifer-flow-and-recharge-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "孔隙、滲透性與補注如何決定含水層的流動",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/aquifers-and-groundwater"
+  },
+  {
+    "slug": "precipitation-air-temperature-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "水滴與冰晶如何長大，並受氣溫影響成為不同降水",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/precipitation-and-water-cycle"
+  },
+  {
+    "slug": "evapotranspiration-controls-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "日照、風、濕度與植物種類如何控制蒸發散",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/evapotranspiration-and-water-cycle"
+  },
+  {
+    "slug": "evaporation-energy-humidity-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "液態水變成水蒸氣為何需要能量，也受到濕度限制",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/evaporation-and-water-cycle"
+  },
+  {
+    "slug": "drop-size-fall-speed-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "雨滴大小、空氣阻力與下降速度如何彼此影響",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/rain-and-precipitation"
+  },
+  {
+    "slug": "dew-point-condensation-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "空氣冷到露點時，水蒸氣如何凝結在微小顆粒上",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/condensation-and-water-cycle"
+  },
+  {
+    "slug": "groundwater-cone-subsidence-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "地下水超抽如何形成降落漏斗並造成地層下陷",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/groundwater-decline-and-depletion"
+  },
+  {
+    "slug": "glacier-mass-balance-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "降雪累積與融冰流失如何決定冰河變厚或縮小",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/ice-snow-and-glaciers-and-water-cycle"
+  },
+  {
+    "slug": "sampling-place-time-comparison-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "採樣地點、時間與頻率如何影響兩條河的水質比較",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/water-quality-sampling-techniques"
+  },
+  {
+    "slug": "baseflow-groundwater-river-voyage",
+    "level": "voyage",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "少雨時地下水如何持續補給河川基流",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/rivers-contain-groundwater"
+  },
+  {
+    "slug": "collection-workflow-roles-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "徵集、登錄、研究與展示如何分工又互相牽制",
+    "preferredSource": "https://collections.nmth.gov.tw/Article.aspx?a=236"
+  },
+  {
+    "slug": "collection-manual-consistency-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "典藏作業手冊如何讓不同人處理文物時留下可比較紀錄",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=217"
+  },
+  {
+    "slug": "storage-risk-zoning-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "材質特性與災害風險如何決定文物在庫房的位置",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=162"
+  },
+  {
+    "slug": "collection-policy-boundary-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "館藏主題、來源證明與保存能力如何形成徵集邊界",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=141"
+  },
+  {
+    "slug": "open-access-rights-check-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "著作權、文物所有權與影像授權為何是三個不同問題",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=137"
+  },
+  {
+    "slug": "digitization-color-metadata-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "色彩校準、解析度與詮釋資料如何影響數位副本的可信度",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=211"
+  },
+  {
+    "slug": "jade-carving-material-response-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "工匠如何順著翠玉原有的顏色與瑕疵安排造形",
+    "preferredSource": "https://digitalarchive.npm.gov.tw/Collection/Detail?dep=U&id=3"
+  },
+  {
+    "slug": "peach-village-secrecy-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "桃花源人為何要求保守祕密，漁人離開後又做了什麼",
+    "preferredSource": "https://zh.wikisource.org/wiki/桃花源記"
+  },
+  {
+    "slug": "skill-pride-dialogue-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "陳堯咨與賣油翁的對話如何從觀察轉成衝突",
+    "preferredSource": "https://zh.wikisource.org/wiki/賣油翁"
+  },
+  {
+    "slug": "scene-emotion-structure-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "范仲淹如何用兩組景物與兩類遊人鋪陳情緒對照",
+    "preferredSource": "https://zh.wikisource.org/wiki/岳陽樓記"
+  },
+  {
+    "slug": "empty-and-busy-contrast-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "文章如何用「有」與「無」的對照塑造陋室價值",
+    "preferredSource": "https://zh.wikisource.org/wiki/陋室銘"
+  },
+  {
+    "slug": "flowers-social-types-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "菊、牡丹與蓮如何分別代表隱逸、富貴與君子",
+    "preferredSource": "https://zh.wikisource.org/wiki/愛蓮說"
+  },
+  {
+    "slug": "many-scenes-one-joy-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "山間四時、宴飲與遊人如何被串成「樂」的層次",
+    "preferredSource": "https://zh.wikisource.org/wiki/醉翁亭記"
+  },
+  {
+    "slug": "brief-night-scene-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "短短一篇夜遊如何用比喻、動作與停頓留下安靜感",
+    "preferredSource": "https://zh.wikisource.org/wiki/記承天寺夜遊"
+  },
+  {
+    "slug": "gratitude-persuasion-order-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "出師表如何把國家危局、用人建議與個人報恩編排成說服力量",
+    "preferredSource": "https://zh.wikisource.org/wiki/出師表"
+  },
+  {
+    "slug": "joy-turns-to-mortality-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "文章如何從遊宴之樂轉向生命短暫的感嘆",
+    "preferredSource": "https://zh.wikisource.org/wiki/蘭亭集序"
+  },
+  {
+    "slug": "status-blocks-learning-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "士大夫怕被嘲笑的心態，如何阻礙向不同身分的人學習",
+    "preferredSource": "https://zh.wikisource.org/wiki/師說"
+  },
+  {
+    "slug": "tax-versus-venom-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "柳宗元如何用鄰里遭遇比較毒蛇與苛稅造成的傷害",
+    "preferredSource": "https://zh.wikisource.org/wiki/捕蛇者說"
+  },
+  {
+    "slug": "self-portrait-indirect-voyage",
+    "level": "voyage",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "作者為何用「不知何許人」的傳記口吻描寫理想中的自己",
+    "preferredSource": "https://zh.wikisource.org/wiki/五柳先生傳"
+  },
+  {
+    "slug": "amoc-risk-coordination-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "大西洋翻轉環流減弱時，各國如何共同判讀跨區氣候風險",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/amoc.html"
+  },
+  {
+    "slug": "gyre-waste-responsibility-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "垃圾隨環流跨越國界後，減量與清理責任該如何分配",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/gyre.html"
+  },
+  {
+    "slug": "meteotsunami-warning-gap-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "氣象海嘯不由地震引發，沿岸警報制度該如何補上缺口",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/meteotsunami.html"
+  },
+  {
+    "slug": "retreat-or-restore-coast-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "面對幽靈森林擴張，沿岸社區該選擇退讓、調適還是復育",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ghost-forest.html"
+  },
+  {
+    "slug": "tidal-flood-city-budget-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "城市治理滿潮淹水時，堤防、排水與遷居經費如何取捨",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/high-tide-flooding.html"
+  },
+  {
+    "slug": "satellite-ocean-planning-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "衛星追蹤緩慢海波，能如何改善漁業、航運與氣候決策",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/rossby-wave.html"
+  },
+  {
+    "slug": "sea-level-data-fairness-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "老驗潮站分布不均時，全球海平面政策如何避免資料偏差",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/tide-gauge.html"
+  },
+  {
+    "slug": "citizen-king-tide-mapping-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "公民拍攝王潮能否成為城市調適決策的可靠證據",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/kingtide.html"
+  },
+  {
+    "slug": "global-target-local-plan-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "全球海平面預測如何轉成各地可負擔又公平的防災標準",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/sealevel-global-local.html"
+  },
+  {
+    "slug": "turbidity-development-limit-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "港口開發增加混濁度時，工程需求與棲地保護如何協商",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/turbidity.html"
+  },
+  {
+    "slug": "wave-forecast-public-choice-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海浪預報如何同時服務航運、遊憩與沿岸安全",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/wavesinocean.html"
+  },
+  {
+    "slug": "compound-flood-evacuation-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "複合淹水風險升高時，撤離門檻與警報範圍該如何設定",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/stormsurge-stormtide.html"
+  },
+  {
+    "slug": "rare-tide-risk-message-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "罕見大潮的警示如何說得準確，又不讓民眾誤以為必然成災",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/perigean-spring-tide.html"
+  },
+  {
+    "slug": "inland-water-warning-language-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "內陸大湖的水位警報該如何避免套用海岸經驗造成誤判",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/gltides.html"
+  },
+  {
+    "slug": "eddy-data-fishing-route-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "漁船利用渦旋找魚時，效率、資源保育與資料公平如何平衡",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/eddy.html"
+  },
+  {
+    "slug": "offshore-loop-current-plan-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "離岸作業面對環流與強颶風時，預報成本和安全標準如何決定",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/loopcurrent.html"
+  },
+  {
+    "slug": "conveyor-climate-timescale-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海洋輸送帶跨越數百年的變化，政策該如何面對慢訊號與急決策",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/conveyor.html"
+  },
+  {
+    "slug": "beach-rip-risk-governance-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "海灘面對離岸流，告示、救生員與封閉措施如何依風險調整",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ripcurrent.html"
+  },
+  {
+    "slug": "upwelling-fishery-justice-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "湧升流改變漁獲時，科學預報與沿岸生計如何共同納入管理",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/upwelling.html"
+  },
+  {
+    "slug": "rogue-wave-design-standard-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "極端巨浪難以預測，船舶與海上平台的安全標準要留多大餘裕",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/roguewaves.html"
+  },
+  {
+    "slug": "longevity-evidence-uncertainty-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "極長壽動物的年齡證據有限時，研究者如何表達估值與不確定性",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/greenland-shark.html"
+  },
+  {
+    "slug": "plankton-carbon-feedback-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "浮游生物同時影響食物網與碳循環，暖化下的淨效應如何判讀",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/plankton.html"
+  },
+  {
+    "slug": "intertidal-compound-change-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "海平面、熱浪與海岸工程同時作用時，潮間帶會如何重新排列",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/intertidal-zone.html"
+  },
+  {
+    "slug": "beach-sand-budget-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "沙源被水庫與工程截斷後，養灘能否長期抵消海岸侵蝕",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/sand.html"
+  },
+  {
+    "slug": "climate-sex-ratio-adaptation-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "暖化使性別比失衡時，物種能否靠選巢與演化及時調適",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/temperature-dependent.html"
+  },
+  {
+    "slug": "ocean-noise-causal-proof-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "海洋聲景持續變動時，科學家如何分辨噪音與動物行為改變的因果",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/ocean-noise.html"
+  },
+  {
+    "slug": "coral-spectacle-stewardship-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "珊瑚產卵成為觀光奇景後，觀看、研究與棲地安寧如何並存",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/coral-spawning.html"
+  },
+  {
+    "slug": "microplastic-blame-narrative-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "談海洋微塑膠時，個人選擇與產業制度為何不能只怪其中一方",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/microplastics.html"
+  },
+  {
+    "slug": "biofouling-human-movement-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "附著生物跟著船移動時，航海文化、貿易與生態風險如何交織",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/barnacles.html"
+  },
+  {
+    "slug": "nautilus-beauty-tradeoff-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "當美麗外殼成為收藏品，欣賞、交易與物種保育如何取捨",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/nautilus.html"
+  },
+  {
+    "slug": "aquaculture-values-debate-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "評估水產養殖時，糧食需求、地方生計、污染與動物福祉該如何排序",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/aquaculture.html"
+  },
+  {
+    "slug": "whale-fall-human-imagination-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "鯨落被寫成生命循環象徵時，科學事實與文化想像如何相互照亮",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/whale-fall.html"
+  },
+  {
+    "slug": "acidification-story-responsibility-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "海洋吸收人類排放的二氧化碳後，誰應承擔監測與減量責任",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/acidification.html"
+  },
+  {
+    "slug": "seagrass-restoration-community-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "復育海草床時，科學指標與漁民的地方經驗如何共同決策",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/underwaterplants.html"
+  },
+  {
+    "slug": "saltmarsh-memory-and-retreat-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "海岸退縮時，鹽沼保育如何兼顧地方記憶、私有土地與防災",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/saltmarsh.html"
+  },
+  {
+    "slug": "invasive-control-ethics-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "移除入侵種時，原生生態、動物生命與執行成本如何衡量",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/invasive.html"
+  },
+  {
+    "slug": "dark-tourism-bioluminescence-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "追逐藍眼淚的旅遊熱潮，如何兼顧地方經濟與夜間生態",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/biolum.html"
+  },
+  {
+    "slug": "kelp-restoration-ownership-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "復育海帶森林時，公共海域、養殖使用與保育責任如何協調",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/kelplives.html"
+  },
+  {
+    "slug": "plankton-data-public-story-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "衛星上的海色資料如何轉譯成大眾能理解的海洋變化故事",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/phyto.html"
+  },
+  {
+    "slug": "mangrove-conservation-conflict-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "紅樹林擴張或開發引發爭議時，生態、防洪與居民使用如何對話",
+    "preferredSource": "https://oceanservice.noaa.gov/facts/mangroves.html"
+  },
+  {
+    "slug": "mercury-ice-evidence-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "離太陽最近的水星仍有極區冰，雷達與探測資料如何互相驗證",
+    "preferredSource": "https://science.nasa.gov/mercury/facts/"
+  },
+  {
+    "slug": "venus-earth-comparison-limit-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "金星與地球大小相近卻走向不同環境，哪些證據能限制演化模型",
+    "preferredSource": "https://science.nasa.gov/venus/venus-facts/"
+  },
+  {
+    "slug": "earth-system-tipping-links-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "地球系統的回饋彼此牽動時，科學家如何辨認臨界變化",
+    "preferredSource": "https://science.nasa.gov/earth/facts/"
+  },
+  {
+    "slug": "mars-habitability-inference-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "從古代水環境推論火星宜居性時，證據能支持到哪一步",
+    "preferredSource": "https://science.nasa.gov/mars/facts/"
+  },
+  {
+    "slug": "jupiter-interior-models-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "無法直接看見木星內部，重力、磁場與大氣資料如何約束模型",
+    "preferredSource": "https://science.nasa.gov/jupiter/jupiter-facts/"
+  },
+  {
+    "slug": "saturn-ring-age-debate-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "土星環究竟年輕還是古老，科學家如何處理互相牴觸的證據",
+    "preferredSource": "https://science.nasa.gov/saturn/facts/"
+  },
+  {
+    "slug": "ice-giant-missing-data-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "冰巨星只有一次近距離探測，有限資料如何影響行星理論",
+    "preferredSource": "https://science.nasa.gov/uranus/facts/"
+  },
+  {
+    "slug": "neptune-weather-model-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "觀測稀少又季節漫長時，海王星天氣模型如何接受檢驗",
+    "preferredSource": "https://science.nasa.gov/neptune/neptune-facts/"
+  },
+  {
+    "slug": "pluto-classification-evidence-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "冥王星分類改變後，天體定義如何隨新證據修正",
+    "preferredSource": "https://science.nasa.gov/dwarf-planets/pluto/facts/"
+  },
+  {
+    "slug": "solar-cycle-forecast-uncertainty-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "太陽活動週期影響太空天氣，預報為何仍需保留不確定範圍",
+    "preferredSource": "https://science.nasa.gov/sun/facts/"
+  },
+  {
+    "slug": "moon-origin-models-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "巨大撞擊說如何同時接受月岩成分與軌道資料的檢驗",
+    "preferredSource": "https://science.nasa.gov/moon/facts/"
+  },
+  {
+    "slug": "asteroid-hazard-probability-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "面對低機率高衝擊的小行星威脅，觀測與防禦資源如何配置",
+    "preferredSource": "https://science.nasa.gov/solar-system/asteroids/facts/"
+  },
+  {
+    "slug": "comet-origin-chemistry-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "彗星物質能否保存早期太陽系線索，採樣證據有哪些限制",
+    "preferredSource": "https://science.nasa.gov/solar-system/comets/facts/"
+  },
+  {
+    "slug": "stellar-evolution-evidence-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "看不到單顆恆星的一生，天文學家如何用群體觀測建立演化理論",
+    "preferredSource": "https://science.nasa.gov/universe/stars/"
+  },
+  {
+    "slug": "dark-matter-galaxy-model-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "星系旋轉與重力透鏡如何共同支持暗物質模型，又留下哪些爭議",
+    "preferredSource": "https://science.nasa.gov/universe/galaxies/"
+  },
+  {
+    "slug": "habitable-not-inhabited-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "位在適居帶不等於存在生命，評估系外世界還需要哪些證據",
+    "preferredSource": "https://science.nasa.gov/exoplanets/"
+  },
+  {
+    "slug": "physical-activity-policy-mix-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "促進全民運動時，個人勸說、校園設計與城市交通該如何搭配",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/physical-activity"
+  },
+  {
+    "slug": "safe-water-rights-cost-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "保障安全飲水時，公共權利、建設成本與偏遠服務如何平衡",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/drinking-water"
+  },
+  {
+    "slug": "clean-air-transition-burden-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "改善空氣品質時，產業轉型成本與弱勢族群健康該如何一起考量",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health"
+  },
+  {
+    "slug": "climate-health-justice-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "最少排放的人往往承受較大健康風險，國際調適資源如何公平分配",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/climate-change-and-health"
+  },
+  {
+    "slug": "adolescent-care-rights-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "青少年心理照護如何兼顧隱私、自主、家長參與與安全",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health"
+  },
+  {
+    "slug": "hearing-inclusion-policy-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "公共服務該如何在預防、輔具與手語文化之間支持聽覺多樣性",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss"
+  },
+  {
+    "slug": "food-safety-shared-duty-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "跨國食品供應鏈出問題時，生產者、政府與消費者如何分工追溯",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/food-safety"
+  },
+  {
+    "slug": "amr-access-stewardship-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "對抗抗藥性時，限制濫用與保障需要者取得藥物如何兼顧",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance"
+  },
+  {
+    "slug": "lead-cleanup-accountability-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "鉛污染的預防與整治費用，應由家庭、企業還是政府承擔",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/lead-poisoning-and-health"
+  },
+  {
+    "slug": "e-waste-circular-justice-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "電子產品更新愈快，設計者責任、回收勞動與跨境廢棄物如何治理",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/electronic-waste-(e-waste)"
+  },
+  {
+    "slug": "one-health-land-choice-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "土地利用決策如何同時衡量生物多樣性、人類健康與地方生計",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/biodiversity"
+  },
+  {
+    "slug": "road-space-equity-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "降低交通傷亡時，汽車效率、行人安全與公共運輸如何重新分配路權",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries"
+  },
+  {
+    "slug": "drowning-prevention-system-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "防溺政策如何在教育、設施、法規與緊急救援間配置資源",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/drowning"
+  },
+  {
+    "slug": "healthy-diet-sustainable-policy-tower",
+    "level": "tower",
+    "category": "world",
+    "textType": "vernacular",
+    "topic": "營養、文化習慣、農業環境與食品產業利益如何放進同一張政策餐桌",
+    "preferredSource": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+  },
+  {
+    "slug": "water-quality-multiple-stressors-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "污染源、流量與氣候同時變動時，水質因果要如何拆解",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/groundwater-quality"
+  },
+  {
+    "slug": "aquifer-model-uncertainty-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "看不見的含水層如何用井位資料建模，又可能錯在哪裡",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/aquifers-and-groundwater"
+  },
+  {
+    "slug": "precipitation-extremes-attribution-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "極端降水變多時，如何區分自然變異與人為暖化的影響",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/precipitation-and-water-cycle"
+  },
+  {
+    "slug": "evapotranspiration-water-budget-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "乾旱區估算蒸發散時，衛星、地面測量與用水模型如何互相校正",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/evapotranspiration-and-water-cycle"
+  },
+  {
+    "slug": "reservoir-evaporation-estimate-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "大型水庫的蒸發量難以直接量完，哪些估算方法較可信",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/evaporation-and-water-cycle"
+  },
+  {
+    "slug": "radar-rainfall-bias-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "雷達與雨量筒量到的雨不同時，科學家如何修正空間偏差",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/rain-and-precipitation"
+  },
+  {
+    "slug": "cloud-condensation-aerosol-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "氣膠增加不一定讓降雨增加，雲滴數量與大小如何造成複雜反應",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/condensation-and-water-cycle"
+  },
+  {
+    "slug": "groundwater-recovery-lag-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "停止超抽後含水層未必立刻恢復，彈性與不可逆壓密如何判斷",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/groundwater-decline-and-depletion"
+  },
+  {
+    "slug": "glacier-runoff-peak-water-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "冰河退縮初期河水可能增加，之後為何反而面臨水量下降",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/ice-snow-and-glaciers-and-water-cycle"
+  },
+  {
+    "slug": "monitoring-data-detection-limit-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "污染值接近偵測極限時，長期監測如何避免把未檢出當成不存在",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/water-quality-sampling-techniques"
+  },
+  {
+    "slug": "groundwater-pumping-streamflow-tower",
+    "level": "tower",
+    "category": "science",
+    "textType": "vernacular",
+    "topic": "抽地下水為何可能讓遠處河流減水，模型如何判斷延遲影響",
+    "preferredSource": "https://www.usgs.gov/water-science-school/science/rivers-contain-groundwater"
+  },
+  {
+    "slug": "museum-collection-public-trust-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "博物館收藏決策如何在專業判斷、公共價值與有限空間間取捨",
+    "preferredSource": "https://collections.nmth.gov.tw/Article.aspx?a=236"
+  },
+  {
+    "slug": "museum-rule-exception-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "統一典藏規範遇到特殊材質與地方知識時，何時應容許例外",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=217"
+  },
+  {
+    "slug": "museum-storage-sustainability-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "嚴格環控能保護文物卻耗能，保存標準與永續目標如何協調",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=162"
+  },
+  {
+    "slug": "whose-history-collected-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "收藏政策決定誰的生活被留下，博物館如何修補代表性不足",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=141"
+  },
+  {
+    "slug": "digital-collection-openness-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "開放典藏資料時，公共近用、文化敏感性與權利保護如何定界",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=137"
+  },
+  {
+    "slug": "digitization-selection-bias-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "數位化經費有限時，優先順序會如何改變人們看見的歷史",
+    "preferredSource": "https://collections.nmth.gov.tw/article.aspx?a=211"
+  },
+  {
+    "slug": "jadeite-cabbage-icon-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "vernacular",
+    "topic": "一件清宮小品如何成為博物館明星，名氣又會怎樣影響觀看",
+    "preferredSource": "https://digitalarchive.npm.gov.tw/Collection/Detail?dep=U&id=3"
+  },
+  {
+    "slug": "peach-utopia-boundary-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "桃花源的安定建立在隔絕之上，理想社會能否承受外界進入",
+    "preferredSource": "https://zh.wikisource.org/wiki/桃花源記"
+  },
+  {
+    "slug": "practice-talent-judgment-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "「惟手熟爾」能否解釋所有專業能力，熟練、天分與謙遜如何辨析",
+    "preferredSource": "https://zh.wikisource.org/wiki/賣油翁"
+  },
+  {
+    "slug": "private-sorrow-public-duty-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "「先憂後樂」要求超越個人得失，這種公共理想有哪些力量與壓力",
+    "preferredSource": "https://zh.wikisource.org/wiki/岳陽樓記"
+  },
+  {
+    "slug": "simple-life-social-capital-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "安貧樂道是否需要文化資本支撐，陋室理想如何放進不同生活條件檢視",
+    "preferredSource": "https://zh.wikisource.org/wiki/陋室銘"
+  },
+  {
+    "slug": "gentleman-symbol-boundary-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "把植物固定成道德象徵，能帶來清楚價值也可能遮住哪些複雜性",
+    "preferredSource": "https://zh.wikisource.org/wiki/愛蓮說"
+  },
+  {
+    "slug": "governor-shared-joy-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "地方官書寫「與民同樂」時，治理成果、作者形象與百姓聲音如何區辨",
+    "preferredSource": "https://zh.wikisource.org/wiki/醉翁亭記"
+  },
+  {
+    "slug": "idle-person-freedom-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "「閒人」既是失意者也是賞景者，逆境中的自由應如何理解",
+    "preferredSource": "https://zh.wikisource.org/wiki/記承天寺夜遊"
+  },
+  {
+    "slug": "loyalty-institution-tension-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "忠誠能支撐責任，也可能集中權威；出師表如何呈現君臣與制度的張力",
+    "preferredSource": "https://zh.wikisource.org/wiki/出師表"
+  },
+  {
+    "slug": "shared-feeling-across-time-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "王羲之相信後人也會感慨生死，作品如何讓個人經驗成為跨世代記憶",
+    "preferredSource": "https://zh.wikisource.org/wiki/蘭亭集序"
+  },
+  {
+    "slug": "teacher-authority-inquiry-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "「道之所存，師之所存」如何兼顧專業傳承與學生獨立思考",
+    "preferredSource": "https://zh.wikisource.org/wiki/師說"
+  },
+  {
+    "slug": "suffering-as-policy-evidence-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "個人苦難被寫成政治證言時，文學感染力與制度證據如何互補",
+    "preferredSource": "https://zh.wikisource.org/wiki/捕蛇者說"
+  },
+  {
+    "slug": "poverty-choice-romance-tower",
+    "level": "tower",
+    "category": "humanities",
+    "textType": "classical",
+    "topic": "不慕榮利能是自主選擇，也可能美化匱乏；如何讀出隱逸理想的條件",
+    "preferredSource": "https://zh.wikisource.org/wiki/五柳先生傳"
   }
 ]

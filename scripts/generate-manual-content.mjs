@@ -3,22 +3,35 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 import { normalizeManualContentFile } from "./manual-content-normalizer.mjs";
+import { manualLengthRule } from "./manual-content-profile.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const args = process.argv.slice(2);
 const slugIndex = args.indexOf("--slug");
+const levelIndex = args.indexOf("--level");
+const dateIndex = args.indexOf("--date");
 const slug = slugIndex >= 0 ? args[slugIndex + 1] : null;
+const level = levelIndex >= 0 ? args[levelIndex + 1] : null;
+const requestedDate = dateIndex >= 0 ? args[dateIndex + 1] : null;
 const topic = args
   .filter(
     (arg, index) =>
       arg !== "--slug" &&
-      index !== slugIndex + 1,
+      index !== slugIndex + 1 &&
+      arg !== "--level" &&
+      index !== levelIndex + 1 &&
+      arg !== "--date" &&
+      index !== dateIndex + 1,
   )
   .join(" ")
   .trim();
 
 if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
   console.error("請提供安全 slug，例如：--slug moon-phases");
+  process.exit(1);
+}
+if (!["launch", "voyage", "tower"].includes(level)) {
+  console.error("請提供 --level launch、voyage 或 tower");
   process.exit(1);
 }
 if (!topic) {
@@ -38,17 +51,24 @@ if (fs.existsSync(output)) {
   process.exit(1);
 }
 
-const date = new Intl.DateTimeFormat("en-CA", {
+const today = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Taipei",
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
 }).format(new Date());
+const date = requestedDate ?? today;
+if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+  console.error("--date 必須是 YYYY-MM-DD");
+  process.exit(1);
+}
 const prompt = fs
   .readFileSync(path.join(root, "content", "manual", "PROMPT.md"), "utf8")
   .replaceAll("{{TOPIC}}", topic)
   .replaceAll("{{SLUG}}", slug)
-  .replaceAll("{{DATE}}", date);
+  .replaceAll("{{DATE}}", date)
+  .replaceAll("{{LEVEL}}", level)
+  .replaceAll("{{LENGTH_RULE}}", manualLengthRule(level));
 
 const result = spawnSync(
   "codex",
@@ -58,6 +78,8 @@ const result = spawnSync(
     "--ephemeral",
     "--ignore-user-config",
     "--ignore-rules",
+    "-c",
+    'model="gpt-5.6-terra"',
     "-c",
     'model_reasoning_effort="low"',
     "--sandbox",

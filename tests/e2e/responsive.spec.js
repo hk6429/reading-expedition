@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
 test.use({ serviceWorkers: "block" });
 
@@ -28,7 +28,6 @@ test("圖片缺失仍保留文字與安全色塊", async ({ page }) => {
   await page.route("**/*.{png,webp,jpg,jpeg}", (route) => route.abort());
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "四海航線" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "格物航線" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "眾生航線" })).toBeVisible();
+  await expect(page.locator(".route-card h2")).toHaveCount(1);
+  await expect(page.locator(".route-card")).toContainText("未讀");
 });

@@ -80,6 +80,7 @@
   "packages": [
     {
       "id": "deep-sea-vents-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "黑暗海底的生命綠洲",
@@ -268,6 +269,7 @@
     },
     {
       "id": "deep-sea-vents-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "把地球內部的能量接上食物網",

@@ -82,6 +82,7 @@
   "packages": [
     {
       "id": "bird-migration-guided-vernacular-v1",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "候鳥腦中的多重導航系統",
@@ -262,6 +263,7 @@
     },
     {
       "id": "bird-migration-challenge-vernacular-v1",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "一條航線，許多種答案",

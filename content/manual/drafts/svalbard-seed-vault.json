@@ -89,6 +89,7 @@
   "packages": [
     {
       "id": "svalbard-seed-vault-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "藏在北極山中的糧食備份",
@@ -260,6 +261,7 @@
     },
     {
       "id": "svalbard-seed-vault-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "種子庫保存的不是答案，而是選項",

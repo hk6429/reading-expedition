@@ -5,6 +5,12 @@ import {
   recommendLevelFromPlacement,
 } from "../domain/reading-level.js";
 
+const PLACEMENT_SKILLS = Object.freeze({
+  comprehension: ["找重點", "先圈出重複出現的人、事與關鍵句。"],
+  inference: ["想意思", "把原因、結果與人物立場連起來。"],
+  evidence: ["找證據", "選答案前，先回原文指出直接支持的句子。"],
+});
+
 export function renderPlacement(
   container,
   { state, saveState },
@@ -84,17 +90,28 @@ export function renderPlacement(
       completedAt: new Date().toISOString(),
     };
     state.preferences.recommendedLevel = recommendedLevel;
-    state.preferences.selectedLevel = recommendedLevel;
     saveState(state);
 
     const result = document.createElement("section");
     result.className = "placement-result";
+    result.setAttribute("role", "status");
+    result.setAttribute("aria-live", "polite");
     const label = READING_LEVELS[recommendedLevel];
     result.innerHTML = `
       <p class="chapter-label">建議起點</p>
-      <h2>${label.label}</h2>
+      <h2 tabindex="-1">${label.label}</h2>
       <p>${label.description}</p>
       <p>你答對 ${correctCount}／3 題。這不是能力標籤，只是今天比較舒服的起點。</p>
+      <ul class="placement-skill-results">
+        ${placementReading.assessment
+          .map((item) => {
+            const correct = data.get(item.id) === item.correctAnswer;
+            const [skillLabel, advice] = PLACEMENT_SKILLS[item.type];
+            return `<li class="${correct ? "is-correct" : "needs-practice"}"><strong>${skillLabel}：${correct ? "已掌握" : "先練這一項"}</strong><span>${correct ? "這題能抓到文章線索。" : advice}</span></li>`;
+          })
+          .join("")}
+      </ul>
+      <p>請親自選擇起點；看到建議不會自動替你換級。</p>
     `;
     const choices = document.createElement("div");
     choices.className = "placement-level-choices";
@@ -118,6 +135,7 @@ export function renderPlacement(
     body.hidden = true;
     article.append(result);
     result.scrollIntoView({ behavior: "smooth", block: "start" });
+    result.querySelector("h2")?.focus({ preventScroll: true });
   });
 
   article.append(body, form);

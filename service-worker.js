@@ -1,4 +1,4 @@
-const VERSION = "reading-expedition-v13";
+const VERSION = "reading-expedition-v15";
 const CACHE_PREFIX = "reading-expedition-";
 const SHELL = [
   "/",
@@ -35,6 +35,7 @@ self.addEventListener("activate", (event) => {
 function isReadingRequest(url) {
   return (
     url.pathname === "/api/v1/daily" ||
+    url.pathname === "/api/v1/readings" ||
     /^\/api\/v1\/readings\/[a-zA-Z0-9-]+$/.test(url.pathname)
   );
 }

@@ -4,17 +4,29 @@ import path from "node:path";
 import { validateAssessmentAnswers } from "../worker/src/pipeline/answer-validator.js";
 import { evaluateContentProfile } from "../worker/src/pipeline/content-profile.js";
 import { compareDifficultyLevels } from "../worker/src/pipeline/reading-level.js";
+import { manualProfileLimits } from "./manual-content-profile.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const draftsDir = path.join(root, "content", "manual", "drafts");
 const args = process.argv.slice(2);
 const requireCountIndex = args.indexOf("--require-count");
+const categoryQuotaIndex = args.indexOf("--category-quota");
 const requiredCount =
   requireCountIndex >= 0 ? Number(args[requireCountIndex + 1]) : null;
+const categoryQuota =
+  categoryQuotaIndex >= 0
+    ? Object.fromEntries(
+        String(args[categoryQuotaIndex + 1] ?? "")
+          .split(",")
+          .map((entry) => entry.split("="))
+          .map(([category, count]) => [category, Number(count)]),
+      )
+    : null;
 const explicitFiles = args.filter(
   (arg, index) =>
-    arg !== "--require-count" &&
-    (requireCountIndex < 0 || index !== requireCountIndex + 1),
+    !["--require-count", "--category-quota"].includes(arg) &&
+    (requireCountIndex < 0 || index !== requireCountIndex + 1) &&
+    (categoryQuotaIndex < 0 || index !== categoryQuotaIndex + 1),
 );
 const files =
   explicitFiles.length > 0
@@ -30,14 +42,7 @@ const seenIds = new Set();
 const seenContentKeys = new Set();
 const seenScheduleSlots = new Set();
 const categoryCounts = { world: 0, science: 0, humanities: 0 };
-const MANUAL_PROFILE_LIMITS = {
-  vernacularMin: 1300,
-  vernacularMax: 1700,
-  classicalMin: 500,
-  classicalMax: 900,
-  classicalGlossaryMin: 8,
-  classicalGlossaryMax: 15,
-};
+const LEVELS = new Set(["launch", "voyage", "tower"]);
 
 function fail(file, message) {
   failures.push(`${path.relative(root, file)}: ${message}`);
@@ -122,6 +127,9 @@ for (const file of files) {
     fail(file, `JSON 無法解析：${error.message}`);
     continue;
   }
+  if (/INVALID|```/.test(JSON.stringify(fixture))) {
+    fail(file, "含有模型生成失敗標記、程式碼圍欄或占位符");
+  }
   const slug = path.basename(file, ".json");
   if (!fixture?.source || !fixture?.sourceItem || !fixture?.factPack) {
     fail(file, "缺少來源、來源項目或事實包");
@@ -152,16 +160,6 @@ for (const file of files) {
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(fixture.factPack.topicDate ?? "")) {
     fail(file, "factPack.topicDate 必須是 YYYY-MM-DD");
-  } else {
-    const scheduleSlot = [
-      fixture.factPack.topicDate,
-      fixture.factPack.category,
-      fixture.factPack.version,
-    ].join(":");
-    if (seenScheduleSlots.has(scheduleSlot)) {
-      fail(file, `日期與類別時段重複：${scheduleSlot}`);
-    }
-    seenScheduleSlots.add(scheduleSlot);
   }
   if (seenContentKeys.has(fixture.contentKey)) {
     fail(file, `contentKey 重複：${fixture.contentKey}`);
@@ -182,6 +180,24 @@ for (const file of files) {
     fail(file, "必須同時包含 guided 與 challenge");
     continue;
   }
+  const packageLevels = new Set(fixture.packages.map(({ level }) => level));
+  const level = fixture.packages[0]?.level;
+  if (packageLevels.size !== 1 || !LEVELS.has(level)) {
+    fail(file, "guided 與 challenge 必須使用同一個有效 level");
+    continue;
+  }
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fixture.factPack.topicDate ?? "")) {
+    const scheduleSlot = [
+      fixture.factPack.topicDate,
+      fixture.factPack.category,
+      level,
+      fixture.factPack.version,
+    ].join(":");
+    if (seenScheduleSlots.has(scheduleSlot)) {
+      fail(file, `日期、類別與階段時段重複：${scheduleSlot}`);
+    }
+    seenScheduleSlots.add(scheduleSlot);
+  }
   for (const reading of fixture.packages) {
     checkUnique(file, reading.id, "reading.id");
     if (!reading.id.startsWith(slug)) {
@@ -194,7 +210,10 @@ for (const file of files) {
     ) {
       fail(file, `${reading.difficulty} 必須是通過硬門檻的待審稿`);
     }
-    const profile = evaluateContentProfile(reading, MANUAL_PROFILE_LIMITS);
+    const profile = evaluateContentProfile(
+      reading,
+      manualProfileLimits(reading.level),
+    );
     if (!profile.ok) {
       fail(
         file,
@@ -251,13 +270,28 @@ if (requiredCount !== null) {
   } else if (files.length !== requiredCount) {
     failures.push(`草稿數量為 ${files.length}，目標為 ${requiredCount}`);
   }
-  if (
-    requiredCount === 30 &&
-    Object.values(categoryCounts).some((count) => count !== 10)
-  ) {
-    failures.push(
-      `30 組正式內容須三類各 10 組，目前為 ${JSON.stringify(categoryCounts)}`,
+}
+
+if (categoryQuota !== null) {
+  const valid =
+    Object.keys(categoryQuota).length === 3 &&
+    Object.keys(categoryCounts).every(
+      (category) =>
+        Number.isInteger(categoryQuota[category]) &&
+        categoryQuota[category] >= 0,
     );
+  if (!valid) {
+    failures.push(
+      "--category-quota 必須是 world=N,science=N,humanities=N",
+    );
+  } else {
+    for (const [category, expected] of Object.entries(categoryQuota)) {
+      if (categoryCounts[category] !== expected) {
+        failures.push(
+          `${category} 草稿數量為 ${categoryCounts[category]}，配額為 ${expected}`,
+        );
+      }
+    }
   }
 }
 

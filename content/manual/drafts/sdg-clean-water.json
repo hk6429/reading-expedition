@@ -82,6 +82,7 @@
   "packages": [
     {
       "id": "sdg-clean-water-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "一杯水背後的共同承諾",
@@ -251,6 +252,7 @@
     },
     {
       "id": "sdg-clean-water-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "共同指標能否接住每一滴水",

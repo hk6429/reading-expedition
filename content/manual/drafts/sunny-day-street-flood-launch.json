@@ -1,0 +1,356 @@
+{
+  "source": {
+    "id": "sunny-day-street-flood-launch-source",
+    "name": "NOAA National Ocean Service",
+    "baseUrl": "https://oceanservice.noaa.gov",
+    "licenseType": "public-domain-us-government",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "sunny-day-street-flood-launch-source-item",
+    "canonicalUrl": "https://oceanservice.noaa.gov/facts/high-tide-flooding.html",
+    "title": "What is high tide flooding?",
+    "publisher": "NOAA National Ocean Service",
+    "publishedAt": null,
+    "fetchedAt": "2026-08-06T00:00:00+08:00",
+    "contentFingerprint": "noaa-nos-sunny-day-street-flood-launch-live-2026-08-06",
+    "licenseSnapshot": "NOAA 為美國聯邦政府機構；本草稿只使用該頁可核對的政府事實並原創改寫，排除頁面中的第三方圖片、影片與商標。",
+    "extractScope": "晴天淹水與滿潮淹水的形成、相對海平面與在地因素、三級嚴重度、道路和建物影響，以及未來趨勢。"
+  },
+  "factPack": {
+    "id": "sunny-day-street-flood-launch-fact-pack",
+    "topicDate": "2026-08-12",
+    "category": "world",
+    "facts": [
+      {
+        "id": "sunny-day-street-flood-launch-fact-1",
+        "statement": "滿潮淹水可能在晴天發生，常由海平面上升與在地因素共同把水位推過正常滿潮線。",
+        "sourceItemId": "sunny-day-street-flood-launch-source-item"
+      },
+      {
+        "id": "sunny-day-street-flood-launch-fact-2",
+        "statement": "盛行風改變、洋流變化，以及新月或滿月時較強的潮汐，都可能促成滿潮淹水。",
+        "sourceItemId": "sunny-day-street-flood-launch-source-item"
+      },
+      {
+        "id": "sunny-day-street-flood-launch-fact-3",
+        "statement": "海平面上升、陸地下沉與天然屏障消失，使沿岸更容易發生滿潮淹水。",
+        "sourceItemId": "sunny-day-street-flood-launch-source-item"
+      },
+      {
+        "id": "sunny-day-street-flood-launch-fact-4",
+        "statement": "輕微滿潮淹水主要造成雨水下水道回堵與道路封閉；更嚴重時可能損害住家、商家與基礎設施。",
+        "sourceItemId": "sunny-day-street-flood-launch-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://oceanservice.noaa.gov/facts/high-tide-flooding.html"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "sunny-day-street-flood-launch",
+  "packages": [
+    {
+      "id": "sunny-day-street-flood-launch-guided",
+      "level": "launch",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "太陽下的街道為何冒出海水",
+      "hookQuestion": "沒有下雨，沿海街道上的水可能從哪裡來？",
+      "body": [
+        "看到街道積水，我們常先找烏雲和大雨。但在沿海地區，有時天空晴朗，水仍會淹上道路。這種現象叫作滿潮淹水，也常被稱為晴天淹水或滋擾性淹水。",
+        "滿潮淹水的重點，是水位超過當地正常滿潮線。當相對海平面上升，海面離道路與排水設施更近，就不一定要有強烈風暴或颶風，沿岸也可能進水。",
+        "海平面上升通常不會單獨作用。盛行風改變、洋流移動，以及新月或滿月時較強的潮汐，都可能把水位再往上推。雨水也可能加入，但不是每次都需要下雨。",
+        "因此，晴天淹水不是天氣名稱，而是提醒我們淹水來源不只天空。海水可在滿潮與其他在地條件配合時越過原本界線，進入低窪街道，甚至讓排水系統回堵。",
+        "NOAA把滿潮淹水分成輕微、中度與重大三級，依據是水位超過當地平均滿潮多少。輕微事件多半造成干擾，例如雨水下水道回堵或道路封閉。",
+        "水位再高時，影響會變嚴重。中度淹水可能損害住家與商家；重大淹水可能需要疏散，也常要修復基礎設施和財產。分類讓人們不只說有沒有淹，也能比較程度。",
+        "風險增加還和陸地下沉、天然屏障消失有關。若地面降低，或原本能緩衝海水的自然環境減少，相同潮位就可能造成更大影響。這些因素會和海平面上升一起作用。",
+        "所以，晴天看到沿海街道積水時，不能只問雨下了多少。還要看滿潮時間、相對海平面、風與洋流，以及地勢和天然屏障。把這些線索放在一起，才能理解水從哪裡來。"
+      ],
+      "glossary": [
+        {
+          "term": "滿潮淹水",
+          "definition": "海水水位超過當地正常滿潮線而造成的沿岸淹水。"
+        },
+        {
+          "term": "相對海平面",
+          "definition": "海面相對於當地陸地的高度。"
+        },
+        {
+          "term": "盛行風",
+          "definition": "某地在一段時間內較常出現的風向與風勢。"
+        },
+        {
+          "term": "天然屏障",
+          "definition": "能緩衝海水或波浪影響的自然地形與生態環境。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "晴天積水溯源法",
+        "purpose": "把海面高度、潮汐、風流、地勢與屏障逐項連結，找出沒有降雨時的沿岸淹水來源。",
+        "steps": [
+          {
+            "label": "先看界線",
+            "instruction": "找出正常滿潮線與實際水位的關係，確認海水是否越過當地原有界線。",
+            "example": "第二段說相對海平面上升後，海面更接近道路，滿潮較容易越過界線。"
+          },
+          {
+            "label": "再加因素",
+            "instruction": "把盛行風、洋流、新月滿月潮汐放在海平面之上，觀察水位如何被再次推高。",
+            "example": "即使沒有大雨，較強潮汐與風流變化仍可能和海平面上升共同造成淹水。"
+          },
+          {
+            "label": "判斷影響",
+            "instruction": "依道路、排水、住家與基礎設施受影響程度，區分輕微、中度和重大事件。",
+            "example": "雨水下水道回堵與封路多屬輕微干擾，建物損害或疏散則代表程度更高。"
+          }
+        ],
+        "structureMap": "文章先打破淹水必有降雨的想法，再解釋相對海平面與在地因素，接著用三級分類比較影響，最後整理判讀線索。",
+        "expertTip": "晴天只排除當下明顯降雨，不能排除海水來源；判斷時要把潮位與陸地高度一起看。",
+        "selfCheck": "我能否列出四項不用靠下雨，也可能讓沿海水位升高或影響加重的因素？"
+      },
+      "readingMinutes": 5,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/high-tide-flooding.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "sunny-day-street-flood-launch-guided-q1",
+          "type": "comprehension",
+          "prompt": "依本文，滿潮淹水的關鍵條件是什麼？",
+          "options": [
+            "水位超過當地正常滿潮線",
+            "天空一定出現颱風眼",
+            "所有排水管同時破裂",
+            "海水完全停止流動"
+          ],
+          "correctAnswer": "水位超過當地正常滿潮線",
+          "rationale": "第二段直接指出滿潮淹水的核心是水位越過當地正常滿潮線。",
+          "distractorReasons": {
+            "天空一定出現颱風眼": "滿潮淹水不一定需要強烈風暴。",
+            "所有排水管同時破裂": "排水回堵可能是影響，不是唯一成因。",
+            "海水完全停止流動": "水位變化與潮汐、風流有關，不是完全停止。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 9,
+            "end": 20,
+            "text": "水位超過當地正常滿潮線"
+          }
+        },
+        {
+          "id": "sunny-day-street-flood-launch-guided-q2",
+          "type": "inference",
+          "prompt": "為何沒有下雨的晴天仍可能淹水？",
+          "options": [
+            "海平面、潮汐、風與洋流仍可能共同推高海水",
+            "晴天會讓柏油路自動產生海水",
+            "沿海街道每天都固定蓄水",
+            "沒有雨時所有排水設施都會關閉"
+          ],
+          "correctAnswer": "海平面、潮汐、風與洋流仍可能共同推高海水",
+          "rationale": "第三、四段說明海水可由相對海平面和多種在地因素推高，降雨不是必要條件。",
+          "distractorReasons": {
+            "晴天會讓柏油路自動產生海水": "柏油路不會製造海水。",
+            "沿海街道每天都固定蓄水": "滿潮淹水受水位和在地條件影響，不是每天固定發生。",
+            "沒有雨時所有排水設施都會關閉": "正文沒有排水設施晴天必定關閉的規則。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 50,
+            "end": 68,
+            "text": "雨水也可能加入，但不是每次都需要下雨"
+          }
+        },
+        {
+          "id": "sunny-day-street-flood-launch-guided-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能說明輕微滿潮淹水仍會妨礙生活？",
+          "options": [
+            "輕微事件多半造成雨水下水道回堵或道路封閉。",
+            "分類讓人們比較淹水程度。",
+            "水位再高時，影響會變嚴重。",
+            "風險和天然屏障消失有關。"
+          ],
+          "correctAnswer": "輕微事件多半造成雨水下水道回堵或道路封閉。",
+          "rationale": "第一項列出排水回堵與封路兩種具體干擾，直接支持輕微事件仍影響生活。",
+          "distractorReasons": {
+            "分類讓人們比較淹水程度。": "此句只說分類功能。",
+            "水位再高時，影響會變嚴重。": "此句談更高水位，沒有列出輕微影響。",
+            "風險和天然屏障消失有關。": "此句說明風險因素，不是生活干擾。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 38,
+            "end": 48,
+            "text": "輕微事件多半造成干擾"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sunny-day-street-flood-launch-challenge",
+      "level": "launch",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "相對海平面如何改寫晴天淹水",
+      "hookQuestion": "當海面與街道的距離縮短，一次普通滿潮會變成什麼？",
+      "body": [
+        "沿海街道在藍天下積水，看似矛盾，其實只是淹水來源不在天空。滿潮淹水發生於海水越過當地正常滿潮線，也常被稱為晴天淹水。當相對海平面升高，普通潮汐與在地條件就更容易把水推進低窪地區。",
+        "相對海平面同時比較海面與陸地。海面上升會縮短海水到道路的高度差；陸地下沉也會產生相似結果。再加上天然屏障減少，沿岸失去部分緩衝，即使沒有強烈風暴，淹水門檻仍會降低。",
+        "因此，成因不能只用單一箭頭表示。長期的海平面上升和地層下沉，先改變背景高度；風、洋流與強潮再形成短期加成。當兩個時間尺度重疊，原本不致淹水的潮位也可能越過街道。",
+        "NOAA依超過當地平均滿潮的高度，把事件分成三級。輕微滿潮淹水為高出零點五五公尺，常造成雨水下水道回堵和道路封閉。這種事件未必摧毀建物，卻會反覆打亂交通與日常運作。",
+        "NOAA指出，由於海面上升、土地下沉與天然屏障消失，美國沿岸社區的滿潮淹水頻率已是二十年前的兩倍。這是美國沿岸的統計，不能直接當成台灣每個港鎮的數值，但形成機制可協助理解相對水位。",
+        "未來趨勢也和背景高度有關。隨海平面繼續上升，今天造成輕微或中度滿潮淹水的條件，到二○五○年可能造成中度或重大淹水。同一組風潮條件，會因起始海面更高而跨過更嚴重門檻。",
+        "判讀晴天街道淹水時，應把問題拆成三層：背景相對海平面是否改變，當日風、洋流和潮汐是否加成，以及水位超線後造成何種影響。這能避免把沒有下雨誤判為沒有洪水風險，也避免把美國分級數字直接套到其他地點。"
+      ],
+      "glossary": [
+        {
+          "term": "滿潮淹水",
+          "definition": "海水超過當地正常滿潮線而造成的沿岸淹水。"
+        },
+        {
+          "term": "相對海平面",
+          "definition": "海面相對於當地陸地的高度。"
+        },
+        {
+          "term": "地層下沉",
+          "definition": "地面高度隨時間逐漸降低的現象。"
+        },
+        {
+          "term": "天然屏障",
+          "definition": "能降低海水或波浪影響的自然地形與生態環境。"
+        },
+        {
+          "term": "短期加成",
+          "definition": "短時間因素疊加，使原有水位再提高。"
+        },
+        {
+          "term": "淹水門檻",
+          "definition": "水位開始超過地面或設施而造成淹水的界線。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "雙尺度門檻分析",
+        "purpose": "分開長期背景水位與短期風潮加成，再用分級門檻評估街道和建物可能受到的影響。",
+        "steps": [
+          {
+            "label": "定背景線",
+            "instruction": "先整理海面上升、陸地下沉與屏障消失，判斷淹水門檻是否已逐漸降低。",
+            "example": "海面更高或地面更低，都會縮短海水到街道的距離，使普通潮汐更接近門檻。"
+          },
+          {
+            "label": "疊短因素",
+            "instruction": "再加入盛行風、洋流、新月滿月強潮與降雨，分辨哪些是短期推高水位的因素。",
+            "example": "滿月強潮和向岸風可在較高背景海面上疊加，即使晴天也可能讓海水越線。"
+          },
+          {
+            "label": "核對門檻",
+            "instruction": "把實際影響對照輕微、中度與重大三級，並確認數值是相對當地平均滿潮。",
+            "example": "零點五五公尺屬輕微分級，常見回堵和封路；更高級別才涉及建物損害與疏散。"
+          }
+        ],
+        "structureMap": "文章先用相對海平面解釋背景變化，再疊加短期風潮因素，接著比較三級門檻、地區統計與未來嚴重度變化。",
+        "expertTip": "跨地區使用分級數字時，務必保留它相對於當地平均滿潮的基準，不能直接當絕對海拔。",
+        "selfCheck": "我能否分清長期背景、短期加成與影響分級，並說明三者如何共同造成晴天淹水？"
+      },
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/high-tide-flooding.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "sunny-day-street-flood-launch-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依本文，輕微滿潮淹水的分級門檻是多少？",
+          "options": [
+            "高出當地平均滿潮零點五五公尺",
+            "高出當地平均滿潮零點八五公尺",
+            "高出當地平均滿潮一點二公尺",
+            "任何可見積水都固定算重大"
+          ],
+          "correctAnswer": "高出當地平均滿潮零點五五公尺",
+          "rationale": "第四段列出 NOAA 的輕微級門檻為高出當地平均滿潮零點五五公尺。",
+          "distractorReasons": {
+            "高出當地平均滿潮零點八五公尺": "零點八五公尺屬中度分級。",
+            "高出當地平均滿潮一點二公尺": "一點二公尺屬重大分級。",
+            "任何可見積水都固定算重大": "分級依相對水位高度，不是只看有無積水。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 25,
+            "end": 40,
+            "text": "輕微滿潮淹水為高出零點五五公尺"
+          }
+        },
+        {
+          "id": "sunny-day-street-flood-launch-challenge-q2",
+          "type": "inference",
+          "prompt": "為何未來相同的風潮條件可能造成更嚴重淹水？",
+          "options": [
+            "背景海面升高，使短期加成更容易跨過較高門檻",
+            "風和潮汐到未來都會完全消失",
+            "道路會自動降低分級標準",
+            "所有地區都會使用同一絕對海拔"
+          ],
+          "correctAnswer": "背景海面升高，使短期加成更容易跨過較高門檻",
+          "rationale": "第四、八段把背景海平面與短期風潮疊加，說明起始水位升高會使同樣條件跨過更嚴重門檻。",
+          "distractorReasons": {
+            "風和潮汐到未來都會完全消失": "正文沒有風潮消失的說法。",
+            "道路會自動降低分級標準": "分級基準並非道路自行調整。",
+            "所有地區都會使用同一絕對海拔": "本文強調數字相對於當地平均滿潮。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 57,
+            "end": 73,
+            "text": "同一組風潮條件，會因起始海面更高"
+          }
+        },
+        {
+          "id": "sunny-day-street-flood-launch-challenge-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能限制讀者把美國統計直接套到台灣？",
+          "options": [
+            "這是美國沿岸的統計，不能直接當成台灣每個港鎮的數值。",
+            "滿潮淹水也常被稱為晴天淹水。",
+            "盛行風變化能把水推向岸邊。",
+            "重大淹水可能需要疏散。"
+          ],
+          "correctAnswer": "這是美國沿岸的統計，不能直接當成台灣每個港鎮的數值。",
+          "rationale": "第一項明確指出統計適用地區與不可直接外推的界線。",
+          "distractorReasons": {
+            "滿潮淹水也常被稱為晴天淹水。": "名稱不能限制統計外推。",
+            "盛行風變化能把水推向岸邊。": "形成機制不等於各地頻率相同。",
+            "重大淹水可能需要疏散。": "可能影響也不能證明台灣數值等同美國。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 49,
+            "end": 58,
+            "text": "這是美國沿岸的統計"
+          }
+        }
+      ]
+    }
+  ]
+}

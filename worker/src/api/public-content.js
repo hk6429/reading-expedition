@@ -24,6 +24,72 @@ export function isValidIsoDate(value) {
   );
 }
 
+const READING_LEVELS = new Set(["launch", "voyage", "tower"]);
+
+export function parseReadingListQuery(url) {
+  const level = url.searchParams.get("level");
+  const page = Number(url.searchParams.get("page") ?? 1);
+  const pageSize = Number(url.searchParams.get("pageSize") ?? 100);
+  if (
+    !READING_LEVELS.has(level) ||
+    !Number.isInteger(page) ||
+    page < 1 ||
+    !Number.isInteger(pageSize) ||
+    pageSize < 1 ||
+    pageSize > 200
+  ) {
+    return null;
+  }
+  return { level, page, pageSize, offset: (page - 1) * pageSize };
+}
+
+function projectReading(reading) {
+  const {
+    id,
+    contentKey,
+    category,
+    difficulty,
+    level,
+    supportMode,
+    textType,
+    title,
+    hookQuestion,
+    readingMinutes,
+    version,
+  } = reading;
+  return {
+    id,
+    contentKey,
+    category,
+    difficulty,
+    level,
+    supportMode,
+    textType,
+    title,
+    hookQuestion,
+    readingMinutes,
+    version,
+  };
+}
+
+export async function getReadingListPayload(repository, query) {
+  const result = await repository.listPublishedReadings({
+    level: query.level,
+    limit: query.pageSize,
+    offset: query.offset,
+  });
+  const total = result.total;
+  return {
+    readings: result.readings.map(projectReading),
+    pagination: {
+      page: query.page,
+      pageSize: query.pageSize,
+      total,
+      hasMore: query.offset + result.readings.length < total,
+    },
+  };
+}
+
 export async function getDailyPayload(repository, date) {
   let readings = await repository.getPublishedDaily(date);
   if (
@@ -37,33 +103,7 @@ export async function getDailyPayload(repository, date) {
     date,
     contentDate,
     isEncore: contentDate !== date,
-    readings: readings.map(
-      ({
-        id,
-        contentKey,
-        category,
-        difficulty,
-        level,
-        supportMode,
-        textType,
-        title,
-        hookQuestion,
-        readingMinutes,
-        version,
-      }) => ({
-        id,
-        contentKey,
-        category,
-        difficulty,
-        level,
-        supportMode,
-        textType,
-        title,
-        hookQuestion,
-        readingMinutes,
-        version,
-      }),
-    ),
+    readings: readings.map(projectReading),
   };
 }
 

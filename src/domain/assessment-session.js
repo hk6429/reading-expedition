@@ -22,6 +22,18 @@ export function gradeAssessment(answerKey, answers) {
   };
 }
 
+export function assessmentOutcome(results = []) {
+  const total = results.length;
+  const correctCount = results.filter(({ correct }) => correct).length;
+  const requiredCorrectCount = Math.max(1, Math.ceil((total * 2) / 3));
+  return Object.freeze({
+    total,
+    correctCount,
+    requiredCorrectCount,
+    passed: total > 0 && correctCount >= requiredCorrectCount,
+  });
+}
+
 export function createAssessmentSession({ itemIds, submit }) {
   const answers = {};
   let attempts = 0;

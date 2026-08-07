@@ -45,6 +45,7 @@
   "packages": [
     {
       "id": "water-sharing-guided-v1",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "一座城市如何分配有限水源？",
@@ -150,6 +151,7 @@
     },
     {
       "id": "water-sharing-challenge-v1",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "缺水時，平均分配真的公平嗎？",

@@ -58,7 +58,7 @@ test("repository 依日期取得已發布文章並解析結構欄位", async () 
   assert.deepEqual(db.calls[0].bindings, ["2026-07-28"]);
 });
 
-test("repository 可取得七日內最近一次已發布文章", async () => {
+test("repository 可取得指定日期以前最近一次已發布文章，不設七日下限", async () => {
   const db = createFakeDb([
     {
       id: "water-001-guided",
@@ -81,8 +81,40 @@ test("repository 可取得七日內最近一次已發布文章", async () => {
 
   assert.equal(readings[0].topicDate, "2026-07-28");
   assert.match(db.calls[0].sql, /MAX\(fp2\.topic_date\)/);
-  assert.match(db.calls[0].sql, /date\(\?, '-7 days'\)/);
-  assert.deepEqual(db.calls[0].bindings, ["2026-07-29", "2026-07-29"]);
+  assert.doesNotMatch(db.calls[0].sql, /-7 days/);
+  assert.deepEqual(db.calls[0].bindings, ["2026-07-29"]);
+});
+
+test("repository 依 level 分頁取得全部已發布 metadata", async () => {
+  const db = createFakeDb([
+    {
+      id: "launch-001-guided",
+      content_key: "launch-001",
+      topic_date: "2026-07-29",
+      category: "world",
+      difficulty: "guided",
+      reading_level: "launch",
+      support_mode: "guided",
+      text_type: "vernacular",
+      title: "第一卷",
+      hook_question: "為什麼？",
+      reading_minutes: 5,
+      version: 1,
+      total_count: 60,
+    },
+  ]);
+  const repository = createReadingRepository(db);
+  const result = await repository.listPublishedReadings({
+    level: "launch",
+    limit: 20,
+    offset: 40,
+  });
+
+  assert.equal(result.total, 60);
+  assert.equal(result.readings[0].id, "launch-001-guided");
+  assert.match(db.calls[0].sql, /reading_level = \?/);
+  assert.match(db.calls[0].sql, /COUNT\(\*\) OVER\(\)/);
+  assert.deepEqual(db.calls[0].bindings, ["launch", 20, 40]);
 });
 
 test("repository 只取得已發布文章的正文與題目", async () => {

@@ -89,6 +89,7 @@
   "packages": [
     {
       "id": "satellite-rescue-beacons-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "從一束求救訊號到跨國救援",
@@ -255,6 +256,7 @@
     },
     {
       "id": "satellite-rescue-beacons-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "沒有世界搜救隊，為何仍能全球接力？",

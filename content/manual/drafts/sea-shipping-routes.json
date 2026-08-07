@@ -86,6 +86,7 @@
   "packages": [
     {
       "id": "sea-shipping-routes-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "看不見的海上道路",
@@ -266,6 +267,7 @@
     },
     {
       "id": "sea-shipping-routes-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "航線背後的全球治理",

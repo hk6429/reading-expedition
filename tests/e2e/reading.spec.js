@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
 test("學生可閱讀啟航文章、調整夜讀並保存進度", async ({ page }) => {
   await page.goto("/#/read/water-sharing-guided-v1");
@@ -26,6 +26,8 @@ test("學生可閱讀啟航文章、調整夜讀並保存進度", async ({ page 
     )
     .toHaveProperty("water-sharing-guided-v1");
 
+  await page.locator(".reading-paragraph").last().scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: "前往 3 題問答" })).toBeEnabled();
   await page.getByRole("button", { name: "前往 3 題問答" }).click();
   await expect(page).toHaveURL(/#\/quiz\/water-sharing-guided-v1$/);
 });
@@ -77,11 +79,7 @@ test("引導模式提供段落路標，獨立模式保留點詞解釋", async ({
   await expect(
     page.getByRole("button", { name: /獨立模式.*點詞解釋/ }),
   ).toHaveAttribute("aria-pressed", "true");
-  await page
-    .getByRole("article")
-    .filter({ hasText: "四海航線" })
-    .getByRole("button", { name: /啟航.*獨立模式/ })
-    .click();
+  await page.goto("/#/read/water-sharing-guided-v1");
   await expect(page.locator(".paragraph-scaffold")).toHaveCount(0);
   const challengeTerm = page
     .locator(".reading-block")

@@ -60,6 +60,7 @@
   "packages": [
     {
       "id": "yueyang-tower-guided-001",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "classical",
       "title": "悲喜之外，尚有天下",
@@ -236,6 +237,7 @@
     },
     {
       "id": "yueyang-tower-challenge-001",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "classical",
       "title": "進退皆憂：情感與責任的次序",

@@ -21,7 +21,13 @@ const CATEGORY_COPY = Object.freeze({
 
 export function createRouteCard(
   route,
-  { level = "launch", supportMode = "guided", onStart },
+  {
+    level = "launch",
+    supportMode = "guided",
+    completion = null,
+    attempt = null,
+    onStart,
+  },
 ) {
   const copy = CATEGORY_COPY[route.category];
   const reading = route.reading;
@@ -52,6 +58,13 @@ export function createRouteCard(
   body.innerHTML = `
     <p>${copy.description}</p>
     <span class="route-level-badge">${levelCopy.label}・${supportMode === "guided" ? "引導模式" : "獨立模式"}</span>
+    <span class="reading-status">${
+      completion
+        ? `已完成・${completion.finalCorrectCount === undefined ? "已達標" : `答對 ${completion.finalCorrectCount} 題`}・${completion.date}`
+        : attempt
+          ? `已作答・${attempt.correctCount}／${attempt.totalCount} 題・待再挑戰`
+          : "未讀"
+    }</span>
     <h3>${reading.title}</h3>
     <p class="route-question">${reading.hookQuestion}</p>
     <p class="route-reward">${copy.reward}</p>
@@ -60,7 +73,9 @@ export function createRouteCard(
   const button = document.createElement("button");
   button.type = "button";
   button.className = "primary-action route-start";
-  button.textContent = `開始 ${reading.readingMinutes} 分鐘閱讀`;
+  button.textContent = completion
+    ? "重讀此卷"
+    : `開始 ${reading.readingMinutes} 分鐘閱讀`;
   button.setAttribute(
     "aria-label",
     `${levelCopy.label}，${supportMode === "guided" ? "引導模式" : "獨立模式"}：${reading.title}`,

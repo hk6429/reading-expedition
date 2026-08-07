@@ -1,4 +1,3 @@
-import { groupDailyRoutes } from "../domain/daily-routes.js";
 import {
   LEVEL_ORDER,
   READING_LEVELS,
@@ -6,6 +5,10 @@ import {
 } from "../domain/reading-level.js";
 import { createRouteCard } from "./route-card.js";
 import { createReadingJournal } from "./reading-journal.js";
+import {
+  buildReadingInventory,
+  nextUnreadReading,
+} from "../domain/reading-inventory.js";
 
 function createChoiceButton({
   label,
@@ -33,12 +36,17 @@ export function renderHome(
   readingHistory = [],
   {
     preferences,
+    diagnosticHistory = [],
     onPreferencesChange,
   },
 ) {
   const selectedLevel = preferences.selectedLevel ?? "launch";
   const supportMode = preferences.supportMode ?? "guided";
-  const routes = groupDailyRoutes(readings, {
+  const nextChallenge = nextUnreadReading(readings, completedReadings, {
+    level: selectedLevel,
+    supportMode,
+  });
+  const inventory = buildReadingInventory(readings, completedReadings, {
     level: selectedLevel,
     supportMode,
   });
@@ -50,21 +58,22 @@ export function renderHome(
   hero.setAttribute("aria-labelledby", "today-heading");
   hero.innerHTML = `
     <div class="hero-copy">
-      <p class="chapter-label">今日十刻遠征</p>
-      <h1 id="today-heading">今天，想從哪裡讀懂世界？</h1>
+      <p class="chapter-label">個人閱讀遠征</p>
+      <h1 id="today-heading">一次一篇，讀懂再往前</h1>
       <p class="hero-lead">
-        不必一口氣讀完整座梁山。選一條航線，帶回一份可信的知識，就能讓浮城亮起一盞燈。
+        系統會記住你的每一篇閱讀與答題。達標後，可以接著挑戰下一篇，也可以今天先到這裡，明天再來。
       </p>
-      <div class="today-status" aria-label="今日任務狀態">
-        <span>今日只需完成一篇</span>
-        <span>約 6–10 分鐘</span>
-        <span>中斷不會歸零</span>
+      <div class="today-status" aria-label="個人閱讀狀態">
+        <span>一次專心一篇</span>
+        <span>答對 2／3 題達標</span>
+        <span>隨時可以結束</span>
       </div>
       <a class="placement-link" href="#/placement">${
         preferences.recommendedLevel
           ? `重做五分鐘測讀・目前建議 ${READING_LEVELS[preferences.recommendedLevel].label}`
           : "第一次使用？先做五分鐘測讀"
       }</a>
+      ${preferences.recommendedLevel ? "" : '<p class="placement-skip-note">也可以先不測讀；目前暫從「啟航」開始，之後隨時能更換。</p>'}
     </div>
     <picture class="hero-illustration">
       <source media="(max-width: 700px)" srcset="./assets/scenes/hero-960.webp">
@@ -84,7 +93,7 @@ export function renderHome(
   chooser.innerHTML = `
     <div class="section-heading">
       <div>
-        <p class="eyebrow">先選程度，再選陪讀方式</p>
+        <p class="eyebrow">已測讀或想自己選時，再調整這裡</p>
         <h2 id="chooser-heading">三段文章，各有自己的閱讀路線</h2>
       </div>
       <p>程度只提供起點，不會鎖住文章；引導模式會多顯示段落與領航提示。</p>
@@ -172,20 +181,38 @@ export function renderHome(
   routeSection.innerHTML = `
     <div class="section-heading">
       <div>
-        <p class="eyebrow">三路同行</p>
-        <h2 id="routes-heading">${READING_LEVELS[selectedLevel].label}文章庫</h2>
+        <p class="eyebrow">依個人進度接續</p>
+        <h2 id="routes-heading">你的下一篇挑戰</h2>
       </div>
-      <p>${supportMode === "guided" ? "引導模式會陪你找段落線索。" : "獨立模式保留點詞解釋，其餘由你判斷。"}</p>
+      <p>${supportMode === "guided" ? "引導模式會陪你找段落線索。" : "獨立模式保留點詞解釋，其餘由你判斷。"}想自己選文，也可以打開選文書架。</p>
+    </div>
+    <div class="inventory-summary">
+      <strong>${READING_LEVELS[selectedLevel].label}・已完成 ${inventory.completedCount} / ${inventory.totalCount}</strong>
+      <a href="#/bookshelf">打開選文書架</a>
     </div>
   `;
 
   const grid = document.createElement("div");
   grid.className = "route-grid";
-  for (const route of routes) {
+  if (nextChallenge) {
+    const lastAttempt = diagnosticHistory
+      .filter(({ readingId }) => readingId === nextChallenge.id)
+      .at(-1);
+    const attempt = lastAttempt
+      ? {
+          correctCount: lastAttempt.items.filter(({ finalCorrect }) => finalCorrect).length,
+          totalCount: lastAttempt.items.length,
+        }
+      : null;
     grid.append(
-      createRouteCard(route, {
+      createRouteCard({
+        category: nextChallenge.category,
+        reading: nextChallenge,
+      }, {
         level: selectedLevel,
         supportMode,
+        completion: null,
+        attempt,
         onStart: (reading) => {
           preferences.selectedLevel = selectedLevel;
           preferences.supportMode = supportMode;
@@ -195,14 +222,21 @@ export function renderHome(
       }),
     );
   }
-  if (routes.length === 0) {
+  if (!nextChallenge) {
     const empty = document.createElement("section");
     empty.className = "paper-panel";
-    empty.innerHTML = `
-      <p class="chapter-label">文章庫正在補卷</p>
-      <h3>這個程度今天還沒有可讀文章</h3>
-      <p>可以先選另一個程度；你的推薦與完成紀錄都不會受影響。</p>
-    `;
+    empty.innerHTML = inventory.allCompleted
+      ? `
+        <p class="chapter-label">本批讀卷・全數收妥</p>
+        <h3>這一批已讀完，且在浮城歇一歇</h3>
+        <p>老師補上下一批讀卷時，藏卷閣會再亮燈。你的浮城進度與完成紀錄都安穩留著，不會歸零。</p>
+        <a href="#/bookshelf">回藏卷閣重讀</a>
+      `
+      : `
+        <p class="chapter-label">文章庫正在補卷</p>
+        <h3>這個階段尚無可讀文章</h3>
+        <p>可以先選另一個程度；你的推薦與完成紀錄都不會受影響。</p>
+      `;
     grid.append(empty);
   }
   routeSection.append(grid);

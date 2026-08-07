@@ -76,6 +76,7 @@
   "packages": [
     {
       "id": "utc-world-time-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "世界的鐘，如何對準同一把尺？",
@@ -238,6 +239,7 @@
     },
     {
       "id": "utc-world-time-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "共同時間不是一只鐘，而是一套制度",

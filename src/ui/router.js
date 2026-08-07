@@ -9,11 +9,17 @@ export function createRouter({
   onClass,
   onPlacement,
   onFamily,
+  onBookshelf,
+  onRest,
+  afterRoute,
 }) {
   async function renderRoute(render) {
     await render();
+    if (afterRoute) await afterRoute();
     window.scrollTo(0, 0);
-    const heading = document.querySelector("main h1");
+    const heading = document.querySelector(
+      ".backup-reminder h2, main h1",
+    );
     if (heading) {
       heading.tabIndex = -1;
       heading.focus({ preventScroll: true });
@@ -21,12 +27,20 @@ export function createRouter({
   }
 
   async function navigate() {
+    if (window.location.hash === "#/rest") {
+      if (onRest) await renderRoute(onRest);
+      return;
+    }
     if (window.location.hash === "#/placement") {
       if (onPlacement) await renderRoute(onPlacement);
       return;
     }
     if (window.location.hash === "#/family") {
       if (onFamily) await renderRoute(onFamily);
+      return;
+    }
+    if (window.location.hash === "#/bookshelf") {
+      if (onBookshelf) await renderRoute(onBookshelf);
       return;
     }
     if (window.location.hash === "#/guide") {

@@ -50,6 +50,7 @@
   "packages": [
     {
       "id": "water-cycle-guided-v1",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "一滴水為什麼總在旅行？",
@@ -155,6 +156,7 @@
     },
     {
       "id": "water-cycle-challenge-v1",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "水循環為什麼更像網，而不是圓圈？",

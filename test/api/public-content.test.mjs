@@ -61,7 +61,66 @@ test("daily API 拒絕無效日期並回傳一致錯誤", async () => {
   });
 });
 
-test("指定日期尚無內容時沿用七日內最近一次完整讀卷", async () => {
+test("level 清單 API 回傳 metadata 分頁且不洩漏正文或答案", async () => {
+  const calls = [];
+  const api = createApi({
+    repository: {
+      getPublishedDaily: async () => [],
+      async listPublishedReadings(query) {
+        calls.push(query);
+        return {
+          total: 201,
+          readings: [
+            {
+              id: "launch-001-guided",
+              contentKey: "launch-001",
+              category: "world",
+              difficulty: "guided",
+              level: "launch",
+              supportMode: "guided",
+              textType: "vernacular",
+              title: "第一卷",
+              hookQuestion: "這件事如何發生？",
+              readingMinutes: 5,
+              version: 1,
+              body: ["不可外流"],
+            },
+          ],
+        };
+      },
+    },
+  });
+  const response = await api.fetch(
+    new Request(
+      "https://example.test/api/v1/readings?level=launch&page=1&pageSize=200",
+    ),
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(calls, [{ level: "launch", limit: 200, offset: 0 }]);
+  assert.equal(payload.pagination.total, 201);
+  assert.equal(payload.pagination.hasMore, true);
+  assert.equal(payload.readings[0].level, "launch");
+  assert.doesNotMatch(JSON.stringify(payload), /body|correctAnswer/);
+});
+
+test("level 清單 API 限制階段與每頁最多 200 筆", async () => {
+  const api = createApi({
+    repository: {
+      getPublishedDaily: async () => [],
+      listPublishedReadings: async () => ({ readings: [], total: 0 }),
+    },
+  });
+  const response = await api.fetch(
+    new Request(
+      "https://example.test/api/v1/readings?level=unknown&pageSize=201",
+    ),
+  );
+  assert.equal(response.status, 400);
+});
+
+test("指定日期尚無內容時沿用最近一次完整讀卷，不受七日視窗限制", async () => {
   const requestedDates = [];
   const api = createApi({
     repository: {

@@ -119,6 +119,7 @@
         "additionalProperties": false,
         "required": [
           "id",
+          "level",
           "difficulty",
           "textType",
           "title",
@@ -136,6 +137,10 @@
         ],
         "properties": {
           "id": { "type": "string" },
+          "level": {
+            "type": "string",
+            "enum": ["launch", "voyage", "tower"]
+          },
           "difficulty": {
             "type": "string",
             "enum": ["guided", "challenge"]

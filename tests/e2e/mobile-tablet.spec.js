@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
 const viewports = [
   { name: "小手機直向", width: 320, height: 720 },
@@ -12,9 +12,8 @@ for (const viewport of viewports) {
   test(`${viewport.name}可單手選航線且點按區足夠`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto("/");
-    const worldCard = page.locator(".route-card").filter({ hasText: "四海航線" });
-    const action = worldCard.getByRole("button", {
-      name: /啟航.*引導模式/,
+    const action = page.locator(".route-card").getByRole("button", {
+      name: /引導模式/,
     });
     await expect(action).toBeVisible();
     const box = await action.boundingBox();
@@ -29,7 +28,7 @@ for (const viewport of viewports) {
       expect(header.height).toBeLessThanOrEqual(190);
     }
     await action.click();
-    await expect(page.getByRole("heading", { name: /一座城市如何分配有限水源/ })).toBeVisible();
+    await expect(page.locator(".reading-header h1")).toBeVisible();
   });
 }
 

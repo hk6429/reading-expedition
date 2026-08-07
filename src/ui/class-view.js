@@ -60,7 +60,7 @@ export async function renderClassView(
         }
         <p class="class-success">${escapeHtml(message || "你已匿名加入。完成任一篇有效閱讀，就會替全班共同地標增加進度。")}</p>
         <p class="privacy-note">只會同步有效閱讀的類別與能力，不會上傳答案文字。這裡沒有排行榜、個人貢獻、姓名、自由聊天或公開個人頁。</p>
-        <a href="#/">回到今日航線</a>
+        <a href="#/">回到個人挑戰</a>
         <button class="class-leave" type="button" data-leave-class>離開／更換班級</button>
       </section>
     `;

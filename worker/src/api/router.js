@@ -5,8 +5,10 @@ import {
 import { errorResponse, jsonResponse } from "./errors.js";
 import {
   getDailyPayload,
+  getReadingListPayload,
   getReadingPayload,
   isValidIsoDate,
+  parseReadingListQuery,
   taipeiDate,
 } from "./public-content.js";
 
@@ -192,6 +194,13 @@ export function createApi({
           return reviewApi.list(request);
         }
         if (
+          publicationApi &&
+          url.pathname === "/api/v1/teacher/review/batch/publish" &&
+          request.method === "POST"
+        ) {
+          return publicationApi.batch(request, authorization.sessionId);
+        }
+        if (
           reviewApi &&
           url.pathname === "/api/v1/teacher/review/batch" &&
           request.method === "POST"
@@ -307,6 +316,35 @@ export function createApi({
             },
           },
         );
+      }
+
+      if (url.pathname === "/api/v1/readings") {
+        if (typeof repository.listPublishedReadings !== "function") {
+          return errorResponse(
+            "not_found",
+            "找不到指定內容。",
+            404,
+            traceId,
+          );
+        }
+        const query = parseReadingListQuery(url);
+        if (!query) {
+          return errorResponse(
+            "invalid_reading_list_query",
+            "level、page 或 pageSize 不正確。",
+            400,
+            traceId,
+          );
+        }
+        const payload = await getReadingListPayload(repository, query);
+        return jsonResponse(payload, {
+          headers: {
+            // 單一階段預期最多約 200 個 package；分頁限制未來批次大小，
+            // 傳輸壓縮交由 Cloudflare／Vercel／Netlify 的 HTTP 層處理。
+            "cache-control": "public, max-age=300",
+            "x-trace-id": traceId,
+          },
+        });
       }
 
       if (url.pathname !== "/api/v1/daily") {

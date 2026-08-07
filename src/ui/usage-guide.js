@@ -1,8 +1,8 @@
 const studentSteps = [
-  ["選一條航線", "從世界、科學、人文挑一篇今天想知道的事，不必三條都完成。"],
+  ["確認個人紀錄", "先下載備份；多人共用裝置時，先在家庭護照切換孩子，讓紀錄不混在一起。"],
   ["選程度與模式", "啟航、行舟、登樓決定文章長度；引導模式提供段落路標，獨立模式保留點詞解釋。"],
   ["讀完再答三題", "依序找重點、想意思、找證據。答錯時回到原文找線索，還能修正一次。"],
-  ["把成果帶回城", "每天第一篇推進三十日主線：二十次修築浮城、十次解鎖故事與回顧；額外閱讀仍會收藏。"],
+  ["自己決定下一步", "三題答對兩題達標後，可接著挑戰下一篇，也可以今天先結束，明天再來。"],
 ];
 
 const teacherSteps = [
@@ -38,10 +38,10 @@ export function renderUsageGuide(
   container.className = "guide-view";
   container.innerHTML = `
     <section class="guide-hero" aria-labelledby="guide-title">
-      <a class="back-link" href="#/">← 返回今日航線</a>
+      <a class="back-link" href="#/">← 返回個人挑戰</a>
       <p class="chapter-label">入山手引</p>
       <h1 id="guide-title">師生怎麼使用梁山閱征記？</h1>
-      <p>學生每天用十分鐘完成一篇；老師先把來源與題目把關，再用班級共建陪全班累積。沒有速度競賽，也不因休息一天而歸零；浮城紀錄還能下載與復原。</p>
+      <p>學生依自己的節奏一次讀一篇；老師先把來源與題目把關，再用班級共建陪全班累積。沒有每日篇數壓力，也不因選擇休息而歸零；個人閱讀與答題結果都會保存。</p>
     </section>
 
     <div class="guide-audiences">
@@ -50,7 +50,7 @@ export function renderUsageGuide(
         <h2 id="student-guide-title">一篇、三題、一次修正</h2>
         <ol>${renderSteps(studentSteps)}</ol>
         <p class="guide-class-note">要參與全班共同地標時，點選頁首「加入班級」，輸入老師提供的 8 碼班級碼即可。</p>
-        <a class="guide-action" href="#/">選今天的閱讀航線</a>
+        <a class="guide-action" href="#/">開始個人下一篇挑戰</a>
       </section>
 
       <section class="guide-card teacher-guide" aria-labelledby="teacher-guide-title">

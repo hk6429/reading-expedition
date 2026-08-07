@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
 test("手機可完成一篇短文三題測讀，結果只推薦不鎖級", async ({
   page,

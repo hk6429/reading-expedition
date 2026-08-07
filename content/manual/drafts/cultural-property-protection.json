@@ -67,6 +67,7 @@
   "packages": [
     {
       "id": "cultural-property-protection-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "文化財產為什麼不能當成普通商品搬運？",
@@ -228,6 +229,7 @@
     },
     {
       "id": "cultural-property-protection-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "當文化財產進入市場：價格、權利與公共記憶的拉鋸",

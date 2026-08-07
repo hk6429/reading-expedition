@@ -1,6 +1,6 @@
 export function navigationItems() {
   return Object.freeze([
-    { href: "#/", label: "今日航線" },
+    { href: "#/", label: "個人挑戰" },
     { href: "#/city", label: "我的浮城" },
     { href: "#/class", label: "班級共建" },
     { href: "#/teacher", label: "教師校閱" },

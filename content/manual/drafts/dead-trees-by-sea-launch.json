@@ -1,0 +1,356 @@
+{
+  "source": {
+    "id": "dead-trees-by-sea-launch-source",
+    "name": "NOAA National Ocean Service",
+    "baseUrl": "https://oceanservice.noaa.gov",
+    "licenseType": "public-domain-us-government",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "dead-trees-by-sea-launch-source-item",
+    "canonicalUrl": "https://oceanservice.noaa.gov/facts/ghost-forest.html",
+    "title": "What is a ghost forest?",
+    "publisher": "NOAA National Ocean Service",
+    "publishedAt": null,
+    "fetchedAt": "2026-08-06T00:00:00+08:00",
+    "contentFingerprint": "noaa-nos-dead-trees-by-sea-launch-live-2026-08-06",
+    "licenseSnapshot": "NOAA 為美國聯邦政府機構；本草稿只使用該頁可核對的政府事實並原創改寫，排除頁面中的第三方圖片、影片與商標。",
+    "extractScope": "鬼魅森林的外觀、海水入侵與淡水樹木死亡、海平面上升和地層下沉的共同作用，以及美國沿岸實例。"
+  },
+  "factPack": {
+    "id": "dead-trees-by-sea-launch-fact-pack",
+    "topicDate": "2026-08-11",
+    "category": "world",
+    "facts": [
+      {
+        "id": "dead-trees-by-sea-launch-fact-1",
+        "statement": "鬼魅森林是昔日茂盛林地受海水影響後留下的枯死或垂死樹木景觀。",
+        "sourceItemId": "dead-trees-by-sea-launch-source-item"
+      },
+      {
+        "id": "dead-trees-by-sea-launch-fact-2",
+        "statement": "海平面上升使鹽水侵入沿岸與河口陸地，取代落葉樹賴以生存的淡水。",
+        "sourceItemId": "dead-trees-by-sea-launch-source-item"
+      },
+      {
+        "id": "dead-trees-by-sea-launch-fact-3",
+        "statement": "枯樹仍可能站在半鹹水中，成為近海平面沿岸平原環境變化的明顯線索。",
+        "sourceItemId": "dead-trees-by-sea-launch-source-item"
+      },
+      {
+        "id": "dead-trees-by-sea-launch-fact-4",
+        "statement": "部分地區同時受到海平面上升、地層下沉與沉積物壓實影響。",
+        "sourceItemId": "dead-trees-by-sea-launch-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://oceanservice.noaa.gov/facts/ghost-forest.html"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "dead-trees-by-sea-launch",
+  "packages": [
+    {
+      "id": "dead-trees-by-sea-launch-guided",
+      "level": "launch",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "海邊枯樹留下的水位線索",
+      "hookQuestion": "一片沒有被砍伐的海邊森林，為什麼會留下成排灰白枯樹？",
+      "body": [
+        "海邊一整片枯樹，看起來像森林突然失去生命。這種景觀常被稱為鬼魅森林。它不是另一種樹，而是原本青綠的林地受水環境改變後，留下的枯死與垂死樹木。",
+        "許多沿岸落葉樹需要淡水才能生長。當海平面上升，鹽水會逐漸向陸地和河口內部推進。原有淡水被侵入的海水取代，樹根接觸到的水也慢慢變鹹。",
+        "這些樹不適合長期依靠鹹水生活。鹽水持續進入，會傷害活樹，使樹木衰弱、死亡。枯死的樹幹仍可能站在半鹹水附近，像一根根灰色柱子。",
+        "因此，成片枯樹不是只告訴我們樹生病了。若它們位在接近海平面的沿岸平原，周圍又有半鹹水，就可能是海水入侵陸地的視覺線索。森林外觀保存了環境改變的痕跡。",
+        "不過，海水逼近不一定只由海面升高造成。有些地方的陸地也在下沉。當水面上升與地面降低同時發生，海水相對於陸地就更容易向內推進。",
+        "美國切薩皮克灣流域便同時受到海平面上升和冰期後地層下沉影響。密西西比河三角洲還有地殼下沉與沉積物壓實。這些例子說明，各地形成過程可能不完全相同。",
+        "隨著陸地與水域持續改變，林地可能死亡，甚至被開放水域覆蓋。在北卡羅來納州的海岸森林，也能看到昔日林地只剩枯樹的景象。枯樹於是成為變化累積後的結果。",
+        "閱讀鬼魅森林時，可以依序找三個線索：淡水樹種原本需要什麼、鹽水如何進入、地面與水面如何相對改變。把線索連起來，才不會把所有枯樹都草率歸因於同一原因。"
+      ],
+      "glossary": [
+        {
+          "term": "鬼魅森林",
+          "definition": "沿岸林地受海水影響後留下大片枯死樹木的景觀。"
+        },
+        {
+          "term": "半鹹水",
+          "definition": "淡水與海水混合，鹽分介於兩者之間的水。"
+        },
+        {
+          "term": "沿岸平原",
+          "definition": "靠近海岸、地勢較低而平坦的陸地。"
+        },
+        {
+          "term": "沉積物壓實",
+          "definition": "泥沙等沉積物受壓後體積縮小，使地表降低。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "枯樹線索串聯法",
+        "purpose": "從樹木需求、鹽水入侵與地面水面變化三組線索，解釋沿岸森林死亡的過程。",
+        "steps": [
+          {
+            "label": "看樹種",
+            "instruction": "先找出落葉樹依賴淡水的條件，確認環境改變前森林需要什麼才能存活。",
+            "example": "第二段指出沿岸落葉樹需要淡水，因此根部水質改變會形成生存壓力。"
+          },
+          {
+            "label": "追鹽水",
+            "instruction": "圈出海平面上升、鹽水向內推進及淡水被取代，排出變化的先後順序。",
+            "example": "海面升高後鹽水進入陸地，樹根周圍變鹹，樹木接著衰弱與死亡。"
+          },
+          {
+            "label": "比高低",
+            "instruction": "同時標記水面上升和陸地下沉，理解相對位置改變可能由兩邊共同造成。",
+            "example": "切薩皮克灣流域不是只有水升高，地層下沉也會讓海水更容易向內推進。"
+          }
+        ],
+        "structureMap": "文章先界定鬼魅森林外觀，再說明淡水被鹽水取代與樹木死亡，接著補入陸地下沉及不同地區例子。",
+        "expertTip": "環境線索常是多種因素累積的結果；看見枯樹時，要先核對位置、水質與地面變化。",
+        "selfCheck": "我能否用樹木需求、鹽水路徑與相對水位，說明鬼魅森林如何形成？"
+      },
+      "readingMinutes": 5,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/ghost-forest.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "dead-trees-by-sea-launch-guided-q1",
+          "type": "comprehension",
+          "prompt": "依本文，鬼魅森林是什麼？",
+          "options": [
+            "原本林地受海水影響後留下的枯死樹木景觀",
+            "只在夜晚出現的新樹種",
+            "人工把樹幹塗成灰色的公園",
+            "漂浮在深海中的樹葉群"
+          ],
+          "correctAnswer": "原本林地受海水影響後留下的枯死樹木景觀",
+          "rationale": "第一段界定鬼魅森林是原有林地環境改變後留下的枯死或垂死樹木。",
+          "distractorReasons": {
+            "只在夜晚出現的新樹種": "鬼魅森林不是新樹種，也不限定夜晚。",
+            "人工把樹幹塗成灰色的公園": "灰白外觀來自枯死樹幹，不是人工塗色。",
+            "漂浮在深海中的樹葉群": "正文描述仍站立於沿岸或半鹹水附近的樹幹。"
+          },
+          "evidenceSpan": {
+            "paragraph": 1,
+            "start": 21,
+            "end": 33,
+            "text": "這種景觀常被稱為鬼魅森林"
+          }
+        },
+        {
+          "id": "dead-trees-by-sea-launch-guided-q2",
+          "type": "inference",
+          "prompt": "水面上升和陸地下沉同時發生時，最可能造成什麼結果？",
+          "options": [
+            "海水相對陸地更容易向內推進",
+            "所有鹽水立刻變成淡水",
+            "森林會自動移到山頂",
+            "樹木從此不再需要水"
+          ],
+          "correctAnswer": "海水相對陸地更容易向內推進",
+          "rationale": "第五段指出水升、地降會共同改變相對位置，使海水更容易深入陸地。",
+          "distractorReasons": {
+            "所有鹽水立刻變成淡水": "海水不會因地面下沉而立刻淡化。",
+            "森林會自動移到山頂": "森林不能自動整體移動。",
+            "樹木從此不再需要水": "樹木仍有水分與水質需求。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 46,
+            "end": 61,
+            "text": "海水相對於陸地就更容易向內推進"
+          }
+        },
+        {
+          "id": "dead-trees-by-sea-launch-guided-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能支持『枯樹可作為海水入侵的線索』？",
+          "options": [
+            "周圍又有半鹹水，就可能是海水入侵陸地的視覺線索。",
+            "海邊一整片枯樹，看起來像森林突然失去生命。",
+            "各地形成過程可能不完全相同。",
+            "這些樹不適合長期依靠鹹水生活。"
+          ],
+          "correctAnswer": "周圍又有半鹹水，就可能是海水入侵陸地的視覺線索。",
+          "rationale": "第一項直接把半鹹水、枯樹位置與海水入侵連結，是最完整的現場證據。",
+          "distractorReasons": {
+            "海邊一整片枯樹，看起來像森林突然失去生命。": "此句只描述外觀，未說明海水路徑。",
+            "各地形成過程可能不完全相同。": "此句提醒地區差異，不能直接證明入侵。",
+            "這些樹不適合長期依靠鹹水生活。": "此句說明樹木耐鹽限制，但缺少現場位置與水質線索。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 43,
+            "end": 58,
+            "text": "就可能是海水入侵陸地的視覺線索"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dead-trees-by-sea-launch-challenge",
+      "level": "launch",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "鬼魅森林如何記錄海岸相對水位",
+      "hookQuestion": "枯樹站在半鹹水中時，我們能從景觀讀出哪些環境變化？",
+      "body": [
+        "一排灰白樹幹立在水邊，像是森林留下的骨架。鬼魅森林不是虛構名稱，而是昔日茂盛林地受水環境改變後的殘留景觀。枯死或垂死的樹仍站在半鹹水附近，讓緩慢變化變成肉眼可見的線索。",
+        "形成過程先涉及植物的水質需求。沿岸與河口的落葉樹依靠淡水生存；當海平面上升，海水逐步侵入陸地，原有淡水被較鹹的水取代。根部環境改變，不適應鹽水的樹木便受到傷害。",
+        "鹽水的影響不是讓整片森林在一夜之間消失，而是慢慢使活樹衰弱、死亡。樹葉落盡後，正在腐朽的樹幹仍可直立多年，形成成排灰色柱狀景觀。因此，眼前枯樹反映的是一段累積過程。",
+        "研究人員把鬼魅森林快速增加，視為接近海平面的沿岸平原正在改變的鮮明圖像。不過，判讀時不能把相對水位變化只等同海水面升高。若陸地同時發生地層下沉，即使水面變化相同，海水相對位置也會更高。",
+        "密西西比河三角洲的變化又多一層。除了水位上升，當地還有地殼下沉與河川沉積物壓實。土地和水域位置持續改變，林地會死亡，最後甚至被開放水域覆蓋。這顯示相同景觀背後可有不同因素組合。",
+        "因此，鬼魅森林是一種指標，卻不是單憑照片就能完成的診斷。可靠判讀還要結合樹種是否依賴淡水、周圍是否出現半鹹水、地勢是否接近海平面，以及陸地有無下沉等證據。",
+        "從景觀閱讀環境變化，重點是把結果倒推回可能機制，再保留其他解釋。成片枯樹能提醒人們海水正在逼近，但真正說明某地過程時，仍要區分海面上升、地面下沉和沉積物壓實各自的證據。"
+      ],
+      "glossary": [
+        {
+          "term": "鬼魅森林",
+          "definition": "沿岸林地受海水影響後留下大片枯死樹幹的景觀。"
+        },
+        {
+          "term": "半鹹水",
+          "definition": "由淡水和海水混合而成、鹽分介於兩者之間的水。"
+        },
+        {
+          "term": "相對水位",
+          "definition": "水面相對於所在地面的高低位置。"
+        },
+        {
+          "term": "地層下沉",
+          "definition": "地表或地殼高度逐漸降低的現象。"
+        },
+        {
+          "term": "沉積物壓實",
+          "definition": "沉積泥沙受壓而縮小體積，可能使土地降低。"
+        },
+        {
+          "term": "指標",
+          "definition": "可用來觀察或判斷某種變化的現象。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "景觀機制逆推法",
+        "purpose": "從枯樹結果逆推海水入侵、海面上升、土地下降與沉積壓實，並保留證據界線。",
+        "steps": [
+          {
+            "label": "描述結果",
+            "instruction": "先只記錄枯樹、半鹹水與低平位置等可見線索，不急著替所有景觀指定原因。",
+            "example": "可先寫灰白樹幹立在半鹹水附近，而不是立刻斷言某一因素必定主導。"
+          },
+          {
+            "label": "逆推機制",
+            "instruction": "由根部水質改變往前追，連到鹽水入侵，再分查海面上升與陸地下沉。",
+            "example": "樹木死亡可往前連到淡水被取代；相對水位升高又可能來自水升或地降。"
+          },
+          {
+            "label": "比較地區",
+            "instruction": "對照切薩皮克灣與密西西比河三角洲，找出共同結果和不同因素組合。",
+            "example": "兩地都有水陸相對位置改變，但三角洲另有沉積物壓實，不能完全套用同一原因。"
+          }
+        ],
+        "structureMap": "文章從枯樹景觀倒推鹽水入侵，再加入相對水位概念，比較兩個地區的複合機制，最後區分指標與完整診斷。",
+        "expertTip": "景觀能指出變化方向，卻不一定能單獨判定各因素比例；結論強度不能超過手中證據。",
+        "selfCheck": "我能否列出鬼魅森林形成的共同過程，並說明不同地區還需查哪些額外因素？"
+      },
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/ghost-forest.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "dead-trees-by-sea-launch-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依本文，沿岸落葉樹受害的直接水質變化是什麼？",
+          "options": [
+            "淡水逐漸被較鹹的水取代",
+            "半鹹水突然變成純糖水",
+            "所有雨水完全停止蒸發",
+            "海水不再含有任何鹽分"
+          ],
+          "correctAnswer": "淡水逐漸被較鹹的水取代",
+          "rationale": "第二段說明海水侵入後，原有淡水被較鹹的水取代，使不耐鹽樹木受害。",
+          "distractorReasons": {
+            "半鹹水突然變成純糖水": "正文沒有糖水變化。",
+            "所有雨水完全停止蒸發": "蒸發不是本文解釋樹木受害的直接水質因素。",
+            "海水不再含有任何鹽分": "海水入侵會增加鹽分影響，不是移除鹽分。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 47,
+            "end": 58,
+            "text": "原有淡水被較鹹的水取代"
+          }
+        },
+        {
+          "id": "dead-trees-by-sea-launch-challenge-q2",
+          "type": "inference",
+          "prompt": "為何相同的鬼魅森林景觀不能證明各地成因完全相同？",
+          "options": [
+            "不同地區可能有海面上升、地層下沉或沉積壓實等不同組合",
+            "每一棵樹都能自行選擇死亡原因",
+            "枯樹外觀與水環境毫無關係",
+            "所有海岸地勢與地質都完全一致"
+          ],
+          "correctAnswer": "不同地區可能有海面上升、地層下沉或沉積壓實等不同組合",
+          "rationale": "第五、六段比較不同地區，顯示相同結果背後可能疊加不同因素。",
+          "distractorReasons": {
+            "每一棵樹都能自行選擇死亡原因": "樹木不能主動選擇環境成因。",
+            "枯樹外觀與水環境毫無關係": "正文把枯樹與鹽水入侵明確連結。",
+            "所有海岸地勢與地質都完全一致": "各地因素不同，並非完全一致。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 70,
+            "end": 87,
+            "text": "這顯示相同景觀背後可有不同因素組合"
+          }
+        },
+        {
+          "id": "dead-trees-by-sea-launch-challenge-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能支持『鬼魅森林是指標，但不是完整診斷』？",
+          "options": [
+            "可靠判讀還要結合樹種、半鹹水、地勢與陸地下沉等證據。",
+            "一排灰白樹幹立在水邊。",
+            "樹葉落盡後，樹幹仍可直立多年。",
+            "北卡羅來納州也有鬼魅森林。"
+          ],
+          "correctAnswer": "可靠判讀還要結合樹種、半鹹水、地勢與陸地下沉等證據。",
+          "rationale": "第一項列出照片之外仍需查核的多項證據，最能說明指標不等於完整診斷。",
+          "distractorReasons": {
+            "一排灰白樹幹立在水邊。": "外觀描述只能呈現現象。",
+            "樹葉落盡後，樹幹仍可直立多年。": "樹幹留存時間不能區分環境機制。",
+            "北卡羅來納州也有鬼魅森林。": "另一地案例不能取代該地成因查核。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 28,
+            "end": 44,
+            "text": "可靠判讀還要結合樹種是否依賴淡水"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -70,6 +70,7 @@
   "packages": [
     {
       "id": "cao-gui-debate-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "classical",
       "title": "一介之士，何以知戰",
@@ -244,6 +245,7 @@
     },
     {
       "id": "cao-gui-debate-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "classical",
       "title": "善斷者，止亦有時",

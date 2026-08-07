@@ -41,7 +41,12 @@ export function buildDiagnosticRecord({
   };
 }
 
-function summarizeRecord(record, childId, childAlias) {
+function summarizeRecord(
+  record,
+  childId,
+  childAlias,
+  { levelCompletedCount = "", levelTotalCount = "" } = {},
+) {
   const firstCorrect = record.items.filter(
     ({ firstCorrect: correct }) => correct,
   ).length;
@@ -64,6 +69,8 @@ function summarizeRecord(record, childId, childAlias) {
     nextAction:
       NEXT_ACTIONS[stuckSkill] ??
       "維持目前節奏，下一篇繼續說出答案所根據的原文。",
+    levelCompletedCount,
+    levelTotalCount,
   };
 }
 
@@ -72,9 +79,15 @@ export function buildChildReport({
   alias,
   records = [],
   today = new Date(),
+  level = "",
+  levelCompletedCount = null,
+  levelTotalCount = null,
 }) {
   const rows = records.map((record) =>
-    summarizeRecord(record, childId, alias),
+    summarizeRecord(record, childId, alias, {
+      levelCompletedCount: levelCompletedCount ?? "",
+      levelTotalCount: levelTotalCount ?? "",
+    }),
   );
   const finalFailures = Object.fromEntries(
     Object.keys(SKILL_LABELS).map((skill) => [skill, 0]),
@@ -96,18 +109,25 @@ export function buildChildReport({
   const previousWeekStart = new Date(weekStart);
   previousWeekStart.setDate(weekStart.getDate() - 7);
   const recordDate = ({ date }) => new Date(`${date}T00:00:00`);
-  const weeklyCount = records.filter((record) => {
+  const weeklyRecords = records.filter((record) => {
     const date = recordDate(record);
     return date >= weekStart && date <= current;
-  }).length;
-  const previousWeekCount = records.filter((record) => {
+  });
+  const previousWeekRecords = records.filter((record) => {
     const date = recordDate(record);
     return date >= previousWeekStart && date < weekStart;
-  }).length;
+  });
+  const uniqueReadingDays = (items) =>
+    new Set(items.map(({ readingId, date }) => `${readingId}:${date}`)).size;
+  const weeklyCount = uniqueReadingDays(weeklyRecords);
+  const previousWeekCount = uniqueReadingDays(previousWeekRecords);
   return {
     childId,
     alias,
-    completedCount: records.length,
+    completedCount: new Set(records.map(({ readingId }) => readingId)).size,
+    level,
+    levelCompletedCount,
+    levelTotalCount,
     weeklyCount,
     previousWeekCount,
     weeklyTrend:
@@ -138,6 +158,8 @@ const CSV_COLUMNS = Object.freeze([
   ["stuckSkill", "stuck_skill"],
   ["evidenceViewed", "evidence_viewed"],
   ["nextAction", "next_action"],
+  ["levelCompletedCount", "level_completed_count"],
+  ["levelTotalCount", "level_total_count"],
 ]);
 
 function csvCell(value) {

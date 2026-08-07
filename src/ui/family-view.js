@@ -1,5 +1,7 @@
 import { buildChildReport, reportRowsToCsv } from "../domain/family-report.js";
 import { createDefaultState } from "../storage/local-store.js";
+import { buildReadingInventory } from "../domain/reading-inventory.js";
+import { READING_LEVELS } from "../domain/reading-level.js";
 
 function createStatus() {
   const status = document.createElement("p");
@@ -92,8 +94,13 @@ function renderAnonymous(
       copy.textContent = "複製護照碼";
       const status = createStatus();
       copy.addEventListener("click", async () => {
-        await navigator.clipboard.writeText(payload.passportCode);
-        status.textContent = "護照碼已複製。";
+        try {
+          await navigator.clipboard.writeText(payload.passportCode);
+          status.textContent = "護照碼已複製。";
+        } catch {
+          status.textContent =
+            "瀏覽器無法自動複製，請長按上方護照碼並手動複製。";
+        }
       });
       const form = document.createElement("form");
       form.className = "family-inline-form";
@@ -157,14 +164,20 @@ function renderAnonymous(
   codeInput.name = "passportCode";
   codeInput.required = true;
   codeInput.autocomplete = "off";
+  codeInput.autocapitalize = "characters";
+  codeInput.spellcheck = false;
   codeInput.inputMode = "text";
   codeInput.placeholder = "XXXX-XXXX-XXXX-XXXX";
+  const codeHelp = document.createElement("small");
+  codeHelp.id = "family-passport-code-help";
+  codeHelp.textContent = "可直接貼上；英文字母大小寫與連字號不影響登入。";
+  codeInput.setAttribute("aria-describedby", codeHelp.id);
   const loginButton = document.createElement("button");
   loginButton.type = "submit";
   loginButton.className = "primary-action";
   loginButton.textContent = "登入家庭護照";
   const loginStatus = createStatus();
-  form.append(codeLabel, codeInput, loginButton);
+  form.append(codeLabel, codeInput, codeHelp, loginButton);
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     loginButton.disabled = true;
@@ -207,7 +220,11 @@ function childCard({
       : report.weeklyTrend === "down"
         ? "減少"
         : "持平"
-  }）・累積 ${report.completedCount} 篇・${
+  }）・累積 ${report.completedCount} 篇${
+    report.levelTotalCount !== null
+      ? `・${READING_LEVELS[report.level]?.label ?? report.level}已完成 ${report.levelCompletedCount} / ${report.levelTotalCount}`
+      : ""
+  }・${
     report.stuckSkillLabel
       ? `目前可陪練：${report.stuckSkillLabel}`
       : "三項能力穩定"
@@ -262,7 +279,14 @@ function childCard({
 async function renderAuthenticated(
   container,
   family,
-  { familyClient, localState, localStore, reload },
+  {
+    familyClient,
+    localState,
+    localStore,
+    loadLevelInventory,
+    exportState,
+    reload,
+  },
 ) {
   container.replaceChildren();
   container.className = "family-view";
@@ -294,6 +318,19 @@ async function renderAuthenticated(
     family.children.map(async (child) => {
       try {
         const record = await familyClient.childState(child.id);
+        const level = record.state.preferences?.selectedLevel ?? "launch";
+        let inventory = null;
+        if (loadLevelInventory) {
+          const readings = await loadLevelInventory(level);
+          inventory = buildReadingInventory(
+            readings,
+            record.state.completedReadings ?? {},
+            {
+              level,
+              supportMode: record.state.preferences?.supportMode ?? "guided",
+            },
+          );
+        }
         reports.set(
           child.id,
           buildChildReport({
@@ -301,6 +338,9 @@ async function renderAuthenticated(
             alias: child.alias,
             records: record.state.diagnosticHistory ?? [],
             today: reportToday,
+            level,
+            levelCompletedCount: inventory?.completedCount ?? null,
+            levelTotalCount: inventory?.totalCount ?? null,
           }),
         );
       } catch {
@@ -335,9 +375,27 @@ async function renderAuthenticated(
   });
   const logout = document.createElement("button");
   logout.type = "button";
-  logout.textContent = "安全登出";
+  logout.textContent = "登出（保留這部裝置紀錄）";
   logout.addEventListener("click", async () => {
     await familyClient.logout();
+    reload();
+  });
+  const logoutAndClear = document.createElement("button");
+  logoutAndClear.type = "button";
+  logoutAndClear.className = "danger-action";
+  logoutAndClear.textContent = "登出並清除此裝置紀錄";
+  logoutAndClear.addEventListener("click", async () => {
+    if (
+      !window.confirm(
+        "確定登出並清除這部裝置上的閱讀紀錄？已同步的雲端紀錄仍會保留。",
+      )
+    ) {
+      return;
+    }
+    await familyClient.logout();
+    localStore.restore(
+      JSON.stringify(createDefaultState(localState.deviceId)),
+    );
     reload();
   });
   const deleteFamily = document.createElement("button");
@@ -355,7 +413,7 @@ async function renderAuthenticated(
     await familyClient.deleteFamily();
     reload();
   });
-  actions.append(exportAll, logout, deleteFamily);
+  actions.append(exportAll, logout, logoutAndClear, deleteFamily);
   if (failedChildren.size > 0) {
     status.textContent = `有 ${failedChildren.size} 位孩子的雲端紀錄未載入；為避免產生不完整報告，已暫停全家庭 CSV。`;
   }
@@ -396,6 +454,11 @@ async function renderAuthenticated(
         reload();
       });
       actions.prepend(loadCloud);
+      const backup = document.createElement("button");
+      backup.type = "button";
+      backup.textContent = "先下載目前孩子 JSON 備份";
+      backup.addEventListener("click", exportState);
+      actions.prepend(backup);
     }
   }
   hero.append(actions);
@@ -491,7 +554,13 @@ async function renderAuthenticated(
           ) {
             return;
           }
+          const deletingActiveChild = activeChild?.id === child.id;
           await familyClient.deleteChild(child.id);
+          if (deletingActiveChild) {
+            localStore.restore(
+              JSON.stringify(createDefaultState(localState.deviceId)),
+            );
+          }
           reload();
         },
       }),
@@ -509,7 +578,14 @@ async function renderAuthenticated(
 
 export async function renderFamilyView(
   container,
-  { familyClient, localState, localStore, reload = () => location.reload() },
+  {
+    familyClient,
+    localState,
+    localStore,
+    loadLevelInventory,
+    exportState = () => {},
+    reload = () => location.reload(),
+  },
 ) {
   container.className = "family-view";
   container.innerHTML = `
@@ -524,6 +600,8 @@ export async function renderFamilyView(
       familyClient,
       localState,
       localStore,
+      loadLevelInventory,
+      exportState,
       reload,
     });
   } catch (error) {

@@ -85,6 +85,7 @@
   "packages": [
     {
       "id": "coral-reef-ecosystem-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "珊瑚礁如何成為海中的立體城市",
@@ -243,6 +244,7 @@
     },
     {
       "id": "coral-reef-ecosystem-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "一座會生長、也會失衡的海中城市",

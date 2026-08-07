@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="《萬卷浮城：梁山閱征記》讓國中生每天用十分鐘讀懂一件事，把知識建成自己的城市。"
+      content="《萬卷浮城：梁山閱征記》讓國中生依個人進度一次讀懂一篇，達標再挑戰下一篇。"
     />
     <title>萬卷浮城｜梁山閱征記</title>
     <link rel="stylesheet" href="./styles.css" />
@@ -20,20 +20,26 @@
         </a>
         <nav class="site-nav" aria-label="主要功能">
           <a class="teacher-entry" href="#/city" aria-label="查看我的萬卷浮城">我的浮城</a>
+          <a class="teacher-entry" href="#/bookshelf" aria-label="查看目前階段全部選文">選文書架</a>
           <a class="teacher-entry" href="#/placement" aria-label="進行五分鐘閱讀程度測讀">程度測讀</a>
-          <a class="teacher-entry" href="#/family" aria-label="家庭護照與跨裝置紀錄">家庭護照</a>
-          <a class="teacher-entry" href="#/guide" aria-label="師生使用說明">使用說明</a>
-          <a class="teacher-entry" href="#/class" aria-label="加入班級">加入班級</a>
-          <a class="teacher-entry" href="#/teacher" aria-label="教師登入與管理">教師登入</a>
+          <details class="more-nav">
+            <summary>更多</summary>
+            <div>
+              <a class="teacher-entry" href="#/family" aria-label="家庭護照與跨裝置紀錄">家庭護照</a>
+              <a class="teacher-entry" href="#/guide" aria-label="師生使用說明">使用說明</a>
+              <a class="teacher-entry" href="#/class" aria-label="加入班級">加入班級</a>
+              <a class="teacher-entry" href="#/teacher" aria-label="教師登入與管理">教師登入</a>
+            </div>
+          </details>
         </nav>
         <p id="family-sync-chip" class="family-sync-chip" role="status" aria-live="polite" hidden></p>
       </header>
       <main id="main-content">
         <section class="paper-panel" aria-labelledby="welcome-title">
           <p class="chapter-label">第一回・墨海來潮</p>
-          <h1 id="welcome-title">每天十分鐘，讀懂一件事</h1>
+          <h1 id="welcome-title">一次一篇，讀懂再往前</h1>
           <p>
-            從世界、科學與人文三條航線選一篇，把可信的知識帶回來，逐步修築你的萬卷浮城。
+            系統依個人進度接續文章；答題達標後，再選擇下一篇挑戰或今天先休息。
           </p>
           <p class="privacy-note">
             不登入也能完整試讀，個人歷程預設只存在這部裝置；選配家庭護照後，才會同步孩子代號、閱讀診斷與浮城進度。系統不收姓名、學號、Email、學校或班級真名。
@@ -42,7 +48,7 @@
       </main>
     </div>
     <noscript>
-      《萬卷浮城》需要 JavaScript 才能保存閱讀進度。你仍可以先記住今天的約定：每天十分鐘，讀懂一件事。
+      《萬卷浮城》需要 JavaScript 才能保存個人閱讀與答題進度。你仍可以先記住約定：一次一篇，讀懂再往前。
     </noscript>
     <script>
       {

@@ -1,0 +1,360 @@
+{
+  "source": {
+    "id": "noaa-ocean-service",
+    "name": "NOAA Ocean Service",
+    "baseUrl": "https://oceanservice.noaa.gov",
+    "licenseType": "public-domain",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "slow-ocean-ripples-launch-source-noaa",
+    "canonicalUrl": "https://oceanservice.noaa.gov/facts/rossby-wave.html",
+    "title": "What is a Rossby wave?",
+    "publisher": "NOAA Ocean Service",
+    "publishedAt": "2024-06-16",
+    "fetchedAt": "2026-08-06",
+    "contentFingerprint": "sha256:3d826ce22a299fbc6cb4409a1856bf6c6c208292f8e4d277f3c4700d54507011",
+    "licenseSnapshot": "美國國家海洋暨大氣總署之政府機構頁面；依 NOAA 網站著作權政策，政府製作內容原則上屬公有領域，個別標示內容例外。",
+    "extractScope": "僅採用羅斯貝波的成因、尺度、傳播時間、海表與溫躍層垂直運動，以及衛星偵測等可核對事實。"
+  },
+  "factPack": {
+    "id": "slow-ocean-ripples-launch-facts",
+    "topicDate": "2026-08-13",
+    "category": "world",
+    "facts": [
+      {
+        "id": "slow-ocean-ripples-launch-fact-01",
+        "statement": "海洋羅斯貝波又稱行星波，主要與地球自轉有關。",
+        "sourceItemId": "slow-ocean-ripples-launch-source-noaa"
+      },
+      {
+        "id": "slow-ocean-ripples-launch-fact-02",
+        "statement": "海洋羅斯貝波不同於岸邊碎裂的表面波，能以向西延伸數百公里的巨大起伏跨越海洋。",
+        "sourceItemId": "slow-ocean-ripples-launch-source-noaa"
+      },
+      {
+        "id": "slow-ocean-ripples-launch-fact-03",
+        "statement": "太平洋低緯度的羅斯貝波可在數月至一年間橫越海盆；中緯度的波則可能需十至二十年。",
+        "sourceItemId": "slow-ocean-ripples-launch-source-noaa"
+      },
+      {
+        "id": "slow-ocean-ripples-launch-fact-04",
+        "statement": "同一羅斯貝波在海面造成的垂直位移通常約十公分，但深處溫躍層的垂直運動約可大一千倍。",
+        "sourceItemId": "slow-ocean-ripples-launch-source-noaa"
+      },
+      {
+        "id": "slow-ocean-ripples-launch-fact-05",
+        "statement": "由於海表起伏很小，人眼難以察覺海洋羅斯貝波，科學家通常以衛星雷達測高資料偵測。",
+        "sourceItemId": "slow-ocean-ripples-launch-source-noaa"
+      }
+    ],
+    "sourceLinks": [
+      "https://oceanservice.noaa.gov/facts/rossby-wave.html"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "slow-ocean-ripples-launch",
+  "packages": [
+    {
+      "id": "slow-ocean-ripples-launch-guided",
+      "level": "launch",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "慢慢走過大洋的波",
+      "hookQuestion": "海面看起來平靜時，深海裡是否仍可能有一個巨大的波正在旅行？",
+      "body": [
+        "提到海浪，我們常想到岸邊翻白的浪花。不過，海洋裡還有一種不容易被眼睛看見的波，叫作羅斯貝波，也常被稱為行星波。它和地球自轉有關，並不是一般海邊那種會破碎的浪。",
+        "海洋羅斯貝波的尺度很大。它可以在海中形成廣闊的起伏，向西延伸數百公里。若只站在船上看附近海面，人們未必會覺得自己正經過一個巨大的波；這正是它和熟悉浪花最不同的地方。",
+        "這種波走得很慢，而且速度會隨緯度改變。在太平洋靠近赤道的低緯度地區，一個波橫越海盆可能只要數個月至一年；較靠近中緯度的波，旅程卻可能長達十至二十年。",
+        "為什麼同樣是跨洋旅行，所花時間會差那麼多？關鍵不只是距離，還有波所在的緯度。因此，閱讀這類資料時，不能只看到「很慢」，還要把地點和所需時間連在一起理解。",
+        "羅斯貝波在海面造成的上下變化通常很小，大約只有十公分。這個高度很容易被其他海況掩蓋，所以人眼難以直接看出它的存在。可是，海面下的情形並不一樣。",
+        "在暖水上層與較冷深水交界的溫躍層，同一個波造成的垂直運動可以大約是一千倍。也就是說，海表的細小變化，可能對應到深處相當明顯的上下移動。",
+        "科學家因此常利用衛星雷達測高資料觀察海面高度的微小差異，再推知這些大尺度波動。這個例子提醒我們：看不見不等於不存在；把表面線索和深處變化連起來，才能讀懂海洋正在發生的事。"
+      ],
+      "glossary": [
+        {
+          "term": "羅斯貝波",
+          "definition": "與地球自轉有關、移動緩慢的大尺度海洋或大氣波動。"
+        },
+        {
+          "term": "緯度",
+          "definition": "表示地點距離赤道南北位置的數值。"
+        },
+        {
+          "term": "海盆",
+          "definition": "可視為一大片由陸地或海底地形界定的海洋區域。"
+        },
+        {
+          "term": "溫躍層",
+          "definition": "海水暖的上層與較冷深水之間，溫度快速改變的交界區。"
+        },
+        {
+          "term": "衛星雷達測高",
+          "definition": "利用衛星量測海面高度變化的方法。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "表面深處對照讀法",
+        "purpose": "用同一現象在海面與深處的差異，抓住文章最重要的科學關係。",
+        "steps": [
+          {
+            "label": "圈出位置",
+            "instruction": "先找出文章比較的兩個位置。','example':'本文比較「海面」與「溫躍層」。",
+            "example": "本文先比較海面的細小起伏，再對照溫躍層中更明顯的垂直運動。"
+          },
+          {
+            "label": "配對數量",
+            "instruction": "把每個位置對應的變化量配成一組。','example':'海面約十公分；溫躍層約大一千倍。",
+            "example": "海面上下變化約十公分，溫躍層的垂直運動則約可大上一千倍。"
+          },
+          {
+            "label": "說出意義",
+            "instruction": "用自己的話說明這組對照如何解釋偵測方法。','example':'海面變化小，所以需要衛星測量。",
+            "example": "因為海面變化不易用肉眼看出，科學家才利用衛星測量微小高度差。"
+          }
+        ],
+        "structureMap": "認識不同海浪 → 說明尺度 → 比較緯度與旅行時間 → 對照海面和深處 → 解釋衛星偵測",
+        "expertTip": "讀科學說明文時，遇到數字要先問：它是在比較哪兩個位置或條件？",
+        "selfCheck": "我能否用「海面雖小、深處卻大」解釋科學家為何使用衛星？"
+      },
+      "readingMinutes": 5,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/rossby-wave.html",
+          "license": "美國政府作品原則上屬公有領域；個別標示內容例外。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "slow-ocean-ripples-launch-guided-q01",
+          "type": "comprehension",
+          "prompt": "依據本文，科學家通常用什麼方法偵測海洋羅斯貝波？",
+          "options": [
+            "觀察岸邊浪花破碎的方向",
+            "利用衛星雷達測高資料量測海面差異",
+            "潛入溫躍層直接以肉眼尋找",
+            "只依海面風速推算波的位置"
+          ],
+          "correctAnswer": "利用衛星雷達測高資料量測海面差異",
+          "rationale": "第七段直接說明科學家利用衛星雷達測高資料觀察海面高度的微小差異。",
+          "distractorReasons": {
+            "觀察岸邊浪花破碎的方向": "岸邊碎浪是本文用來區別一般表面波的例子，不是偵測方式。",
+            "潛入溫躍層直接以肉眼尋找": "本文指出人眼難以直接看見，並未說以潛水肉眼偵測。",
+            "只依海面風速推算波的位置": "本文沒有把風速列為偵測羅斯貝波的主要方法。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 0,
+            "end": 30,
+            "text": "科學家因此常利用衛星雷達測高資料觀察海面高度的微小差異，再推"
+          }
+        },
+        {
+          "id": "slow-ocean-ripples-launch-guided-q02",
+          "type": "inference",
+          "prompt": "小安說：「低緯度的波一定比中緯度的波短。」依據本文，最適合如何評估這句話？",
+          "options": [
+            "正確，因為低緯度波只要數月至一年",
+            "正確，因為所有波都向西移動",
+            "不夠周全，本文比較的是跨越海盆所需時間，且速度與緯度有關",
+            "不正確，因為中緯度的波會完全停止移動"
+          ],
+          "correctAnswer": "不夠周全，本文比較的是跨越海盆所需時間，且速度與緯度有關",
+          "rationale": "文章說明的是旅行時間隨緯度改變，不能直接把「較快抵達」推成波本身的長度較短。",
+          "distractorReasons": {
+            "正確，因為低緯度波只要數月至一年": "此選項把旅行時間誤當成波的長度。",
+            "正確，因為所有波都向西移動": "向西移動無法證明波的長度。",
+            "不正確，因為中緯度的波會完全停止移動": "本文沒有說中緯度的波停止移動，反而說它可能旅行十至二十年。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 30,
+            "text": "這種波走得很慢，而且速度會隨緯度改變。在太平洋靠近赤道的低緯"
+          }
+        },
+        {
+          "id": "slow-ocean-ripples-launch-guided-q03",
+          "type": "evidence",
+          "prompt": "若要支持「海面平靜不代表深海沒有明顯變化」，下列哪一段證據最有力？",
+          "options": [
+            "羅斯貝波和地球自轉有關，且不是岸邊會破碎的浪。",
+            "它可向西延伸數百公里，人們在船上未必感覺得到。",
+            "海面上下變化約十公分，而溫躍層的垂直運動約大一千倍。",
+            "低緯度與中緯度的波，跨越海盆所需時間不同。"
+          ],
+          "correctAnswer": "海面上下變化約十公分，而溫躍層的垂直運動約大一千倍。",
+          "rationale": "這項對照同時提供海面變化小與深處變化大的證據，最直接支持主張。",
+          "distractorReasons": {
+            "羅斯貝波和地球自轉有關，且不是岸邊會破碎的浪。": "只能說明成因與類型，沒有比較海面和深處的變化。",
+            "它可向西延伸數百公里，人們在船上未必感覺得到。": "說明尺度與不易察覺，沒有指出深處的明顯變化。",
+            "低緯度與中緯度的波，跨越海盆所需時間不同。": "說明旅行時間受緯度影響，與深海變化無關。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 0,
+            "end": 30,
+            "text": "在暖水上層與較冷深水交界的溫躍層，同一個波造成的垂直運動可以"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slow-ocean-ripples-launch-challenge",
+      "level": "launch",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "一條看不見的跨洋訊息",
+      "hookQuestion": "當海面只升降一點點，研究者憑什麼判斷深處正有巨大波動？",
+      "body": [
+        "人們多半把波浪想成短暫的海面景象：風起，浪成；靠岸，浪碎。然而海洋羅斯貝波並不符合這幅圖像。它是與地球自轉相關的行星波，能以極大的尺度在海中形成緩慢起伏，並朝西方延展。",
+        "「巨大」不必然等於「顯眼」。羅斯貝波可橫跨數百公里，但海表的垂直起伏通常約十公分。若以人的視線或一艘船的短暫經驗判斷，很容易把這種細小變化當成一般海況，忽略它其實屬於廣闊的波動。",
+        "它的旅行速度也不能用單一答案概括。太平洋低緯度、較靠近赤道的波，橫越海盆可花數月至一年；中緯度的波，則可能要十至二十年。這兩組時間不是在宣告固定時刻表，而是指出緯度會改變水平傳播速度。",
+        "因此，若有人只根據「羅斯貝波很慢」便推論所有海域都需相同時間，便把條件抹平了。文章提供的是一個有界線的比較：同在太平洋、跨越海盆的旅程，低緯度與中緯度可能呈現非常不同的時間尺度。",
+        "更值得注意的是，海面並不是全部故事。海洋上層暖水與較冷深水之間有溫躍層；同一個羅斯貝波在那裡引起的垂直運動，約可比海面的運動大一千倍。小小的海表訊號，可能連著深處顯著的上下移動。",
+        "這層關係也說明了觀察方法的選擇。既然海表位移有限，人眼難以偵測，研究者便以衛星雷達測高資料捕捉海面高度的微差。衛星量到的不是整個深海畫面，卻能提供推知大尺度波動的重要線索。",
+        "從這個例子可學到，科學閱讀不能把「看不見」誤作「沒有」。較好的判斷是分清證據能直接說明什麼：衛星先量到海表高度差；結合海面與溫躍層的關係，才理解那微差為何值得追蹤。"
+      ],
+      "glossary": [
+        {
+          "term": "行星波",
+          "definition": "在像海洋或大氣這類旋轉流體中出現，與地球自轉相關的大尺度波動。"
+        },
+        {
+          "term": "水平傳播",
+          "definition": "波動沿著海洋表面方向移動的情形。"
+        },
+        {
+          "term": "時間尺度",
+          "definition": "描述某現象持續或完成所需時間的範圍。"
+        },
+        {
+          "term": "溫躍層",
+          "definition": "海洋暖水上層和較冷深水之間，水溫快速改變的區域。"
+        },
+        {
+          "term": "雷達測高",
+          "definition": "以衛星雷達測量海面高度變化的觀測技術。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "證據邊界整合讀法",
+        "purpose": "把不同段落的條件、數據與觀測方法連結起來，分辨文章直接證據和合理解釋的界線。",
+        "steps": [
+          {
+            "label": "拆開條件",
+            "instruction": "先標出數據成立的地點與條件。','example':'數月至一年與十至二十年，都談太平洋波橫越海盆，差別在緯度。",
+            "example": "數月至一年和十至二十年都指橫越太平洋海盆，差別條件在低緯度與中緯度。"
+          },
+          {
+            "label": "串接證據",
+            "instruction": "把海表位移、溫躍層運動與衛星觀測連成因果鏈。','example':'海表微差不易看見，所以衛星先量微差；深處運動大則說",
+            "example": "海表微差不易看見，所以衛星先測高度；深處運動較大則說明追蹤微差的價值。"
+          },
+          {
+            "label": "檢查界線",
+            "instruction": "判斷一句話是否超出本文證據。','example':'本文支持「衛星提供推知波動的線索」，不支持「衛星直接拍到整個深海畫",
+            "example": "本文支持衛星提供推知波動的線索，卻不支持衛星直接拍到整個深海畫面。"
+          }
+        ],
+        "structureMap": "打破一般浪花印象 → 尺度與可見性矛盾 → 緯度影響時間 → 限定推論範圍 → 海面／溫躍層對照 → 衛星線索 → 說明證據邊界",
+        "expertTip": "跨段推論時，保留原文的條件詞，例如「太平洋」「低緯度」與「可能」；刪掉它們，結論往往就過度了。",
+        "selfCheck": "我能否區分：哪一項是衛星直接量到的資料，哪一項是由資料推知的海洋現象？"
+      },
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/rossby-wave.html",
+          "license": "美國政府作品原則上屬公有領域；個別標示內容例外。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "slow-ocean-ripples-launch-challenge-q01",
+          "type": "comprehension",
+          "prompt": "本文所說「衛星量到的不是整個深海畫面」，最主要是在說明什麼？",
+          "options": [
+            "衛星只能觀察岸邊破碎的浪",
+            "衛星直接量測的是海面高度的微小差異",
+            "衛星無法提供任何關於羅斯貝波的資訊",
+            "溫躍層只存在於衛星拍攝範圍之外"
+          ],
+          "correctAnswer": "衛星直接量測的是海面高度的微小差異",
+          "rationale": "第六段指出衛星雷達測高資料用於捕捉海面高度微差，並以此提供推知波動的線索。",
+          "distractorReasons": {
+            "衛星只能觀察岸邊破碎的浪": "本文沒有說衛星只能觀察岸邊浪花。",
+            "衛星無法提供任何關於羅斯貝波的資訊": "本文反而說衛星資料是推知大尺度波動的重要線索。",
+            "溫躍層只存在於衛星拍攝範圍之外": "本文沒有討論溫躍層是否在衛星拍攝範圍之外。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 0,
+            "end": 30,
+            "text": "這層關係也說明了觀察方法的選擇。既然海表位移有限，人眼難以偵"
+          }
+        },
+        {
+          "id": "slow-ocean-ripples-launch-challenge-q02",
+          "type": "inference",
+          "prompt": "研究者甲說：「海面只升降約十公分，深處應該也沒有重要變化。」依本文跨段資訊，何者最能反駁他？",
+          "options": [
+            "羅斯貝波會向西延展數百公里，所以海面不會升降",
+            "低緯度波花的時間較少，所以深處一定不變",
+            "溫躍層的垂直運動約可比海面大一千倍，海表微差仍可能連著深處顯著變化",
+            "衛星難以偵測海表變化，所以無法判斷深海狀況"
+          ],
+          "correctAnswer": "溫躍層的垂直運動約可比海面大一千倍，海表微差仍可能連著深處顯著變化",
+          "rationale": "第二段的海表小位移，需與第五段的溫躍層大幅運動整合，才能否定「海面小所以深處不重要」的推論。",
+          "distractorReasons": {
+            "羅斯貝波會向西延展數百公里，所以海面不會升降": "向西延展的尺度不能推出海面完全不升降。",
+            "低緯度波花的時間較少，所以深處一定不變": "旅行時間與深處是否變化沒有必然關係。",
+            "衛星難以偵測海表變化，所以無法判斷深海狀況": "本文說衛星可捕捉海面微差並提供推知波動的線索。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 0,
+            "end": 30,
+            "text": "更值得注意的是，海面並不是全部故事。海洋上層暖水與較冷深水之"
+          }
+        },
+        {
+          "id": "slow-ocean-ripples-launch-challenge-q03",
+          "type": "evidence",
+          "prompt": "若要評鑑「所有羅斯貝波橫越大洋都要十至二十年」這項主張，下列哪項本文證據最能指出它過度概括？",
+          "options": [
+            "羅斯貝波是與地球自轉相關的行星波。",
+            "羅斯貝波可以向西延展數百公里。",
+            "太平洋低緯度波可花數月至一年，中緯度波則可能要十至二十年。",
+            "海面垂直起伏通常約十公分。"
+          ],
+          "correctAnswer": "太平洋低緯度波可花數月至一年，中緯度波則可能要十至二十年。",
+          "rationale": "這段證據同時呈現緯度條件與兩種不同時間範圍，直接顯示不能把中緯度情況套用到所有羅斯貝波。",
+          "distractorReasons": {
+            "羅斯貝波是與地球自轉相關的行星波。": "成因無法檢驗跨洋時間是否一致。",
+            "羅斯貝波可以向西延展數百公里。": "水平尺度不比較不同緯度的旅行時間。",
+            "海面垂直起伏通常約十公分。": "海表位移與跨越大洋所需時間無關。"
+          },
+          "evidenceSpan": {
+            "paragraph": 3,
+            "start": 0,
+            "end": 30,
+            "text": "它的旅行速度也不能用單一答案概括。太平洋低緯度、較靠近赤道的"
+          }
+        }
+      ]
+    }
+  ]
+}

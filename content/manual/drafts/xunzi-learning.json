@@ -77,6 +77,7 @@
   "packages": [
     {
       "id": "xunzi-learning-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "classical",
       "title": "積微而至遠",
@@ -245,6 +246,7 @@
     },
     {
       "id": "xunzi-learning-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "classical",
       "title": "善假而能自化",

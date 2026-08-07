@@ -92,6 +92,7 @@
   "packages": [
     {
       "id": "antarctic-treaty-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "把冰原留給共同的未來",
@@ -283,6 +284,7 @@
     },
     {
       "id": "antarctic-treaty-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "不是沒有政治，而是約束政治",

@@ -1,0 +1,356 @@
+{
+  "source": {
+    "id": "floating-trash-circle-launch-source",
+    "name": "NOAA National Ocean Service",
+    "baseUrl": "https://oceanservice.noaa.gov",
+    "licenseType": "public-domain-us-government",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "floating-trash-circle-launch-source-item",
+    "canonicalUrl": "https://oceanservice.noaa.gov/facts/gyre.html",
+    "title": "What is a gyre?",
+    "publisher": "NOAA National Ocean Service",
+    "publishedAt": null,
+    "fetchedAt": "2026-08-06T00:00:00+08:00",
+    "contentFingerprint": "noaa-nos-floating-trash-circle-launch-live-2026-08-06",
+    "licenseSnapshot": "NOAA 為美國聯邦政府機構；本草稿只使用該頁可核對的政府事實並原創改寫，排除頁面中的第三方圖片、影片與商標。",
+    "extractScope": "環流圈的定義、五大副熱帶環流圈、洋流驅動因素、漂流物與污染的移動，以及名詞常見誤用。"
+  },
+  "factPack": {
+    "id": "floating-trash-circle-launch-fact-pack",
+    "topicDate": "2026-08-09",
+    "category": "world",
+    "facts": [
+      {
+        "id": "floating-trash-circle-launch-fact-1",
+        "statement": "環流圈是由大型、持續且旋轉的洋流共同構成的系統。",
+        "sourceItemId": "floating-trash-circle-launch-source-item"
+      },
+      {
+        "id": "floating-trash-circle-launch-fact-2",
+        "statement": "風、潮汐、溫度差與鹽度差都能驅動海洋中的不同洋流。",
+        "sourceItemId": "floating-trash-circle-launch-source-item"
+      },
+      {
+        "id": "floating-trash-circle-launch-fact-3",
+        "statement": "世界海洋有五個主要環流圈。",
+        "sourceItemId": "floating-trash-circle-launch-source-item"
+      },
+      {
+        "id": "floating-trash-circle-launch-fact-4",
+        "statement": "洋流不只移動海水，也會移動人、貨物、污染物與漂流物；部分海域的塑膠及其他廢棄物濃度較高。",
+        "sourceItemId": "floating-trash-circle-launch-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://oceanservice.noaa.gov/facts/gyre.html"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "floating-trash-circle-launch",
+  "packages": [
+    {
+      "id": "floating-trash-circle-launch-guided",
+      "level": "launch",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "漂流物為何跟著大海繞圈",
+      "hookQuestion": "一只離岸的瓶子，為什麼可能一直在大片海域打轉？",
+      "body": [
+        "把一片葉子放進緩慢旋轉的水盆，它會跟著水移動。海上的瓶罐、漁具或其他漂流物也一樣，不能自己決定方向，卻會被洋流帶走。要理解大片海域中的繞圈現象，可以先認識環流圈。",
+        "環流圈是大型旋轉洋流組成的系統。海洋中有短暫的小漩渦，也有範圍更大、維持較久的洋流。當多股大型而持續的洋流連在一起，就形成規模龐大的旋轉路徑。",
+        "洋流的動力不只一種。風、潮汐、海水溫度差與鹽度差，都會推動不同的水流。這些力量在廣大海洋中共同作用，使水不斷移動，也讓環流圈能長期存在。",
+        "世界海洋共有五個主要環流圈，包括南、北太平洋，南、北大西洋，以及印度洋的副熱帶環流圈。它們不是同一個巨大圓圈，而是分布在不同海盆中的大型流動系統。",
+        "洋流移動時，不只搬運海水。人員、貨物、污染物和漂流物，也可能跟著水流改變位置。因此，一件垃圾離開岸邊後，仍會進入更大的移動路線。",
+        "有些海域會發現較高濃度的塑膠和其他廢棄物，人們也常把這些聚集現象叫作環流圈。不過，這個詞原本指的是旋轉洋流系統，不是垃圾本身。兩種意思不能混在一起。",
+        "所以，海上漂流物在大片海域繞圈，不是因為垃圾會主動尋找同伴，而是因為它被持續洋流搬運。不同力量推動水流，水流再帶動漂流物，形成一條連續的因果鏈。",
+        "NOAA蒐集潮汐與洋流資料，協助沿岸航行、搜救、災害清理與海岸工程。追蹤海水怎麼流，也是在追蹤船、人與污染可能往哪裡去。看懂環流圈，就能分清水的路線與垃圾的聚集。"
+      ],
+      "glossary": [
+        {
+          "term": "環流圈",
+          "definition": "由多股大型而持續的旋轉洋流共同形成的系統。"
+        },
+        {
+          "term": "洋流",
+          "definition": "海水朝特定方向持續移動的現象。"
+        },
+        {
+          "term": "鹽度差",
+          "definition": "不同海域海水含鹽程度的差異。"
+        },
+        {
+          "term": "海盆",
+          "definition": "由海底地形圍出的廣大海洋區域。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "水流帶物追蹤法",
+        "purpose": "沿著力量推水、水再帶物的順序，分清環流圈、漂流路徑與廢棄物聚集。",
+        "steps": [
+          {
+            "label": "先找水",
+            "instruction": "圈出大型、持續、旋轉等描述，先確認環流圈指的是水流系統而非垃圾。",
+            "example": "第二段說多股大型而持續的洋流連在一起，形成規模龐大的旋轉路徑。"
+          },
+          {
+            "label": "再找力",
+            "instruction": "把風、潮汐、溫度差與鹽度差列在水流前方，標示它們是推動因素。",
+            "example": "第三段把四種力量放在洋流之前，表示水流不是由漂流物自己製造。"
+          },
+          {
+            "label": "最後追物",
+            "instruction": "沿洋流箭頭追蹤人、貨物、污染與漂流物，判斷哪些會被水帶往他處。",
+            "example": "瓶罐離岸後仍可能進入大型流動路線，因為洋流會搬運漂流物。"
+          }
+        ],
+        "structureMap": "文章先用水盆比喻引出環流圈，再介紹驅動力與五大系統，接著說明洋流搬運漂流物及名詞容易混淆之處。",
+        "expertTip": "看到垃圾環流圈時，先問句中指的是水流還是廢棄物；同一詞語在日常用法中可能被轉借。",
+        "selfCheck": "我能否用力量、水流、漂流物三層順序，解釋垃圾為何會改變位置？"
+      },
+      "readingMinutes": 5,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/gyre.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "floating-trash-circle-launch-guided-q1",
+          "type": "comprehension",
+          "prompt": "依本文，環流圈原本指的是什麼？",
+          "options": [
+            "大型旋轉洋流組成的系統",
+            "固定不動的垃圾島",
+            "只有海岸才有的小水窪",
+            "船隻畫出的圓形航線"
+          ],
+          "correctAnswer": "大型旋轉洋流組成的系統",
+          "rationale": "第二段直接界定環流圈是大型旋轉洋流所組成的系統。",
+          "distractorReasons": {
+            "固定不動的垃圾島": "正文特別提醒環流圈不是垃圾本身。",
+            "只有海岸才有的小水窪": "環流圈分布在廣大海盆，不是岸邊小水窪。",
+            "船隻畫出的圓形航線": "它由洋流組成，不是船隻畫出的航線。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 0,
+            "end": 15,
+            "text": "環流圈是大型旋轉洋流組成的系統"
+          }
+        },
+        {
+          "id": "floating-trash-circle-launch-guided-q2",
+          "type": "inference",
+          "prompt": "一件垃圾離岸後為何仍可能走很遠？",
+          "options": [
+            "持續洋流會搬運漂流物",
+            "垃圾能自己選擇航線",
+            "所有海水都流向同一座港口",
+            "垃圾一碰海水就會長出船帆"
+          ],
+          "correctAnswer": "持續洋流會搬運漂流物",
+          "rationale": "第五、七段都指出洋流會移動漂流物，所以垃圾離岸後仍可能改變位置。",
+          "distractorReasons": {
+            "垃圾能自己選擇航線": "漂流物不能主動選擇方向。",
+            "所有海水都流向同一座港口": "五大環流圈位於不同海盆，不會都流向同一港口。",
+            "垃圾一碰海水就會長出船帆": "正文沒有垃圾長出船帆的現象。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 13,
+            "end": 26,
+            "text": "人員、貨物、污染物和漂流物"
+          }
+        },
+        {
+          "id": "floating-trash-circle-launch-guided-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能分清『環流圈』與『垃圾聚集』？",
+          "options": [
+            "這個詞原本指的是旋轉洋流系統，不是垃圾本身。",
+            "世界海洋共有五個主要環流圈。",
+            "海洋中有短暫的小漩渦。",
+            "NOAA蒐集潮汐與洋流資料。"
+          ],
+          "correctAnswer": "這個詞原本指的是旋轉洋流系統，不是垃圾本身。",
+          "rationale": "第一項直接比較詞語原義與常見借用，支持兩者不能混同。",
+          "distractorReasons": {
+            "世界海洋共有五個主要環流圈。": "數量資訊沒有直接區分水流與垃圾。",
+            "海洋中有短暫的小漩渦。": "小漩渦只說明水流種類。",
+            "NOAA蒐集潮汐與洋流資料。": "資料用途不能直接說明名詞差異。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 41,
+            "end": 55,
+            "text": "這個詞原本指的是旋轉洋流系統"
+          }
+        }
+      ]
+    },
+    {
+      "id": "floating-trash-circle-launch-challenge",
+      "level": "launch",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "旋轉洋流與漂流物的聚集錯覺",
+      "hookQuestion": "人們口中的垃圾環流圈，究竟是水流，還是一堆垃圾？",
+      "body": [
+        "海面上一件漂流物的位置，往往不是由它本身決定，而是由周圍水體的移動改寫。副熱帶環流圈是一套大型旋轉洋流系統。理解它，不能只盯著垃圾聚集的照片，而要先看海水如何在廣大海盆中形成持續路徑。",
+        "海洋會出現多種尺度的流動，例如渦流、漩渦與深海洋流。有些流動短暫且範圍小，另一些則更大、更持久，甚至有自己的名稱。多股大型持續洋流合在一起，才構成環流圈。",
+        "這些水流不是由單一力量驅動。風、潮汐、溫度差與鹽度差都能推動洋流。不同力量造成不同類型的流動，再由較大且持久的洋流連成旋轉系統。因此，環流圈不是一個靜止容器。",
+        "水流一旦移動，就會搬運水中的事物。洋流能改變人員與貨物的位置，也會帶走污染物和漂流物。一件塑膠製品進海後，便可能加入原本就存在的水流路線，而不是停在落水點附近。",
+        "部分海域確實會發現濃度較高的塑膠及其他廢棄物，因此日常語言常用環流圈指稱這些聚集區。但傳統定義仍是大型旋轉洋流。把兩者畫上等號，容易把造成移動的系統誤當成被移動的物質。",
+        "這也說明，漂流物繞圈不代表每一件垃圾都走完全相同的圓。NOAA頁面能確定的是：持續洋流構成旋轉系統，洋流又能搬運污染與廢棄物。至於單件物品的完整軌跡，仍需要實際潮汐與洋流資料來追蹤。",
+        "因此，解釋海上漂流物的聚集，最好分成三層：驅動力使海水移動，大型持續洋流形成環流圈，漂流物再被洋流搬運。這套解釋保留了可核對的因果關係，也避免把海洋想成裝著固定垃圾堆的水池。"
+      ],
+      "glossary": [
+        {
+          "term": "環流圈",
+          "definition": "由大型且持續的旋轉洋流共同形成的海洋系統。"
+        },
+        {
+          "term": "渦流",
+          "definition": "海水旋轉形成、尺度可大可小的流動。"
+        },
+        {
+          "term": "深海洋流",
+          "definition": "在海洋深處移動的水流。"
+        },
+        {
+          "term": "副熱帶環流圈",
+          "definition": "分布在副熱帶海域的大型旋轉洋流系統。"
+        },
+        {
+          "term": "驅動力",
+          "definition": "使海水開始或持續移動的作用力。"
+        },
+        {
+          "term": "傳統定義",
+          "definition": "一個詞語原先較正式而穩定的意義。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "名詞因果雙軌法",
+        "purpose": "一面辨析環流圈的正式定義與日常借用，一面建立力量、水流、漂流物的因果層次。",
+        "steps": [
+          {
+            "label": "辨析名詞",
+            "instruction": "把環流圈在科學定義與垃圾聚集語境中的意思分欄，找出兩者指涉對象。",
+            "example": "科學定義指大型旋轉洋流；日常說法有時指塑膠與其他廢棄物的高濃度區。"
+          },
+          {
+            "label": "建立三層",
+            "instruction": "依序整理驅動力、持續洋流與被搬運物，避免把原因、路徑和結果混成一團。",
+            "example": "風與溫鹽差推動水流，水流構成環流圈，漂流物再被這套水流帶往他處。"
+          },
+          {
+            "label": "檢查界線",
+            "instruction": "判斷文章能支持系統層次還是單件軌跡，對來源沒有提供的細節保留限制。",
+            "example": "可確定洋流會搬運廢棄物，卻不能只靠定義畫出每只瓶子的完整行進路線。"
+          }
+        ],
+        "structureMap": "文章先界定不同尺度的洋流，再列出驅動力與五大環流圈，接著辨析垃圾聚集的轉借用法，最後說明資料用途。",
+        "expertTip": "科學解釋常同時處理名詞與因果；若對象指錯，即使後面的推理形式完整，結論仍會偏離。",
+        "selfCheck": "我能否指出環流圈的兩種用法，並用三層因果說明漂流物如何被搬運？"
+      },
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/gyre.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "floating-trash-circle-launch-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依本文，多股大型持續洋流合在一起會形成什麼？",
+          "options": [
+            "環流圈",
+            "固定垃圾島",
+            "單一潮汐",
+            "海岸公路"
+          ],
+          "correctAnswer": "環流圈",
+          "rationale": "第二段指出較大、較持久的洋流共同構成環流圈。",
+          "distractorReasons": {
+            "固定垃圾島": "廢棄物是被搬運的物質，不是洋流系統本身。",
+            "單一潮汐": "潮汐是一種驅動或流動現象，不等於多股持續洋流系統。",
+            "海岸公路": "海岸公路不是海水流動。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 57,
+            "end": 69,
+            "text": "多股大型持續洋流合在一起"
+          }
+        },
+        {
+          "id": "floating-trash-circle-launch-challenge-q2",
+          "type": "inference",
+          "prompt": "為何把環流圈直接等同垃圾堆會造成理解錯誤？",
+          "options": [
+            "會把搬運系統誤當成被搬運物質",
+            "會讓五大海盆立刻消失",
+            "會使所有洋流停止旋轉",
+            "會證明垃圾完全不受洋流影響"
+          ],
+          "correctAnswer": "會把搬運系統誤當成被搬運物質",
+          "rationale": "第五段區分大型旋轉洋流與高濃度廢棄物，兩者分別是搬運系統與被搬運物。",
+          "distractorReasons": {
+            "會讓五大海盆立刻消失": "名詞混淆不會讓海盆消失。",
+            "會使所有洋流停止旋轉": "用詞錯誤不會使洋流停止。",
+            "會證明垃圾完全不受洋流影響": "正文反而指出垃圾會受洋流搬運。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 64,
+            "end": 83,
+            "text": "容易把造成移動的系統誤當成被移動的物質"
+          }
+        },
+        {
+          "id": "floating-trash-circle-launch-challenge-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能支持『不能只憑環流圈定義畫出單件垃圾軌跡』？",
+          "options": [
+            "單件物品的完整軌跡，仍需要實際潮汐與洋流資料來追蹤。",
+            "世界共有五個主要環流圈。",
+            "海洋會出現多種尺度的流動。",
+            "洋流能改變人員與貨物的位置。"
+          ],
+          "correctAnswer": "單件物品的完整軌跡，仍需要實際潮汐與洋流資料來追蹤。",
+          "rationale": "第一項直接指出單件軌跡需要實際資料，清楚限定了環流圈定義的解釋範圍。",
+          "distractorReasons": {
+            "世界共有五個主要環流圈。": "環流圈數量不能提供個別物品軌跡。",
+            "海洋會出現多種尺度的流動。": "尺度多樣只說明流動種類。",
+            "洋流能改變人員與貨物的位置。": "搬運能力不能直接畫出某件物品的完整路線。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 75,
+            "end": 90,
+            "text": "仍需要實際潮汐與洋流資料來追蹤"
+          }
+        }
+      ]
+    }
+  ]
+}

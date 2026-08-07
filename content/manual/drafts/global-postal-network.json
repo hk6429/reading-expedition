@@ -98,6 +98,7 @@
   "packages": [
     {
       "id": "global-postal-network-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "一封信的跨國接力",
@@ -292,6 +293,7 @@
     },
     {
       "id": "global-postal-network-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "信封、代碼與國界之間",

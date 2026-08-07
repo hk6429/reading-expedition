@@ -49,14 +49,15 @@ export async function seedReadingPackage(db, fixture) {
     db
       .prepare(
         `INSERT OR IGNORE INTO fact_packs (
-           id, topic_date, category, facts_json, source_links_json,
+           id, topic_date, category, reading_level, facts_json, source_links_json,
            sensitivity_flags_json, verification_status, version
-         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
         fixture.factPack.id,
         fixture.factPack.topicDate,
         fixture.factPack.category,
+        fixture.packages[0]?.level ?? "tower",
         json(fixture.factPack.facts),
         json(fixture.factPack.sourceLinks),
         json(fixture.factPack.sensitivityFlags),
@@ -67,21 +68,27 @@ export async function seedReadingPackage(db, fixture) {
 
   let assessmentItems = 0;
   for (const reading of fixture.packages) {
+    const publicationStatus =
+      reading.publicationStatus === "manual_review"
+        ? "review"
+        : reading.publicationStatus;
     statements.push(
       db
         .prepare(
           `INSERT OR IGNORE INTO reading_packages (
-             id, content_key, fact_pack_id, difficulty, text_type, title, hook_question,
+             id, content_key, fact_pack_id, difficulty, reading_level, support_mode, text_type, title, hook_question,
              body, glossary_json, reading_minutes, source_attribution_json,
              quality_score, hard_gate_status, publication_status, version,
              published_at
-           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
         .bind(
           reading.id,
           fixture.contentKey,
           fixture.factPack.id,
           reading.difficulty,
+          reading.level ?? "tower",
+          reading.difficulty === "guided" ? "guided" : "independent",
           reading.textType ?? "vernacular",
           reading.title,
           reading.hookQuestion,
@@ -91,7 +98,7 @@ export async function seedReadingPackage(db, fixture) {
           json(reading.sourceAttribution),
           reading.qualityScore,
           reading.hardGateStatus,
-          reading.publicationStatus,
+          publicationStatus,
           reading.version,
           fixture.sourceItem.fetchedAt,
         ),

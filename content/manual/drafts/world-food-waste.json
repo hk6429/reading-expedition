@@ -101,6 +101,7 @@
   "packages": [
     {
       "id": "world-food-waste-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "一顆番茄的接力賽：減少浪費為何不能只靠消費者",
@@ -262,6 +263,7 @@
     },
     {
       "id": "world-food-waste-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "垃圾桶只是終點：用系統眼光追查消失的食物",

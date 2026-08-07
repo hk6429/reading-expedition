@@ -79,17 +79,18 @@ rows.push(`INSERT OR IGNORE INTO source_items (
   )
 WHERE id = ${value(fixture.sourceItem.id)};`);
 rows.push(`INSERT OR IGNORE INTO fact_packs (
-  id, topic_date, category, facts_json, source_links_json,
+  id, topic_date, category, reading_level, facts_json, source_links_json,
   sensitivity_flags_json, verification_status, version
 ) VALUES (
   ${value(fixture.factPack.id)}, ${value(fixture.factPack.topicDate)},
-  ${value(fixture.factPack.category)}, ${json(fixture.factPack.facts)},
+  ${value(fixture.factPack.category)}, ${value(fixture.packages[0].level)}, ${json(fixture.factPack.facts)},
   ${json(fixture.factPack.sourceLinks)}, ${json(fixture.factPack.sensitivityFlags)},
   ${value(fixture.factPack.verificationStatus)}, ${fixture.factPack.version}
 );`);
   rows.push(`UPDATE fact_packs SET
   topic_date = ${value(fixture.factPack.topicDate)},
   category = ${value(fixture.factPack.category)},
+  reading_level = ${value(fixture.packages[0].level)},
   facts_json = ${json(fixture.factPack.facts)},
   source_links_json = ${json(fixture.factPack.sourceLinks)},
   sensitivity_flags_json = ${json(fixture.factPack.sensitivityFlags)},
@@ -106,18 +107,20 @@ WHERE id = ${value(fixture.factPack.id)};`);
         ? fixture.sourceItem.fetchedAt
         : null;
     rows.push(`INSERT OR IGNORE INTO reading_packages (
-    id, content_key, fact_pack_id, difficulty, text_type, title, hook_question, body,
+    id, content_key, fact_pack_id, difficulty, reading_level, support_mode, text_type, title, hook_question, body,
     glossary_json, reading_strategy_json, reading_minutes, source_attribution_json, quality_score,
     hard_gate_status, publication_status, version, published_at
   ) VALUES (
     ${value(reading.id)}, ${value(fixture.contentKey)}, ${value(fixture.factPack.id)},
-    ${value(reading.difficulty)}, ${value(reading.textType)}, ${value(reading.title)}, ${value(reading.hookQuestion)},
+    ${value(reading.difficulty)}, ${value(reading.level)}, ${value(reading.difficulty === "guided" ? "guided" : "independent")}, ${value(reading.textType)}, ${value(reading.title)}, ${value(reading.hookQuestion)},
     ${json(reading.body)}, ${json(reading.glossary)}, ${json(reading.readingStrategy ?? {})}, ${reading.readingMinutes},
     ${json(reading.sourceAttribution)}, ${reading.qualityScore},
     ${value(reading.hardGateStatus)}, ${value(publicationStatus)},
     ${reading.version}, ${value(publishedAt)}
   );`);
     rows.push(`UPDATE reading_packages SET
+    reading_level = ${value(reading.level)},
+    support_mode = ${value(reading.difficulty === "guided" ? "guided" : "independent")},
     text_type = ${value(reading.textType)},
     title = ${value(reading.title)},
     hook_question = ${value(reading.hookQuestion)},

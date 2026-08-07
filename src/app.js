@@ -29,6 +29,7 @@ import { createFamilyClient } from "./storage/family-client.js";
 import { createSyncQueue } from "./storage/sync-queue.js";
 import { createClassContributionQueue } from "./storage/class-contribution-queue.js";
 import { renderAssessment } from "./ui/assessment-view.js";
+import { renderBookshelf } from "./ui/bookshelf-view.js";
 import { renderCityInvest } from "./ui/city-view.js";
 import { renderCityOverview } from "./ui/city-overview.js";
 import { renderHome } from "./ui/home-view.js";
@@ -39,6 +40,8 @@ import { renderFamilyView } from "./ui/family-view.js";
 import { renderPlacement } from "./ui/placement-view.js";
 import { renderUsageGuide } from "./ui/usage-guide.js";
 import { createRouter } from "./ui/router.js";
+import { renderBackupReminder } from "./ui/backup-reminder.js";
+import { nextUnreadReading } from "./domain/reading-inventory.js";
 
 const main = document.querySelector("#main-content");
 if ("serviceWorker" in navigator) {
@@ -224,30 +227,34 @@ window.addEventListener("online", () => {
 flushEvents();
 flushClassContributions();
 
-async function loadDaily() {
-  const safeDemoReadings = demoDailyReadings
-    .filter(({ id }) =>
-      ["water-sharing-guided-v1", "water-cycle-guided-v1"].includes(id),
-    )
-    .map((reading) => ({
-      ...reading,
-      level: "launch",
-      supportMode: "guided",
-    }));
-  const localReadings = [...safeDemoReadings, ...levelDailyReadings];
+function localInventory() {
+  const demoInventory = demoDailyReadings.map((reading) => ({
+    ...reading,
+    level: reading.level ?? "tower",
+    supportMode:
+      reading.supportMode ??
+      (reading.difficulty === "guided" ? "guided" : "independent"),
+  }));
+  return [...demoInventory, ...levelDailyReadings];
+}
+
+async function loadInventory(level) {
+  const localReadings = localInventory();
   try {
-    const response = await fetch(`/api/v1/daily?date=${localToday()}`);
-    if (!response.ok) throw new Error("daily API unavailable");
-    const payload = await response.json();
-    const remoteReadings = Array.isArray(payload.readings)
-      ? payload.readings.map((reading) => ({
-          ...reading,
-          level: reading.level ?? "tower",
-          supportMode:
-            reading.supportMode ??
-            (reading.difficulty === "guided" ? "guided" : "independent"),
-        }))
-      : [];
+    const remoteReadings = [];
+    let page = 1;
+    let hasMore = true;
+    while (hasMore) {
+      const response = await fetch(
+        `/api/v1/readings?level=${encodeURIComponent(level)}&page=${page}&pageSize=200`,
+      );
+      if (!response.ok) throw new Error("inventory API unavailable");
+      const payload = await response.json();
+      if (!Array.isArray(payload.readings)) break;
+      remoteReadings.push(...payload.readings);
+      hasMore = Boolean(payload.pagination?.hasMore);
+      page += 1;
+    }
     return [...new Map(
       [...localReadings, ...remoteReadings].map((reading) => [
         reading.id,
@@ -265,8 +272,12 @@ async function loadReading(id) {
     (demoReadingsById[id]
       ? {
           ...demoReadingsById[id],
-          level: "launch",
-          supportMode: "guided",
+          level: demoReadingsById[id].level ?? "tower",
+          supportMode:
+            demoReadingsById[id].supportMode ??
+            (demoReadingsById[id].difficulty === "guided"
+              ? "guided"
+              : "independent"),
         }
       : null);
   try {
@@ -310,16 +321,20 @@ function localToday() {
   }).format(new Date());
 }
 
-function exportLearningState() {
+function exportLearningState(personLabel = "個人") {
   const payload = store.export();
-  if (!payload) return;
+  if (!payload) return false;
   const blob = new Blob([payload], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `梁山閱征記-${localToday()}.json`;
+  const safeLabel = String(personLabel)
+    .replace(/[^\p{L}\p{N}_-]+/gu, "-")
+    .replace(/^-+|-+$/g, "") || "個人";
+  link.download = `梁山閱征記-${safeLabel}-${localToday()}.json`;
   link.click();
   URL.revokeObjectURL(url);
+  return true;
 }
 
 async function restoreLearningState(file) {
@@ -333,22 +348,67 @@ async function restoreLearningState(file) {
 }
 
 const router = createRouter({
+  afterRoute() {
+    if (
+      window.location.hash === "#/family" ||
+      window.location.hash.startsWith("#/teacher")
+    ) {
+      return;
+    }
+    const activeChild = familyClient.activeChild();
+    renderBackupReminder(main, {
+      personId: activeChild?.id ?? state.deviceId,
+      personLabel: activeChild?.alias ?? "此裝置的閱行者",
+      sessionStorage: window.sessionStorage,
+      onExport: () =>
+        exportLearningState(activeChild?.alias ?? "此裝置"),
+    });
+  },
   async onHome() {
     setPublicCounterVisible(true);
+    const selectedLevel = state.preferences.selectedLevel ?? "launch";
     renderHome(
       main,
-      await loadDaily(),
+      await loadInventory(selectedLevel),
       state.completedReadings,
       state.readingHistory,
       {
         preferences: state.preferences,
+        diagnosticHistory: state.diagnosticHistory,
         onPreferencesChange: (preferences, { navigate = true } = {}) => {
+          const scrollY = window.scrollY;
           state.preferences = preferences;
           persistState(state);
-          if (navigate) router.navigate();
+          if (navigate) {
+            router.navigate().then(() => window.scrollTo(0, scrollY));
+          }
         },
       },
     );
+  },
+  async onBookshelf() {
+    setPublicCounterVisible(true);
+    const selectedLevel = state.preferences.selectedLevel ?? "launch";
+    const render = async () => {
+      renderBookshelf(
+        main,
+        await loadInventory(selectedLevel),
+        state.completedReadings,
+        {
+          preferences: state.preferences,
+          diagnosticHistory: state.diagnosticHistory,
+          onPreferencesChange: (
+            preferences,
+            { persist = true } = {},
+          ) => {
+            state.preferences = preferences;
+            if (persist) persistState(state);
+            router.navigate();
+          },
+        },
+      );
+    };
+    await render();
   },
   async onRead(id) {
     setPublicCounterVisible(false, "reading");
@@ -359,7 +419,7 @@ const router = createRouter({
           <p class="chapter-label">尚待校閱</p>
           <h1>這份讀卷目前無法開啟</h1>
           <p>內容可能正在修訂或已下架，你的既有城市成果不會消失。</p>
-          <a href="#/">返回三條航線</a>
+          <a href="#/">返回個人挑戰</a>
         </section>
       `;
       return;
@@ -369,6 +429,9 @@ const router = createRouter({
       state,
       saveState: persistState,
       session,
+      assessmentAvailableOffline: Boolean(
+        levelAnswerKeys[reading.id] ?? demoAnswerKeys[reading.id],
+      ),
     });
   },
   async onQuiz(id) {
@@ -380,14 +443,16 @@ const router = createRouter({
     }
     renderAssessment(main, reading, {
       submitAnswers: (answers) => submitAssessment(reading, answers),
+      requiresConnection: !Boolean(
+        levelAnswerKeys[reading.id] ?? demoAnswerKeys[reading.id],
+      ),
       onComplete: ({
         firstResults,
         finalResults,
         evidenceViewedIds,
+        assessmentOutcome,
       }) => {
         const date = localToday();
-        const previous = state.completedReadings[reading.id];
-        const repeatedSameDay = previous?.date === date;
         const firstCorrect = firstResults.filter(({ correct }) => correct).length;
         const revisedCount = firstResults.filter(
           (item, index) => !item.correct && finalResults[index]?.correct,
@@ -400,6 +465,35 @@ const router = createRouter({
         const evidenceText =
           extractEvidenceText(reading, evidenceResult?.evidenceSpan) ||
           "已完成文證定位";
+        const diagnosticRecord = buildDiagnosticRecord({
+          reading,
+          date,
+          supportMode:
+            reading.supportMode ?? state.preferences.supportMode,
+          firstResults,
+          finalResults,
+          evidenceViewedIds,
+        });
+        const previousAttempts = state.diagnosticHistory.filter(
+          (record) => record.readingId === reading.id,
+        ).length;
+        state.diagnosticHistory = [
+          ...state.diagnosticHistory,
+          {
+            ...diagnosticRecord,
+            attemptNumber: previousAttempts + 1,
+            completedAt: new Date().toISOString(),
+          },
+        ];
+        queueEvent("assessment_submitted", reading);
+        if (revisedCount > 0) queueEvent("answer_revised", reading);
+        if (!assessmentOutcome?.passed) {
+          persistState(state);
+          flushEvents();
+          return `#/read/${reading.id}`;
+        }
+        const previous = state.completedReadings[reading.id];
+        const repeatedSameDay = previous?.date === date;
         const historyResult = appendVerifiedReading(state.readingHistory, {
           readingId: reading.id,
           date,
@@ -437,25 +531,6 @@ const router = createRouter({
             date,
           });
         }
-        const diagnosticRecord = buildDiagnosticRecord({
-          reading,
-          date,
-          supportMode:
-            reading.supportMode ?? state.preferences.supportMode,
-          firstResults,
-          finalResults,
-          evidenceViewedIds,
-        });
-        state.diagnosticHistory = [
-          ...state.diagnosticHistory.filter(
-            (record) =>
-              !(
-                record.readingId === reading.id &&
-                record.date === date
-              ),
-          ),
-          diagnosticRecord,
-        ];
         if (historyResult.added) {
           state.abilityMastery = recordAbilityEvidence(
             state.abilityMastery,
@@ -485,11 +560,17 @@ const router = createRouter({
           category: reading.category,
           skill: "理解與文證",
           evidence: evidenceText,
+          assessmentPassed: Boolean(assessmentOutcome?.passed),
+          firstCorrectCount: firstCorrect,
+          finalCorrectCount:
+            assessmentOutcome?.correctCount ??
+            finalResults.filter(({ correct }) => correct).length,
+          requiredCorrectCount:
+            assessmentOutcome?.requiredCorrectCount ??
+            Math.ceil((finalResults.length * 2) / 3),
         };
-        queueEvent("assessment_submitted", reading);
         queueEvent("reading_completed", reading);
         queueEvent("evidence_located", reading);
-        if (revisedCount > 0) queueEvent("answer_revised", reading);
         if (
           !repeatedSameDay &&
           window.localStorage.getItem(CLASS_TOKEN_KEY)
@@ -505,7 +586,7 @@ const router = createRouter({
         persistState(state);
         flushEvents();
         flushClassContributions();
-        window.location.hash = `#/city/invest/${reading.id}`;
+        return `#/city/invest/${reading.id}`;
       },
     });
   },
@@ -517,6 +598,20 @@ const router = createRouter({
       return;
     }
     const reading = await loadReading(id);
+    const inventory = await loadInventory(
+      reading?.level ?? state.preferences.selectedLevel ?? "launch",
+    );
+    const nextReading = nextUnreadReading(
+      inventory,
+      state.completedReadings,
+      {
+        level:
+          reading?.level ?? state.preferences.selectedLevel ?? "launch",
+        supportMode:
+          reading?.supportMode ?? state.preferences.supportMode ?? "guided",
+        currentReadingId: id,
+      },
+    );
     renderCityInvest(main, state, {
       readingId: id,
       earnedInkBricks: completion.reward,
@@ -527,6 +622,11 @@ const router = createRouter({
       reading,
       evidence: completion.evidence,
       date: completion.date,
+      assessmentPassed: completion.assessmentPassed ?? true,
+      finalCorrectCount: completion.finalCorrectCount ?? 0,
+      requiredCorrectCount: completion.requiredCorrectCount ?? 2,
+      assessmentTotal: reading?.assessment?.length ?? 3,
+      nextReading,
       saveState: persistState,
     });
   },
@@ -574,8 +674,28 @@ const router = createRouter({
       familyClient,
       localState: state,
       localStore: store,
+      loadLevelInventory: loadInventory,
+      exportState: () =>
+        exportLearningState(
+          familyClient.activeChild()?.alias ?? "此裝置",
+        ),
       reload: () => window.location.reload(),
     });
+  },
+  async onRest() {
+    setPublicCounterVisible(true);
+    main.className = "rest-view";
+    main.innerHTML = `
+      <section class="paper-panel rest-panel">
+        <p class="chapter-label">今日收卷</p>
+        <h1>今天先走到這裡，明天再來</h1>
+        <p>你的閱讀進度、每篇答題結果與浮城成果都已保存。休息不是中斷，而是替下一次專心留位置。</p>
+        <div class="rest-actions">
+          <a class="primary-link" href="#/">回到個人閱讀首頁</a>
+          <a href="#/city">查看我的浮城與紀錄</a>
+        </div>
+      </section>
+    `;
   },
 });
 

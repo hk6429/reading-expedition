@@ -95,6 +95,10 @@ function validateCompleted(value) {
         "category",
         "skill",
         "evidence",
+        "assessmentPassed",
+        "firstCorrectCount",
+        "finalCorrectCount",
+        "requiredCorrectCount",
       ],
       `completedReadings.${readingId}`,
     );
@@ -106,6 +110,18 @@ function validateCompleted(value) {
     if (record.category !== undefined && !CATEGORIES.has(record.category)) fail(`${readingId}.category`);
     if (record.skill !== undefined) string(record.skill, `${readingId}.skill`, 40);
     if (record.evidence !== undefined) string(record.evidence, `${readingId}.evidence`, 500);
+    if (record.assessmentPassed !== undefined) {
+      boolean(record.assessmentPassed, `${readingId}.assessmentPassed`);
+    }
+    for (const field of [
+      "firstCorrectCount",
+      "finalCorrectCount",
+      "requiredCorrectCount",
+    ]) {
+      if (record[field] !== undefined) {
+        integer(record[field], `${readingId}.${field}`, 0, 20);
+      }
+    }
     if (record.rewards !== undefined) {
       keys(
         record.rewards,
@@ -225,10 +241,19 @@ function validateDiagnostics(records) {
   limitedArray(records, "diagnosticHistory");
   for (const [index, record] of records.entries()) {
     const path = `diagnosticHistory.${index}`;
-    keys(record, ["readingId", "title", "date", "category", "level", "supportMode", "items"], path);
+    keys(record, ["readingId", "title", "date", "category", "level", "supportMode", "attemptNumber", "completedAt", "items"], path);
     string(record.readingId, `${path}.readingId`, 160);
     string(record.title, `${path}.title`, 200);
     if (!DATE.test(record.date) || !CATEGORIES.has(record.category)) fail(path);
+    if (record.attemptNumber !== undefined) {
+      integer(record.attemptNumber, `${path}.attemptNumber`, 1, 10_000);
+    }
+    if (record.completedAt !== undefined) {
+      string(record.completedAt, `${path}.completedAt`, 40);
+      if (Number.isNaN(Date.parse(record.completedAt))) {
+        fail(`${path}.completedAt`);
+      }
+    }
     if (!LEVELS.has(record.level) || !SUPPORT_MODES.has(record.supportMode)) fail(path);
     limitedArray(record.items, `${path}.items`, 20);
     for (const [itemIndex, item] of record.items.entries()) {

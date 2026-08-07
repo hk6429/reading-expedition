@@ -76,6 +76,7 @@
   "packages": [
     {
       "id": "movable-type-printing-guided",
+      "level": "tower",
       "difficulty": "guided",
       "textType": "vernacular",
       "title": "把一頁拆成一個個字：活字印刷帶來的改變",
@@ -250,6 +251,7 @@
     },
     {
       "id": "movable-type-printing-challenge",
+      "level": "tower",
       "difficulty": "challenge",
       "textType": "vernacular",
       "title": "被拆開的頁面：活字如何重組知識生產",

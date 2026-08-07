@@ -113,7 +113,12 @@ function appendInteractiveParagraph(block, text, glossaryItems) {
 export function renderReading(
   container,
   reading,
-  { state, saveState, session },
+  {
+    state,
+    saveState,
+    session,
+    assessmentAvailableOffline = false,
+  },
 ) {
   container.replaceChildren();
   container.className = "reading-view";
@@ -146,7 +151,7 @@ export function renderReading(
   const level = reading.level ?? state.preferences.selectedLevel ?? "tower";
   const supportMode = state.preferences.supportMode ?? "guided";
   side.innerHTML = `
-    <a class="back-link" href="#/">← 返回三條航線</a>
+    <a class="back-link" href="#/">← 返回個人挑戰</a>
     <p class="chapter-label">${waterMarginTheme.categoryLabels[reading.category]}</p>
     <p class="reading-difficulty">${READING_LEVELS[level]?.label ?? "登樓"}・${supportMode === "guided" ? "引導模式" : "獨立模式"}</p>
   `;
@@ -164,6 +169,10 @@ export function renderReading(
   const textTypeLabel =
     reading.textType === "classical" ? "文言文" : "白話文";
   kicker.textContent = `約 ${reading.readingMinutes} 分鐘・${textTypeLabel} ${characters} 字・第 ${reading.version} 版`;
+  const supportBadge = document.createElement("p");
+  supportBadge.className = "reading-mode-badge";
+  supportBadge.textContent =
+    supportMode === "guided" ? "目前：引導模式" : "目前：獨立模式";
   const paceNote = document.createElement("p");
   paceNote.className = "reading-pace-note";
   paceNote.textContent =
@@ -192,9 +201,9 @@ export function renderReading(
     const questionLabel = document.createElement("span");
     questionLabel.textContent = "帶著這個問題讀";
     question.append(questionLabel, `：${reading.hookQuestion}`);
-    header.append(kicker, title, question);
+    header.append(kicker, supportBadge, title, question);
   } else {
-    header.append(kicker, title);
+    header.append(kicker, supportBadge, title);
   }
   if (reading.readingMinutes > 10) header.append(paceNote);
   article.append(header, mentorGuide, midpointCheckpoint);
@@ -230,17 +239,23 @@ export function renderReading(
   let resumeChoicePending =
     savedPosition?.paragraph > 0 &&
     savedPosition.progress >= 0.1 &&
-    savedPosition.progress < 0.95;
+    !state.completedReadings[reading.id];
   if (resumeChoicePending) {
     const resume = document.createElement("section");
     resume.className = "reading-resume";
     const resumeCopy = document.createElement("p");
-    resumeCopy.textContent = `上次讀到第 ${savedPosition.paragraph + 1}／${reading.body.length} 段`;
+    resumeCopy.textContent =
+      savedPosition.progress >= 0.95
+        ? "上次已讀到結尾，要先複習最後一段或直接作答？"
+        : `上次讀到第 ${savedPosition.paragraph + 1}／${reading.body.length} 段`;
     const resumeActions = document.createElement("div");
     const continueButton = document.createElement("button");
     continueButton.type = "button";
     continueButton.className = "primary-action";
-    continueButton.textContent = "從上次位置繼續";
+    continueButton.textContent =
+      savedPosition.progress >= 0.95
+        ? "從結尾複習"
+        : "從上次段落繼續";
     const restartButton = document.createElement("button");
     restartButton.type = "button";
     restartButton.textContent = "從頭開始";
@@ -307,31 +322,79 @@ export function renderReading(
   const quizButton = document.createElement("button");
   quizButton.type = "button";
   quizButton.className = "primary-action";
-  quizButton.textContent = `前往 ${reading.assessment.length} 題問答`;
+  quizButton.textContent = `尚未讀到最後一段`;
+  const quizStatus = document.createElement("p");
+  quizStatus.className = "quiz-readiness";
+  quizStatus.setAttribute("role", "status");
+  let hasReachedEnd = (savedPosition?.progress ?? 0) >= 0.95;
+  function updateQuizReadiness() {
+    const offlineBlocked =
+      !assessmentAvailableOffline && navigator.onLine === false;
+    quizButton.disabled = !hasReachedEnd || offlineBlocked;
+    quizButton.textContent = offlineBlocked
+      ? "恢復連線後才能作答"
+      : hasReachedEnd
+        ? `已讀完，前往 ${reading.assessment.length} 題問答`
+        : "尚未讀到最後一段";
+    quizStatus.textContent = offlineBlocked
+      ? "這篇正式讀卷的評分需連線；閱讀進度已保存。"
+      : hasReachedEnd
+        ? "已讀到最後一段，可以開始作答。"
+        : "讀到最後一段後，問答按鈕會開啟。";
+  }
   quizButton.addEventListener("click", () => {
     window.location.hash = `#/quiz/${reading.id}`;
   });
-  article.append(quizButton);
+  article.append(quizButton, quizStatus);
+  updateQuizReadiness();
+  window.addEventListener("online", updateQuizReadiness, { once: true });
+  window.addEventListener("offline", updateQuizReadiness, { once: true });
 
-  const controls = createReadingControls(state.preferences, () => {
-    saveState(state);
-  });
+  const controls = createReadingControls(
+    state.preferences,
+    () => saveState(state),
+    {
+      onSupportModeChange(mode) {
+        state.preferences.supportMode = mode;
+        saveState(state);
+        window.location.reload();
+      },
+    },
+  );
   layout.append(side, article, controls);
   container.append(layout);
 
+  let endDwellTimer = null;
   const observer = new IntersectionObserver(
     (entries) => {
+      const finalParagraph = reading.body.length - 1;
+      const endEntry = entries.find(
+        (entry) => Number(entry.target.dataset.paragraph) === finalParagraph,
+      );
+      if (endEntry?.isIntersecting && !hasReachedEnd && !endDwellTimer) {
+        endDwellTimer = window.setTimeout(() => {
+          hasReachedEnd = true;
+          endDwellTimer = null;
+          updateQuizReadiness();
+        }, 650);
+      } else if (endEntry && !endEntry.isIntersecting && endDwellTimer) {
+        window.clearTimeout(endDwellTimer);
+        endDwellTimer = null;
+      }
       const visible = entries
         .filter((entry) => entry.isIntersecting)
         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       if (!visible) return;
       const paragraph = Number(visible.target.dataset.paragraph);
       const readingProgress = (paragraph + 1) / reading.body.length;
-      progressBar.style.width = `${readingProgress * 100}%`;
-      progressText.textContent = `第 ${paragraph + 1}／${reading.body.length} 段`;
+      const savedProgress =
+        state.readingProgress[reading.id]?.progress ?? 0;
+      const furthestProgress = Math.max(savedProgress, readingProgress);
+      progressBar.style.width = `${furthestProgress * 100}%`;
+      progressText.textContent = `已讀到第 ${Math.max(paragraph + 1, (state.readingProgress[reading.id]?.paragraph ?? 0) + 1)}／${reading.body.length} 段`;
       progress.setAttribute(
         "aria-valuenow",
-        String(Math.round(readingProgress * 100)),
+        String(Math.round(furthestProgress * 100)),
       );
       if (
         readingProgress >= 0.5 &&
@@ -343,6 +406,7 @@ export function renderReading(
         midpointCheckpoint.hidden = false;
       }
       if (resumeChoicePending) return;
+      if (readingProgress <= savedProgress) return;
       session.updatePosition(reading.id, {
         contentKey: reading.contentKey,
         paragraph,

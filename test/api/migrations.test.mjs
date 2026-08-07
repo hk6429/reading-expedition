@@ -4,8 +4,8 @@ import test from "node:test";
 
 const projectRoot = new URL("../../", import.meta.url);
 
-test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭護照、稽核事件與班級去重", async () => {
-  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql, familySql] = await Promise.all([
+test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭護照、分級排程、稽核事件與班級去重", async () => {
+  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql, familySql, levelScheduleSql] = await Promise.all([
     readFile(new URL("migrations/0001_content.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0002_review.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0003_class_aggregate.sql", projectRoot), "utf8"),
@@ -23,6 +23,10 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭�
     ),
     readFile(
       new URL("migrations/0009_family_passport_and_levels.sql", projectRoot),
+      "utf8",
+    ),
+    readFile(
+      new URL("migrations/0010_fact_pack_level_schedule.sql", projectRoot),
       "utf8",
     ),
   ]);
@@ -68,4 +72,9 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭�
   assert.match(familySql, /ADD COLUMN support_mode TEXT NOT NULL DEFAULT 'independent'/);
   assert.match(familySql, /passport_code_hash TEXT NOT NULL UNIQUE/);
   assert.match(familySql, /state_json TEXT NOT NULL/);
+  assert.match(levelScheduleSql, /reading_level TEXT NOT NULL DEFAULT 'tower'/);
+  assert.match(
+    levelScheduleSql,
+    /UNIQUE \(topic_date, category, reading_level, version\)/,
+  );
 });

@@ -1,0 +1,356 @@
+{
+  "source": {
+    "id": "north-atlantic-winter-link-launch-source",
+    "name": "NOAA National Ocean Service",
+    "baseUrl": "https://oceanservice.noaa.gov",
+    "licenseType": "public-domain-us-government",
+    "licenseVersion": null,
+    "allowedUsage": "facts-and-short-extracts"
+  },
+  "sourceItem": {
+    "id": "north-atlantic-winter-link-launch-source-item",
+    "canonicalUrl": "https://oceanservice.noaa.gov/facts/amoc.html",
+    "title": "What is the Atlantic Meridional Overturning Circulation (AMOC)?",
+    "publisher": "NOAA National Ocean Service",
+    "publishedAt": null,
+    "fetchedAt": "2026-08-06T00:00:00+08:00",
+    "contentFingerprint": "noaa-nos-north-atlantic-winter-link-launch-live-2026-08-06",
+    "licenseSnapshot": "NOAA 為美國聯邦政府機構；本草稿只使用該頁可核對的政府事實並原創改寫，排除頁面中的第三方圖片、影片與商標。",
+    "extractScope": "大西洋經向翻轉環流的方向、驅動因素、下沉與上升循環、熱量與養分輸送，以及減弱趨勢的不確定性。"
+  },
+  "factPack": {
+    "id": "north-atlantic-winter-link-launch-fact-pack",
+    "topicDate": "2026-08-08",
+    "category": "world",
+    "facts": [
+      {
+        "id": "north-atlantic-winter-link-launch-fact-1",
+        "statement": "大西洋經向翻轉環流在大西洋內讓暖水向北、冷水向南流動。",
+        "sourceItemId": "north-atlantic-winter-link-launch-source-item"
+      },
+      {
+        "id": "north-atlantic-winter-link-launch-fact-2",
+        "statement": "部分深層慢流由海水溫度與鹽度變化驅動；結冰排出鹽分後，較鹹海水密度增加並下沉。",
+        "sourceItemId": "north-atlantic-winter-link-launch-source-item"
+      },
+      {
+        "id": "north-atlantic-winter-link-launch-fact-3",
+        "statement": "深層水向南移動，之後上升到表面並再次變暖，完成長循環。",
+        "sourceItemId": "north-atlantic-winter-link-launch-source-item"
+      },
+      {
+        "id": "north-atlantic-winter-link-launch-fact-4",
+        "statement": "研究顯示這套環流在過去一世紀有所減弱，但未來是否持續減慢或停止仍不確定。",
+        "sourceItemId": "north-atlantic-winter-link-launch-source-item"
+      }
+    ],
+    "sourceLinks": [
+      "https://oceanservice.noaa.gov/facts/amoc.html"
+    ],
+    "sensitivityFlags": [],
+    "verificationStatus": "verified",
+    "version": 1
+  },
+  "contentKey": "north-atlantic-winter-link-launch",
+  "packages": [
+    {
+      "id": "north-atlantic-winter-link-launch-guided",
+      "level": "launch",
+      "difficulty": "guided",
+      "textType": "vernacular",
+      "title": "一條連起南北大西洋的暖流路",
+      "hookQuestion": "歐洲冬天的冷暖，為什麼可能和遠方海水的旅行有關？",
+      "body": [
+        "歐洲的冬天不只受陸地與天空影響，鄰近海洋也會搬運熱量。要理解這件事，可以先認識大西洋經向翻轉環流。它不是一條孤單的水道，而是一套連接海面與深海的洋流系統。",
+        "這套環流讓大西洋的暖水向北移動，也把較冷的水送往南方。北大西洋的灣流就是暖水向極地方向前進的例子。海水因此像慢速輸送帶，把熱量帶到不同地區。",
+        "海面洋流常受風影響，但有些更慢的洋流會從表面延伸到海床。它們和海水的溫度、鹽度有關。這提醒我們，同一片海中不只有表面看得見的流動。",
+        "暖水往高緯度前進後會冷卻。海冰形成時，鹽分多留在周圍海水裡。水變得較鹹，密度也會增加，於是向深處下沉。這一步把表面與深海接了起來。",
+        "下沉後的冷水在深處向南流。經過漫長路程，海水最後又被帶回表面，重新變暖。從北上、冷卻、下沉、南流到上升，才構成一個完整循環。",
+        "整套循環非常緩慢。一小塊海水沿全球輸送帶走完旅程，估計要約一千年。慢不代表不重要，因為環流仍能搬運熱量，也能帶動維持海洋生命所需的養分。",
+        "科學家發現這套環流在過去一世紀有所減弱，卻不能因此斷言它一定會停止。未來會不會繼續變慢，仍有不確定性。研究人員也在了解它和海岸海平面、極端事件的關係。",
+        "所以，談歐洲冬天時，不能只看當地氣溫。先追蹤暖水往北、冷水下沉與深層水南返的路線，才能看見遠方海流如何參與熱量分配；至於未來影響多大，仍要依證據判斷。"
+      ],
+      "glossary": [
+        {
+          "term": "大西洋經向翻轉環流",
+          "definition": "在大西洋中連接南北方向、海面與深海的洋流系統。"
+        },
+        {
+          "term": "鹽度",
+          "definition": "海水中鹽分多寡的程度。"
+        },
+        {
+          "term": "密度",
+          "definition": "一定體積物質所含質量的多寡，會影響海水是否下沉。"
+        },
+        {
+          "term": "高緯度",
+          "definition": "較接近南北兩極的地區。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "暖流路徑拆解法",
+        "purpose": "把長循環拆成北上、冷卻、下沉、南返與上升，掌握海水搬運熱量的順序。",
+        "steps": [
+          {
+            "label": "找方向",
+            "instruction": "逐段圈出向北、向南、下沉與上升，先畫出海水移動的基本箭頭。",
+            "example": "本文先寫暖水向北，再寫冷水在深處向南，兩條路線方向相反。"
+          },
+          {
+            "label": "接原因",
+            "instruction": "在每個轉折旁標出風、冷卻、結冰、鹽分與密度，連成原因和結果。",
+            "example": "海冰形成使鹽分留在海水，較鹹的水密度增加，接著向深處下沉。"
+          },
+          {
+            "label": "辨界線",
+            "instruction": "把來源確定的現象和仍待研究的未來變化分開，避免把可能性寫成定論。",
+            "example": "過去一世紀有減弱證據，但是否持續減慢或完全停止，文章明說仍不確定。"
+          }
+        ],
+        "structureMap": "文章先說洋流搬熱，再依序追蹤暖水北上、冷卻下沉、深層南返與上升，最後說明研究中的不確定性。",
+        "expertTip": "看到環流變慢時，先分清已觀察的變化與未來推測；兩者的證據強度並不相同。",
+        "selfCheck": "我能否不看文章，依正確順序說出這套海水循環的五個動作？"
+      },
+      "readingMinutes": 5,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/amoc.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "north-atlantic-winter-link-launch-guided-q1",
+          "type": "comprehension",
+          "prompt": "依本文，大西洋經向翻轉環流主要如何搬運海水？",
+          "options": [
+            "暖水向北、冷水向南",
+            "暖水只向南、冷水只向北",
+            "所有海水都停在海面",
+            "只有潮汐能推動深海水"
+          ],
+          "correctAnswer": "暖水向北、冷水向南",
+          "rationale": "第二段直接指出暖水向北、較冷的水向南，呈現環流的主要方向。",
+          "distractorReasons": {
+            "暖水只向南、冷水只向北": "方向與正文相反。",
+            "所有海水都停在海面": "正文說明海面與深海相連，並非都停在海面。",
+            "只有潮汐能推動深海水": "深層慢流與溫度、鹽度有關，不能只歸因於潮汐。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 0,
+            "end": 15,
+            "text": "這套環流讓大西洋的暖水向北移動"
+          }
+        },
+        {
+          "id": "north-atlantic-winter-link-launch-guided-q2",
+          "type": "inference",
+          "prompt": "為何海冰形成可能促使附近海水下沉？",
+          "options": [
+            "鹽分留在海水，使密度增加",
+            "海冰把所有海水推向天空",
+            "風一停止，海水立刻結成岩石",
+            "養分消失後，海水一定變輕"
+          ],
+          "correctAnswer": "鹽分留在海水，使密度增加",
+          "rationale": "第四段建立結冰、鹽分留下、密度增加與下沉之間的因果鏈。",
+          "distractorReasons": {
+            "海冰把所有海水推向天空": "海冰不會把所有海水推向天空。",
+            "風一停止，海水立刻結成岩石": "正文沒有海水變岩石的說法。",
+            "養分消失後，海水一定變輕": "下沉原因是鹽度與密度變化，不是養分消失。"
+          },
+          "evidenceSpan": {
+            "paragraph": 4,
+            "start": 30,
+            "end": 42,
+            "text": "水變得較鹹，密度也會增加"
+          }
+        },
+        {
+          "id": "north-atlantic-winter-link-launch-guided-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能提醒讀者不要斷言環流一定會停止？",
+          "options": [
+            "未來會不會繼續變慢，仍有不確定性。",
+            "北大西洋的灣流是暖水北上的例子。",
+            "環流也能帶動海洋所需的養分。",
+            "海面洋流常受風影響。"
+          ],
+          "correctAnswer": "未來會不會繼續變慢，仍有不確定性。",
+          "rationale": "第一項直接指出未來走向仍不確定，最能限制過度肯定的結論。",
+          "distractorReasons": {
+            "北大西洋的灣流是暖水北上的例子。": "此句只舉暖流路線，未說未來走向。",
+            "環流也能帶動海洋所需的養分。": "此句說明功能，不能判斷是否停止。",
+            "海面洋流常受風影響。": "此句說明一種驅動因素，未處理停止的可能性。"
+          },
+          "evidenceSpan": {
+            "paragraph": 7,
+            "start": 34,
+            "end": 50,
+            "text": "未來會不會繼續變慢，仍有不確定性"
+          }
+        }
+      ]
+    },
+    {
+      "id": "north-atlantic-winter-link-launch-challenge",
+      "level": "launch",
+      "difficulty": "challenge",
+      "textType": "vernacular",
+      "title": "慢速環流如何重分配大西洋熱量",
+      "hookQuestion": "一套要走上千年的海水循環，為何仍能牽動遠方冬季？",
+      "body": [
+        "把歐洲冬季只看成當地冷空氣的結果，會漏掉海洋的角色。大西洋經向翻轉環流是全球海洋輸送帶的一部分，讓暖水向北、冷水向南，並在海面與海床之間交換。它搬運的不只是水，也包含熱量與維持海洋生命的養分。",
+        "這套系統不是單一原因推動。近岸潮流受太陽與月球影響，表面洋流常受風驅動；另一些從表面延伸到海床的慢流，則和溫度及鹽度改變有關。閱讀時若把所有洋流都歸為風吹，就無法解釋深層循環。",
+        "循環的一段從暖水向高緯度前進開始，北大西洋的灣流就是例子。水往極地方向移動後冷卻，部分海面形成海冰。結冰沒有把鹽一起大量帶走，鹽分留在周圍水體，使海水變得更鹹。",
+        "鹽度上升會提高海水密度，冷卻也參與這個變化。密度較大的水下沉，將原本在表面向北輸送的水帶入深海。於是，水平移動與垂直翻轉接在一起，環流才不只是畫在海面上的箭頭。",
+        "這種交換速度很慢。一份海水沿全球輸送帶完成旅程，估計約需一千年。但判斷影響不能只看單一水滴跑多快，還要看整套系統持續搬運多少水、熱與養分。慢速而連續的流動，仍能參與廣大區域的熱量分配。",
+        "NOAA整理的研究顯示，這套環流在過去一世紀有所減弱。可是，觀察到已發生的減弱，不等於已證明它會持續減慢，更不等於必然完全停止。這是時間尺度和證據界線的差別。",
+        "因此，歐洲冬天可作為理解海洋輸熱的入口，但不能把每次冷暖都只歸因於這套環流。較完整的讀法，是先建立暖水北上、密度增加、下沉南返、上升流再暖的因果鏈，再把已知機制、已見趨勢與未來推測分層。"
+      ],
+      "glossary": [
+        {
+          "term": "大西洋經向翻轉環流",
+          "definition": "連接大西洋南北方向與不同深度的龐大洋流系統。"
+        },
+        {
+          "term": "全球海洋輸送帶",
+          "definition": "由多套洋流共同形成、在全球搬運海水的長循環。"
+        },
+        {
+          "term": "鹽度",
+          "definition": "海水中溶解鹽分的多寡。"
+        },
+        {
+          "term": "密度",
+          "definition": "一定體積物質所含質量的多寡。"
+        },
+        {
+          "term": "上升流",
+          "definition": "較深處海水向海面移動的過程。"
+        },
+        {
+          "term": "時間尺度",
+          "definition": "觀察或討論變化時所採用的時間範圍。"
+        }
+      ],
+      "readingStrategy": {
+        "name": "環流因果鏈整合法",
+        "purpose": "整合水平流向、垂直翻轉、密度變化與證據時間尺度，評估海洋輸熱的完整論述。",
+        "steps": [
+          {
+            "label": "分層畫流",
+            "instruction": "把表面與深海分成兩層，標出暖水北上、下沉、冷水南返及上升的位置。",
+            "example": "表層箭頭往北，到了高緯度轉向下；深層箭頭往南，末端再回到海面。"
+          },
+          {
+            "label": "串接機制",
+            "instruction": "用因為、所以連結冷卻、結冰、鹽度、密度與下沉，檢查是否漏掉中間環節。",
+            "example": "結冰使鹽分留在水中，所以鹽度提高；密度隨之增加，海水才向深處下沉。"
+          },
+          {
+            "label": "分級證據",
+            "instruction": "把機制、觀察趨勢與未來情境分成三級，判斷每句話可以支持到什麼程度。",
+            "example": "已知環流會輸送熱量，也觀察到過去減弱；未來是否停止則仍屬不確定情境。"
+          }
+        ],
+        "structureMap": "文章先界定環流及多種驅動力，再串起海水的水平與垂直路徑，接著比較千年循環、世紀趨勢與未來推測。",
+        "expertTip": "跨尺度閱讀時，不要用一份海水的速度代替整套環流的輸送量，也不要用過去趨勢保證未來。",
+        "selfCheck": "我能否分別說明環流機制、已觀察趨勢與未來不確定情境的證據界線？"
+      },
+      "readingMinutes": 6,
+      "sourceAttribution": [
+        {
+          "publisher": "NOAA National Ocean Service",
+          "url": "https://oceanservice.noaa.gov/facts/amoc.html",
+          "license": "美國聯邦政府作品；僅改寫頁面事實與短摘，不使用另有權利標示的圖片、影片或商標。"
+        }
+      ],
+      "qualityScore": 100,
+      "hardGateStatus": "passed",
+      "publicationStatus": "manual_review",
+      "version": 1,
+      "assessment": [
+        {
+          "id": "north-atlantic-winter-link-launch-challenge-q1",
+          "type": "comprehension",
+          "prompt": "依本文，深層慢流與哪兩項海水性質的變化密切相關？",
+          "options": [
+            "溫度與鹽度",
+            "顏色與聲音",
+            "浪高與船速",
+            "潮聲與月光"
+          ],
+          "correctAnswer": "溫度與鹽度",
+          "rationale": "第二段指出從表面延伸到海床的慢流和溫度、鹽度變化有關。",
+          "distractorReasons": {
+            "顏色與聲音": "正文未把顏色與聲音列為驅動性質。",
+            "浪高與船速": "浪高與船速不是本文所述的深層驅動因素。",
+            "潮聲與月光": "潮聲與月光不是海水性質。"
+          },
+          "evidenceSpan": {
+            "paragraph": 2,
+            "start": 51,
+            "end": 62,
+            "text": "則和溫度及鹽度改變有關"
+          }
+        },
+        {
+          "id": "north-atlantic-winter-link-launch-challenge-q2",
+          "type": "inference",
+          "prompt": "為何作者說環流速度慢，仍可能影響廣大區域的熱量分配？",
+          "options": [
+            "整套系統持續搬運水與熱，不能只看單一水滴",
+            "每一滴海水都能在一天內繞完全球",
+            "洋流只在冬天出現，夏天完全停止",
+            "海冰會直接把熱量送進所有城市"
+          ],
+          "correctAnswer": "整套系統持續搬運水與熱，不能只看單一水滴",
+          "rationale": "第六段區分單份海水的旅程時間與整體系統的連續輸送，說明慢速不等於沒有區域影響。",
+          "distractorReasons": {
+            "每一滴海水都能在一天內繞完全球": "正文估計完整旅程約需一千年。",
+            "洋流只在冬天出現，夏天完全停止": "正文沒有季節性完全停止的說法。",
+            "海冰會直接把熱量送進所有城市": "海冰形成參與密度變化，不會直接供熱給所有城市。"
+          },
+          "evidenceSpan": {
+            "paragraph": 5,
+            "start": 32,
+            "end": 48,
+            "text": "但判斷影響不能只看單一水滴跑多快"
+          }
+        },
+        {
+          "id": "north-atlantic-winter-link-launch-challenge-q3",
+          "type": "evidence",
+          "prompt": "哪項證據最能反駁『過去減弱，所以未來必定停止』？",
+          "options": [
+            "觀察到已發生的減弱，不等於已證明它會持續減慢",
+            "暖水向北、冷水向南",
+            "水往極地方向移動後冷卻",
+            "海洋會搬運維持生命的養分"
+          ],
+          "correctAnswer": "觀察到已發生的減弱，不等於已證明它會持續減慢",
+          "rationale": "第一項直接區分既有觀察與未來推論，指出不能由過去減弱推出必然停止。",
+          "distractorReasons": {
+            "暖水向北、冷水向南": "此句只描述流向，沒有處理未來推論。",
+            "水往極地方向移動後冷卻": "此句描述循環機制，沒有比較過去與未來。",
+            "海洋會搬運維持生命的養分": "此句說明環流功能，不能反駁必然停止。"
+          },
+          "evidenceSpan": {
+            "paragraph": 6,
+            "start": 40,
+            "end": 52,
+            "text": "不等於已證明它會持續減慢"
+          }
+        }
+      ]
+    }
+  ]
+}

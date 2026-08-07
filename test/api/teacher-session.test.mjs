@@ -227,3 +227,45 @@ test("班級管理必須有教師 session，建立與停用另需 CSRF", async (
   assert.equal(calls[1][0], "create");
   assert.deepEqual(calls[2], ["revoke", "class-001"]);
 });
+
+test("批次發布端點必須同時通過教師 session 與 CSRF", async () => {
+  const repository = createSessionRepository();
+  const teacherSessionApi = createTeacherSessionApi({
+    repository,
+    teacherKeyHash: await hashSecret("teacher-secret"),
+  });
+  const calls = [];
+  const api = createApi({
+    repository: { ...repository, getPublishedDaily: async () => [] },
+    teacherSessionApi,
+    publicationApi: {
+      async batch(_request, actorId) {
+        calls.push(actorId);
+        return Response.json({ count: 1 });
+      },
+    },
+  });
+  const loginResponse = await teacherSessionApi.login(
+    new Request("https://example.test/api/v1/teacher/session", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ key: "teacher-secret" }),
+    }),
+  );
+  const { csrfToken } = await loginResponse.json();
+  const cookie = loginResponse.headers.get("set-cookie").split(";")[0];
+  const request = (headers = {}) =>
+    new Request("https://example.test/api/v1/teacher/review/batch/publish", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ action: "published", ids: ["reading-1"] }),
+    });
+
+  assert.equal((await api.fetch(request())).status, 401);
+  assert.equal((await api.fetch(request({ cookie }))).status, 401);
+  assert.equal(
+    (await api.fetch(request({ cookie, "x-csrf-token": csrfToken }))).status,
+    200,
+  );
+  assert.equal(calls.length, 1);
+});
