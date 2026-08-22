@@ -77,6 +77,14 @@ npm run dev:web
 
 預設位置為 `http://127.0.0.1:8788`。
 
+一般更新完成 commit 後，使用快速部署：
+
+```sh
+npm run deploy:quick
+```
+
+它會執行快速測試、建置、推送與 Cloudflare 部署，但不重跑完整 E2E、不備份或遷移資料庫。只有資料庫、權限、個資安全或大量內容匯入變更才使用 `docs/deployment.md` 的完整流程。
+
 ## 系統架構
 
 - 三個靜態前端：Cloudflare Pages、Vercel、Netlify。

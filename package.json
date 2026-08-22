@@ -21,6 +21,7 @@
     "content:sql": "node scripts/render-manual-sql.mjs",
     "content:strategy-sql": "node scripts/render-reading-strategy-sql.mjs",
     "dev:web": "wrangler pages dev . --port 8788 --compatibility-date=2026-07-28",
+    "deploy:quick": "node scripts/deploy-quick.mjs",
     "deploy:worker": "wrangler deploy --config wrangler.worker.toml --env=\"\"",
     "deploy:worker:preview": "wrangler deploy --config wrangler.worker.toml --env preview"
   },

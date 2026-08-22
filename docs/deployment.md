@@ -36,7 +36,19 @@ npx wrangler d1 execute reading-expedition --remote \
 
 Preview D1 與正式 D1 必須是不同資料庫；Preview Worker 只能綁 Preview D1。Vercel Preview、Netlify Draft 與 Cloudflare Pages Preview 的 `READING_API_ORIGIN` 都指向 Preview Worker，不得連正式資料庫。
 
-## 正式順序
+## 快速部署（預設）
+
+一般的介面、文案、樣式與既有功能修正，預設只執行：登入檢查、`npm test`、建置、GitHub push、Worker／Pages 部署，以及兩個正式 HTTP 健康檢查。
+
+```sh
+npm run deploy:quick
+```
+
+快速部署不重跑完整 Playwright E2E、不備份資料庫、不套 migration，也不重做十角色稽核。執行前須先完成 commit，工作樹必須乾淨；通常可在數十秒內完成。
+
+只有本次變更涉及 `migrations/`、資料模型或正式資料、登入／權限／個資安全、內容大量匯入，或使用者明確要求完整驗收時，才改用下方完整部署流程。
+
+## 完整部署順序（高風險變更才使用）
 
 1. 先確認 Worker 是否設定 `TURSO_URL` 與 `TURSO_TOKEN`。正式 D1 一律先匯出 SQL 備份再套用 migration；若 Worker 已設定 Turso secrets，還必須另行匯出 Turso snapshot／WAL，並對正式 Turso 套用完全相同的 migration。部署後須從 Worker 與 Pages 代理各建立一次作答工作階段，確認不是只有 D1 已更新。第 0013 號新增一次性作答 nonce 與匿名事件索引，第 0014 號新增匿名席次、能力機會與家庭代號唯一性。
 2. 部署中央 Cloudflare Worker。
