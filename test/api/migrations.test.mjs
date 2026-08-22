@@ -5,7 +5,7 @@ import test from "node:test";
 const projectRoot = new URL("../../", import.meta.url);
 
 test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭護照、分級排程、稽核事件與班級去重", async () => {
-  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql, familySql, levelScheduleSql] = await Promise.all([
+  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql, familySql, levelScheduleSql, integritySql, missionSql] = await Promise.all([
     readFile(new URL("migrations/0001_content.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0002_review.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0003_class_aggregate.sql", projectRoot), "utf8"),
@@ -27,6 +27,17 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭�
     ),
     readFile(
       new URL("migrations/0010_fact_pack_level_schedule.sql", projectRoot),
+      "utf8",
+    ),
+    readFile(
+      new URL(
+        "migrations/0011_completion_proofs_and_event_retention.sql",
+        projectRoot,
+      ),
+      "utf8",
+    ),
+    readFile(
+      new URL("migrations/0012_class_missions.sql", projectRoot),
       "utf8",
     ),
   ]);
@@ -77,4 +88,23 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭�
     levelScheduleSql,
     /UNIQUE \(topic_date, category, reading_level, version\)/,
   );
+  assert.match(integritySql, /ADD COLUMN canonical_content_key/);
+  assert.match(integritySql, /ADD COLUMN proof_nonce/);
+  assert.match(
+    integritySql,
+    /classroom_id, participant_id, canonical_content_key/,
+  );
+  assert.match(integritySql, /ON classroom_contributions\(proof_nonce\)/);
+  assert.match(integritySql, /ON anonymous_events\(created_at\)/);
+  assert.match(missionSql, /CREATE TABLE class_missions/);
+  assert.match(missionSql, /CREATE TABLE class_mission_votes/);
+  assert.match(missionSql, /CREATE TABLE class_mission_exits/);
+  assert.match(missionSql, /CREATE TABLE class_assignments/);
+  assert.match(missionSql, /UNIQUE \(classroom_id, period\)/);
+  assert.match(
+    missionSql,
+    /UNIQUE \(classroom_id, participant_id, period\)/,
+  );
+  assert.match(missionSql, /ADD COLUMN quality_first_correct/);
+  assert.match(missionSql, /ADD COLUMN quality_transfer_completed/);
 });

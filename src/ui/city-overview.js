@@ -4,12 +4,25 @@ import { resolveHistoryChapterProgress } from "../domain/active-days.js";
 import { ABILITY_EQUIPMENT } from "../domain/ability-mastery.js";
 import { journeyRewardForActiveDay } from "../domain/journey-progression.js";
 import { createChapterCard } from "./chapter-card.js";
+import {
+  cityThemeTokens,
+  loadGamificationProfile,
+  saveGamificationProfile,
+} from "../domain/gamification-profile.js";
+import { createMissionDashboard } from "./mission-dashboard.js";
 
 const ABILITIES = Object.freeze([
   ["comprehension", "找重點", "從文章中辨認重要訊息"],
   ["inference", "想意思", "連結線索並推論作者意思"],
   ["evidence", "找證據", "回到原文定位、檢查與修正"],
 ]);
+
+function applyCityTheme(container, theme) {
+  container.dataset.cityTheme = theme;
+  for (const [property, value] of Object.entries(cityThemeTokens(theme))) {
+    container.style.setProperty(property, value);
+  }
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -136,46 +149,6 @@ function createJourneyPanel(state) {
   return section;
 }
 
-function createGoalPanel(state, saveState) {
-  const section = document.createElement("section");
-  section.className = "weekly-goal paper-panel";
-  section.setAttribute("aria-labelledby", "goal-heading");
-  const target = state.weeklyGoal?.target ?? 0;
-  const today = new Date();
-  const weekStart = new Date(today);
-  weekStart.setHours(0, 0, 0, 0);
-  weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-  const completedThisWeek = new Set(
-    state.readingHistory
-      .filter(({ date }) => new Date(`${date}T00:00:00`) >= weekStart)
-      .map(({ readingId }) => readingId),
-  ).size;
-  section.innerHTML = `
-    <p class="eyebrow">無壓力習慣契約</p>
-    <h2 id="goal-heading">這週想讀幾篇？</h2>
-    <p>依自己的生活選擇；沒有連續簽到，休息也不扣分。</p>
-    <p class="goal-progress">${target > 0 ? `本週已讀 ${completedThisWeek}／${target} 篇` : `本週已讀 ${completedThisWeek} 篇，尚未設定目標`}</p>
-    <div class="goal-options" role="group" aria-label="每週閱讀目標">
-      ${[0, 1, 3, 5, 7]
-        .map(
-          (value) =>
-            `<button type="button" data-goal="${value}" aria-pressed="${String(target === value)}">${value === 0 ? "先不設定" : `每週 ${value} 篇`}</button>`,
-        )
-        .join("")}
-    </div>
-  `;
-  for (const button of section.querySelectorAll("[data-goal]")) {
-    button.addEventListener("click", () => {
-      state.weeklyGoal = { target: Number(button.dataset.goal) };
-      saveState(state);
-      for (const peer of section.querySelectorAll("[data-goal]")) {
-        peer.setAttribute("aria-pressed", String(peer === button));
-      }
-    });
-  }
-  return section;
-}
-
 function createReadingLog(history = [], completedReadings = {}) {
   const section = document.createElement("section");
   section.className = "reading-event-log paper-panel";
@@ -205,17 +178,18 @@ function createReadingLog(history = [], completedReadings = {}) {
 export function renderCityOverview(
   container,
   state,
-  { saveState, exportState, restoreState },
+  { exportState, restoreState },
 ) {
   const progress = resolveHistoryChapterProgress(state.readingHistory);
   const currentChapter = chapterForActiveDay(Math.max(progress.activeDay, 1));
+  const gamificationProfile = loadGamificationProfile();
   container.replaceChildren();
   container.className = "city-overview";
   container.innerHTML = `
     <section class="city-overview__hero">
       <div>
         <p class="chapter-label">我的萬卷浮城</p>
-        <h1>每一盞燈，都是我讀懂的證據</h1>
+        <h1>${escapeHtml(gamificationProfile.cityName)}：每一盞燈，都是我讀懂的證據</h1>
         <p>城市不會因為休息而衰敗。點亮建築、收藏文證，慢慢長成自己的閱讀地圖。</p>
         <div class="city-overview__stats">
           <span>${progress.activeDay} 個活躍日</span>
@@ -265,13 +239,29 @@ export function renderCityOverview(
     completed: progress.activeDay > 0,
   }));
 
+  const missionDashboard = createMissionDashboard({
+    context: "city",
+    profile: gamificationProfile,
+    readingHistory: state.readingHistory,
+    abilityMastery: state.abilityMastery,
+    city: state.city,
+    onExport: exportState,
+    onProfileChange: (profile) => {
+      saveGamificationProfile(localStorage, profile);
+      applyCityTheme(container, profile.cityTheme);
+      container.querySelector(".city-overview__hero h1").textContent =
+        `${profile.cityName}：每一盞燈，都是我讀懂的證據`;
+    },
+  });
+  applyCityTheme(container, gamificationProfile.cityTheme);
+
   container.append(
+    missionDashboard,
     buildings,
     createReadingLog(state.readingHistory, state.completedReadings),
     createAbilityPanel(state),
     createJourneyPanel(state),
     chapter,
-    createGoalPanel(state, saveState),
   );
   container
     .querySelector("[data-export-city]")

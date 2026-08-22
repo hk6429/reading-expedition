@@ -20,7 +20,7 @@
     "content:ready": "node scripts/validate-manual-content.mjs --require-count 30",
     "content:sql": "node scripts/render-manual-sql.mjs",
     "content:strategy-sql": "node scripts/render-reading-strategy-sql.mjs",
-    "dev:web": "wrangler pages dev . --port 8788",
+    "dev:web": "wrangler pages dev . --port 8788 --compatibility-date=2026-07-28",
     "deploy:worker": "wrangler deploy --config wrangler.worker.toml --env=\"\"",
     "deploy:worker:preview": "wrangler deploy --config wrangler.worker.toml --env preview"
   },

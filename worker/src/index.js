@@ -1,4 +1,5 @@
 import { createApi } from "./api/router.js";
+import { createCompletionProofService } from "./api/assessment.js";
 import { createPublicationApi } from "./api/publication.js";
 import { createReviewApi } from "./api/review.js";
 import { createClassroomApi } from "./api/classroom.js";
@@ -8,20 +9,30 @@ import { createFamilyPassportApi } from "./api/family-passport.js";
 import { createReadingRepository } from "./db/repository.js";
 import { tursoD1 } from "./_tursod1.js";
 
+function repositoryFromEnvironment(environment) {
+  const env =
+    environment.TURSO_URL && environment.TURSO_TOKEN
+      ? { ...environment, READING_DB: tursoD1(environment) }
+      : environment;
+  return createReadingRepository(env.READING_DB);
+}
+
 export default {
   fetch(request, env) {
-    // D1 → Turso 切換層：設定了 TURSO_URL/TURSO_TOKEN 就以 Turso 取代 READING_DB（D1 binding 保留當備援，刪掉 secret 即回退 D1）。
-    if (env.TURSO_URL && env.TURSO_TOKEN) {
-      env = { ...env, READING_DB: tursoD1(env) };
-    }
-    const repository = createReadingRepository(env.READING_DB);
+    const repository = repositoryFromEnvironment(env);
+    const completionProofService = env.COMPLETION_PROOF_SECRET
+      ? createCompletionProofService({ secret: env.COMPLETION_PROOF_SECRET })
+      : null;
     const teacherSessionApi = createTeacherSessionApi({
       repository,
       teacherKeyHash: env.TEACHER_KEY_HASH,
     });
     const reviewApi = createReviewApi({ repository });
     const publicationApi = createPublicationApi({ repository });
-    const classroomApi = createClassroomApi({ repository });
+    const classroomApi = createClassroomApi({
+      repository,
+      completionProofService,
+    });
     const eventsApi = createEventsApi({ repository });
     const familyPassportApi = createFamilyPassportApi({ repository });
     return createApi({
@@ -32,6 +43,13 @@ export default {
       classroomApi,
       eventsApi,
       familyPassportApi,
+      completionProofService,
     }).fetch(request);
+  },
+  scheduled(controller, env, ctx) {
+    const repository = repositoryFromEnvironment(env);
+    const scheduledAt = Number(controller.scheduledTime) || Date.now();
+    const cutoffIso = new Date(scheduledAt - 45 * 86_400_000).toISOString();
+    ctx.waitUntil(repository.purgeExpiredAnonymousEvents(cutoffIso));
   },
 };

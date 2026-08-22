@@ -1,5 +1,7 @@
 import {
   assertAssessmentPayload,
+  assertAssessmentSessionPayload,
+  CompletionProofError,
   submitAssessment,
 } from "./assessment.js";
 import { errorResponse, jsonResponse } from "./errors.js";
@@ -20,6 +22,7 @@ export function createApi({
   classroomApi = null,
   eventsApi = null,
   familyPassportApi = null,
+  completionProofService = null,
   clock = () => new Date(),
 }) {
   if (!repository || typeof repository.getPublishedDaily !== "function") {
@@ -133,6 +136,20 @@ export function createApi({
       }
       if (
         classroomApi &&
+        url.pathname === "/api/v1/classrooms/vote" &&
+        request.method === "POST"
+      ) {
+        return classroomApi.vote(request);
+      }
+      if (
+        classroomApi &&
+        url.pathname === "/api/v1/classrooms/exit" &&
+        request.method === "POST"
+      ) {
+        return classroomApi.exit(request);
+      }
+      if (
+        classroomApi &&
         url.pathname === "/api/v1/classrooms/landmark" &&
         request.method === "GET"
       ) {
@@ -174,6 +191,36 @@ export function createApi({
           request.method === "POST"
         ) {
           return classroomApi.create(authorization.sessionId);
+        }
+        const classroomMissionMatch =
+          /^\/api\/v1\/teacher\/classrooms\/([a-zA-Z0-9-]+)\/mission$/.exec(
+            url.pathname,
+          );
+        if (
+          classroomApi &&
+          classroomMissionMatch &&
+          request.method === "POST"
+        ) {
+          return classroomApi.setMission(
+            classroomMissionMatch[1],
+            request,
+            authorization.sessionId,
+          );
+        }
+        const classroomAssignmentMatch =
+          /^\/api\/v1\/teacher\/classrooms\/([a-zA-Z0-9-]+)\/assignment$/.exec(
+            url.pathname,
+          );
+        if (
+          classroomApi &&
+          classroomAssignmentMatch &&
+          request.method === "POST"
+        ) {
+          return classroomApi.setAssignment(
+            classroomAssignmentMatch[1],
+            request,
+            authorization.sessionId,
+          );
         }
         const classroomMatch =
           /^\/api\/v1\/teacher\/classrooms\/([a-zA-Z0-9-]+)$/.exec(
@@ -232,6 +279,60 @@ export function createApi({
           );
         }
       }
+      const assessmentSessionMatch =
+        /^\/api\/v1\/readings\/([a-zA-Z0-9-]+)\/assessment-session$/.exec(
+          url.pathname,
+        );
+      if (assessmentSessionMatch && request.method === "POST") {
+        if (
+          !completionProofService ||
+          typeof repository.getAssessmentProofContext !== "function"
+        ) {
+          return errorResponse(
+            "assessment_session_unavailable",
+            "目前無法建立作答工作階段。",
+            503,
+            traceId,
+          );
+        }
+        let payload;
+        try {
+          payload = assertAssessmentSessionPayload(await request.json());
+        } catch {
+          return errorResponse(
+            "invalid_assessment_session",
+            "作答工作階段格式不正確。",
+            400,
+            traceId,
+          );
+        }
+        const context = await repository.getAssessmentProofContext(
+          assessmentSessionMatch[1],
+          payload.version,
+        );
+        if (!context) {
+          return errorResponse(
+            "not_found",
+            "找不到指定內容或版本。",
+            404,
+            traceId,
+          );
+        }
+        return jsonResponse(
+          {
+            assessmentSession:
+              await completionProofService.issueStart(context),
+          },
+          {
+            status: 201,
+            headers: {
+              "cache-control": "no-store",
+              "x-trace-id": traceId,
+            },
+          },
+        );
+      }
+
       const submitMatch =
         /^\/api\/v1\/readings\/([a-zA-Z0-9-]+)\/submit$/.exec(url.pathname);
 
@@ -255,11 +356,28 @@ export function createApi({
             traceId,
           );
         }
-        const result = await submitAssessment(
-          repository,
-          submitMatch[1],
-          payload,
-        );
+        let result;
+        try {
+          result = await submitAssessment(
+            repository,
+            submitMatch[1],
+            payload,
+            { completionProofService },
+          );
+        } catch (error) {
+          if (error instanceof CompletionProofError) {
+            const tooFast = error.code === "assessment_too_fast";
+            return errorResponse(
+              tooFast ? "assessment_too_fast" : error.code,
+              tooFast
+                ? "完成速度超出可驗證範圍，請回到文章閱讀後再試。"
+                : "作答工作階段無效或已到期。",
+              tooFast ? 429 : 400,
+              traceId,
+            );
+          }
+          throw error;
+        }
         if (!result) {
           return errorResponse(
             "not_found",

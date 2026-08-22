@@ -17,3 +17,359 @@
     forced-color-adjust: auto;
   }
 }
+
+.learning-preparation,
+.reading-insights,
+.reading-completion-map,
+.learning-result-report {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--mineral-blue) 32%, transparent);
+  border-radius: 1rem 0.25rem;
+  background: color-mix(in srgb, var(--paper-card) 62%, transparent);
+}
+
+.learning-preparation h2,
+.reading-insights h2,
+.reading-completion-map h2,
+.learning-result-report h3 {
+  margin-top: 0;
+}
+
+.learning-preparation fieldset,
+.assessment-guidance fieldset,
+.learning-result-report fieldset {
+  margin: 0.85rem 0;
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 22%, transparent);
+  border-radius: 0.65rem;
+}
+
+.learning-preparation legend,
+.assessment-guidance legend,
+.learning-result-report legend {
+  padding: 0 0.35rem;
+  font-weight: 800;
+}
+
+.learning-choice-grid,
+.confidence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.5rem;
+}
+
+.learning-choice {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 22%, transparent);
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+
+.learning-choice:has(input:checked) {
+  border-color: var(--cinnabar);
+  background: color-mix(in srgb, var(--cinnabar) 9%, transparent);
+}
+
+.learning-preparation__tools,
+.paragraph-toolkit,
+.hint-actions,
+.speech-controls,
+.reading-thumb-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.learning-preparation button,
+.paragraph-toolkit button,
+.learning-midpoint button,
+.hint-actions button,
+.speech-controls button,
+.reading-end-confirm,
+.assessment-guidance select {
+  min-height: 44px;
+}
+
+.learning-preparation__tools button,
+.paragraph-toolkit button,
+.learning-midpoint button,
+.hint-actions button,
+.speech-controls button,
+.reading-end-confirm {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid currentcolor;
+  border-radius: 0.6rem;
+  background: var(--paper-card);
+  color: var(--ink-primary);
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.paragraph-toolkit {
+  margin-bottom: 0.55rem;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+
+.paragraph-toolkit > span {
+  margin-right: auto;
+  color: var(--mineral-blue);
+  font-weight: 850;
+}
+
+.reading-block.is-learning-complete {
+  border-inline-start: 3px solid var(--mineral-green);
+  padding-inline-start: 0.75rem;
+}
+
+.reading-block.is-learning-dimmed {
+  opacity: 0.32;
+}
+
+.reading-block.is-learning-focus {
+  outline: 3px solid color-mix(in srgb, var(--mineral-blue) 35%, transparent);
+  outline-offset: 0.6rem;
+}
+
+:root[data-scaffolds="off"] .paragraph-scaffold {
+  display: none;
+}
+
+.vocabulary-action {
+  min-height: 44px;
+  margin-right: 0.5rem;
+}
+
+.reading-insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+.reading-insights > div {
+  padding: 0.85rem;
+  border-inline-start: 4px solid var(--mineral-blue);
+}
+
+.reading-insights li {
+  margin-bottom: 0.55rem;
+}
+
+.reading-insights li span,
+.reading-insights li strong {
+  display: block;
+}
+
+.learning-midpoint {
+  margin: 2rem 0;
+  padding: 1rem;
+  border: 2px dashed var(--mineral-blue);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--mineral-blue) 7%, transparent);
+}
+
+.reading-completion-map ol,
+.learning-result-report ul,
+.learning-result-report ol {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.reading-thumb-bar {
+  z-index: 12;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 20%, transparent);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--paper-primary) 96%, transparent);
+  box-shadow: 0 0.35rem 1.2rem rgb(29 26 23 / 10%);
+}
+
+.speech-controls [role="status"] {
+  flex-basis: 100%;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+
+.assessment-guidance {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--mineral-blue) 7%, transparent);
+}
+
+.assessment-variant-label {
+  display: block;
+  margin: 0.25rem 0 0.45rem;
+  color: var(--mineral-blue);
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+
+.assessment-guidance > label {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  font-weight: 800;
+}
+
+.assessment-guidance select {
+  width: 100%;
+  padding-inline: 0.65rem;
+  border: 1px solid var(--ink-muted);
+  border-radius: 0.55rem;
+  background: var(--paper-card);
+  color: var(--ink-primary);
+}
+
+.preserved-answer,
+.learning-announcer {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+
+.correction-support {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed color-mix(in srgb, var(--ink-primary) 24%, transparent);
+}
+
+.correction-support summary {
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+:root[data-learning-contrast="high"] {
+  --paper-primary: #fff;
+  --paper-card: #fff;
+  --ink-primary: #000;
+  --ink-muted: #202020;
+  --cinnabar: #8b0000;
+  --mineral-blue: #003c78;
+  --mineral-green: #005a2d;
+}
+
+:root[data-learning-contrast="high"] .reading-article,
+:root[data-learning-contrast="high"] .assessment-sheet {
+  border: 3px solid #000;
+  box-shadow: none;
+}
+
+:root[data-learning-contrast="high"] button,
+:root[data-learning-contrast="high"] select,
+:root[data-learning-contrast="high"] .learning-choice {
+  color: var(--ink-primary);
+  background: var(--paper-primary);
+  border: 2px solid var(--ink-primary);
+}
+
+:root[data-learning-contrast="high"] :where(button, a, input, select, summary):focus-visible {
+  outline: 4px solid var(--mineral-blue);
+  outline-offset: 3px;
+}
+
+:root[data-learning-contrast="high"] [data-learning-feature="three-axis-result"] {
+  color: var(--ink-primary);
+  background: var(--paper-primary);
+  border-inline-start: 6px solid var(--mineral-green);
+}
+
+:root[data-easy-reading="true"] .reading-article {
+  max-width: 38rem;
+  margin-inline: auto;
+}
+
+:root[data-easy-reading="true"] .reading-paragraph {
+  max-width: 34rem;
+  line-height: 2.1;
+  text-align: left;
+}
+
+:root[data-easy-reading="true"] .reading-block {
+  margin-bottom: 2.4rem;
+}
+
+:where(button, a, input, select, summary):focus-visible {
+  outline: 3px solid var(--mineral-blue);
+  outline-offset: 3px;
+}
+
+@media (max-width: 48rem) {
+  .reading-article {
+    padding-bottom: 8rem;
+  }
+
+  .reading-thumb-bar {
+    position: sticky;
+    bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  .reading-controls {
+    pointer-events: none;
+  }
+
+  .reading-controls button {
+    pointer-events: auto;
+  }
+
+  .reading-thumb-bar > .reading-end-confirm,
+  .reading-thumb-bar > .speech-controls {
+    flex: 1 1 100%;
+  }
+
+  .speech-controls button {
+    flex: 1 1 5rem;
+  }
+
+  .learning-choice-grid,
+  .confidence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-block.is-resumed {
+    animation: none;
+  }
+
+  .reading-block.is-learning-dimmed {
+    opacity: 0.55;
+  }
+}
+
+@media (forced-colors: active) {
+  .question-feedback.is-correct::before {
+    content: "正確：";
+    font-weight: 900;
+  }
+
+  .question-feedback.is-incorrect::before {
+    content: "需要修正：";
+    font-weight: 900;
+  }
+
+  .assessment-option:has(input:checked) {
+    outline: 4px double CanvasText;
+    outline-offset: 2px;
+  }
+
+  .reading-progress__bar {
+    border-inline-end: 6px solid CanvasText;
+    background: CanvasText;
+  }
+
+  .reading-block.is-learning-complete {
+    border-inline-start-style: double;
+    border-inline-start-width: 6px;
+  }
+}

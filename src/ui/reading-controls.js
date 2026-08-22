@@ -100,6 +100,67 @@ export function createReadingControls(
     sizeGroup.append(button);
   }
   panel.append(sizeGroup);
+
+  const spacingLabel = document.createElement("p");
+  spacingLabel.className = "control-label";
+  spacingLabel.textContent = "閱讀行距";
+  const spacingGroup = document.createElement("div");
+  spacingGroup.className = "line-height-group";
+  for (const [label, value] of [
+    ["緊密 1.6", 1.6],
+    ["舒適 1.9", 1.9],
+    ["寬鬆 2.2", 2.2],
+  ]) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    button.setAttribute(
+      "aria-pressed",
+      String(Math.abs(preferences.lineHeight - value) < 0.06),
+    );
+    button.addEventListener("click", () => {
+      preferences.lineHeight = value;
+      document.documentElement.style.setProperty(
+        "--reading-line-height",
+        String(value),
+      );
+      spacingGroup.querySelectorAll("button").forEach((peer) => {
+        peer.setAttribute("aria-pressed", String(peer === button));
+      });
+      onChange(preferences);
+    });
+    spacingGroup.append(button);
+  }
+  panel.append(spacingLabel, spacingGroup);
+
+  const comfortLabel = document.createElement("p");
+  comfortLabel.className = "control-label";
+  comfortLabel.textContent = "視覺舒適";
+  const comfortGroup = document.createElement("div");
+  comfortGroup.className = "comfort-group";
+  for (const [label, field, enabledValue] of [
+    ["減少動效", "reducedMotion", true],
+    ["純色背景", "textures", false],
+  ]) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    const active = preferences[field] === enabledValue;
+    button.setAttribute("aria-pressed", String(active));
+    button.addEventListener("click", () => {
+      const nextActive = button.getAttribute("aria-pressed") !== "true";
+      preferences[field] = nextActive ? enabledValue : !enabledValue;
+      button.setAttribute("aria-pressed", String(nextActive));
+      document.documentElement.dataset.reducedMotion = String(
+        preferences.reducedMotion === true,
+      );
+      document.documentElement.dataset.texture =
+        preferences.textures === false ? "off" : "on";
+      onChange(preferences);
+    });
+    comfortGroup.append(button);
+  }
+  panel.append(comfortLabel, comfortGroup);
   aside.append(toggle, panel);
 
   return aside;

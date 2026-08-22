@@ -1,4 +1,31 @@
+import {
+  ASSIGNMENT_ABILITIES,
+  ASSIGNMENT_ROUTES,
+  buildClassAssignment,
+  buildClassDeepLink,
+  buildClassMission,
+  interventionForDistribution,
+  missionTypeDetails,
+  normalizeAssignmentReadings,
+  normalizeMissionChoice,
+} from "../domain/class-mission.js";
+
 const CLASS_CODE_STORAGE_KEY = "reading-expedition.teacher-class-codes";
+const TEACHER_MISSION_OPTIONS = Object.freeze([
+  ["shared_readings", "共同篇數", "一起累積有效閱讀，不比較個人速度。"],
+  ["category_balance", "類別平衡", "讓三個閱讀類別都有完成片段。"],
+  ["ability_practice", "能力練習", "共同練習主旨、推論與文證。"],
+]);
+const ASSIGNMENT_ABILITY_LABELS = Object.freeze({
+  comprehension: "找主旨",
+  inference: "推論",
+  evidence: "找文證",
+});
+const ASSIGNMENT_ROUTE_LABELS = Object.freeze({
+  guided: "引導路線",
+  independent: "獨立路線",
+  equivalent: "兩者等價",
+});
 
 function escapeHtml(value) {
   return String(value)
@@ -57,7 +84,146 @@ async function copyText(value) {
   if (!copied) throw new Error("clipboard unavailable");
 }
 
-function classroomMarkup(classroom, rememberedCode) {
+async function loadAssignmentReadings(request) {
+  const levels = ["launch", "voyage", "tower"];
+  const results = await Promise.all(
+    levels.map(async (level) => {
+      try {
+        const response = await request(
+          `/api/v1/readings?level=${level}&page=1&pageSize=200`,
+        );
+        if (!response?.ok) return [];
+        const payload = await response.json();
+        return Array.isArray(payload.readings) ? payload.readings : [];
+      } catch {
+        return [];
+      }
+    }),
+  );
+  return normalizeAssignmentReadings(results.flat());
+}
+
+function teacherAssignmentMarkup(classroom, assignmentReadings) {
+  if (classroom.revokedAt) return "";
+  const current = classroom.assignment ?? {};
+  const hasOptions = assignmentReadings.length > 0;
+  const selectedReading = assignmentReadings.some(
+    ({ readingId }) => readingId === current.readingId,
+  )
+    ? current.readingId
+    : assignmentReadings[0]?.readingId ?? "";
+  const selectedAbility = ASSIGNMENT_ABILITIES.includes(current.ability)
+    ? current.ability
+    : "evidence";
+  const selectedRoute = ASSIGNMENT_ROUTES.includes(current.route)
+    ? current.route
+    : "equivalent";
+  const dueDate = /^\d{4}-\d{2}-\d{2}$/.test(current.dueDate ?? "")
+    ? current.dueDate
+    : "";
+  return `
+    <section class="class-mission__assignment" aria-labelledby="assignment-${escapeHtml(classroom.id)}">
+      <p class="eyebrow">G069・教師指派</p>
+      <h4 id="assignment-${escapeHtml(classroom.id)}">指派閱讀任務</h4>
+      <p>只選結構化文章、能力與路線，不收姓名、答案或自由文字。</p>
+      <form data-class-assignment-form data-classroom-id="${escapeHtml(classroom.id)}">
+        <label>選擇文章
+          <select name="readingId" ${hasOptions ? "" : "disabled"} required>
+            ${hasOptions
+              ? assignmentReadings.map(({ readingId, title }) => `<option value="${escapeHtml(readingId)}" ${readingId === selectedReading ? "selected" : ""}>${escapeHtml(title)}</option>`).join("")
+              : '<option value="">文章清單暫時無法載入</option>'}
+          </select>
+        </label>
+        <label>練習能力
+          <select name="ability" required>
+            ${ASSIGNMENT_ABILITIES.map((ability) => `<option value="${ability}" ${ability === selectedAbility ? "selected" : ""}>${ASSIGNMENT_ABILITY_LABELS[ability]}</option>`).join("")}
+          </select>
+        </label>
+        <fieldset>
+          <legend>閱讀路線</legend>
+          ${ASSIGNMENT_ROUTES.map((route) => `<label><input type="radio" name="route" value="${route}" ${route === selectedRoute ? "checked" : ""}><span><strong>${ASSIGNMENT_ROUTE_LABELS[route]}</strong><small>${route === "equivalent" ? "學生可自由選引導或獨立，完成標準相同。" : "只指定閱讀支援方式，不代表能力高低。"}</small></span></label>`).join("")}
+        </fieldset>
+        <div class="class-mission__deadline">
+          <label>日期期限
+            <input type="date" name="dueDate" value="${dueDate}" ${dueDate ? "" : "disabled"}>
+          </label>
+          <label><input type="checkbox" name="noDeadline" ${dueDate ? "" : "checked"}>無期限</label>
+        </div>
+        <p>期限只協助安排教學；逾期不扣分、不倒數、不歸零，之後仍可完成。</p>
+        <button type="submit" ${hasOptions ? "" : "disabled"}>儲存閱讀指派</button>
+        <p data-assignment-status role="status" aria-live="polite">${hasOptions ? "" : "目前無法取得文章清單，請稍後重新載入；既有指派不受影響。"}</p>
+      </form>
+    </section>
+  `;
+}
+
+function teacherMissionMarkup(classroom, assignmentReadings) {
+  if (classroom.revokedAt) return "";
+  const mission = buildClassMission(classroom);
+  const selectedType = mission.type;
+  const safeDetails = mission.privacyProtected
+    ? `<p class="class-mission__privacy">匿名參與尚未達 ${mission.participantThreshold} 人，能力熱圖與介入建議暫不顯示。</p>`
+    : (() => {
+        const intervention = interventionForDistribution(
+          mission.skillDistribution,
+        );
+        const max = Math.max(1, ...Object.values(mission.skillDistribution));
+        const labels = {
+          comprehension: "找主旨",
+          inference: "推論",
+          evidence: "找文證",
+        };
+        const qualityMarkup = mission.qualityRates
+          ? `
+            <section class="class-mission__quality" aria-labelledby="quality-${escapeHtml(classroom.id)}">
+              <h4 id="quality-${escapeHtml(classroom.id)}">學習品質聚合</h4>
+              <p>只顯示達隱私門檻的班級比率，不列學生、答案或自由文字。</p>
+              <dl>
+                <div><dt>首次正確率</dt><dd>${Math.round(mission.qualityRates.firstCorrectRate * 100)}%</dd></div>
+                <div><dt>修正成功率</dt><dd>${Math.round(mission.qualityRates.revisedCorrectRate * 100)}%</dd></div>
+                <div><dt>文證查看率</dt><dd>${Math.round(mission.qualityRates.evidenceViewedRate * 100)}%</dd></div>
+                <div><dt>遷移完成率</dt><dd>${Math.round(mission.qualityRates.transferCompletedRate * 100)}%</dd></div>
+              </dl>
+            </section>
+          `
+          : "";
+        return `
+          <section class="class-mission__teacher-heatmap" aria-labelledby="heatmap-${escapeHtml(classroom.id)}">
+            <h4 id="heatmap-${escapeHtml(classroom.id)}">匿名能力熱圖</h4>
+            <p>只顯示班級聚合，不列出個人。</p>
+            <ul>${Object.entries(labels)
+              .map(([key, label]) => `<li><span>${label}</span><div role="img" aria-label="${label} ${mission.skillDistribution[key]} 次"><i style="width:${Math.round((mission.skillDistribution[key] / max) * 100)}%"></i></div><strong>${mission.skillDistribution[key]}</strong></li>`)
+              .join("")}</ul>
+          </section>
+          <aside class="class-mission__intervention" aria-labelledby="intervention-${escapeHtml(classroom.id)}">
+            <p class="eyebrow">10 分鐘介入卡</p>
+            <h4 id="intervention-${escapeHtml(classroom.id)}">${intervention.title}</h4>
+            <p>${intervention.steps}</p>
+            <button type="button" class="class-mission__print-action" data-print-intervention aria-label="列印介入卡">列印介入卡</button>
+          </aside>
+          ${qualityMarkup}
+        `;
+      })();
+  return `
+    <section class="class-mission__teacher" aria-labelledby="mission-${escapeHtml(classroom.id)}">
+      <h4 id="mission-${escapeHtml(classroom.id)}">設定共同任務</h4>
+      <form data-class-mission-form data-classroom-id="${escapeHtml(classroom.id)}">
+        <fieldset>
+          <legend>選擇下一個共同任務</legend>
+          ${TEACHER_MISSION_OPTIONS.map(([type, title, description]) =>
+            `<label><input type="radio" name="missionType" value="${type}" ${type === selectedType ? "checked" : ""}><span><strong>${title}</strong><small>${description}</small></span></label>`,
+          ).join("")}
+        </fieldset>
+        <button type="submit">儲存共同任務</button>
+        <p data-mission-form-status role="status" aria-live="polite"></p>
+      </form>
+      ${teacherAssignmentMarkup(classroom, assignmentReadings)}
+      ${safeDetails}
+    </section>
+  `;
+}
+
+function classroomMarkup(classroom, rememberedCode, assignmentReadings) {
   const revoked = Boolean(classroom.revokedAt);
   const code = !revoked ? rememberedCode : null;
   const labelId = `classroom-${classroom.id}`;
@@ -79,6 +245,7 @@ function classroomMarkup(classroom, rememberedCode) {
             <div class="class-code-row">
               <code>${escapeHtml(code)}</code>
               <button type="button" aria-label="複製班級碼 ${escapeHtml(code)}" data-copy-class-code="${escapeHtml(classroom.id)}">複製班級碼</button>
+              <button type="button" aria-label="複製匿名加入連結" data-copy-class-link="${escapeHtml(classroom.id)}">複製加入連結</button>
             </div>
           `
           : revoked
@@ -90,6 +257,7 @@ function classroomMarkup(classroom, rememberedCode) {
         <div><dt>有效閱讀</dt><dd>${Number(classroom.validReadings) || 0} 次</dd></div>
         <div><dt>有效期限</dt><dd>${escapeHtml(formatDate(classroom.expiresAt))}</dd></div>
       </dl>
+      ${teacherMissionMarkup(classroom, assignmentReadings)}
       ${
         revoked
           ? ""
@@ -113,6 +281,7 @@ function createdClassroomMarkup(classroom) {
       <div class="class-code-row">
         <code>${escapeHtml(classroom.classCode)}</code>
         <button type="button" aria-label="複製班級碼 ${escapeHtml(classroom.classCode)}" data-copy-class-code="${escapeHtml(classroom.id)}">複製班級碼</button>
+        <button type="button" aria-label="複製匿名加入連結" data-copy-class-link="${escapeHtml(classroom.id)}">複製加入連結</button>
       </div>
     </section>
   `;
@@ -126,6 +295,7 @@ export async function renderClassroomManagement(
     getCsrfToken = () => csrfToken,
     onAuthenticationInvalid = async () => {},
     storage = window.sessionStorage,
+    baseUrl = window.location.href,
   } = {},
 ) {
   let rememberedCodes = readRememberedCodes(storage);
@@ -151,6 +321,12 @@ export async function renderClassroomManagement(
       return;
     }
     const payload = await response.json();
+    const assignmentReadings = normalizeAssignmentReadings([
+      ...(Array.isArray(payload.assignmentReadings)
+        ? payload.assignmentReadings
+        : []),
+      ...(await loadAssignmentReadings(request)),
+    ]);
     const classrooms = Array.isArray(payload.classrooms)
       ? payload.classrooms
       : [];
@@ -174,6 +350,7 @@ export async function renderClassroomManagement(
                     classroomMarkup(
                       classroom,
                       rememberedCodes[classroom.id],
+                      assignmentReadings,
                     ),
                   )
                   .join("")
@@ -236,6 +413,142 @@ export async function renderClassroomManagement(
           root.querySelector("[data-classroom-message]").textContent =
             "無法自動複製，請手動選取班級碼。";
         }
+      });
+    });
+
+    root.querySelectorAll("[data-copy-class-link]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const code = rememberedCodes[button.dataset.copyClassLink];
+        const deepLink = buildClassDeepLink(baseUrl, code);
+        try {
+          if (!deepLink) throw new Error("class link unavailable");
+          await copyText(deepLink);
+          button.textContent = "加入連結已複製 ✓";
+          root.querySelector("[data-classroom-message]").textContent =
+            "已複製匿名班級加入連結；連結不含教師或學生姓名。";
+        } catch {
+          root.querySelector("[data-classroom-message]").textContent =
+            "無法自動複製加入連結，請重新建立班級碼後再試。";
+        }
+      });
+    });
+
+    root.querySelectorAll("[data-print-intervention]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const intervention = button.closest(".class-mission__intervention");
+        if (!intervention) return;
+        document.body.classList.add("is-printing-intervention");
+        intervention.classList.add("is-print-target");
+        try {
+          window.print();
+        } finally {
+          intervention.classList.remove("is-print-target");
+          document.body.classList.remove("is-printing-intervention");
+        }
+      });
+    });
+
+    root.querySelectorAll("[data-class-mission-form]").forEach((form) => {
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const classroomId = form.dataset.classroomId;
+        const missionType = normalizeMissionChoice(
+          new FormData(form).get("missionType"),
+        );
+        const status = form.querySelector("[data-mission-form-status]");
+        const submit = form.querySelector('button[type="submit"]');
+        if (!missionType) {
+          status.textContent = "請先選擇一種共同任務。";
+          return;
+        }
+        submit.disabled = true;
+        status.textContent = "正在儲存共同任務…";
+        let missionResponse;
+        try {
+          missionResponse = await request(
+            `/api/v1/teacher/classrooms/${classroomId}/mission`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-csrf-token": getCsrfToken(),
+              },
+              body: JSON.stringify({ type: missionType }),
+            },
+          );
+        } catch {
+          missionResponse = null;
+        }
+        submit.disabled = false;
+        if ([401, 403].includes(missionResponse?.status)) {
+          await onAuthenticationInvalid();
+          return;
+        }
+        if (!missionResponse?.ok) {
+          status.textContent =
+            "共同任務暫時無法儲存；目前設定與班級進度都不會被清除。";
+          return;
+        }
+        status.textContent = `已儲存「${missionTypeDetails(missionType).title}」，學生下次載入時會看到。`;
+      });
+    });
+
+    root.querySelectorAll("[data-class-assignment-form]").forEach((form) => {
+      const noDeadline = form.elements.noDeadline;
+      const dueDate = form.elements.dueDate;
+      noDeadline.addEventListener("change", () => {
+        dueDate.disabled = noDeadline.checked;
+        if (noDeadline.checked) dueDate.value = "";
+      });
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const classroomId = form.dataset.classroomId;
+        const fields = new FormData(form);
+        const assignment = buildClassAssignment(
+          {
+            readingId: fields.get("readingId"),
+            ability: fields.get("ability"),
+            route: fields.get("route"),
+            dueDate: noDeadline.checked ? "" : fields.get("dueDate"),
+          },
+          assignmentReadings,
+        );
+        const status = form.querySelector("[data-assignment-status]");
+        const submit = form.querySelector('button[type="submit"]');
+        if (!assignment) {
+          status.textContent =
+            "請確認文章、能力、路線與日期期限；尚未送出任何變更。";
+          return;
+        }
+        submit.disabled = true;
+        status.textContent = "正在儲存閱讀指派…";
+        let assignmentResponse;
+        try {
+          assignmentResponse = await request(
+            `/api/v1/teacher/classrooms/${classroomId}/assignment`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-csrf-token": getCsrfToken(),
+              },
+              body: JSON.stringify(assignment),
+            },
+          );
+        } catch {
+          assignmentResponse = null;
+        }
+        submit.disabled = false;
+        if ([401, 403].includes(assignmentResponse?.status)) {
+          await onAuthenticationInvalid();
+          return;
+        }
+        if (!assignmentResponse?.ok) {
+          status.textContent =
+            "閱讀指派暫時無法儲存；原有指派與學生進度都不會被清除。";
+          return;
+        }
+        status.textContent = `已指派「${assignment.title}」・${ASSIGNMENT_ABILITY_LABELS[assignment.ability]}・${ASSIGNMENT_ROUTE_LABELS[assignment.route]}・${assignment.dueDate ?? "無期限"}。`;
       });
     });
 

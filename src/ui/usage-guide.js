@@ -31,7 +31,7 @@ function renderSteps(steps) {
 export function renderUsageGuide(
   container,
   {
-    anonymousStatisticsEnabled = true,
+    anonymousStatisticsEnabled = false,
     onAnonymousStatisticsChange = () => {},
   } = {},
 ) {

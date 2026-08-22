@@ -9,7 +9,6 @@
     />
     <title>萬卷浮城｜梁山閱征記</title>
     <link rel="stylesheet" href="./styles.css" />
-    <script src="https://xuexi-hangzhan-api.hk6429.workers.dev/naicheng-sso.js" defer></script>
 </head>
   <body>
     <a class="skip-link" href="#main-content">跳至主要內容</a>
@@ -35,6 +34,7 @@
         </nav>
         <p id="family-sync-chip" class="family-sync-chip" role="status" aria-live="polite" hidden></p>
       </header>
+      <p id="route-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
       <main id="main-content">
         <section class="paper-panel" aria-labelledby="welcome-title">
           <p class="chapter-label">第一回・墨海來潮</p>
@@ -68,7 +68,7 @@
         function loadPublicCounter() {
           if (
             isLocal ||
-            window.localStorage.getItem(anonymousStatisticsKey) === "off" ||
+            window.localStorage.getItem(anonymousStatisticsKey) !== "on" ||
             document.querySelector(counterSelector)
           ) {
             return;

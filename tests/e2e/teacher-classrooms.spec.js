@@ -54,10 +54,13 @@ test("夜讀模式下班級管理文字仍可清楚閱讀", async ({ page }) => 
   });
 
   await page.goto("/#/read/water-sharing-guided-v1");
+  await expect(
+    page.getByRole("heading", { name: "一座城市如何分配有限水源？" }),
+  ).toBeVisible();
   const nightButton = page.getByRole("button", { name: "夜讀" });
-  if (!(await nightButton.isVisible())) {
-    await page.getByRole("button", { name: "顯示設定" }).click();
-  }
+  const settingsButton = page.getByRole("button", { name: "顯示設定" });
+  if (await settingsButton.isVisible()) await settingsButton.click();
+  await expect(nightButton).toBeVisible();
   await nightButton.click();
   await page.goto("/#/teacher/classes");
 
@@ -81,6 +84,156 @@ test("夜讀模式下班級管理文字仍可清楚閱讀", async ({ page }) => 
       ),
     )
     .toBeGreaterThanOrEqual(4.5);
+});
+
+test("教師以聚合資料設定共同任務並取得十分鐘介入卡", async ({ page }) => {
+  let missionRequest = null;
+  await page.addInitScript(() => {
+    sessionStorage.setItem("reading-expedition.csrf", "csrf-demo");
+    sessionStorage.setItem(
+      "reading-expedition.teacher-class-codes",
+      JSON.stringify({ "class-mission": "MISSION2" }),
+    );
+  });
+  await page.route("**/api/v1/teacher/classrooms", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        classrooms: [
+          {
+            id: "class-mission",
+            createdAt: "2026-08-20T00:00:00Z",
+            expiresAt: "2027-02-20T00:00:00Z",
+            revokedAt: null,
+            anonymousParticipants: 8,
+            validReadings: 24,
+            privacyProtected: false,
+            weeklyPeriod: "2026-W34",
+            weeklyValidReadings: 6,
+            weeklyMissionTarget: 10,
+            mission: { type: "shared_readings", target: 10 },
+            categoryDistribution: { world: 8, science: 7, humanities: 9 },
+            skillDistribution: { comprehension: 10, inference: 4, evidence: 8 },
+          },
+        ],
+      }),
+    });
+  });
+  await page.route(
+    "**/api/v1/teacher/classrooms/class-mission/mission",
+    async (route) => {
+      missionRequest = {
+        body: route.request().postDataJSON(),
+        csrf: route.request().headers()["x-csrf-token"],
+      };
+      await route.fulfill({ status: 200, body: "{}" });
+    },
+  );
+
+  await page.goto("/#/teacher/classes");
+  await expect(page.getByRole("heading", { name: "匿名能力熱圖" })).toBeVisible();
+  await expect(page.getByText("10 分鐘線索連線")).toBeVisible();
+  await page.evaluate(() => {
+    window.__interventionPrintCalls = 0;
+    window.print = () => {
+      window.__interventionPrintCalls += 1;
+    };
+  });
+  await page.getByRole("button", { name: "列印介入卡" }).click();
+  await expect
+    .poll(() => page.evaluate(() => window.__interventionPrintCalls))
+    .toBe(1);
+  await expect(page.locator("body")).not.toHaveClass(/is-printing-intervention/);
+  await page.getByLabel("能力練習").check();
+  await page.getByRole("button", { name: "儲存共同任務" }).click();
+
+  await expect(page.getByText(/已儲存「能力練習」/)).toBeVisible();
+  expect(missionRequest).toEqual({
+    body: { type: "ability_practice" },
+    csrf: "csrf-demo",
+  });
+});
+
+test("G069 教師以結構選項指派文章且期限不產生懲罰", async ({ page }) => {
+  let assignmentRequest = null;
+  await page.addInitScript(() => {
+    sessionStorage.setItem("reading-expedition.csrf", "csrf-assignment");
+  });
+  await page.route("**/api/v1/readings?*", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        readings: [
+          {
+            id: "water-sharing-guided-v1",
+            title: "一座城市如何分配水源？",
+            answer: "不應進入指派",
+          },
+          {
+            id: "forest-path-independent-v1",
+            title: "森林裡的兩條路",
+          },
+        ],
+        pagination: { hasMore: false },
+      }),
+    });
+  });
+  await page.route("**/api/v1/teacher/classrooms", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        classrooms: [
+          {
+            id: "class-assignment",
+            createdAt: "2026-08-20T00:00:00Z",
+            expiresAt: "2027-02-20T00:00:00Z",
+            revokedAt: null,
+            anonymousParticipants: 2,
+            validReadings: 4,
+          },
+        ],
+      }),
+    });
+  });
+  await page.route(
+    "**/api/v1/teacher/classrooms/class-assignment/assignment",
+    async (route) => {
+      assignmentRequest = {
+        body: route.request().postDataJSON(),
+        csrf: route.request().headers()["x-csrf-token"],
+      };
+      await route.fulfill({ status: 201, body: "{}" });
+    },
+  );
+
+  await page.goto("/#/teacher/classes");
+  const assignment = page.locator(".class-mission__assignment");
+  await expect(
+    assignment.getByRole("heading", { name: "指派閱讀任務" }),
+  ).toBeVisible();
+  await assignment.getByLabel("選擇文章").selectOption(
+    "forest-path-independent-v1",
+  );
+  await assignment.getByLabel("練習能力").selectOption("inference");
+  await assignment.getByLabel(/兩者等價/).check();
+  await assignment.getByLabel("無期限").uncheck();
+  await assignment.getByLabel("日期期限").fill("2026-09-01");
+  await assignment.getByRole("button", { name: "儲存閱讀指派" }).click();
+
+  await expect(assignment.getByRole("status")).toContainText(
+    "森林裡的兩條路",
+  );
+  await expect(assignment.getByText(/逾期不扣分、不倒數、不歸零/)).toBeVisible();
+  expect(assignmentRequest).toEqual({
+    body: {
+      readingId: "forest-path-independent-v1",
+      title: "森林裡的兩條路",
+      ability: "inference",
+      route: "equivalent",
+      dueDate: "2026-09-01",
+    },
+    csrf: "csrf-assignment",
+  });
 });
 
 test("教師建立、複製並停用匿名班級", async ({ page }) => {

@@ -24,6 +24,10 @@ test("手機可從頁首開啟師生使用說明並看見兩種操作流程", as
 });
 
 test("學生可退出匿名統計且重新整理後維持設定", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "同意傳送匿名統計" })
+    .click();
   await page.goto("/#/guide");
   const toggle = page.getByRole("checkbox", {
     name: "允許傳送匿名使用統計",
@@ -31,7 +35,7 @@ test("學生可退出匿名統計且重新整理後維持設定", async ({ page 
 
   await expect(toggle).toBeChecked();
   await toggle.uncheck();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.locator("[data-anonymous-statistics-status]")).toContainText(
     "不會傳送匿名學習事件或載入到訪計數器",
   );
   await expect

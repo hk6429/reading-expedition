@@ -55,9 +55,9 @@ test("首頁只顯示一篇個人挑戰並可直接開始", async ({ page }) => 
   await expect(
     page.getByRole("heading", { name: "一次一篇，讀懂再往前" }),
   ).toBeVisible();
-  await expect(page.getByRole("article")).toHaveCount(1);
+  await expect(page.locator(".route-card")).toHaveCount(1);
 
-  const nextCard = page.getByRole("article");
+  const nextCard = page.locator(".route-card");
   await expect(nextCard).toContainText("啟航");
   await expect(nextCard).toContainText("引導模式");
   await expect(nextCard).toContainText("未讀");
@@ -91,7 +91,7 @@ test("手機首頁為單欄且主要內容沒有水平捲動", async ({ page }) 
     () => document.documentElement.scrollWidth - window.innerWidth,
   );
   expect(overflow).toBeLessThanOrEqual(1);
-  await expect(page.getByRole("article")).toHaveCount(1);
+  await expect(page.locator(".route-card")).toHaveCount(1);
 });
 
 test("夜讀模式返回或重載首頁時，標題與航線仍有足夠對比", async ({
@@ -184,7 +184,9 @@ test("唯一啟航讀卷完成後顯示等待下一批，浮城進度不歸零",
   await expect(
     page.getByRole("heading", { name: "這一批已讀完，且在浮城歇一歇" }),
   ).toBeVisible();
-  await expect(page.getByText(/不會歸零/)).toBeVisible();
+  await expect(
+    page.getByText(/浮城進度與完成紀錄都安穩留著，不會歸零/),
+  ).toBeVisible();
   expect(
     await page.evaluate(
       () =>

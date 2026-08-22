@@ -1,7 +1,10 @@
 import { expect, test } from "./fixtures.js";
+import { gradeAssessment } from "../../src/domain/assessment-session.js";
+import { demoAnswerKeys } from "../../src/data/demo-answer-key.js";
 
 test("學生從首頁完成閱讀、達標與建城", async ({ page }) => {
   const contributions = [];
+  const completionProof = `${"a".repeat(43)}.${"b".repeat(43)}`;
   await page.addInitScript(() => {
     localStorage.setItem("reading-expedition.class-token", "a".repeat(43));
   });
@@ -12,6 +15,22 @@ test("學生從首頁完成閱讀、達標與建城", async ({ page }) => {
     });
     await route.fulfill({ status: 202, body: "" });
   });
+  await page.route(
+    "**/api/v1/readings/water-sharing-guided-v1/submit",
+    async (route) => {
+      const { answers } = route.request().postDataJSON();
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({
+          ...gradeAssessment(
+            demoAnswerKeys["water-sharing-guided-v1"],
+            answers,
+          ),
+          completionProof,
+        }),
+      });
+    },
+  );
   await page.goto("/");
 
   await page.goto("/#/read/water-sharing-guided-v1");
@@ -44,10 +63,16 @@ test("學生從首頁完成閱讀、達標與建城", async ({ page }) => {
   expect(contributions[0]).toMatchObject({
     authorization: `Bearer ${"a".repeat(43)}`,
     body: {
-      validReading: true,
-      contentId: "water-sharing-guided-v1",
-      category: "world",
-      skill: "evidence",
+      completionProof,
+      readingId: "water-sharing-guided-v1",
+      contentKey: "2026-07-28-water-sharing",
+      version: 1,
+      quality: {
+        firstCorrect: 2,
+        revisedCorrect: 0,
+        evidenceViewed: false,
+        transferCompleted: false,
+      },
     },
   });
 

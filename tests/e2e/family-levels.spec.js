@@ -1,5 +1,7 @@
 import { expect, test } from "./fixtures.js";
 
+test.use({ serviceWorkers: "block" });
+
 test("手機可完成一篇短文三題測讀，結果只推薦不鎖級", async ({
   page,
 }) => {
@@ -65,7 +67,9 @@ test("家庭頁同時提供每位孩子與全家庭 CSV，先顯示週趨勢", a
       }),
     });
   });
-  await page.route("**/api/v1/family/children/*/state", async (route) => {
+  await page.route(
+    /\/api\/v1\/family\/children\/[^/]+\/state$/,
+    async (route) => {
     const childId = route.request().url().includes("child-a")
       ? "child-a"
       : "child-b";
@@ -92,21 +96,29 @@ test("家庭頁同時提供每位孩子與全家庭 CSV，先顯示週趨勢", a
               ],
             },
           ],
+          city: {
+            storyUnlocks: [{ title: "聚義廳的第一盞燈" }],
+          },
           childId,
         },
       }),
     });
-  });
+    },
+  );
   await page.goto("/#/family");
 
   await expect(
     page.getByRole("button", { name: "下載全家庭 CSV" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "下載孩子 CSV" }),
+    page.getByRole("button", { name: "下載匿名化 CSV" }),
+  ).toHaveCount(2);
+  await expect(
+    page.getByRole("button", { name: "下載完整孩子 CSV（私人）" }),
   ).toHaveCount(2);
   await expect(page.getByText(/本週 1 篇/)).toHaveCount(2);
+  await expect(page.getByText(/聚義廳的第一盞燈.*已解鎖/)).toHaveCount(2);
   await expect(
-    page.getByText("每位孩子，都有自己的浮城"),
+    page.getByRole("heading", { name: "每位孩子，都有自己的浮城" }),
   ).toBeVisible();
 });

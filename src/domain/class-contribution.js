@@ -1,11 +1,9 @@
-const CATEGORIES = new Set(["world", "science", "humanities"]);
 const SKILLS = new Set(["comprehension", "inference", "evidence"]);
 const CONTRIBUTION_KEYS = new Set([
-  "validReading",
-  "contentId",
-  "category",
-  "skill",
-  "period",
+  "completionProof",
+  "readingId",
+  "contentKey",
+  "version",
 ]);
 
 export function createClassContribution(input) {
@@ -15,12 +13,15 @@ export function createClassContribution(input) {
     }
   }
   if (
-    input.validReading !== true ||
-    typeof input.contentId !== "string" ||
-    !/^[A-Za-z0-9-]{1,120}$/.test(input.contentId) ||
-    !CATEGORIES.has(input.category) ||
-    !SKILLS.has(input.skill) ||
-    !/^\d{4}-W\d{2}$/.test(input.period)
+    typeof input.completionProof !== "string" ||
+    input.completionProof.length > 2_048 ||
+    !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(input.completionProof) ||
+    typeof input.readingId !== "string" ||
+    !/^[A-Za-z0-9_-]{1,160}$/.test(input.readingId) ||
+    typeof input.contentKey !== "string" ||
+    !/^[A-Za-z0-9_-]{1,160}$/.test(input.contentKey) ||
+    !Number.isInteger(input.version) ||
+    input.version < 1
   ) {
     throw new TypeError("class contribution is invalid");
   }

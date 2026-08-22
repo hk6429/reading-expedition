@@ -4,6 +4,7 @@
 
 :root {
   --reading-scale: 1;
+  --reading-line-height: 1.85;
   color-scheme: light;
   --ink-primary: #1d1a17;
   --ink-muted: #6d685f;
@@ -53,6 +54,17 @@
 
 * {
   box-sizing: border-box;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 body {
@@ -1459,7 +1471,7 @@ main h1[tabindex="-1"]:focus {
   font-family: "Noto Serif TC", "Songti TC", serif;
   font-size: calc(1.18rem * var(--reading-scale));
   font-weight: 450;
-  line-height: 1.9;
+  line-height: var(--reading-line-height);
   text-align: justify;
 }
 
@@ -2673,6 +2685,36 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   background: var(--chip-background);
 }
 
+.knowledge-room-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0 1.25rem;
+}
+
+.knowledge-room {
+  padding: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 16%, transparent);
+  border-radius: 0.8rem;
+  background: var(--chip-background);
+}
+
+.knowledge-room h4,
+.knowledge-room p {
+  margin: 0;
+}
+
+.knowledge-room p {
+  margin-top: 0.35rem;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 700px) {
+  .knowledge-room-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .ability-card > div:first-child {
   display: flex;
   gap: 0.5rem;
@@ -3457,6 +3499,148 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   gap: 0.75rem;
 }
 
+.backup-reminder__actions button,
+.backup-reminder__actions a {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  align-items: center;
+}
+
+.privacy-consent {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 1rem;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border-color: color-mix(in srgb, var(--mineral-blue) 55%, transparent);
+}
+
+.privacy-consent h2 {
+  margin: 0.35rem 0;
+}
+
+.privacy-consent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.privacy-consent__actions button,
+.update-ready button {
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+}
+
+.update-ready {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 80;
+  width: min(28rem, calc(100% - 2rem));
+  padding: 0.9rem;
+  border: 2px solid var(--mineral-blue);
+  border-radius: 0.8rem;
+  background: var(--paper-primary);
+  box-shadow: 0 1rem 3rem rgb(17 28 36 / 25%);
+}
+
+.update-ready p {
+  margin: 0 0 0.5rem;
+}
+
+.family-support-cards {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.8rem;
+  background: var(--surface-background);
+}
+
+.family-support-cards p {
+  margin: 0;
+}
+
+.family-support-cards fieldset {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.25rem 0 0;
+}
+
+.family-support-cards label {
+  display: flex;
+  min-height: 44px;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.mission-dashboard {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.mission-dashboard .paper-panel {
+  width: 100%;
+  max-width: none;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.mission-choice-group {
+  margin: 1rem 0;
+  padding: 0;
+  border: 0;
+}
+
+.mission-choice-group legend {
+  font-weight: 800;
+}
+
+.mission-choice-group > p {
+  margin: 0.25rem 0 0.65rem;
+  color: var(--ink-muted);
+}
+
+.mission-progress {
+  margin-top: 0.8rem;
+}
+
+.mission-dashboard button,
+.mission-dashboard a {
+  min-height: 44px;
+}
+
+.offline-pack-control {
+  display: grid;
+  flex: 1 1 100%;
+  gap: 0.35rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.offline-pack-control button {
+  width: fit-content;
+  min-height: 44px;
+}
+
+.offline-pack-control p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+.city-name-field {
+  display: grid;
+  max-width: 28rem;
+  gap: 0.35rem;
+}
+
+.city-name-field input {
+  min-height: 44px;
+  padding: 0.55rem 0.7rem;
+}
+
 .journey-choice {
   margin-top: 1.5rem;
 }
@@ -3469,4 +3653,275 @@ html[data-focus-context="assessment"] #danai-learning-passport {
 
 .rest-panel {
   width: min(680px, 100%);
+}
+
+/* Class mission components: appended independently for the shared mission UI. */
+.class-mission__routes,
+.class-mission__role,
+.class-mission__vote,
+.class-mission__exit,
+.class-mission__privacy,
+.class-mission__jigsaw,
+.class-mission__teacher {
+  margin-top: 1rem;
+  padding: clamp(1rem, 3vw, 1.35rem);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  background: var(--panel-background);
+}
+
+.class-mission__routes > div,
+.class-mission__balances {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.8rem;
+}
+
+.class-mission__routes article,
+.class-mission__intervention {
+  padding: 0.9rem;
+  border-inline-start: 0.3rem solid var(--mineral-blue);
+  background: var(--chip-background);
+}
+
+.class-mission__vote > div,
+.class-mission__exit > div,
+.class-mission__jigsaw ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0;
+}
+
+.class-mission__vote button,
+.class-mission__exit button,
+.class-mission__teacher button,
+.class-mission__teacher input {
+  min-height: 44px;
+}
+
+.class-mission__vote button,
+.class-mission__exit button,
+.class-mission__teacher button {
+  padding: 0.55rem 0.8rem;
+}
+
+.class-mission__vote button[aria-pressed="true"],
+.class-mission__exit button[aria-pressed="true"] {
+  border-color: var(--mineral-green);
+  background: var(--chip-background);
+  box-shadow: 0 0 0 2px var(--mineral-green);
+}
+
+.class-mission__jigsaw li {
+  min-width: 10rem;
+  padding: 0.65rem;
+  border: 1px dashed var(--surface-border);
+  border-radius: var(--radius-md);
+  list-style: none;
+}
+
+.class-mission__jigsaw li.is-complete {
+  border-style: solid;
+  border-color: var(--mineral-green);
+}
+
+.class-mission__balance ul,
+.class-mission__teacher-heatmap ul {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0;
+}
+
+.class-mission__balance li,
+.class-mission__teacher-heatmap li {
+  display: grid;
+  grid-template-columns: 5rem minmax(7rem, 1fr) 2rem;
+  gap: 0.55rem;
+  align-items: center;
+  list-style: none;
+}
+
+.class-mission__balance li div,
+.class-mission__teacher-heatmap li div {
+  height: 0.75rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-border);
+}
+
+.class-mission__balance li i,
+.class-mission__teacher-heatmap li i {
+  display: block;
+  height: 100%;
+  background: var(--mineral-blue);
+}
+
+.class-mission__teacher form fieldset {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 0.75rem;
+}
+
+.class-mission__teacher form label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.55rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+}
+
+.class-mission__teacher form label span,
+.class-mission__teacher form label small {
+  display: block;
+}
+
+.class-mission__celebration {
+  padding: 0.8rem;
+  border-radius: var(--radius-md);
+  background: var(--chip-background);
+  text-align: center;
+  font-weight: 800;
+}
+
+.class-mission__celebration.is-celebrating {
+  animation: class-mission-celebrate 700ms ease-out both;
+}
+
+@keyframes class-mission-celebrate {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .class-mission__celebration.is-celebrating {
+    animation: none;
+  }
+}
+
+.class-mission__assignment {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  background: var(--panel-background);
+}
+
+.class-mission__quality {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--ink-primary) 18%, transparent);
+  border-radius: 0.85rem;
+  background: var(--chip-background);
+}
+
+.class-mission__quality dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.class-mission__quality dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.class-mission__assignment form,
+.class-mission__assignment form > label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.class-mission__assignment form {
+  gap: 0.85rem;
+}
+
+.class-mission__assignment select,
+.class-mission__assignment input,
+.class-mission__assignment button {
+  min-height: 44px;
+}
+
+.class-mission__assignment select,
+.class-mission__assignment input[type="date"] {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--paper-card);
+  color: var(--ink-primary);
+}
+
+.class-mission__assignment fieldset {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.class-mission__assignment fieldset label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.55rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+}
+
+.class-mission__assignment fieldset span,
+.class-mission__assignment fieldset small {
+  display: block;
+}
+
+.class-mission__deadline {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.class-mission__deadline > label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+@media (max-width: 42rem) {
+  .class-mission__deadline {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body.is-printing-intervention * {
+    visibility: hidden !important;
+  }
+
+  body.is-printing-intervention .class-mission__intervention.is-print-target,
+  body.is-printing-intervention .class-mission__intervention.is-print-target * {
+    visibility: visible !important;
+  }
+
+  body.is-printing-intervention .class-mission__intervention.is-print-target {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    margin: 0;
+    border: 1px solid #000;
+    color: #000;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  body.is-printing-intervention .class-mission__print-action {
+    display: none !important;
+  }
 }

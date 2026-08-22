@@ -55,8 +55,32 @@ export function computeLearningMetrics(events = []) {
   });
 }
 
-export function evaluateExperiment(baseline, candidate, sideEffects) {
+export function evaluateExperiment(
+  baseline,
+  candidate,
+  sideEffects,
+  protocol = null,
+) {
   const reasons = [];
+  const inconclusiveReasons = [];
+  if (
+    !protocol?.hypothesis ||
+    !protocol?.primaryMetric ||
+    !Number.isInteger(protocol?.minimumSamplePerVariant) ||
+    !Number.isInteger(protocol?.minimumDays)
+  ) {
+    reasons.push("preregistration_missing");
+  } else {
+    if (
+      protocol.baselineSample < protocol.minimumSamplePerVariant ||
+      protocol.candidateSample < protocol.minimumSamplePerVariant
+    ) {
+      inconclusiveReasons.push("sample_too_small");
+    }
+    if (protocol.observedDays < protocol.minimumDays) {
+      inconclusiveReasons.push("observation_too_short");
+    }
+  }
   if (candidate.completionRate <= baseline.completionRate) {
     reasons.push("completion_not_improved");
   }
@@ -65,5 +89,34 @@ export function evaluateExperiment(baseline, candidate, sideEffects) {
   }
   if (sideEffects.fastSubmitRate > 0.15) reasons.push("fast_submit_risk");
   if (sideEffects.fixedOptionRate > 0.35) reasons.push("fixed_option_risk");
-  return Object.freeze({ success: reasons.length === 0, reasons });
+  if (
+    Number.isFinite(sideEffects.baselineKeyboardCompletionRate) &&
+    sideEffects.keyboardCompletionRate <
+      sideEffects.baselineKeyboardCompletionRate
+  ) {
+    reasons.push("keyboard_access_regressed");
+  }
+  if (
+    Number.isFinite(sideEffects.baselineOfflineFailureRate) &&
+    sideEffects.offlineFailureRate > sideEffects.baselineOfflineFailureRate
+  ) {
+    reasons.push("offline_failure_regressed");
+  }
+  if (
+    Number.isFinite(sideEffects.baselineRecoveryRate) &&
+    sideEffects.recoveryRate < sideEffects.baselineRecoveryRate
+  ) {
+    reasons.push("recovery_regressed");
+  }
+  const allReasons = [...inconclusiveReasons, ...reasons];
+  const status = inconclusiveReasons.length
+    ? "inconclusive"
+    : reasons.length
+      ? "rejected"
+      : "accepted";
+  return Object.freeze({
+    success: status === "accepted",
+    status,
+    reasons: Object.freeze(allReasons),
+  });
 }

@@ -18,7 +18,10 @@ import {
 import { countHistoryActiveDays } from "./domain/active-days.js";
 import { recordAbilityEvidence } from "./domain/ability-mastery.js";
 import { buildDiagnosticRecord } from "./domain/family-report.js";
-import { createAnonymousDeviceId } from "./domain/device-identity.js";
+import {
+  createAnonymousDeviceId,
+  getRotatingTelemetryId,
+} from "./domain/device-identity.js";
 import {
   appendVerifiedReading,
   extractEvidenceText,
@@ -28,20 +31,14 @@ import { createLocalStore } from "./storage/local-store.js";
 import { createFamilyClient } from "./storage/family-client.js";
 import { createSyncQueue } from "./storage/sync-queue.js";
 import { createClassContributionQueue } from "./storage/class-contribution-queue.js";
-import { renderAssessment } from "./ui/assessment-view.js";
-import { renderBookshelf } from "./ui/bookshelf-view.js";
-import { renderCityInvest } from "./ui/city-view.js";
-import { renderCityOverview } from "./ui/city-overview.js";
 import { renderHome } from "./ui/home-view.js";
-import { renderReading } from "./ui/reading-view.js";
-import { renderReviewConsole } from "./ui/review-console.js";
-import { renderClassView } from "./ui/class-view.js";
-import { renderFamilyView } from "./ui/family-view.js";
-import { renderPlacement } from "./ui/placement-view.js";
-import { renderUsageGuide } from "./ui/usage-guide.js";
 import { createRouter } from "./ui/router.js";
 import { renderBackupReminder } from "./ui/backup-reminder.js";
 import { nextUnreadReading } from "./domain/reading-inventory.js";
+import { renderPrivacyConsent } from "./ui/privacy-consent.js";
+import { applyGlobalPreferences } from "./ui/navigation.js";
+import { createOfflineCache } from "./storage/offline-cache.js";
+import { buildPortfolioExport } from "./domain/portfolio-export.js";
 
 const main = document.querySelector("#main-content");
 if ("serviceWorker" in navigator) {
@@ -58,9 +55,12 @@ document.documentElement.style.setProperty(
   "--reading-scale",
   state.preferences.fontScale,
 );
+applyGlobalPreferences(document.documentElement, state.preferences);
 store.save(state);
 const syncQueue = createSyncQueue(window.localStorage);
 const classContributionQueue = createClassContributionQueue(window.localStorage);
+const offlineCache = createOfflineCache(window.localStorage);
+const assessmentSessions = new Map();
 const familyClient = createFamilyClient({
   fetchImpl: window.fetch.bind(window),
   storage: window.localStorage,
@@ -106,6 +106,7 @@ function queueFamilySync(next) {
 
 function persistState(next, { syncFamily = true } = {}) {
   store.save(next);
+  applyGlobalPreferences(document.documentElement, next.preferences);
   if (syncFamily) queueFamilySync(next);
 }
 
@@ -122,7 +123,7 @@ const ANONYMOUS_STATISTICS_KEY =
   "reading-expedition.anonymous-statistics";
 
 function anonymousStatisticsEnabled() {
-  return window.localStorage.getItem(ANONYMOUS_STATISTICS_KEY) !== "off";
+  return window.localStorage.getItem(ANONYMOUS_STATISTICS_KEY) === "on";
 }
 
 function setAnonymousStatisticsEnabled(enabled) {
@@ -150,6 +151,37 @@ function setPublicCounterVisible(visible, focusContext = "") {
   if (counter) counter.style.display = shouldShow ? "" : "none";
 }
 
+let updateReady = false;
+function renderUpdateNotice() {
+  document.querySelector("[data-update-ready]")?.remove();
+  if (!updateReady) return;
+  const notice = document.createElement("aside");
+  notice.className = "update-ready";
+  notice.dataset.updateReady = "";
+  notice.setAttribute("role", "status");
+  const taskInProgress = /^#\/(read|quiz)\//.test(window.location.hash);
+  const copy = document.createElement("p");
+  copy.textContent = taskInProgress
+    ? "網站更新已準備好。先完成目前這篇；回到首頁後再更新，不會中斷閱讀或作答。"
+    : "網站更新已準備好，可以由你決定何時重新整理。";
+  notice.append(copy);
+  if (!taskInProgress) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "現在更新";
+    button.addEventListener("click", () => window.location.reload());
+    notice.append(button);
+  }
+  document.body.append(notice);
+}
+
+navigator.serviceWorker?.addEventListener("message", (event) => {
+  if (event.data?.type !== "UPDATE_READY") return;
+  updateReady = true;
+  renderUpdateNotice();
+});
+window.addEventListener("hashchange", renderUpdateNotice);
+
 function durationBucket(reading) {
   if (reading.readingMinutes <= 5) return "1-5m";
   if (reading.readingMinutes <= 10) return "6-10m";
@@ -167,7 +199,7 @@ function queueEvent(type, reading) {
       category: reading.category,
       difficulty: reading.difficulty,
       durationBucket: durationBucket(reading),
-      deviceId: state.deviceId,
+      deviceId: getRotatingTelemetryId(window.localStorage),
     },
   });
 }
@@ -206,18 +238,9 @@ async function flushClassContributions() {
       classContributionQueue.clear();
       return true;
     }
+    if ([400, 409].includes(response.status)) return true;
     return response.ok;
   });
-}
-
-function isoWeekKey(dateString) {
-  const date = new Date(`${dateString}T00:00:00Z`);
-  const day = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - day);
-  const year = date.getUTCFullYear();
-  const yearStart = new Date(Date.UTC(year, 0, 1));
-  const week = Math.ceil(((date - yearStart) / 86_400_000 + 1) / 7);
-  return `${year}-W${String(week).padStart(2, "0")}`;
 }
 
 window.addEventListener("online", () => {
@@ -284,28 +307,86 @@ async function loadReading(id) {
     const response = await fetch(`/api/v1/readings/${id}`);
     if (!response.ok) throw new Error("reading API unavailable");
     const payload = await response.json();
-    return withDemoReadingStrategy(payload.reading);
+    const reading = withDemoReadingStrategy(payload.reading);
+    offlineCache.storeReading(reading);
+    const sessionKey = `${reading.id}:${reading.version}`;
+    const rememberedSession = assessmentSessions.get(sessionKey);
+    if (rememberedSession) {
+      return { ...reading, assessmentSession: rememberedSession };
+    }
+    try {
+      const sessionResponse = await fetch(
+        `/api/v1/readings/${reading.id}/assessment-session`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ version: reading.version }),
+        },
+      );
+      if (!sessionResponse.ok) {
+        return { ...reading, assessmentSessionUnavailable: true };
+      }
+      const sessionPayload = await sessionResponse.json();
+      if (typeof sessionPayload.assessmentSession !== "string") {
+        return { ...reading, assessmentSessionUnavailable: true };
+      }
+      assessmentSessions.set(sessionKey, sessionPayload.assessmentSession);
+      return {
+        ...reading,
+        assessmentSession: sessionPayload.assessmentSession,
+      };
+    } catch {
+      return { ...reading, assessmentSessionUnavailable: true };
+    }
   } catch {
-    return localReading;
+    return offlineCache.getReading(id) ?? localReading;
   }
 }
 
 async function submitAssessment(reading, answers) {
+  const answerKey =
+    levelAnswerKeys[reading.id] ?? demoAnswerKeys[reading.id];
   try {
     const response = await fetch(
       `/api/v1/readings/${reading.id}/submit`,
       {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ version: reading.version, answers }),
+        body: JSON.stringify({
+          version: reading.version,
+          answers,
+          assessmentSession: reading.assessmentSession,
+        }),
       },
     );
-    if (!response.ok) throw new Error("assessment API unavailable");
+    if (!response.ok) {
+      let message = "作答暫時無法送出，答案仍保留在這一頁。";
+      try {
+        const payload = await response.json();
+        if (typeof payload?.error?.message === "string") {
+          message = payload.error.message;
+        }
+      } catch {
+        // Keep the controlled fallback message for a malformed error response.
+      }
+      // 內建安全讀卷可離線評分；但伺服器判定速度異常時不得吞掉 429。
+      // 本機評分不會產生 completion proof，因此不能計入班級共建。
+      if (answerKey && response.status !== 429) {
+        return gradeAssessment(answerKey, answers);
+      }
+      const error = new Error("assessment API rejected the submission");
+      error.userMessage = message;
+      error.serverResponse = true;
+      throw error;
+    }
     return await response.json();
-  } catch {
-    const answerKey =
-      levelAnswerKeys[reading.id] ?? demoAnswerKeys[reading.id];
-    if (!answerKey) throw new Error("assessment unavailable");
+  } catch (cause) {
+    if (cause?.serverResponse) throw cause;
+    if (!answerKey) {
+      const error = new Error("assessment unavailable");
+      error.userMessage = "目前無法連線評分，答案仍保留在這一頁。";
+      throw error;
+    }
     return gradeAssessment(answerKey, answers);
   }
 }
@@ -322,8 +403,15 @@ function localToday() {
 }
 
 function exportLearningState(personLabel = "個人") {
-  const payload = store.export();
-  if (!payload) return false;
+  const raw = store.export();
+  if (!raw) return false;
+  const payload = JSON.stringify(
+    buildPortfolioExport(JSON.parse(raw), {
+      exportedAt: new Date().toISOString(),
+    }),
+    null,
+    2,
+  );
   const blob = new Blob([payload], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -359,6 +447,7 @@ const router = createRouter({
     renderBackupReminder(main, {
       personId: activeChild?.id ?? state.deviceId,
       personLabel: activeChild?.alias ?? "此裝置的閱行者",
+      recordCount: state.readingHistory.length,
       sessionStorage: window.sessionStorage,
       onExport: () =>
         exportLearningState(activeChild?.alias ?? "此裝置"),
@@ -375,6 +464,7 @@ const router = createRouter({
       {
         preferences: state.preferences,
         diagnosticHistory: state.diagnosticHistory,
+        readingProgress: state.readingProgress,
         onPreferencesChange: (preferences, { navigate = true } = {}) => {
           const scrollY = window.scrollY;
           state.preferences = preferences;
@@ -385,9 +475,17 @@ const router = createRouter({
         },
       },
     );
+    renderPrivacyConsent(main, {
+      decision: window.localStorage.getItem(ANONYMOUS_STATISTICS_KEY),
+      onDecision: setAnonymousStatisticsEnabled,
+    });
   },
   async onBookshelf() {
     setPublicCounterVisible(true);
+    const [{ renderBookshelf }, { downloadOfflinePack }] = await Promise.all([
+      import("./ui/bookshelf-view.js"),
+      import("./storage/offline-pack.js"),
+    ]);
     const selectedLevel = state.preferences.selectedLevel ?? "launch";
     const render = async () => {
       renderBookshelf(
@@ -405,6 +503,11 @@ const router = createRouter({
             if (persist) persistState(state);
             router.navigate();
           },
+          onDownloadOfflinePack: (readings) =>
+            downloadOfflinePack(readings, {
+              loadReading,
+              storeReading: (reading) => offlineCache.storeReading(reading),
+            }),
         },
       );
     };
@@ -412,6 +515,7 @@ const router = createRouter({
   },
   async onRead(id) {
     setPublicCounterVisible(false, "reading");
+    const { renderReading } = await import("./ui/reading-view.js");
     const reading = await loadReading(id);
     if (!reading) {
       main.innerHTML = `
@@ -436,6 +540,7 @@ const router = createRouter({
   },
   async onQuiz(id) {
     setPublicCounterVisible(false, "assessment");
+    const { renderAssessment } = await import("./ui/assessment-view.js");
     const reading = await loadReading(id);
     if (!reading) {
       window.location.hash = "#/";
@@ -446,11 +551,16 @@ const router = createRouter({
       requiresConnection: !Boolean(
         levelAnswerKeys[reading.id] ?? demoAnswerKeys[reading.id],
       ),
+      onQualityChange: (changes) =>
+        classContributionQueue.updateQuality(reading.contentKey, changes),
+      beforeNavigate: flushClassContributions,
       onComplete: ({
         firstResults,
         finalResults,
         evidenceViewedIds,
         assessmentOutcome,
+        completionProof,
+        transferCompleted,
       }) => {
         const date = localToday();
         const firstCorrect = firstResults.filter(({ correct }) => correct).length;
@@ -573,25 +683,31 @@ const router = createRouter({
         queueEvent("evidence_located", reading);
         if (
           !repeatedSameDay &&
+          typeof completionProof === "string" &&
           window.localStorage.getItem(CLASS_TOKEN_KEY)
         ) {
           classContributionQueue.enqueue({
-            validReading: true,
-            contentId: reading.id,
-            category: reading.category,
-            skill: "evidence",
-            period: isoWeekKey(date),
+            completionProof,
+            readingId: reading.id,
+            contentKey: reading.contentKey,
+            version: reading.version,
+            quality: {
+              firstCorrect,
+              revisedCorrect: revisedCount,
+              evidenceViewed: evidenceViewedIds.length > 0,
+              transferCompleted: Boolean(transferCompleted),
+            },
           });
         }
         persistState(state);
         flushEvents();
-        flushClassContributions();
         return `#/city/invest/${reading.id}`;
       },
     });
   },
   async onCityInvest(id) {
     setPublicCounterVisible(false);
+    const { renderCityInvest } = await import("./ui/city-view.js");
     const completion = state.completedReadings[id];
     if (!completion) {
       window.location.hash = `#/read/${id}`;
@@ -632,6 +748,7 @@ const router = createRouter({
   },
   async onCity() {
     setPublicCounterVisible(true);
+    const { renderCityOverview } = await import("./ui/city-overview.js");
     renderCityOverview(main, state, {
       saveState: persistState,
       exportState: exportLearningState,
@@ -640,6 +757,7 @@ const router = createRouter({
   },
   async onTeacher(view, status) {
     setPublicCounterVisible(false);
+    const { renderReviewConsole } = await import("./ui/review-console.js");
     await renderReviewConsole(main, {
       initialView: view,
       initialStatus: status,
@@ -647,6 +765,7 @@ const router = createRouter({
   },
   async onGuide() {
     setPublicCounterVisible(true);
+    const { renderUsageGuide } = await import("./ui/usage-guide.js");
     renderUsageGuide(main, {
       anonymousStatisticsEnabled: anonymousStatisticsEnabled(),
       onAnonymousStatisticsChange: (enabled) => {
@@ -657,12 +776,14 @@ const router = createRouter({
   },
   async onClass() {
     setPublicCounterVisible(false);
+    const { renderClassView } = await import("./ui/class-view.js");
     await renderClassView(main, {
       contributionQueue: classContributionQueue,
     });
   },
   async onPlacement() {
     setPublicCounterVisible(false);
+    const { renderPlacement } = await import("./ui/placement-view.js");
     renderPlacement(main, {
       state,
       saveState: persistState,
@@ -670,6 +791,7 @@ const router = createRouter({
   },
   async onFamily() {
     setPublicCounterVisible(false);
+    const { renderFamilyView } = await import("./ui/family-view.js");
     await renderFamilyView(main, {
       familyClient,
       localState: state,

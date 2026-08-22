@@ -45,13 +45,14 @@ test("部署文件明定 migration、Worker、前端順序與 Preview 隔離", (
   assert.doesNotMatch(deployment, /[A-Za-z0-9_-]{30,}/);
 });
 
-test("正式環境停用每日 AI Cron，內容改由 Codex CLI 人工策展", () => {
+test("正式環境只保留資料清理 Cron，內容仍由 Codex CLI 人工策展", () => {
   const config = read("wrangler.worker.toml");
   const worker = read("worker/src/index.js");
   const deployment = read("docs/deployment.md");
-  assert.match(config, /\[triggers\]\s+crons = \[\]/);
+  assert.match(config, /\[triggers\]\s+crons = \["17 19 \* \* \*"\]/);
   assert.doesNotMatch(config, /\[ai\]|GENERATION_MODEL|GENERATION_API_KEY/);
-  assert.doesNotMatch(worker, /scheduled|createPipelineRuntime/);
+  assert.doesNotMatch(worker, /createPipelineRuntime/);
+  assert.match(worker, /purgeExpiredAnonymousEvents/);
   assert.match(deployment, /Codex CLI/);
   assert.match(deployment, /30 個閱讀主題/);
 });

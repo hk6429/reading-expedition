@@ -110,7 +110,7 @@ test("閱征紀錄可安全復原，含禁止欄位的檔案不會覆寫原狀�
   restored.city.buildings.library = 3;
 
   const result = store.restore(JSON.stringify(restored));
-  assert.equal(result.city.buildings.library, 3);
+  assert.equal(result.city.buildings.library, 0);
   assert.equal(store.load().deviceId, "device-restored");
 
   assert.throws(
@@ -118,4 +118,65 @@ test("閱征紀錄可安全復原，含禁止欄位的檔案不會覆寫原狀�
     /email/,
   );
   assert.equal(store.load().deviceId, "device-restored");
+});
+
+test("匯入時依有效閱讀與診斷重算獎勵、建築與能力，不信任任意數值", () => {
+  const storage = memoryStorage();
+  const store = createLocalStore(storage);
+  const imported = createDefaultState("device-imported");
+  imported.readingHistory = [
+    {
+      id: "reading-1:2026-08-01",
+      readingId: "reading-1",
+      date: "2026-08-01",
+      category: "science",
+      skill: "evidence",
+      title: "文章一",
+      evidence: "原文證據",
+      mainlineReward: true,
+    },
+  ];
+  imported.completedReadings["reading-1"] = {
+    date: "2026-08-01",
+    category: "science",
+    skill: "理解與文證",
+    evidence: "原文證據",
+    evidenceSubmitted: true,
+    assessmentPassed: true,
+    reward: 9999,
+    rewards: {
+      inkBricks: 9999,
+      fellowshipSeals: 9999,
+      type: "building",
+      title: "偽造獎勵",
+    },
+  };
+  imported.city.materials.inkBricks = 999999;
+  imported.city.materials.fellowshipSeals = 999999;
+  imported.city.buildings.library = 5;
+  imported.abilityGrowth.evidence = 999999;
+
+  const restored = store.restore(JSON.stringify(imported));
+
+  assert.equal(restored.completedReadings["reading-1"].reward, 5);
+  assert.equal(restored.city.materials.inkBricks, 5);
+  assert.equal(restored.city.materials.fellowshipSeals, 0);
+  assert.equal(restored.city.buildings.library, 0);
+  assert.equal(restored.abilityGrowth.evidence, 0);
+});
+
+test("可從含資料字典的作品集包裝還原學習狀態", () => {
+  const storage = memoryStorage();
+  const store = createLocalStore(storage);
+  const state = createDefaultState("device-portfolio");
+  const restored = store.restore(
+    JSON.stringify({
+      kind: "reading-expedition-portfolio",
+      version: 1,
+      dataDictionary: {},
+      privacy: {},
+      learningState: state,
+    }),
+  );
+  assert.equal(restored.deviceId, "device-portfolio");
 });

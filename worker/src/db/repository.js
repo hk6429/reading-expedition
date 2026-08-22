@@ -166,6 +166,22 @@ export function createReadingRepository(db) {
       );
       if (statements.length) await db.batch(statements);
     },
+    async purgeExpiredAnonymousEvents(cutoffIso) {
+      if (
+        typeof cutoffIso !== "string" ||
+        !Number.isFinite(Date.parse(cutoffIso))
+      ) {
+        throw new TypeError("anonymous event cutoff must be an ISO timestamp");
+      }
+      const result = await db
+        .prepare(
+          `DELETE FROM anonymous_events
+           WHERE created_at < ?`,
+        )
+        .bind(cutoffIso)
+        .run();
+      return Number(result?.meta?.changes ?? 0);
+    },
     async createClassroom(record) {
       await db
         .prepare(
@@ -281,24 +297,257 @@ export function createReadingRepository(db) {
         : null;
     },
     async addClassContribution(record) {
-      await db
+      const result = await db
         .prepare(
           `INSERT OR IGNORE INTO classroom_contributions
-             (id, classroom_id, participant_id, content_id, category, skill, period)
-           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+              (id, classroom_id, participant_id, content_id,
+              canonical_content_key, reading_version, category, skill,
+              proof_nonce, period, created_at, quality_first_correct,
+              quality_revised_correct, quality_evidence_viewed,
+              quality_transfer_completed)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
         .bind(
           crypto.randomUUID(),
           record.classroomId,
           record.participantId,
           record.contentId,
+          record.canonicalContentKey,
+          record.readingVersion,
           record.category,
           record.skill,
+          record.proofNonce,
           record.period,
+          record.createdAt,
+          record.quality?.firstCorrect ?? null,
+          record.quality?.revisedCorrect ?? null,
+          record.quality ? Number(record.quality.evidenceViewed) : null,
+          record.quality ? Number(record.quality.transferCompleted) : null,
+        )
+        .run();
+      return Number(result?.meta?.changes) > 0;
+    },
+    async countRecentClassContributions(participantId, since) {
+      const row = await db
+        .prepare(
+          `SELECT COUNT(*) AS contribution_count
+           FROM classroom_contributions
+           WHERE participant_id = ?
+             AND julianday(created_at) >= julianday(?)`,
+        )
+        .bind(participantId, since)
+        .first();
+      return Number(row?.contribution_count ?? 0);
+    },
+    async countRecentClassroomContributions(classroomId, since) {
+      const row = await db
+        .prepare(
+          `SELECT COUNT(*) AS contribution_count
+           FROM classroom_contributions
+           WHERE classroom_id = ?
+             AND julianday(created_at) >= julianday(?)`,
+        )
+        .bind(classroomId, since)
+        .first();
+      return Number(row?.contribution_count ?? 0);
+    },
+    async setClassMission(record) {
+      const result = await db
+        .prepare(
+          `INSERT INTO class_missions
+             (id, classroom_id, period, mission_type, target,
+              created_by_session, created_at, updated_at)
+           SELECT ?, ?, ?, ?, ?, ?, ?, ?
+           WHERE EXISTS (
+             SELECT 1 FROM classrooms
+             WHERE id = ? AND revoked_at IS NULL
+           )
+           ON CONFLICT(classroom_id, period) DO UPDATE SET
+             mission_type = excluded.mission_type,
+             target = excluded.target,
+             created_by_session = excluded.created_by_session,
+             updated_at = excluded.updated_at`,
+        )
+        .bind(
+          crypto.randomUUID(),
+          record.classroomId,
+          record.period,
+          record.type,
+          record.target,
+          record.createdBySession,
+          record.updatedAt,
+          record.updatedAt,
+          record.classroomId,
+        )
+        .run();
+      return Number(result?.meta?.changes) > 0;
+    },
+    async addClassMissionVote(record) {
+      const result = await db
+        .prepare(
+          `INSERT OR IGNORE INTO class_mission_votes
+             (id, classroom_id, participant_id, period, choice, created_at)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          crypto.randomUUID(),
+          record.classroomId,
+          record.participantId,
+          record.period,
+          record.choice,
+          record.createdAt,
+        )
+        .run();
+      return Number(result?.meta?.changes) > 0;
+    },
+    async upsertClassMissionExit(record) {
+      await db
+        .prepare(
+          `INSERT INTO class_mission_exits
+             (id, classroom_id, participant_id, period, exit_code, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?)
+           ON CONFLICT(classroom_id, participant_id, period) DO UPDATE SET
+             exit_code = excluded.exit_code,
+             updated_at = excluded.updated_at`,
+        )
+        .bind(
+          crypto.randomUUID(),
+          record.classroomId,
+          record.participantId,
+          record.period,
+          record.code,
+          record.updatedAt,
         )
         .run();
     },
-    async getClassAggregate(classroomId) {
+    async getClassMissionContext(classroomId, period) {
+      const missionRow = await db
+        .prepare(
+          `SELECT mission_type, target
+           FROM class_missions
+           WHERE classroom_id = ? AND period = ?
+           LIMIT 1`,
+        )
+        .bind(classroomId, period)
+        .first();
+      const { results: voteRows = [] } = await db
+        .prepare(
+          `SELECT choice, COUNT(*) AS count
+           FROM class_mission_votes
+           WHERE classroom_id = ? AND period = ?
+           GROUP BY choice`,
+        )
+        .bind(classroomId, period)
+        .all();
+      const { results: exitRows = [] } = await db
+        .prepare(
+          `SELECT exit_code, COUNT(*) AS count
+           FROM class_mission_exits
+           WHERE classroom_id = ? AND period = ?
+           GROUP BY exit_code`,
+        )
+        .bind(classroomId, period)
+        .all();
+      const assignmentRow = await db
+        .prepare(
+          `SELECT reading_id, title, ability, route, due_date
+           FROM class_assignments
+           WHERE classroom_id = ?
+           LIMIT 1`,
+        )
+        .bind(classroomId)
+        .first();
+      const qualityRow = await db
+        .prepare(
+          `SELECT
+             COUNT(quality_first_correct) AS quality_count,
+             COALESCE(SUM(quality_first_correct), 0) AS first_correct,
+             COALESCE(SUM(quality_revised_correct), 0) AS revised_correct,
+             COALESCE(SUM(quality_evidence_viewed), 0) AS evidence_viewed,
+             COALESCE(SUM(quality_transfer_completed), 0) AS transfer_completed
+           FROM classroom_contributions
+           WHERE classroom_id = ? AND period = ?`,
+        )
+        .bind(classroomId, period)
+        .first();
+      const voteCounts = Object.fromEntries(
+        voteRows.map((row) => [row.choice, Number(row.count)]),
+      );
+      const exitCounts = Object.fromEntries(
+        exitRows.map((row) => [row.exit_code, Number(row.count)]),
+      );
+      return {
+        mission: missionRow
+          ? {
+              type: missionRow.mission_type,
+              target: Number(missionRow.target),
+            }
+          : null,
+        voteParticipants: Object.values(voteCounts).reduce(
+          (sum, count) => sum + count,
+          0,
+        ),
+        voteCounts,
+        exitParticipants: Object.values(exitCounts).reduce(
+          (sum, count) => sum + count,
+          0,
+        ),
+        exitCounts,
+        currentAssignment: assignmentRow
+          ? {
+              readingId: assignmentRow.reading_id,
+              title: assignmentRow.title,
+              ability: assignmentRow.ability,
+              route: assignmentRow.route,
+              dueDate: assignmentRow.due_date,
+            }
+          : null,
+        quality: {
+          count: Number(qualityRow?.quality_count ?? 0),
+          firstCorrect: Number(qualityRow?.first_correct ?? 0),
+          revisedCorrect: Number(qualityRow?.revised_correct ?? 0),
+          evidenceViewed: Number(qualityRow?.evidence_viewed ?? 0),
+          transferCompleted: Number(qualityRow?.transfer_completed ?? 0),
+        },
+      };
+    },
+    async setClassAssignment(record) {
+      const result = await db
+        .prepare(
+          `INSERT INTO class_assignments
+             (id, classroom_id, reading_id, title, ability, route, due_date,
+              created_by_session, created_at, updated_at)
+           SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+           WHERE EXISTS (
+             SELECT 1 FROM classrooms
+             WHERE id = ? AND revoked_at IS NULL
+           )
+           ON CONFLICT(classroom_id) DO UPDATE SET
+             reading_id = excluded.reading_id,
+             title = excluded.title,
+             ability = excluded.ability,
+             route = excluded.route,
+             due_date = excluded.due_date,
+             created_by_session = excluded.created_by_session,
+             updated_at = excluded.updated_at`,
+        )
+        .bind(
+          crypto.randomUUID(),
+          record.classroomId,
+          record.readingId,
+          record.title,
+          record.ability,
+          record.route,
+          record.dueDate,
+          record.createdBySession,
+          record.updatedAt,
+          record.updatedAt,
+          record.classroomId,
+        )
+        .run();
+      return Number(result?.meta?.changes) > 0;
+    },
+    async getClassAggregate(classroomId, period) {
       const summary = await db
         .prepare(
           `SELECT
@@ -308,6 +557,16 @@ export function createReadingRepository(db) {
            WHERE classroom_id = ?`,
         )
         .bind(classroomId)
+        .first();
+      const weeklySummary = await db
+        .prepare(
+          `SELECT
+             COUNT(*) AS valid_readings,
+             COUNT(DISTINCT participant_id) AS anonymous_participants
+           FROM classroom_contributions
+           WHERE classroom_id = ? AND period = ?`,
+        )
+        .bind(classroomId, period)
         .first();
       const { results: categoryRows = [] } = await db
         .prepare(
@@ -331,6 +590,10 @@ export function createReadingRepository(db) {
         classroomId,
         validReadings: Number(summary?.valid_readings ?? 0),
         anonymousParticipants: Number(summary?.anonymous_participants ?? 0),
+        weeklyValidReadings: Number(weeklySummary?.valid_readings ?? 0),
+        weeklyAnonymousParticipants: Number(
+          weeklySummary?.anonymous_participants ?? 0,
+        ),
         categoryDistribution: Object.fromEntries(
           categoryRows.map((row) => [row.category, Number(row.count)]),
         ),
@@ -1276,6 +1539,7 @@ export function createReadingRepository(db) {
         .prepare(
           `SELECT
              ai.id,
+             ai.item_type,
              ai.correct_answer,
              ai.rationale,
              ai.distractor_reasons_json,
@@ -1303,6 +1567,7 @@ export function createReadingRepository(db) {
       if (results.length === 0) return null;
       return results.map((row) => ({
         id: row.id,
+        type: row.item_type,
         correctAnswer: row.correct_answer,
         rationale: row.rationale,
         distractorReasons: parseJsonField(
@@ -1314,6 +1579,32 @@ export function createReadingRepository(db) {
           "evidence_span_json",
         ),
       }));
+    },
+    async getAssessmentProofContext(readingId, version) {
+      const row = await db
+        .prepare(
+          `SELECT
+             rp.id AS reading_id,
+             rp.content_key,
+             rp.version,
+             fp.category
+           FROM reading_packages rp
+           JOIN fact_packs fp ON fp.id = rp.fact_pack_id
+           WHERE rp.id = ?
+             AND rp.version = ?
+             AND rp.publication_status = 'published'
+           LIMIT 1`,
+        )
+        .bind(readingId, version)
+        .first();
+      return row
+        ? {
+            readingId: row.reading_id,
+            contentKey: row.content_key,
+            version: Number(row.version),
+            category: row.category,
+          }
+        : null;
     },
   });
 }

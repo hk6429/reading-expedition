@@ -8,6 +8,11 @@ export function navigationItems() {
 }
 
 export function applyGlobalPreferences(root, preferences) {
-  root.dataset.texture = preferences.texture === false ? "off" : "on";
-  root.dataset.muted = preferences.muted === false ? "false" : "true";
+  root.dataset.texture = preferences.textures === false ? "off" : "on";
+  root.dataset.muted = preferences.muted === true ? "true" : "false";
+  root.dataset.reducedMotion = String(preferences.reducedMotion === true);
+  root.style.setProperty(
+    "--reading-line-height",
+    String(preferences.lineHeight ?? 1.85),
+  );
 }

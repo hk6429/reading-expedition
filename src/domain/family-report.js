@@ -82,6 +82,7 @@ export function buildChildReport({
   level = "",
   levelCompletedCount = null,
   levelTotalCount = null,
+  unlockedStoryTitle = "",
 }) {
   const rows = records.map((record) =>
     summarizeRecord(record, childId, alias, {
@@ -128,6 +129,7 @@ export function buildChildReport({
     level,
     levelCompletedCount,
     levelTotalCount,
+    unlockedStoryTitle,
     weeklyCount,
     previousWeekCount,
     weeklyTrend:
@@ -144,6 +146,33 @@ export function buildChildReport({
         : "目前三項能力表現穩定，下一篇可保持程度或嘗試更少提示。",
     rows,
   };
+}
+
+export function buildFamilySupportCards(report) {
+  const latest = report.rows?.at(-1) ?? {};
+  const praise = latest.revisedCorrect > 0
+    ? `我看見你願意回頭修正 ${latest.revisedCorrect} 題，這種修正力比一次答對更值得肯定。`
+    : latest.evidenceViewed
+      ? "我看見你先回原文找證據，再決定答案；這是可靠的閱讀方法。"
+      : "我看見你依自己的節奏完成閱讀，也知道需要時可以休息。";
+  const conversation = {
+    comprehension: "如果只用一句話說，這篇最重要的重點是什麼？",
+    inference: "文章哪一個線索，讓你推想到沒有直接寫出的意思？",
+    evidence: "你會用哪一句原文支持自己的判斷？為什麼？",
+  }[report.stuckSkill] ?? "這篇有哪些想法，可以用在今天的生活裡？";
+  const story = report.unlockedStoryTitle
+    ? `家庭故事卡：章回「${report.unlockedStoryTitle}」已解鎖。輪流說出最喜歡的片段與理由，只需口頭分享，不必上傳。`
+    : "家庭故事卡：目前還沒有新章回；可以一起回想最近一次閱讀中最有感的片段，只需口頭分享，不必上傳。";
+  return Object.freeze({
+    praise,
+    conversation,
+    story,
+    sharedGoalOptions: Object.freeze([
+      "只陪伴，不設篇數",
+      "一起讀 1 次",
+      "一起讀 3 次",
+    ]),
+  });
 }
 
 const CSV_COLUMNS = Object.freeze([
@@ -172,10 +201,19 @@ function csvCell(value) {
     : text;
 }
 
-export function reportRowsToCsv(rows = []) {
+export function reportRowsToCsv(rows = [], { anonymize = false } = {}) {
   const header = CSV_COLUMNS.map(([, label]) => label).join(",");
-  const lines = rows.map((row) =>
-    CSV_COLUMNS.map(([field]) => csvCell(row[field])).join(","),
-  );
+  const lines = rows.map((row) => {
+    const safeRow = anonymize
+      ? {
+          ...row,
+          childId: "",
+          childAlias: "匿名孩子",
+          date: "不顯示日期",
+          title: "已完成讀卷",
+        }
+      : row;
+    return CSV_COLUMNS.map(([field]) => csvCell(safeRow[field])).join(",");
+  });
   return `\uFEFF${[header, ...lines].join("\r\n")}`;
 }

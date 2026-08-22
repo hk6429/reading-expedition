@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   buildChildReport,
   buildDiagnosticRecord,
+  buildFamilySupportCards,
   reportRowsToCsv,
 } from "../../src/domain/family-report.js";
 
@@ -47,6 +48,52 @@ test("診斷紀錄分開首次答對、修正成功與查看文證", () => {
     evidenceViewed: true,
     diagnostic: "把例子當成原因",
   });
+});
+
+test("家庭支持卡稱讚修正與文證，提供口頭對話與可休息的共同目標", () => {
+  const cards = buildFamilySupportCards({
+    weeklyCount: 2,
+    completedCount: 4,
+    stuckSkill: "evidence",
+    unlockedStoryTitle: "聚義廳的第一盞燈",
+    rows: [
+      {
+        revisedCorrect: 1,
+        evidenceViewed: true,
+        title: "城市與水",
+      },
+    ],
+  });
+
+  assert.match(cards.praise, /修正/);
+  assert.match(cards.conversation, /證據|原文/);
+  assert.match(cards.story, /聚義廳的第一盞燈/);
+  assert.match(cards.story, /已解鎖/);
+  assert.deepEqual(cards.sharedGoalOptions, ["只陪伴，不設篇數", "一起讀 1 次", "一起讀 3 次"]);
+});
+
+test("匿名 CSV 不含孩子識別與逐篇標題", () => {
+  const csv = reportRowsToCsv(
+    [
+      {
+        childId: "child-1",
+        childAlias: "小舟",
+        date: "2026-07-30",
+        title: "私人篇名",
+        level: "launch",
+        supportMode: "guided",
+        firstCorrect: 2,
+        revisedCorrect: 1,
+        stuckSkill: "evidence",
+        evidenceViewed: true,
+        nextAction: "回到原文",
+      },
+    ],
+    { anonymize: true },
+  );
+
+  assert.doesNotMatch(csv, /child-1|小舟|私人篇名/);
+  assert.match(csv, /匿名孩子/);
 });
 
 test("家長報告先呈現週趨勢、卡關能力與下一步", () => {

@@ -1,4 +1,8 @@
-import { buildChildReport, reportRowsToCsv } from "../domain/family-report.js";
+import {
+  buildChildReport,
+  buildFamilySupportCards,
+  reportRowsToCsv,
+} from "../domain/family-report.js";
 import { createDefaultState } from "../storage/local-store.js";
 import { buildReadingInventory } from "../domain/reading-inventory.js";
 import { READING_LEVELS } from "../domain/reading-level.js";
@@ -202,6 +206,7 @@ function childCard({
   loadError = false,
   onSwitch,
   onExport,
+  onExportAnonymous,
   onDelete,
 }) {
   const card = document.createElement("article");
@@ -234,6 +239,47 @@ function childCard({
   next.textContent = loadError
     ? "請先重新整理或確認網路，再下載家庭報告。"
     : report.nextAction;
+  const support = buildFamilySupportCards(report);
+  const supportPanel = document.createElement("section");
+  supportPanel.className = "family-support-cards";
+  supportPanel.setAttribute("aria-label", "家庭陪伴卡");
+  const praise = document.createElement("p");
+  praise.innerHTML = "<strong>具體稱讚：</strong>";
+  praise.append(support.praise);
+  const conversation = document.createElement("p");
+  conversation.innerHTML = "<strong>餐桌對話：</strong>";
+  conversation.append(support.conversation);
+  const story = document.createElement("p");
+  story.innerHTML = "<strong>共讀故事：</strong>";
+  story.append(support.story);
+  const goal = document.createElement("fieldset");
+  const goalLegend = document.createElement("legend");
+  goalLegend.textContent = "本週家庭共同目標（不比較、不扣進度）";
+  const goalKey = `reading-expedition.family-goal:${child.id}`;
+  let selectedGoal = "只陪伴，不設篇數";
+  try {
+    selectedGoal = window.localStorage.getItem(goalKey) || selectedGoal;
+  } catch {
+    // Storage is optional; the controls still work for this page view.
+  }
+  for (const option of support.sharedGoalOptions) {
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = `family-goal-${child.id}`;
+    input.value = option;
+    input.checked = option === selectedGoal;
+    input.addEventListener("change", () => {
+      try {
+        window.localStorage.setItem(goalKey, option);
+      } catch {
+        // Keep the current selection when persistent storage is unavailable.
+      }
+    });
+    label.append(input, option);
+    goal.append(label);
+  }
+  supportPanel.append(praise, conversation, story, goal);
   const actions = document.createElement("div");
   actions.className = "family-card-actions";
   const switchButton = document.createElement("button");
@@ -242,15 +288,25 @@ function childCard({
   switchButton.addEventListener("click", onSwitch);
   const exportButton = document.createElement("button");
   exportButton.type = "button";
-  exportButton.textContent = "下載孩子 CSV";
+  exportButton.textContent = "下載完整孩子 CSV（私人）";
   exportButton.disabled = loadError;
   exportButton.addEventListener("click", onExport);
+  const anonymousExport = document.createElement("button");
+  anonymousExport.type = "button";
+  anonymousExport.textContent = "下載匿名化 CSV";
+  anonymousExport.disabled = loadError;
+  anonymousExport.addEventListener("click", onExportAnonymous);
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
   deleteButton.className = "danger-action";
   deleteButton.textContent = "刪除孩子";
   deleteButton.addEventListener("click", onDelete);
-  actions.append(switchButton, exportButton, deleteButton);
+  actions.append(
+    switchButton,
+    anonymousExport,
+    exportButton,
+    deleteButton,
+  );
   const details = document.createElement("details");
   details.className = "family-child-details";
   const detailsSummary = document.createElement("summary");
@@ -272,7 +328,20 @@ function childCard({
   } else {
     details.append(detailsSummary, detailList);
   }
-  card.append(heading, badge, stats, next, details, actions);
+  const privateWarning = document.createElement("p");
+  privateWarning.className = "privacy-note";
+  privateWarning.textContent =
+    "完整 CSV 含孩子代號、日期與篇名，請勿放在公開群組或共用裝置；分享時優先使用匿名化版本。";
+  card.append(
+    heading,
+    badge,
+    stats,
+    next,
+    supportPanel,
+    details,
+    privateWarning,
+    actions,
+  );
   return card;
 }
 
@@ -321,15 +390,19 @@ async function renderAuthenticated(
         const level = record.state.preferences?.selectedLevel ?? "launch";
         let inventory = null;
         if (loadLevelInventory) {
-          const readings = await loadLevelInventory(level);
-          inventory = buildReadingInventory(
-            readings,
-            record.state.completedReadings ?? {},
-            {
-              level,
-              supportMode: record.state.preferences?.supportMode ?? "guided",
-            },
-          );
+          try {
+            const readings = await loadLevelInventory(level);
+            inventory = buildReadingInventory(
+              readings,
+              record.state.completedReadings ?? {},
+              {
+                level,
+                supportMode: record.state.preferences?.supportMode ?? "guided",
+              },
+            );
+          } catch {
+            // 庫存暫時無法載入時，仍保留已取得的孩子報告與匯出能力。
+          }
         }
         reports.set(
           child.id,
@@ -341,6 +414,8 @@ async function renderAuthenticated(
             level,
             levelCompletedCount: inventory?.completedCount ?? null,
             levelTotalCount: inventory?.totalCount ?? null,
+            unlockedStoryTitle:
+              record.state.city?.storyUnlocks?.at(-1)?.title ?? "",
           }),
         );
       } catch {
@@ -438,6 +513,25 @@ async function renderAuthenticated(
   if (activeChild && initialSync.status === "conflict") {
     const cloud = family.children.find(({ id }) => id === activeChild.id);
     if (cloud) {
+      const comparison = document.createElement("section");
+      comparison.className = "family-conflict-comparison";
+      comparison.setAttribute("aria-labelledby", "family-conflict-heading");
+      const localAttempt = initialSync.failedAt ?? initialSync.pendingSince;
+      const localTime = localAttempt
+        ? new Date(localAttempt).toLocaleString("zh-TW")
+        : "時間未記錄";
+      const cloudTime = cloud.updatedAt
+        ? new Date(cloud.updatedAt).toLocaleString("zh-TW")
+        : "時間未記錄";
+      comparison.innerHTML = `
+        <h2 id="family-conflict-heading">先比較兩份紀錄</h2>
+        <dl>
+          <div><dt>本機來源</dt><dd>版本 ${Number(activeChild.stateVersion) || 1}・最後同步嘗試 ${localTime}</dd></div>
+          <div><dt>雲端來源</dt><dd>版本 ${Number(cloud.stateVersion) || 1}・更新 ${cloudTime}</dd></div>
+        </dl>
+        <p>先備份本機，再決定重試上傳或改用雲端；系統不會自動覆蓋其中一份。</p>
+      `;
+      hero.append(comparison);
       const loadCloud = document.createElement("button");
       loadCloud.type = "button";
       loadCloud.textContent = "改用雲端較新版本";
@@ -541,8 +635,15 @@ async function renderAuthenticated(
         },
         onExport: () => {
           downloadText(
-            `萬卷浮城-${child.alias}-${localDate(family.timeZone)}.csv`,
+            `萬卷浮城-完整私人報告-${localDate(family.timeZone)}.csv`,
             reportRowsToCsv(report.rows),
+            "text/csv;charset=utf-8",
+          );
+        },
+        onExportAnonymous: () => {
+          downloadText(
+            `萬卷浮城-匿名學習報告-${localDate(family.timeZone)}.csv`,
+            reportRowsToCsv(report.rows, { anonymize: true }),
             "text/csv;charset=utf-8",
           );
         },

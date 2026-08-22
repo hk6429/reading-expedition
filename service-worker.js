@@ -1,10 +1,19 @@
-const VERSION = "reading-expedition-v15";
+const VERSION = "reading-expedition-v16";
 const CACHE_PREFIX = "reading-expedition-";
 const SHELL = [
   "/",
   "/index.html",
   "/styles.css",
   "/src/app.js",
+  "/src/ui/reading-view.js",
+  "/src/ui/reading-controls.js",
+  "/src/ui/learning-loop.js",
+  "/src/ui/assessment-view.js",
+  "/src/domain/reading-quest.js",
+  "/src/domain/assessment-session.js",
+  "/src/domain/assessment-variants.js",
+  "/src/domain/reading-level.js",
+  "/src/theme/water-margin.js",
 ];
 
 self.addEventListener("install", (event) => {
@@ -25,7 +34,9 @@ self.addEventListener("activate", (event) => {
       if (staleKeys.length) {
         const clients = await self.clients.matchAll({ type: "window" });
         await Promise.all(
-          clients.map((client) => client.navigate(client.url)),
+          clients.map((client) =>
+            client.postMessage({ type: "UPDATE_READY", version: VERSION }),
+          ),
         );
       }
     })(),

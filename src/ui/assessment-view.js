@@ -2,6 +2,17 @@ import {
   assessmentOutcome,
   createAssessmentSession,
 } from "../domain/assessment-session.js";
+import {
+  createAssessmentVariantSet,
+  getAssessmentSessionSeed,
+} from "../domain/assessment-variants.js";
+import {
+  createAssessmentGuidance,
+  createAssessmentReport,
+  createCorrectionDrawer,
+  createLearningQuest,
+  restoreAssessmentAnswer,
+} from "./learning-loop.js";
 
 const COMPETENCY_LABELS = Object.freeze({
   comprehension: "找重點",
@@ -23,7 +34,11 @@ function createQuestion(item, index, total) {
   const legend = document.createElement("legend");
   const label = document.createElement("span");
   label.textContent = `第 ${index + 1}／${total} 題・${COMPETENCY_LABELS[item.type] ?? "閱讀理解"}`;
-  legend.append(label, item.prompt);
+  const variant = document.createElement("small");
+  variant.className = "assessment-variant-label";
+  variant.setAttribute("data-learning-feature", "assessment-equivalent-variant");
+  variant.textContent = `本次題型：${item.variantLabel}`;
+  legend.append(label, variant, item.prompt);
   fieldset.append(legend);
 
   const options = document.createElement("div");
@@ -153,28 +168,56 @@ function createReadingStrategyPanel(strategy) {
 export function renderAssessment(
   container,
   reading,
-  { submitAnswers, onComplete, requiresConnection = false },
+  {
+    submitAnswers,
+    onComplete,
+    onQualityChange = () => {},
+    beforeNavigate = () => {},
+    requiresConnection = false,
+  },
 ) {
   container.replaceChildren();
   container.className = "assessment-view";
+  const quest = createLearningQuest(reading);
+  const assessmentSeed = getAssessmentSessionSeed(window.sessionStorage);
+  const assessmentItems = createAssessmentVariantSet(reading.assessment, {
+    seed: assessmentSeed,
+  });
 
   const wrapper = document.createElement("section");
   wrapper.className = "assessment-sheet";
   wrapper.innerHTML = `
     <header class="assessment-header">
-      <a href="#/read/${reading.id}">← 返回文章</a>
+      <a href="#/read/${reading.id}">← 返回文章（保留當次選擇）</a>
       <p class="chapter-label">讀完後想一想・不計速度</p>
       <h1>用 3 題確認你讀懂了什麼</h1>
       <p class="assessment-reading-title">${reading.title}</p>
       <p><strong>達標條件：三題答對至少兩題。</strong>依序找重點、想意思、找證據；未達標時可回看並修正一次。</p>
       ${requiresConnection ? '<p class="assessment-connection-note">這篇正式讀卷的評分需要網路連線；離線時已選答案會留在這一頁，恢復連線後可再送出。</p>' : ""}
+      ${reading.assessmentSessionUnavailable ? '<p class="assessment-connection-note">目前無法取得伺服器完成驗證；仍可作答與保留學習紀錄，但這次不會計入班級共建。</p>' : ""}
     </header>
   `;
 
   const form = document.createElement("form");
   const questions = [];
-  reading.assessment.forEach((item, index) => {
-    const question = createQuestion(item, index, reading.assessment.length);
+  assessmentItems.forEach((item, index) => {
+    const question = createQuestion(item, index, assessmentItems.length);
+    const options = question.querySelector(".assessment-options");
+    for (const input of options.querySelectorAll("input")) {
+      input.addEventListener("change", () => {
+        quest.setAnswer(item.id, input.value);
+      });
+    }
+    const guidance = createAssessmentGuidance(
+      reading,
+      item,
+      quest,
+      () => {
+        options.querySelector("input")?.focus();
+      },
+    );
+    question.insertBefore(guidance, options);
+    restoreAssessmentAnswer(question, item, quest);
     questions.push(question);
     form.append(question);
   });
@@ -207,7 +250,9 @@ export function renderAssessment(
   closeEvidence.type = "button";
   closeEvidence.textContent = "回到題目";
   let evidenceTrigger = null;
-  const evidenceViewedIds = new Set();
+  const evidenceViewedIds = new Set(
+    quest.snapshot().assessment.evidenceViewed,
+  );
   closeEvidence.addEventListener("click", () => {
     evidencePanel.hidden = true;
     evidenceTrigger?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -232,7 +277,9 @@ export function renderAssessment(
   let latestResults = null;
   let latestAttempt = 0;
   let latestOutcome = null;
-  cityButton.addEventListener("click", () => {
+  let latestCompletionProof = null;
+  cityButton.addEventListener("click", async () => {
+    await beforeNavigate();
     window.location.hash = completionDestination;
   });
   completion.append(completionTitle, completionCopy);
@@ -241,29 +288,6 @@ export function renderAssessment(
   const strategyPanel = createReadingStrategyPanel(reading.readingStrategy);
   if (strategyPanel) completion.append(strategyPanel);
   completion.append(cityButton);
-
-  const backLink = wrapper.querySelector(".assessment-header a");
-  let assessmentFinished = false;
-  backLink.addEventListener("click", (event) => {
-    if (
-      !assessmentFinished &&
-      form.querySelector('input[type="radio"]:checked') &&
-      !window.confirm("尚未送出的作答會消失。確定回到文章嗎？")
-    ) {
-      event.preventDefault();
-    }
-  });
-  const warnBeforeUnload = (event) => {
-    if (
-      assessmentFinished ||
-      !form.querySelector('input[type="radio"]:checked')
-    ) {
-      return;
-    }
-    event.preventDefault();
-    event.returnValue = "";
-  };
-  window.addEventListener("beforeunload", warnBeforeUnload);
 
   const session = createAssessmentSession({
     itemIds: reading.assessment.map(({ id }) => id),
@@ -349,6 +373,7 @@ export function renderAssessment(
       firstResults ??= result.results;
       latestResults = result.results;
       latestAttempt = result.attempt;
+      latestCompletionProof = result.completionProof ?? null;
       result.results.forEach((itemResult) => {
         const fieldset = form.querySelector(
           `[data-item-id="${itemResult.id}"]`,
@@ -376,6 +401,7 @@ export function renderAssessment(
         evidence.textContent = `查看第${itemResult.evidenceSpan.paragraph}段線索`;
         evidence.addEventListener("click", () => {
           evidenceViewedIds.add(itemResult.id);
+          quest.markEvidenceViewed(itemResult.id);
           evidenceTrigger = evidence;
           const paragraph =
             reading.body[itemResult.evidenceSpan.paragraph - 1];
@@ -389,7 +415,16 @@ export function renderAssessment(
           evidencePanel.scrollIntoView({ behavior: "smooth", block: "center" });
           closeEvidence.focus({ preventScroll: true });
         });
-        feedback.append(status, reason, mentor, evidence);
+        const questionItem = reading.assessment.find(
+          ({ id }) => id === itemResult.id,
+        );
+        feedback.append(
+          status,
+          reason,
+          mentor,
+          evidence,
+          createCorrectionDrawer(questionItem, itemResult),
+        );
       });
 
       if (result.canRevise && !assessmentOutcome(result.results).passed) {
@@ -410,8 +445,6 @@ export function renderAssessment(
         (item, index) => !item.correct && latestResults[index]?.correct,
       ).length;
       latestOutcome = assessmentOutcome(latestResults);
-      assessmentFinished = true;
-      window.removeEventListener("beforeunload", warnBeforeUnload);
       completionTitle.textContent = latestOutcome.passed
         ? "答題達標，這一篇讀懂了"
         : "這一篇先停下來整理";
@@ -426,7 +459,21 @@ export function renderAssessment(
         attempt: latestAttempt,
         evidenceViewedIds: [...evidenceViewedIds],
         assessmentOutcome: latestOutcome,
+        completionProof: latestCompletionProof,
+        transferCompleted: Boolean(
+          quest.snapshot().assessment.transferChoice,
+        ),
       });
+      const learningReport = createAssessmentReport({
+        reading,
+        firstResults,
+        finalResults: latestResults,
+        evidenceViewedIds: [...evidenceViewedIds],
+        outcome: latestOutcome,
+        quest,
+        onTransferChange: onQualityChange,
+      });
+      completion.insertBefore(learningReport, strategyPanel ?? cityButton);
       cityButton.textContent = latestOutcome.passed
         ? "查看成果與下一步"
         : "回到文章，重新挑戰";
@@ -459,7 +506,8 @@ export function renderAssessment(
       error.textContent =
         cause.message === "all items must be answered"
           ? `請先完成 ${reading.assessment.length} 題，再送出答案。`
-          : "作答暫時無法送出，答案仍保留在這一頁。";
+          : cause.userMessage ??
+            "作答暫時無法送出，答案仍保留在這一頁。";
     }
   });
 

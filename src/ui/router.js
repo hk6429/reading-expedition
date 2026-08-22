@@ -13,8 +13,34 @@ export function createRouter({
   onRest,
   afterRoute,
 }) {
+  function applyRouteContext() {
+    const hash = window.location.hash || "#/";
+    const heading = document.querySelector("main h1");
+    const routeTitle = heading?.textContent?.trim() || "個人閱讀首頁";
+    document.title = `${routeTitle}｜萬卷浮城`;
+
+    document.querySelectorAll(".site-nav a[aria-current]").forEach((link) => {
+      link.removeAttribute("aria-current");
+    });
+    const activeHref = hash.startsWith("#/city")
+      ? "#/city"
+      : hash.startsWith("#/teacher")
+        ? "#/teacher"
+        : hash.startsWith("#/read") || hash.startsWith("#/quiz")
+          ? "#/bookshelf"
+          : hash.split("?")[0];
+    const current = [...document.querySelectorAll(".site-nav a")].find(
+      (link) => link.getAttribute("href") === activeHref,
+    );
+    current?.setAttribute("aria-current", "page");
+
+    const status = document.querySelector("#route-status");
+    if (status) status.textContent = `已前往：${routeTitle}`;
+  }
+
   async function renderRoute(render) {
     await render();
+    applyRouteContext();
     if (afterRoute) await afterRoute();
     window.scrollTo(0, 0);
     const heading = document.querySelector(
@@ -47,7 +73,7 @@ export function createRouter({
       if (onGuide) await renderRoute(onGuide);
       return;
     }
-    if (window.location.hash === "#/class") {
+    if (window.location.hash.startsWith("#/class")) {
       if (onClass) await renderRoute(onClass);
       return;
     }

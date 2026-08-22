@@ -7,9 +7,11 @@ const serviceWorker = fs.readFileSync(
   "utf8",
 );
 
-test("新版離線程式接管時會重新載入仍停在舊版的視窗", () => {
+test("新版離線程式接管時只通知視窗，不強制中斷閱讀或作答", () => {
   assert.match(serviceWorker, /self\.clients\.matchAll/);
-  assert.match(serviceWorker, /client\.navigate\(client\.url\)/);
+  assert.match(serviceWorker, /client\.postMessage/);
+  assert.match(serviceWorker, /UPDATE_READY/);
+  assert.doesNotMatch(serviceWorker, /client\.navigate\(client\.url\)/);
 });
 
 test("導覽與程式骨架採網路優先，離線時才回快取", () => {

@@ -9,6 +9,11 @@ import {
   buildReadingInventory,
   nextUnreadReading,
 } from "../domain/reading-inventory.js";
+import {
+  loadGamificationProfile,
+  saveGamificationProfile,
+} from "../domain/gamification-profile.js";
+import { createMissionDashboard } from "./mission-dashboard.js";
 
 function createChoiceButton({
   label,
@@ -37,15 +42,42 @@ export function renderHome(
   {
     preferences,
     diagnosticHistory = [],
+    readingProgress = {},
     onPreferencesChange,
   },
 ) {
   const selectedLevel = preferences.selectedLevel ?? "launch";
   const supportMode = preferences.supportMode ?? "guided";
-  const nextChallenge = nextUnreadReading(readings, completedReadings, {
-    level: selectedLevel,
-    supportMode,
-  });
+  const gamificationProfile = loadGamificationProfile();
+  const resolveNextChallenge = (profile) => {
+    const candidates =
+      profile.contentCategory === "any"
+        ? readings
+        : readings.filter(
+            ({ category }) => category === profile.contentCategory,
+          );
+    return nextUnreadReading(candidates, completedReadings, {
+      level: selectedLevel,
+      supportMode,
+    });
+  };
+  const nextChallenge = resolveNextChallenge(gamificationProfile);
+  const resumeChallenge = Object.entries(readingProgress)
+    .reverse()
+    .map(([readingId, position]) => ({
+      reading: readings.find(({ id }) => id === readingId),
+      paragraph: Number.isInteger(position?.paragraph)
+        ? Math.max(0, position.paragraph)
+        : 0,
+      progress: Number(position?.progress) || 0,
+    }))
+    .find(
+      ({ reading, progress }) =>
+        reading &&
+        !completedReadings[reading.id] &&
+        progress > 0 &&
+        progress < 1,
+    ) ?? null;
   const inventory = buildReadingInventory(readings, completedReadings, {
     level: selectedLevel,
     supportMode,
@@ -76,7 +108,7 @@ export function renderHome(
       ${preferences.recommendedLevel ? "" : '<p class="placement-skip-note">也可以先不測讀；目前暫從「啟航」開始，之後隨時能更換。</p>'}
     </div>
     <picture class="hero-illustration">
-      <source media="(max-width: 700px)" srcset="./assets/scenes/hero-960.webp">
+      <source media="(max-width: 700px)" srcset="./assets/scenes/hero-640.webp">
       <img
         src="./assets/scenes/hero-1600.webp"
         width="1600"
@@ -241,8 +273,19 @@ export function renderHome(
   }
   routeSection.append(grid);
 
+  const missionDashboard = createMissionDashboard({
+    context: "home",
+    profile: gamificationProfile,
+    readingHistory,
+    nextChallenge,
+    resolveNextChallenge,
+    resumeChallenge,
+    onProfileChange: (profile) => saveGamificationProfile(localStorage, profile),
+  });
+
   container.append(
     hero,
+    missionDashboard,
     chooser,
     ...(recommendationPanel ? [recommendationPanel] : []),
     routeSection,

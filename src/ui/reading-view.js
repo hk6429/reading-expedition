@@ -1,6 +1,16 @@
 import { waterMarginTheme } from "../theme/water-margin.js";
 import { createReadingControls } from "./reading-controls.js";
 import { READING_LEVELS } from "../domain/reading-level.js";
+import {
+  createCompletionMap,
+  createLearningQuest,
+  createMidpointCheck,
+  createParagraphToolkit,
+  createReadingInsights,
+  createReadingPreparation,
+  createSpeechControls,
+  createVocabularyAction,
+} from "./learning-loop.js";
 
 const MENTOR_GUIDES = Object.freeze({
   world: {
@@ -49,7 +59,7 @@ function glossaryExample(item) {
   return `例：這一段的「${item.term}」，可以理解為${definition}。`;
 }
 
-function appendInteractiveParagraph(block, text, glossaryItems) {
+function appendInteractiveParagraph(block, text, glossaryItems, quest) {
   const paragraph = document.createElement("p");
   paragraph.className = "reading-paragraph";
   const cards = [];
@@ -79,6 +89,7 @@ function appendInteractiveParagraph(block, text, glossaryItems) {
     card.id = cardId;
     card.className = "inline-term-card";
     card.hidden = true;
+    card.tabIndex = -1;
     card.setAttribute("aria-label", `${match.item.term}的文中解釋`);
     const title = document.createElement("strong");
     title.textContent = `${match.item.term}・文中義`;
@@ -95,13 +106,24 @@ function appendInteractiveParagraph(block, text, glossaryItems) {
       button.setAttribute("aria-expanded", "false");
       button.focus();
     });
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      card.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+      button.focus();
+    });
     button.addEventListener("click", () => {
       const opening = card.hidden;
       card.hidden = !opening;
       button.setAttribute("aria-expanded", String(opening));
-      if (opening) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (opening) {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        card.focus({ preventScroll: true });
+      }
     });
-    card.append(title, definition, example, close);
+    const collect = createVocabularyAction(match.item, quest);
+    card.append(title, definition, example, collect, close);
     paragraph.append(button);
     cards.push(card);
     cursor = match.index + match.item.term.length;
@@ -122,6 +144,7 @@ export function renderReading(
 ) {
   container.replaceChildren();
   container.className = "reading-view";
+  const quest = createLearningQuest(reading);
   document.documentElement.dataset.readingMode = state.preferences.mode;
   document.documentElement.style.setProperty(
     "--reading-scale",
@@ -135,6 +158,7 @@ export function renderReading(
   progress.setAttribute("aria-valuemin", "0");
   progress.setAttribute("aria-valuemax", "100");
   progress.setAttribute("aria-valuenow", "0");
+  progress.setAttribute("aria-valuetext", `尚未開始，共 ${reading.body.length} 段`);
   const progressBar = document.createElement("span");
   progressBar.className = "reading-progress__bar";
   const progressText = document.createElement("span");
@@ -206,7 +230,8 @@ export function renderReading(
     header.append(kicker, supportBadge, title);
   }
   if (reading.readingMinutes > 10) header.append(paceNote);
-  article.append(header, mentorGuide, midpointCheckpoint);
+  const preparation = createReadingPreparation(reading, quest);
+  article.append(header, preparation, mentorGuide, midpointCheckpoint);
   if (supportMode === "independent") {
     mentorGuide.hidden = true;
     midpointCheckpoint.hidden = true;
@@ -232,9 +257,36 @@ export function renderReading(
     const nearbyGlossary = reading.glossary.filter(({ term }) =>
       copy.includes(term),
     );
-    appendInteractiveParagraph(block, copy, nearbyGlossary);
+    appendInteractiveParagraph(block, copy, nearbyGlossary, quest);
+    block.prepend(
+      createParagraphToolkit(reading, index, quest, () => {
+        applyParagraphState();
+        completionMap.update();
+      }),
+    );
     paragraphs.append(block);
+    if (index === Math.max(0, Math.ceil(reading.body.length / 2) - 1)) {
+      paragraphs.append(createMidpointCheck(quest));
+    }
   });
+  function applyParagraphState() {
+    const snapshot = quest.snapshot().reading;
+    for (const block of paragraphs.querySelectorAll(".reading-block")) {
+      const index = Number(block.dataset.paragraph);
+      const isFocused = snapshot.focusParagraph === index;
+      block.classList.toggle("is-learning-complete", snapshot.completedParagraphs.includes(index));
+      block.classList.toggle("is-learning-focus", isFocused);
+      block.classList.toggle("is-learning-dimmed", snapshot.focusParagraph !== null && !isFocused);
+      const flag = block.querySelector('[data-learning-feature="paragraph-flag"]');
+      flag?.setAttribute("aria-pressed", String(snapshot.completedParagraphs.includes(index)));
+      if (flag) flag.textContent = snapshot.completedParagraphs.includes(index) ? "本段已讀" : "標記本段完成";
+      const focus = block.querySelector('[data-learning-feature="paragraph-focus"]');
+      focus?.setAttribute("aria-pressed", String(isFocused));
+      if (focus) focus.textContent = isFocused ? "離開焦點" : "只看本段";
+    }
+  }
+  const completionMap = createCompletionMap(reading, quest);
+  applyParagraphState();
   const savedPosition = state.readingProgress[reading.id];
   let resumeChoicePending =
     savedPosition?.paragraph > 0 &&
@@ -261,7 +313,9 @@ export function renderReading(
     restartButton.textContent = "從頭開始";
     continueButton.addEventListener("click", () => {
       resumeChoicePending = false;
-      const target = paragraphs.children[savedPosition.paragraph];
+      const target = paragraphs.querySelector(
+        `[data-paragraph="${savedPosition.paragraph}"]`,
+      );
       target?.scrollIntoView({ behavior: "smooth", block: "start" });
       target?.classList.add("is-resumed");
       resume.remove();
@@ -282,6 +336,7 @@ export function renderReading(
     article.append(resume);
   }
   article.append(paragraphs);
+  article.append(createReadingInsights(reading));
 
   if (reading.glossary.length > 0) {
     const glossary = document.createElement("section");
@@ -309,15 +364,18 @@ export function renderReading(
   sourceTitle.id = "source-title";
   sourceTitle.textContent = "來源與授權";
   source.append(sourceTitle);
-  for (const item of reading.sourceAttribution) {
+  reading.sourceAttribution.forEach((item, index) => {
     const link = document.createElement("a");
     link.href = item.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.textContent = `${item.publisher}・${item.license}`;
+    link.setAttribute("aria-label", `開啟${item.publisher}來源（${item.license}）`);
+    link.textContent = `開啟來源 ${index + 1}・${item.license}`;
     source.append(link);
-  }
+  });
   article.append(source);
+
+  article.append(completionMap);
 
   const quizButton = document.createElement("button");
   quizButton.type = "button";
@@ -326,6 +384,11 @@ export function renderReading(
   const quizStatus = document.createElement("p");
   quizStatus.className = "quiz-readiness";
   quizStatus.setAttribute("role", "status");
+  quizStatus.setAttribute("aria-live", "polite");
+  const reachedEndButton = document.createElement("button");
+  reachedEndButton.type = "button";
+  reachedEndButton.className = "reading-end-confirm";
+  reachedEndButton.textContent = "我已讀到文末";
   let hasReachedEnd = (savedPosition?.progress ?? 0) >= 0.95;
   function updateQuizReadiness() {
     const offlineBlocked =
@@ -345,7 +408,18 @@ export function renderReading(
   quizButton.addEventListener("click", () => {
     window.location.hash = `#/quiz/${reading.id}`;
   });
-  article.append(quizButton, quizStatus);
+  reachedEndButton.addEventListener("click", () => {
+    hasReachedEnd = true;
+    reachedEndButton.disabled = true;
+    reachedEndButton.textContent = "已確認讀到文末";
+    updateQuizReadiness();
+  });
+  const speechControls = createSpeechControls(reading);
+  const thumbBar = document.createElement("nav");
+  thumbBar.className = "reading-thumb-bar";
+  thumbBar.setAttribute("aria-label", "閱讀快速操作");
+  thumbBar.append(reachedEndButton, speechControls);
+  article.append(thumbBar, quizButton, quizStatus);
   updateQuizReadiness();
   window.addEventListener("online", updateQuizReadiness, { once: true });
   window.addEventListener("offline", updateQuizReadiness, { once: true });
@@ -365,8 +439,20 @@ export function renderReading(
   container.append(layout);
 
   let endDwellTimer = null;
-  const observer = new IntersectionObserver(
-    (entries) => {
+  function useManualEndConfirmation() {
+    progressText.textContent = "自動進度暫時無法使用，可逐段標記並在文末手動確認";
+    progress.setAttribute(
+      "aria-valuetext",
+      "自動進度暫時無法使用，可使用段落旗標與文末確認按鈕",
+    );
+  }
+  if (typeof IntersectionObserver !== "function") {
+    useManualEndConfirmation();
+    return;
+  }
+  let observer;
+  try {
+    observer = new IntersectionObserver((entries) => {
       const finalParagraph = reading.body.length - 1;
       const endEntry = entries.find(
         (entry) => Number(entry.target.dataset.paragraph) === finalParagraph,
@@ -396,6 +482,10 @@ export function renderReading(
         "aria-valuenow",
         String(Math.round(furthestProgress * 100)),
       );
+      progress.setAttribute(
+        "aria-valuetext",
+        `已讀到第 ${Math.max(paragraph + 1, (state.readingProgress[reading.id]?.paragraph ?? 0) + 1)} 段，共 ${reading.body.length} 段`,
+      );
       if (
         readingProgress >= 0.5 &&
         mentorGuide.dataset.halfway !== "true"
@@ -413,8 +503,12 @@ export function renderReading(
         offset: 0,
         progress: readingProgress,
       });
-    },
-    { threshold: [0.35, 0.7] },
-  );
-  for (const paragraph of paragraphs.children) observer.observe(paragraph);
+    }, { threshold: [0.35, 0.7] });
+  } catch {
+    useManualEndConfirmation();
+    return;
+  }
+  for (const paragraph of paragraphs.querySelectorAll(".reading-block")) {
+    observer.observe(paragraph);
+  }
 }

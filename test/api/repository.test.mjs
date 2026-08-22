@@ -218,6 +218,45 @@ test("文章發布升版後仍可使用各題最新版本作答", async () => {
   assert.deepEqual(calls[0].bindings, ["moon-phases-guided", 2]);
 });
 
+test("repository 提供完成證明所需的發布文章 canonical context", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async first() {
+          return {
+            reading_id: "water-sharing-guided-v1",
+            content_key: "water-sharing",
+            version: 1,
+            category: "science",
+          };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const context = await repository.getAssessmentProofContext(
+    "water-sharing-guided-v1",
+    1,
+  );
+
+  assert.deepEqual(context, {
+    readingId: "water-sharing-guided-v1",
+    contentKey: "water-sharing",
+    version: 1,
+    category: "science",
+  });
+  assert.match(calls[0].sql, /publication_status = 'published'/);
+  assert.deepEqual(calls[0].bindings, ["water-sharing-guided-v1", 1]);
+});
+
 test("repository 列出匿名班級統計並同步停用班級與權杖", async () => {
   const calls = [];
   const batches = [];
@@ -267,6 +306,461 @@ test("repository 列出匿名班級統計並同步停用班級與權杖", async 
   assert.match(calls[1].sql, /UPDATE classrooms/);
   assert.match(calls[2].sql, /UPDATE classroom_tokens/);
   assert.equal(batches[0].length, 2);
+});
+
+test("repository 分開彙總班級永久地標與指定週任務", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async first() {
+          if (/period = \?/.test(sql)) {
+            return { valid_readings: 7, anonymous_participants: 5 };
+          }
+          return { valid_readings: 24, anonymous_participants: 6 };
+        },
+        async all() {
+          return { results: [] };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const aggregate = await repository.getClassAggregate(
+    "class-001",
+    "2026-W31",
+  );
+
+  assert.equal(aggregate.validReadings, 24);
+  assert.equal(aggregate.weeklyValidReadings, 7);
+  assert.equal(aggregate.weeklyAnonymousParticipants, 5);
+  assert.deepEqual(calls[0].bindings, ["class-001"]);
+  assert.match(calls[1].sql, /period = \?/);
+  assert.deepEqual(calls[1].bindings, ["class-001", "2026-W31"]);
+});
+
+test("repository 只替有效班級 upsert 當週共同任務", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          return { meta: { changes: 1 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const saved = await repository.setClassMission({
+    classroomId: "class-001",
+    period: "2026-W34",
+    type: "category_balance",
+    target: 10,
+    createdBySession: "teacher-session-001",
+    updatedAt: "2026-08-22T10:00:00.000Z",
+  });
+
+  assert.equal(saved, true);
+  assert.match(calls[0].sql, /INSERT INTO class_missions/);
+  assert.match(calls[0].sql, /ON CONFLICT\(classroom_id, period\)/);
+  assert.match(calls[0].sql, /revoked_at IS NULL/);
+  assert.deepEqual(calls[0].bindings.slice(1), [
+    "class-001",
+    "2026-W34",
+    "category_balance",
+    10,
+    "teacher-session-001",
+    "2026-08-22T10:00:00.000Z",
+    "2026-08-22T10:00:00.000Z",
+    "class-001",
+  ]);
+});
+
+test("repository 每個匿名權杖每週只接受一張任務票", async () => {
+  const calls = [];
+  let writes = 0;
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          writes += 1;
+          return { meta: { changes: writes === 1 ? 1 : 0 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+  const vote = {
+    classroomId: "class-001",
+    participantId: "participant-001",
+    period: "2026-W34",
+    choice: "category_balance",
+    createdAt: "2026-08-22T10:00:00.000Z",
+  };
+
+  assert.equal(await repository.addClassMissionVote(vote), true);
+  assert.equal(await repository.addClassMissionVote(vote), false);
+  assert.match(calls[0].sql, /INSERT OR IGNORE INTO class_mission_votes/);
+  assert.deepEqual(calls[0].bindings.slice(1), [
+    "class-001",
+    "participant-001",
+    "2026-W34",
+    "category_balance",
+    "2026-08-22T10:00:00.000Z",
+  ]);
+});
+
+test("repository 將同一匿名權杖的本週結束單更新在同一列", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          return { meta: { changes: 1 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  await repository.upsertClassMissionExit({
+    classroomId: "class-001",
+    participantId: "participant-001",
+    period: "2026-W34",
+    code: "need_support",
+    updatedAt: "2026-08-22T10:00:00.000Z",
+  });
+
+  assert.match(calls[0].sql, /INSERT INTO class_mission_exits/);
+  assert.match(
+    calls[0].sql,
+    /ON CONFLICT\(classroom_id, participant_id, period\)/,
+  );
+  assert.match(calls[0].sql, /exit_code = excluded\.exit_code/);
+  assert.deepEqual(calls[0].bindings.slice(1), [
+    "class-001",
+    "participant-001",
+    "2026-W34",
+    "need_support",
+    "2026-08-22T10:00:00.000Z",
+  ]);
+});
+
+test("repository 只回傳當週共同任務的群體彙總與目前指定閱讀", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async first() {
+          if (/FROM class_missions/.test(sql)) {
+            return { mission_type: "ability_practice", target: 10 };
+          }
+          if (/FROM class_assignments/.test(sql)) {
+            return {
+              reading_id: "water-guided-v1",
+              title: "城市如何分配水源",
+              ability: "evidence",
+              route: "guided",
+              due_date: "2026-08-30",
+            };
+          }
+          return {
+            quality_count: 6,
+            first_correct: 12,
+            revised_correct: 3,
+            evidence_viewed: 5,
+            transfer_completed: 4,
+          };
+        },
+        async all() {
+          if (/FROM class_mission_votes/.test(sql)) {
+            return {
+              results: [
+                { choice: "shared_readings", count: 2 },
+                { choice: "ability_practice", count: 4 },
+              ],
+            };
+          }
+          return {
+            results: [
+              { exit_code: "found_evidence", count: 5 },
+              { exit_code: "need_support", count: 1 },
+            ],
+          };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const context = await repository.getClassMissionContext(
+    "class-001",
+    "2026-W34",
+  );
+
+  assert.deepEqual(context, {
+    mission: { type: "ability_practice", target: 10 },
+    voteParticipants: 6,
+    voteCounts: { shared_readings: 2, ability_practice: 4 },
+    exitParticipants: 6,
+    exitCounts: { found_evidence: 5, need_support: 1 },
+    currentAssignment: {
+      readingId: "water-guided-v1",
+      title: "城市如何分配水源",
+      ability: "evidence",
+      route: "guided",
+      dueDate: "2026-08-30",
+    },
+    quality: {
+      count: 6,
+      firstCorrect: 12,
+      revisedCorrect: 3,
+      evidenceViewed: 5,
+      transferCompleted: 4,
+    },
+  });
+  assert.equal(calls.length, 5);
+  assert.deepEqual(calls[0].bindings, ["class-001", "2026-W34"]);
+  assert.deepEqual(calls[1].bindings, ["class-001", "2026-W34"]);
+  assert.deepEqual(calls[2].bindings, ["class-001", "2026-W34"]);
+  assert.deepEqual(calls[3].bindings, ["class-001"]);
+  assert.deepEqual(calls[4].bindings, ["class-001", "2026-W34"]);
+});
+
+test("repository 只替有效班級 upsert 目前指定閱讀", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          return { meta: { changes: 1 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const saved = await repository.setClassAssignment({
+    classroomId: "class-001",
+    readingId: "water-guided-v1",
+    title: "城市如何分配水源",
+    ability: "evidence",
+    route: "equivalent",
+    dueDate: null,
+    createdBySession: "teacher-session-001",
+    updatedAt: "2026-08-22T10:00:00.000Z",
+  });
+
+  assert.equal(saved, true);
+  assert.match(calls[0].sql, /INSERT INTO class_assignments/);
+  assert.match(calls[0].sql, /ON CONFLICT\(classroom_id\)/);
+  assert.match(calls[0].sql, /revoked_at IS NULL/);
+  assert.deepEqual(calls[0].bindings.slice(1), [
+    "class-001",
+    "water-guided-v1",
+    "城市如何分配水源",
+    "evidence",
+    "equivalent",
+    null,
+    "teacher-session-001",
+    "2026-08-22T10:00:00.000Z",
+    "2026-08-22T10:00:00.000Z",
+    "class-001",
+  ]);
+});
+
+test("repository 以 nonce 與 canonical content key 原子防重並回報是否計入", async () => {
+  const calls = [];
+  let runCount = 0;
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          runCount += 1;
+          return { meta: { changes: runCount === 1 ? 1 : 0 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+  const record = {
+    classroomId: "class-001",
+    participantId: "participant-001",
+    contentId: "water-guided-v1",
+    canonicalContentKey: "water",
+    readingVersion: 1,
+    category: "science",
+    skill: "evidence",
+    proofNonce: "proof-nonce-001",
+    period: "2026-W34",
+    createdAt: "2026-08-22T10:00:00.000Z",
+    quality: {
+      firstCorrect: 2,
+      revisedCorrect: 1,
+      evidenceViewed: true,
+      transferCompleted: false,
+    },
+  };
+
+  assert.equal(await repository.addClassContribution(record), true);
+  assert.equal(await repository.addClassContribution(record), false);
+  assert.match(calls[0].sql, /INSERT OR IGNORE/);
+  assert.match(calls[0].sql, /canonical_content_key/);
+  assert.match(calls[0].sql, /proof_nonce/);
+  assert.deepEqual(calls[0].bindings.slice(1), [
+    "class-001",
+    "participant-001",
+    "water-guided-v1",
+    "water",
+    1,
+    "science",
+    "evidence",
+    "proof-nonce-001",
+    "2026-W34",
+    "2026-08-22T10:00:00.000Z",
+    2,
+    1,
+    1,
+    0,
+  ]);
+});
+
+test("repository 以匿名權杖及一分鐘視窗計算近期貢獻", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async first() {
+          return { contribution_count: 7 };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const count = await repository.countRecentClassContributions(
+    "participant-001",
+    "2026-08-22T09:59:00.000Z",
+  );
+
+  assert.equal(count, 7);
+  assert.match(calls[0].sql, /julianday\(created_at\)/);
+  assert.deepEqual(calls[0].bindings, [
+    "participant-001",
+    "2026-08-22T09:59:00.000Z",
+  ]);
+});
+
+test("repository 以班級及一分鐘視窗計算群體近期貢獻", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async first() {
+          return { contribution_count: 120 };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const count = await repository.countRecentClassroomContributions(
+    "class-001",
+    "2026-08-22T09:59:00.000Z",
+  );
+
+  assert.equal(count, 120);
+  assert.match(calls[0].sql, /classroom_id = \?/);
+  assert.match(calls[0].sql, /julianday\(created_at\)/);
+  assert.deepEqual(calls[0].bindings, [
+    "class-001",
+    "2026-08-22T09:59:00.000Z",
+  ]);
+});
+
+test("repository 清除保存期限以前的匿名事件", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          return { meta: { changes: 23 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+
+  const deleted = await repository.purgeExpiredAnonymousEvents(
+    "2026-07-08T00:00:00.000Z",
+  );
+
+  assert.equal(deleted, 23);
+  assert.match(calls[0].sql, /DELETE FROM anonymous_events/);
+  assert.match(calls[0].sql, /created_at < \?/);
+  assert.deepEqual(calls[0].bindings, ["2026-07-08T00:00:00.000Z"]);
 });
 
 test("repository 刪除家庭時依序實體移除狀態、孩子、sessions 與護照", async () => {

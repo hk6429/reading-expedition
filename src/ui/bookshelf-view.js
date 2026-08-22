@@ -21,7 +21,12 @@ export function renderBookshelf(
   container,
   readings,
   completedReadings,
-  { preferences, diagnosticHistory = [], onPreferencesChange },
+  {
+    preferences,
+    diagnosticHistory = [],
+    onPreferencesChange,
+    onDownloadOfflinePack = null,
+  },
 ) {
   const level = preferences.selectedLevel ?? "launch";
   const inventory = buildReadingInventory(readings, completedReadings, {
@@ -82,6 +87,30 @@ export function renderBookshelf(
     onPreferencesChange(preferences, { persist: false });
   });
   controls.append(filter);
+  if (onDownloadOfflinePack) {
+    const offlinePanel = document.createElement("section");
+    offlinePanel.className = "offline-pack-control";
+    const download = document.createElement("button");
+    download.type = "button";
+    download.textContent = "下載本週離線包（最多 7 篇）";
+    const status = document.createElement("p");
+    status.setAttribute("role", "status");
+    status.textContent = navigator.onLine
+      ? "優先保存文章正文；圖片與正式線上評分不包含在離線包。"
+      : "目前離線；請恢復連線後下載新的週包。";
+    download.disabled = !navigator.onLine;
+    download.addEventListener("click", async () => {
+      download.disabled = true;
+      status.textContent = "正在下載正文，請保留此頁……";
+      const result = await onDownloadOfflinePack(inventory.entries.map(({ reading }) => reading));
+      status.textContent = result.failed.length
+        ? `已保存 ${result.saved}／${result.requested} 篇；${result.failed.length} 篇暫時無法下載。`
+        : `已保存 ${result.saved} 篇；切換飛航模式後仍可從書架開啟。`;
+      download.disabled = !navigator.onLine;
+    });
+    offlinePanel.append(download, status);
+    controls.append(offlinePanel);
+  }
 
   const list = document.createElement("div");
   list.className = "bookshelf-list";

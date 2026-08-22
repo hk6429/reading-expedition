@@ -1,27 +1,70 @@
 const QUEUE_KEY = "reading-expedition.class-contributions.v1";
-const CATEGORIES = new Set(["world", "science", "humanities"]);
-const SKILLS = new Set(["comprehension", "inference", "evidence"]);
+import { createClassContribution } from "../domain/class-contribution.js";
+
+const QUALITY_KEYS = new Set([
+  "firstCorrect",
+  "revisedCorrect",
+  "evidenceViewed",
+  "transferCompleted",
+]);
+
+function validateQuality(value, { partial = false } = {}) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new TypeError("class contribution quality is invalid");
+  }
+  for (const key of Object.keys(value)) {
+    if (!QUALITY_KEYS.has(key)) {
+      throw new TypeError("class contribution quality is invalid");
+    }
+  }
+  if (
+    (!partial || "firstCorrect" in value) &&
+    (!Number.isInteger(value.firstCorrect) ||
+      value.firstCorrect < 0 ||
+      value.firstCorrect > 3)
+  ) {
+    throw new TypeError("class contribution quality is invalid");
+  }
+  if (
+    (!partial || "revisedCorrect" in value) &&
+    (!Number.isInteger(value.revisedCorrect) ||
+      value.revisedCorrect < 0 ||
+      value.revisedCorrect > 3)
+  ) {
+    throw new TypeError("class contribution quality is invalid");
+  }
+  for (const key of ["evidenceViewed", "transferCompleted"]) {
+    if ((!partial || key in value) && typeof value[key] !== "boolean") {
+      throw new TypeError("class contribution quality is invalid");
+    }
+  }
+  return Object.freeze({ ...value });
+}
 
 function validate(item) {
-  if (
-    !item ||
-    item.validReading !== true ||
-    typeof item.contentId !== "string" ||
-    !/^[A-Za-z0-9-]{1,120}$/.test(item.contentId) ||
-    !CATEGORIES.has(item.category) ||
-    !SKILLS.has(item.skill) ||
-    !/^\d{4}-W\d{2}$/.test(item.period)
-  ) {
+  if (!item || typeof item !== "object" || Array.isArray(item)) {
     throw new TypeError("class contribution is invalid");
   }
-  return structuredClone(item);
+  const { quality, ...base } = item;
+  const contribution = createClassContribution(base);
+  return structuredClone({
+    ...contribution,
+    ...(quality === undefined ? {} : { quality: validateQuality(quality) }),
+  });
 }
 
 export function createClassContributionQueue(storage) {
   function load() {
     try {
       const parsed = JSON.parse(storage.getItem(QUEUE_KEY) ?? "[]");
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.flatMap((item) => {
+        try {
+          return [validate(item)];
+        } catch {
+          return [];
+        }
+      });
     } catch {
       return [];
     }
@@ -35,7 +78,7 @@ export function createClassContributionQueue(storage) {
     enqueue(item) {
       const valid = validate(item);
       const items = load();
-      if (!items.some(({ contentId }) => contentId === valid.contentId)) {
+      if (!items.some(({ contentKey }) => contentKey === valid.contentKey)) {
         items.push(valid);
         save(items);
       }
@@ -45,6 +88,25 @@ export function createClassContributionQueue(storage) {
     },
     clear() {
       storage.removeItem(QUEUE_KEY);
+    },
+    updateQuality(contentKey, changes) {
+      const validChanges = validateQuality(changes, { partial: true });
+      const items = load();
+      const index = items.findIndex((item) => item.contentKey === contentKey);
+      if (index < 0) return false;
+      items[index] = validate({
+        ...items[index],
+        quality: {
+          firstCorrect: 0,
+          revisedCorrect: 0,
+          evidenceViewed: false,
+          transferCompleted: false,
+          ...items[index].quality,
+          ...validChanges,
+        },
+      });
+      save(items);
+      return true;
     },
     async flush(send) {
       const remaining = [];

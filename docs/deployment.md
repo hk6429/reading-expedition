@@ -2,17 +2,19 @@
 
 ## 架構
 
-Cloudflare Worker 是唯一內容、教師與家庭護照 API；Cloudflare Pages、Vercel、Netlify 都發布同一份 `dist/`。三個前端以同源 `/api` 代理 Worker，避免把後端網址寫進 bundle，也維持教師與家庭護照的安全 cookie、CSRF 流程。
+Cloudflare Worker 是唯一內容、教師與家庭護照 API；Cloudflare Pages、Vercel、Netlify 都發布同一份 `dist/`。三個前端以同源 `/api` 代理 Worker，避免把後端網址寫進 bundle，也維持教師與家庭護照的安全 cookie、CSRF 流程。Worker 若同時設定 `TURSO_URL` 與 `TURSO_TOKEN`，正式請求會優先使用 Turso；未設定時才使用 `READING_DB` D1 binding。
 
 三平台各自使用 host-only cookie，因此同一組家庭護照碼第一次在不同網域使用時，必須各登入一次；登入後共用中央 D1 的孩子、閱讀紀錄與裝備資料，不會在瀏覽器間共享 cookie。
 
 ## 環境變數名稱
 
-- Worker secret：`TEACHER_KEY_HASH`
+- Worker secrets：`TEACHER_KEY_HASH`、`COMPLETION_PROOF_SECRET`
 - 三個前端：`READING_API_ORIGIN`
 - Cloudflare Worker D1 binding：`READING_DB`
 
 文件與建置紀錄只列變數名稱，不保存值。
+
+`COMPLETION_PROOF_SECRET` 必須是至少 32 個字元的高熵隨機值，只能透過 Wrangler secret 寫入；正式與 Preview 使用不同值。它用來簽發短效、一次性的閱讀完成證明，前端與資料庫都不得保存此密鑰。部署前先用 `wrangler secret list` 確認名稱存在，不要在終端輸出值。
 
 ## Codex CLI 手動內容庫
 
@@ -36,13 +38,15 @@ Preview D1 與正式 D1 必須是不同資料庫；Preview Worker 只能綁 Prev
 
 ## 正式順序
 
-1. 對正式 D1 套用 migration，包含第 0009 號家庭護照與閱讀分級 migration。
+1. 對正式 D1 套用 migration；若 Worker 已設定 Turso secrets，也必須先備份並對正式 Turso 套用相同 migration。第 0011 號新增完成證明與匿名事件索引，第 0012 號新增班級任務、投票、結束單、指派與品質聚合。
 2. 部署中央 Cloudflare Worker。
 3. 以人工種子內容完成教師校閱與發布。
 4. 部署 Cloudflare Pages。
 5. 部署 Vercel Production。
 6. 部署 Netlify Production。
 7. 對三站加 cache-busting query 逐站驗收。
+
+Worker 只保留每天一次的資料清理 Cron（臺灣時間 03:17），用來刪除超過 45 天的原始匿名事件；它不會生成內容，也不呼叫 AI。
 
 三個前端的 `/api` 路徑分工如下：
 

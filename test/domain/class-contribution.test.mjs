@@ -6,31 +6,29 @@ import {
   createStructuredHint,
 } from "../../src/domain/class-contribution.js";
 
-test("班級只同步內容識別、有效閱讀、類別、能力與日期區間", () => {
+test("班級貢獻只接受完成證明及其文章識別欄位", () => {
+  const completionProof = `${"a".repeat(40)}.${"b".repeat(43)}`;
   assert.deepEqual(
     createClassContribution({
-      validReading: true,
-      contentId: "water-sharing-guided-v1",
-      category: "science",
-      skill: "evidence",
-      period: "2026-W31",
+      completionProof,
+      readingId: "water-sharing-guided-v1",
+      contentKey: "water-sharing",
+      version: 1,
     }),
     {
-      validReading: true,
-      contentId: "water-sharing-guided-v1",
-      category: "science",
-      skill: "evidence",
-      period: "2026-W31",
+      completionProof,
+      readingId: "water-sharing-guided-v1",
+      contentKey: "water-sharing",
+      version: 1,
     },
   );
   assert.throws(
     () =>
       createClassContribution({
-        validReading: true,
-        contentId: "water-sharing-guided-v1",
-        category: "science",
-        skill: "evidence",
-        period: "2026-W31",
+        completionProof,
+        readingId: "water-sharing-guided-v1",
+        contentKey: "water-sharing",
+        version: 1,
         answer: "不可上傳",
       }),
     /not allowed/,
