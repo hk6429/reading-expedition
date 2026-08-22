@@ -4,6 +4,8 @@ import { createClassContribution } from "../domain/class-contribution.js";
 const QUALITY_KEYS = new Set([
   "firstCorrect",
   "revisedCorrect",
+  "revisionOpportunities",
+  "abilityResults",
   "evidenceViewed",
   "transferCompleted",
 ]);
@@ -24,6 +26,38 @@ function validateQuality(value, { partial = false } = {}) {
       value.firstCorrect > 3)
   ) {
     throw new TypeError("class contribution quality is invalid");
+  }
+  if (
+    "revisionOpportunities" in value &&
+    (!Number.isInteger(value.revisionOpportunities) ||
+      value.revisionOpportunities < 0 ||
+      value.revisionOpportunities > 3)
+  ) {
+    throw new TypeError("class contribution quality is invalid");
+  }
+  if ("abilityResults" in value) {
+    const results = value.abilityResults;
+    if (
+      !results ||
+      typeof results !== "object" ||
+      Array.isArray(results) ||
+      Object.keys(results).sort().join(",") !==
+        "comprehension,evidence,inference" ||
+      Object.values(results).some(
+        (result) =>
+          !result ||
+          Object.keys(result).sort().join(",") !==
+            "firstCorrect,opportunities" ||
+          !Number.isInteger(result.opportunities) ||
+          result.opportunities < 0 ||
+          result.opportunities > 3 ||
+          !Number.isInteger(result.firstCorrect) ||
+          result.firstCorrect < 0 ||
+          result.firstCorrect > result.opportunities,
+      )
+    ) {
+      throw new TypeError("class contribution quality is invalid");
+    }
   }
   if (
     (!partial || "revisedCorrect" in value) &&
@@ -99,6 +133,12 @@ export function createClassContributionQueue(storage) {
         quality: {
           firstCorrect: 0,
           revisedCorrect: 0,
+          revisionOpportunities: 0,
+          abilityResults: {
+            comprehension: { opportunities: 0, firstCorrect: 0 },
+            inference: { opportunities: 0, firstCorrect: 0 },
+            evidence: { opportunities: 0, firstCorrect: 0 },
+          },
           evidenceViewed: false,
           transferCompleted: false,
           ...items[index].quality,

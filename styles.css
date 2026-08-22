@@ -658,10 +658,22 @@ main h1[tabindex="-1"]:focus {
 
 @media (pointer: coarse), (max-width: 820px) {
   button,
+  summary,
   .teacher-entry,
   .difficulty-button,
-  .primary-action {
+  .primary-action,
+  .back-link,
+  .placement-link,
+  .source-panel a {
     min-height: 48px;
+  }
+
+  summary,
+  .back-link,
+  .placement-link,
+  .source-panel a {
+    display: inline-flex;
+    align-items: center;
   }
 
   .difficulty-button,
@@ -2877,9 +2889,12 @@ html[data-focus-context="assessment"] #danai-learning-passport {
 
   .reading-controls[data-expanded="true"] .reading-controls__panel {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
     align-items: center;
+    max-height: min(60vh, 24rem);
     margin-top: 0.35rem;
+    overflow-y: auto;
   }
 
   .reading-controls[data-expanded="true"] .mode-group,
@@ -3657,6 +3672,7 @@ html[data-focus-context="assessment"] #danai-learning-passport {
 
 /* Class mission components: appended independently for the shared mission UI. */
 .class-mission__routes,
+.class-mission__current-assignment,
 .class-mission__role,
 .class-mission__vote,
 .class-mission__exit,
@@ -3668,6 +3684,30 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   background: var(--panel-background);
+}
+
+.class-mission__current-assignment {
+  margin-top: 1rem;
+  padding: clamp(1rem, 3vw, 1.35rem);
+  border: 2px solid var(--mineral-blue);
+  border-radius: var(--radius-lg);
+  background: var(--panel-background);
+}
+
+.class-shell.is-projecting {
+  width: min(100%, 160vh);
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  overflow: auto;
+  margin-inline: auto;
+  font-size: clamp(1rem, 1.55vw, 1.55rem);
+}
+
+.class-shell.is-projecting .class-mission__vote,
+.class-shell.is-projecting .class-mission__exit,
+.class-shell.is-projecting .class-leave,
+.class-shell.is-projecting .privacy-note {
+  display: none;
 }
 
 .class-mission__routes > div,
@@ -3682,6 +3722,18 @@ html[data-focus-context="assessment"] #danai-learning-passport {
   padding: 0.9rem;
   border-inline-start: 0.3rem solid var(--mineral-blue);
   background: var(--chip-background);
+}
+
+.class-mission__intervention dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1rem;
+}
+
+.class-mission__intervention dl div {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: 0.5rem;
 }
 
 .class-mission__vote > div,

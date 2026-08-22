@@ -20,6 +20,7 @@ export function listHistoryActiveDays(history = []) {
   return [
     ...new Set(
       history
+        .filter(({ mainlineReward }) => mainlineReward === true)
         .map(({ date } = {}) => date)
         .filter(validDate),
     ),
@@ -43,7 +44,9 @@ function chapterProgress(totalActiveDays) {
   return Object.freeze({
     activeDay: Math.min(totalActiveDays, 30),
     totalActiveDays,
-    nextSeasonUnlocked: totalActiveDays >= 30,
+    firstSeasonComplete: totalActiveDays >= 30,
+    nextSeasonUnlocked: false,
+    nextSeasonStatus: "planned",
     resetCity: false,
   });
 }

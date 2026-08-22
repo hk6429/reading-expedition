@@ -4,6 +4,23 @@ const TAIPEI_DATE_FORMATTER = new Intl.DateTimeFormat("en-CA", {
   month: "2-digit",
   day: "2-digit",
 });
+import { levelReadingsById } from "../../../src/data/level-readings.js";
+import { demoReadingsById } from "../../../src/data/demo-readings.js";
+
+const BUNDLED_PUBLISHED_READINGS = Object.freeze({
+  ...levelReadingsById,
+  ...Object.fromEntries(
+    Object.entries(demoReadingsById).map(([id, reading]) => [
+      id,
+      Object.freeze({
+        ...reading,
+        level: "tower",
+        supportMode:
+          reading.difficulty === "independent" ? "independent" : "guided",
+      }),
+    ]),
+  ),
+});
 
 export function taipeiDate(now = new Date()) {
   return TAIPEI_DATE_FORMATTER.format(now);
@@ -78,14 +95,21 @@ export async function getReadingListPayload(repository, query) {
     limit: query.pageSize,
     offset: query.offset,
   });
-  const total = result.total;
+  const fallback = Object.values(BUNDLED_PUBLISHED_READINGS).filter(
+    ({ level }) => level === query.level,
+  );
+  const readings =
+    result.total > 0
+      ? result.readings
+      : fallback.slice(query.offset, query.offset + query.pageSize);
+  const total = result.total > 0 ? result.total : fallback.length;
   return {
-    readings: result.readings.map(projectReading),
+    readings: readings.map(projectReading),
     pagination: {
       page: query.page,
       pageSize: query.pageSize,
       total,
-      hasMore: query.offset + result.readings.length < total,
+      hasMore: query.offset + readings.length < total,
     },
   };
 }
@@ -108,7 +132,10 @@ export async function getDailyPayload(repository, date) {
 }
 
 export async function getReadingPayload(repository, id) {
-  const reading = await repository.getPublishedReading(id);
+  const reading =
+    (await repository.getPublishedReading(id)) ??
+    BUNDLED_PUBLISHED_READINGS[id] ??
+    null;
   if (!reading) return null;
 
   return {

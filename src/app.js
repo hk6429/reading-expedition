@@ -38,13 +38,39 @@ import { nextUnreadReading } from "./domain/reading-inventory.js";
 import { renderPrivacyConsent } from "./ui/privacy-consent.js";
 import { applyGlobalPreferences } from "./ui/navigation.js";
 import { createOfflineCache } from "./storage/offline-cache.js";
+import { fetchWithTimeout } from "./storage/network.js";
 import { buildPortfolioExport } from "./domain/portfolio-export.js";
 
 const main = document.querySelector("#main-content");
+function showLoadingStatus(message = "正在載入閱讀資料……") {
+  const status = document.createElement("p");
+  status.className = "route-loading-status paper-panel";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+  status.textContent = message;
+  main.replaceChildren(status);
+}
+
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/service-worker.js").catch(() => {
-    // 離線能力是漸進增強；註冊失敗不阻擋閱讀。
-  });
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then((registration) => {
+      if (registration.waiting) markUpdateReady();
+      registration.addEventListener("updatefound", () => {
+        const installing = registration.installing;
+        installing?.addEventListener("statechange", () => {
+          if (
+            installing.state === "installed" &&
+            navigator.serviceWorker.controller
+          ) {
+            markUpdateReady();
+          }
+        });
+      });
+    })
+    .catch(() => {
+      // 離線能力是漸進增強；註冊失敗不阻擋閱讀。
+    });
 }
 const store = createLocalStore(window.localStorage, {
   createDeviceId: createAnonymousDeviceId,
@@ -152,6 +178,11 @@ function setPublicCounterVisible(visible, focusContext = "") {
 }
 
 let updateReady = false;
+function markUpdateReady() {
+  updateReady = true;
+  renderUpdateNotice();
+}
+
 function renderUpdateNotice() {
   document.querySelector("[data-update-ready]")?.remove();
   if (!updateReady) return;
@@ -169,7 +200,21 @@ function renderUpdateNotice() {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = "現在更新";
-    button.addEventListener("click", () => window.location.reload());
+    button.addEventListener("click", async () => {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (!registration?.waiting) {
+        window.location.reload();
+        return;
+      }
+      button.disabled = true;
+      button.textContent = "正在更新…";
+      navigator.serviceWorker.addEventListener(
+        "controllerchange",
+        () => window.location.reload(),
+        { once: true },
+      );
+      registration.waiting.postMessage({ type: "SKIP_WAITING" });
+    });
     notice.append(button);
   }
   document.body.append(notice);
@@ -177,8 +222,7 @@ function renderUpdateNotice() {
 
 navigator.serviceWorker?.addEventListener("message", (event) => {
   if (event.data?.type !== "UPDATE_READY") return;
-  updateReady = true;
-  renderUpdateNotice();
+  markUpdateReady();
 });
 window.addEventListener("hashchange", renderUpdateNotice);
 
@@ -209,12 +253,12 @@ async function flushEvents() {
     syncQueue.clear();
     return;
   }
-  await syncQueue.flush(async ({ id: _id, createdAt, ...event }) => {
-    const response = await fetch("/api/v1/events", {
+  await syncQueue.flush(async ({ id, createdAt, ...event }) => {
+    const response = await fetchWithTimeout("/api/v1/events", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        events: [{ ...event, occurredAt: createdAt }],
+        events: [{ id, ...event, occurredAt: createdAt }],
       }),
     });
     return response.ok;
@@ -225,7 +269,7 @@ async function flushClassContributions() {
   const token = window.localStorage.getItem(CLASS_TOKEN_KEY);
   if (!token) return;
   await classContributionQueue.flush(async (contribution) => {
-    const response = await fetch("/api/v1/classrooms/contribute", {
+    const response = await fetchWithTimeout("/api/v1/classrooms/contribute", {
       method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
@@ -268,7 +312,7 @@ async function loadInventory(level) {
     let page = 1;
     let hasMore = true;
     while (hasMore) {
-      const response = await fetch(
+      const response = await fetchWithTimeout(
         `/api/v1/readings?level=${encodeURIComponent(level)}&page=${page}&pageSize=200`,
       );
       if (!response.ok) throw new Error("inventory API unavailable");
@@ -289,7 +333,7 @@ async function loadInventory(level) {
   }
 }
 
-async function loadReading(id) {
+async function loadReading(id, { signal } = {}) {
   const localReading =
     levelReadingsById[id] ??
     (demoReadingsById[id]
@@ -304,7 +348,10 @@ async function loadReading(id) {
         }
       : null);
   try {
-    const response = await fetch(`/api/v1/readings/${id}`);
+    const response = await fetchWithTimeout(
+      `/api/v1/readings/${id}`,
+      { signal },
+    );
     if (!response.ok) throw new Error("reading API unavailable");
     const payload = await response.json();
     const reading = withDemoReadingStrategy(payload.reading);
@@ -315,12 +362,13 @@ async function loadReading(id) {
       return { ...reading, assessmentSession: rememberedSession };
     }
     try {
-      const sessionResponse = await fetch(
+      const sessionResponse = await fetchWithTimeout(
         `/api/v1/readings/${reading.id}/assessment-session`,
         {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ version: reading.version }),
+          signal,
         },
       );
       if (!sessionResponse.ok) {
@@ -347,7 +395,7 @@ async function submitAssessment(reading, answers) {
   const answerKey =
     levelAnswerKeys[reading.id] ?? demoAnswerKeys[reading.id];
   try {
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `/api/v1/readings/${reading.id}/submit`,
       {
         method: "POST",
@@ -482,6 +530,7 @@ const router = createRouter({
   },
   async onBookshelf() {
     setPublicCounterVisible(true);
+    showLoadingStatus("正在整理選文書架；網路較慢時會使用本機內容……");
     const [{ renderBookshelf }, { downloadOfflinePack }] = await Promise.all([
       import("./ui/bookshelf-view.js"),
       import("./storage/offline-pack.js"),
@@ -503,10 +552,11 @@ const router = createRouter({
             if (persist) persistState(state);
             router.navigate();
           },
-          onDownloadOfflinePack: (readings) =>
+          onDownloadOfflinePack: (readings, onProgress) =>
             downloadOfflinePack(readings, {
               loadReading,
               storeReading: (reading) => offlineCache.storeReading(reading),
+              onProgress,
             }),
         },
       );
@@ -515,6 +565,7 @@ const router = createRouter({
   },
   async onRead(id) {
     setPublicCounterVisible(false, "reading");
+    showLoadingStatus("正在開啟讀卷；若網路逾時會改用已下載內容……");
     const { renderReading } = await import("./ui/reading-view.js");
     const reading = await loadReading(id);
     if (!reading) {
@@ -540,6 +591,7 @@ const router = createRouter({
   },
   async onQuiz(id) {
     setPublicCounterVisible(false, "assessment");
+    showLoadingStatus("正在準備題目；你的閱讀進度已保存在本機……");
     const { renderAssessment } = await import("./ui/assessment-view.js");
     const reading = await loadReading(id);
     if (!reading) {
@@ -558,6 +610,7 @@ const router = createRouter({
         firstResults,
         finalResults,
         evidenceViewedIds,
+        evidenceVerified,
         assessmentOutcome,
         completionProof,
         transferCompleted,
@@ -572,9 +625,9 @@ const router = createRouter({
             const item = reading.assessment.find(({ id }) => id === result.id);
             return item?.type === "evidence";
           }) ?? finalResults[0];
-        const evidenceText =
-          extractEvidenceText(reading, evidenceResult?.evidenceSpan) ||
-          "已完成文證定位";
+        const evidenceText = evidenceVerified
+          ? extractEvidenceText(reading, evidenceResult?.evidenceSpan)
+          : "";
         const diagnosticRecord = buildDiagnosticRecord({
           reading,
           date,
@@ -604,20 +657,26 @@ const router = createRouter({
         }
         const previous = state.completedReadings[reading.id];
         const repeatedSameDay = previous?.date === date;
-        const historyResult = appendVerifiedReading(state.readingHistory, {
-          readingId: reading.id,
-          date,
-          category: reading.category,
-          skill: "evidence",
-          title: reading.title,
-          evidence: evidenceText,
-        });
+        const historyResult = evidenceVerified
+          ? appendVerifiedReading(state.readingHistory, {
+              readingId: reading.id,
+              date,
+              category: reading.category,
+              skill: "evidence",
+              title: reading.title,
+              evidence: evidenceText,
+            })
+          : {
+              added: false,
+              event: { mainlineReward: false },
+              history: state.readingHistory,
+            };
         state.readingHistory = historyResult.history;
         const totalActiveDays = countHistoryActiveDays(state.readingHistory);
         const activeDay = Math.max(1, Math.min(totalActiveDays, 30));
         const reward = rewardVerifiedReading({
           completed: true,
-          evidenceSubmitted: true,
+          evidenceSubmitted: Boolean(evidenceVerified),
           correctCount: firstCorrect,
           revisedCount,
           repeatedSameDay,
@@ -641,20 +700,15 @@ const router = createRouter({
             date,
           });
         }
-        if (historyResult.added) {
-          state.abilityMastery = recordAbilityEvidence(
-            state.abilityMastery,
-            diagnosticRecord,
-          );
-          state.abilityGrowth = Object.fromEntries(
-            Object.entries(state.abilityMastery.skills).map(
-              ([skill, progress]) => [
-                skill,
-                progress.successes.length,
-              ],
-            ),
-          );
-        }
+        state.abilityMastery = recordAbilityEvidence(
+          state.abilityMastery,
+          diagnosticRecord,
+        );
+        state.abilityGrowth = Object.fromEntries(
+          Object.entries(state.abilityMastery.skills).map(
+            ([skill, progress]) => [skill, progress.successes.length],
+          ),
+        );
         state.completedReadings[reading.id] = {
           date,
           version: reading.version,
@@ -666,10 +720,10 @@ const router = createRouter({
             title: reward.rewardTitle ?? "",
           },
           activeDay,
-          evidenceSubmitted: true,
+          evidenceSubmitted: Boolean(evidenceVerified),
           category: reading.category,
           skill: "理解與文證",
-          evidence: evidenceText,
+          evidence: evidenceText || "這次尚未定位文證",
           assessmentPassed: Boolean(assessmentOutcome?.passed),
           firstCorrectCount: firstCorrect,
           finalCorrectCount:
@@ -680,7 +734,7 @@ const router = createRouter({
             Math.ceil((finalResults.length * 2) / 3),
         };
         queueEvent("reading_completed", reading);
-        queueEvent("evidence_located", reading);
+        if (evidenceVerified) queueEvent("evidence_located", reading);
         if (
           !repeatedSameDay &&
           typeof completionProof === "string" &&
@@ -694,7 +748,26 @@ const router = createRouter({
             quality: {
               firstCorrect,
               revisedCorrect: revisedCount,
-              evidenceViewed: evidenceViewedIds.length > 0,
+              revisionOpportunities: firstResults.filter(
+                ({ correct }) => !correct,
+              ).length,
+              abilityResults: Object.fromEntries(
+                ["comprehension", "inference", "evidence"].map((ability) => {
+                  const attempts = reading.assessment
+                    .map((item, index) => ({ item, result: firstResults[index] }))
+                    .filter(({ item }) => item.type === ability);
+                  return [
+                    ability,
+                    {
+                      opportunities: attempts.length,
+                      firstCorrect: attempts.filter(
+                        ({ result }) => result?.correct,
+                      ).length,
+                    },
+                  ];
+                }),
+              ),
+              evidenceViewed: Boolean(evidenceVerified),
               transferCompleted: Boolean(transferCompleted),
             },
           });
@@ -737,6 +810,7 @@ const router = createRouter({
       activeDay: completion.activeDay ?? 1,
       reading,
       evidence: completion.evidence,
+      evidenceSubmitted: completion.evidenceSubmitted ?? null,
       date: completion.date,
       assessmentPassed: completion.assessmentPassed ?? true,
       finalCorrectCount: completion.finalCorrectCount ?? 0,

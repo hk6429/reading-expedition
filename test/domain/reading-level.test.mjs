@@ -6,12 +6,26 @@ import {
   normalizeReadingLevel,
   recommendLevelFromPlacement,
   recommendNextLevel,
+  readingLengthBand,
 } from "../../src/domain/reading-level.js";
 
 test("三段閱讀程度順序固定為啟航、行舟、登樓", () => {
   assert.deepEqual(LEVEL_ORDER, ["launch", "voyage", "tower"]);
   assert.equal(normalizeReadingLevel("unknown"), "launch");
   assert.equal(normalizeReadingLevel("tower"), "tower");
+});
+
+test("登樓白話長篇與文言短篇使用不同且誠實的字數範圍", () => {
+  assert.deepEqual(readingLengthBand("tower", "vernacular"), {
+    minCharacters: 1_300,
+    maxCharacters: 1_800,
+    label: "白話文",
+  });
+  assert.deepEqual(readingLengthBand("tower", "classical"), {
+    minCharacters: 180,
+    maxCharacters: 700,
+    label: "文言短篇",
+  });
 });
 
 test("完整短文三題測讀只提供推薦，不鎖住其他程度", () => {

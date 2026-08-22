@@ -145,7 +145,13 @@ function buildTodayPanel(
     makeElement("h2", "", "今天想怎麼讀？"),
   );
   section.querySelector("h2").id = "today-mission-heading";
-  section.append(
+  const preferences = makeElement("details", "mission-preferences");
+  const preferencesSummary = makeElement(
+    "summary",
+    "",
+    "調整今天的閱讀偏好（選填）",
+  );
+  preferences.append(preferencesSummary,
     makeChoiceGroup({
       title: "我的閱讀者身分",
       description: "只是今天想採取的閱讀姿態，不代表程度高低。",
@@ -197,6 +203,19 @@ function buildTodayPanel(
     );
   }
   const challenge = resumeChallenge?.reading ?? nextChallenge;
+  if (
+    challenge &&
+    profile.timeBudget &&
+    Number(challenge.readingMinutes) > profile.timeBudget
+  ) {
+    resume.append(
+      makeElement(
+        "p",
+        "time-budget-note",
+        `這篇約 ${challenge.readingMinutes} 分鐘；你選了 ${profile.timeBudget} 分鐘，今天先讀一部分，進度會保存，下次接著讀。`,
+      ),
+    );
+  }
   const actions = makeElement("div", "city-overview__actions");
   const continueLink = makeElement("a", "primary-link", challenge ? "接著讀" : "打開選文書架");
   continueLink.href = challenge ? `#/read/${challenge.id}` : "#/bookshelf";
@@ -204,7 +223,7 @@ function buildTodayPanel(
   restLink.href = "#/rest";
   actions.append(continueLink, restLink);
   resume.append(actions);
-  section.append(resume);
+  section.append(resume, preferences);
   return section;
 }
 
@@ -247,6 +266,16 @@ function nextStoryDay(activeDay) {
 
 function buildGrowthPanel({ readingHistory, abilityMastery, city }) {
   const progress = resolveHistoryChapterProgress(readingHistory);
+  if (progress.firstSeasonComplete) {
+    const section = makeElement("section", "paper-panel mission-growth");
+    section.setAttribute("aria-labelledby", "mission-growth-heading");
+    section.innerHTML = `
+      <p class="eyebrow">第一航季完成</p>
+      <h2 id="mission-growth-heading">三十日航圖已完整收藏</h2>
+      <p>第二航季仍在規劃中，目前沒有新的主線獎勵或倒數。你可以自由閱讀、收藏文證與修築既有浮城。</p>
+    `;
+    return section;
+  }
   const nextDay = Math.min(progress.activeDay + 1, 30);
   const reward = journeyRewardForActiveDay(nextDay);
   const storyDay = nextStoryDay(progress.activeDay);
@@ -361,11 +390,11 @@ function buildCityPanel(profile, city, commit, onExport) {
   }
   section.append(
     rooms,
-    makeElement("h3", "", "第二航季"),
+    makeElement("h3", "", "第二航季・規劃中"),
     makeElement(
       "p",
       "",
-      "30 個活躍日後開啟新的跨領域航圖；原有城市、文證與徽章完整保留。",
+      "目前尚未開放第二航季，也不會顯示不存在的下一個獎勵；原有城市、文證與徽章會完整保留。",
     ),
   );
   const exportButton = makeElement("button", "", "匯出學習作品集");

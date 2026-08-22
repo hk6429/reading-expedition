@@ -138,10 +138,13 @@ export function buildChildReport({
         : weeklyCount < previousWeekCount
           ? "down"
           : "steady",
+    hasDiagnosticData: records.length > 0,
     stuckSkill: failures > 0 ? stuckSkill : "",
     stuckSkillLabel: failures > 0 ? SKILL_LABELS[stuckSkill] : "",
     nextAction:
-      failures > 0
+      records.length === 0
+        ? "尚無診斷資料；完成第一篇閱讀後，才會依實際作答機會提供陪練建議。"
+        : failures > 0
         ? NEXT_ACTIONS[stuckSkill]
         : "目前三項能力表現穩定，下一篇可保持程度或嘗試更少提示。",
     rows,

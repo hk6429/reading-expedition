@@ -547,6 +547,7 @@ test("repository 只回傳當週共同任務的群體彙總與目前指定閱讀
       count: 6,
       firstCorrect: 12,
       revisedCorrect: 3,
+      revisionOpportunities: 0,
       evidenceViewed: 5,
       transferCompleted: 4,
     },
@@ -664,8 +665,15 @@ test("repository 以 nonce 與 canonical content key 原子防重並回報是否
     "2026-08-22T10:00:00.000Z",
     2,
     1,
+    null,
     1,
     0,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
   ]);
 });
 
@@ -761,6 +769,148 @@ test("repository 清除保存期限以前的匿名事件", async () => {
   assert.match(calls[0].sql, /DELETE FROM anonymous_events/);
   assert.match(calls[0].sql, /created_at < \?/);
   assert.deepEqual(calls[0].bindings, ["2026-07-08T00:00:00.000Z"]);
+});
+
+test("repository 以客戶端事件 UUID 原子去重並回報 accepted/duplicates", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+      };
+    },
+    async batch() {
+      return [
+        { meta: { changes: 1 } },
+        { meta: { changes: 0 } },
+      ];
+    },
+  };
+  const repository = createReadingRepository(db);
+  const base = {
+    type: "reading_completed",
+    occurredAt: "2026-08-22T10:00:00.000Z",
+    context: {
+      contentId: "reading-1",
+      category: "science",
+      difficulty: "guided",
+      durationBucket: "1-5m",
+      deviceId: "anonymous-device-1",
+    },
+  };
+  const result = await repository.recordAnonymousEvents([
+    { ...base, id: "018f6f5e-89ab-7def-8123-456789abcdef" },
+    { ...base, id: "018f6f5e-89ab-7def-8123-456789abcdef" },
+  ]);
+
+  assert.deepEqual(result, { accepted: 1, duplicates: 1 });
+  assert.match(calls[0].sql, /INSERT OR IGNORE INTO anonymous_events/);
+  assert.equal(calls[0].bindings[0], "018f6f5e-89ab-7def-8123-456789abcdef");
+});
+
+test("repository 依匿名裝置與一分鐘視窗計算事件量", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async first() {
+          return { event_count: 17 };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+  const count = await repository.countRecentAnonymousEvents(
+    "reader-018f6f5e-89ab-7def-8123-456789abcdef",
+    "2026-08-22T09:59:00.000Z",
+  );
+
+  assert.equal(count, 17);
+  assert.match(calls[0].sql, /anonymous_device_id = \?/);
+  assert.match(calls[0].sql, /julianday\(created_at\)/);
+  assert.deepEqual(calls[0].bindings, [
+    "reader-018f6f5e-89ab-7def-8123-456789abcdef",
+    "2026-08-22T09:59:00.000Z",
+  ]);
+});
+
+test("repository 以單一條件更新原子消耗作答 nonce", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          return { meta: { changes: 1 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+  const consumed = await repository.consumeAssessmentStartNonce({
+    nonce: "nonce-1",
+    readingId: "reading-1",
+    contentKey: "content-1",
+    version: 2,
+    category: "science",
+    consumedAt: "2026-08-22T10:00:30.000Z",
+  });
+
+  assert.equal(consumed, true);
+  assert.match(calls[0].sql, /consumed_at IS NULL/);
+  assert.match(calls[0].sql, /expires_at > \?/);
+  assert.deepEqual(calls[0].bindings, [
+    "2026-08-22T10:00:30.000Z",
+    "nonce-1",
+    "reading-1",
+    "content-1",
+    2,
+    "science",
+    "2026-08-22T10:00:30.000Z",
+  ]);
+});
+
+test("repository 清除已到期作答 nonce", async () => {
+  const calls = [];
+  const db = {
+    prepare(sql) {
+      const call = { sql, bindings: [] };
+      calls.push(call);
+      return {
+        bind(...bindings) {
+          call.bindings = bindings;
+          return this;
+        },
+        async run() {
+          return { meta: { changes: 4 } };
+        },
+      };
+    },
+  };
+  const repository = createReadingRepository(db);
+  const deleted = await repository.purgeExpiredAssessmentStartNonces(
+    "2026-08-22T10:00:00.000Z",
+  );
+
+  assert.equal(deleted, 4);
+  assert.match(calls[0].sql, /DELETE FROM assessment_start_nonces/);
+  assert.match(calls[0].sql, /expires_at <= \?/);
 });
 
 test("repository 刪除家庭時依序實體移除狀態、孩子、sessions 與護照", async () => {

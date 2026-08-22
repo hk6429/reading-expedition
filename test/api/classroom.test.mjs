@@ -8,6 +8,7 @@ function repository() {
   const classrooms = new Map();
   const classroomsById = new Map();
   const tokens = new Map();
+  const seats = new Map();
   const contributions = [];
   return {
     classrooms,
@@ -23,6 +24,10 @@ function repository() {
     },
     async createClassroomToken(record) {
       tokens.set(record.tokenHash, record);
+      if (record.seatHash) seats.set(`${record.classroomId}:${record.seatHash}`, record);
+    },
+    async findClassroomTokenBySeatHash(classroomId, seatHash) {
+      return seats.get(`${classroomId}:${seatHash}`) ?? null;
     },
     async findClassroomToken(hash) {
       return tokens.get(hash) ?? null;
@@ -71,6 +76,17 @@ function repository() {
       }
       return true;
     },
+    async rotateClassroomCode(classroomId, classCodeHash, rotatedAt) {
+      const classroom = classroomsById.get(classroomId);
+      if (!classroom || classroom.revokedAt) return false;
+      classrooms.delete(classroom.classCodeHash);
+      classroom.classCodeHash = classCodeHash;
+      classrooms.set(classCodeHash, classroom);
+      for (const token of tokens.values()) {
+        if (token.classroomId === classroomId) token.revokedAt = rotatedAt;
+      }
+      return true;
+    },
   };
 }
 
@@ -80,7 +96,7 @@ async function joinCreatedClassroom(api) {
   const joined = await api.join(
     new Request("https://example.test/join", {
       method: "POST",
-      body: JSON.stringify({ classCode }),
+      body: JSON.stringify({ classCode, seatToken: "s".repeat(43) }),
     }),
   );
   return (await joined.json()).participantToken;
@@ -105,6 +121,35 @@ test("教師建立隨機班級碼，伺服器只保存雜湊", async () => {
   assert.equal(repo.classrooms.size, 1);
 });
 
+test("同一裝置席次重複加入不會 mint 新統計身分，教師換碼會撤銷舊席次", async () => {
+  const repo = repository();
+  const api = createClassroomApi({ repository: repo });
+  const created = await api.create("teacher-session");
+  const classroom = await created.json();
+  const seatToken = "z".repeat(43);
+  const join = () => api.join(
+    new Request("https://example.test/join", {
+      method: "POST",
+      body: JSON.stringify({ classCode: classroom.classCode, seatToken }),
+    }),
+  );
+  assert.equal((await join()).status, 201);
+  const reused = await join();
+  assert.equal(reused.status, 200);
+  assert.equal((await reused.json()).reusedSeat, true);
+  assert.equal(repo.tokens.size, 1);
+
+  const rotated = await api.rotateCode(classroom.id);
+  assert.equal(rotated.status, 200);
+  assert.notEqual((await rotated.json()).classCode, classroom.classCode);
+  const landmark = await api.landmark(
+    new Request("https://example.test/landmark", {
+      headers: { authorization: `Bearer ${seatToken}` },
+    }),
+  );
+  assert.equal(landmark.status, 401);
+});
+
 test("教師可列出班級統計並停用班級與既有參與權杖", async () => {
   const repo = repository();
   const clock = () => new Date("2026-07-28T00:00:00.000Z");
@@ -114,7 +159,10 @@ test("教師可列出班級統計並停用班級與既有參與權杖", async ()
   const joined = await api.join(
     new Request("https://example.test/join", {
       method: "POST",
-      body: JSON.stringify({ classCode: createdPayload.classCode }),
+      body: JSON.stringify({
+        classCode: createdPayload.classCode,
+        seatToken: "t".repeat(43),
+      }),
     }),
   );
   const { participantToken } = await joined.json();
@@ -152,7 +200,7 @@ test("學生持伺服器完成證明後才能上傳結構化班級貢獻", async
   const joined = await api.join(
     new Request("https://example.test/join", {
       method: "POST",
-      body: JSON.stringify({ classCode }),
+      body: JSON.stringify({ classCode, seatToken: "u".repeat(43) }),
     }),
   );
   const { participantToken } = await joined.json();
@@ -192,6 +240,8 @@ test("學生持伺服器完成證明後才能上傳結構化班級貢獻", async
   assert.deepEqual(repo.contributions[0].quality, {
     firstCorrect: 2,
     revisedCorrect: 1,
+    revisionOpportunities: 1,
+    abilityResults: null,
     evidenceViewed: true,
     transferCompleted: false,
   });
@@ -575,7 +625,7 @@ test("班級地標分開回傳永久累積與本週任務進度", async () => {
   const joined = await api.join(
     new Request("https://example.test/join", {
       method: "POST",
-      body: JSON.stringify({ classCode }),
+      body: JSON.stringify({ classCode, seatToken: "v".repeat(43) }),
     }),
   );
   const { participantToken } = await joined.json();
@@ -604,7 +654,7 @@ test("未達五人隱私門檻只回傳安全進度帶，不洩漏精確篇數",
   const joined = await api.join(
     new Request("https://example.test/join", {
       method: "POST",
-      body: JSON.stringify({ classCode }),
+      body: JSON.stringify({ classCode, seatToken: "w".repeat(43) }),
     }),
   );
   const { participantToken } = await joined.json();

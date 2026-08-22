@@ -120,6 +120,25 @@ test("level 清單 API 限制階段與每頁最多 200 筆", async () => {
   assert.equal(response.status, 400);
 });
 
+test("正式 level API 在資料庫尚未補齊時仍提供三階已校閱內建讀卷", async () => {
+  const api = createApi({
+    repository: {
+      getPublishedDaily: async () => [],
+      listPublishedReadings: async () => ({ readings: [], total: 0 }),
+    },
+  });
+  for (const level of ["launch", "voyage", "tower"]) {
+    const response = await api.fetch(
+      new Request(`https://example.test/api/v1/readings?level=${level}&page=1&pageSize=200`),
+    );
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.ok(payload.readings.length >= 1, `${level} 至少一篇`);
+    assert.ok(payload.readings.every((reading) => reading.level === level));
+    assert.doesNotMatch(JSON.stringify(payload), /correctAnswer/);
+  }
+});
+
 test("指定日期尚無內容時沿用最近一次完整讀卷，不受七日視窗限制", async () => {
   const requestedDates = [];
   const api = createApi({

@@ -199,6 +199,30 @@ test("SQL renderer 對三階段都寫入 level 並由 difficulty 推導模式", 
   assert.match(rendered.stdout, /'independent'/);
 });
 
+test("手動驗證與 SQL 匯入都拒絕內容欄位中的 HTML", () => {
+  const fixture = JSON.parse(read("test/fixtures/seed-reading-package.json"));
+  fixture.packages[0].title = '<img src=x onerror="alert(1)">';
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "reading-html-"));
+  const file = path.join(directory, "malicious.json");
+  fs.writeFileSync(file, JSON.stringify(fixture));
+
+  const validation = spawnSync(
+    process.execPath,
+    ["scripts/validate-manual-content.mjs", file],
+    { cwd: new URL("../../", import.meta.url), encoding: "utf8" },
+  );
+  const rendered = spawnSync(
+    process.execPath,
+    ["scripts/render-seed-sql.mjs", file],
+    { cwd: new URL("../../", import.meta.url), encoding: "utf8" },
+  );
+
+  assert.equal(validation.status, 1);
+  assert.match(validation.stderr, /不可包含 HTML/);
+  assert.notEqual(rendered.status, 0);
+  assert.match(rendered.stderr, /must not contain HTML markup/);
+});
+
 test("SQL 匯入以來源網址解析既有來源 ID，避免共用網域造成外鍵失敗", () => {
   const renderer = read("scripts/render-seed-sql.mjs");
   assert.match(

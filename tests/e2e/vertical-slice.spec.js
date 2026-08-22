@@ -56,7 +56,11 @@ test("學生從首頁完成閱讀、達標與建城", async ({ page }) => {
       name: "當水情、需求或節水成果改變，原先的比例也應重新檢討",
     })
     .check();
+  await page
+    .locator('[data-item-id="water-sharing-guided-q3-v1"] select')
+    .selectOption("4");
   await page.getByRole("button", { name: "送出 3 題" }).click();
+  await page.getByRole("button", { name: "保留初答，直接看結果" }).click();
   await expect(page.getByText("答題達標，這一篇讀懂了")).toBeVisible();
   await page.getByRole("button", { name: "查看成果與下一步" }).click();
   await expect.poll(() => contributions.length).toBe(1);
@@ -70,7 +74,7 @@ test("學生從首頁完成閱讀、達標與建城", async ({ page }) => {
       quality: {
         firstCorrect: 2,
         revisedCorrect: 0,
-        evidenceViewed: false,
+        evidenceViewed: true,
         transferCompleted: false,
       },
     },

@@ -23,9 +23,13 @@ test("第一次答對兩題即達標，不強迫把第三題修到全對", async
     })
     .check();
   await page.getByRole("button", { name: "送出 3 題" }).click();
+  await expect(
+    page.getByText("已達標；仍有 1 題可選擇回看文證並修正，初答會完整保留。"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "保留初答，直接看結果" }).click();
 
   await expect(page.getByText("答題達標，這一篇讀懂了")).toBeVisible();
-  await expect(page.getByText("你答對 2／3 題，閱讀與答題紀錄已保存。")).toBeVisible();
+  await expect(page.getByText(/你答對 2／3 題/)).toBeVisible();
   await expect(page.getByRole("button", { name: /查看第.*段線索/ })).toHaveCount(0);
   await expect(
     page.getByRole("heading", { name: "答題達標，這一篇讀懂了" }),
@@ -149,7 +153,7 @@ test("未達門檻會保存作答，但不算完成也不開放下一篇", async
     page.getByRole("heading", { name: "這一篇先停下來整理" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "回到文章，重新挑戰" }),
+    page.getByRole("button", { name: "回到文章，換一組等值任務再挑戰" }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "今天先到這裡，明天再來" }),

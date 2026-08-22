@@ -17,6 +17,13 @@ export function hasMainlineRewardForDate(history = [], date) {
   );
 }
 
+export function hasMainlineRewardForReading(history = [], readingId) {
+  return history.some(
+    (event) =>
+      event.readingId === readingId && event.mainlineReward === true,
+  );
+}
+
 export function appendVerifiedReading(history = [], input) {
   if (
     !Array.isArray(history) ||
@@ -52,7 +59,9 @@ export function appendVerifiedReading(history = [], input) {
         ? input.title.trim()
         : "已完成的讀卷",
     evidence: input.evidence.trim(),
-    mainlineReward: !hasMainlineRewardForDate(history, input.date),
+    mainlineReward:
+      !hasMainlineRewardForDate(history, input.date) &&
+      !hasMainlineRewardForReading(history, input.readingId),
   });
   return Object.freeze({
     added: true,

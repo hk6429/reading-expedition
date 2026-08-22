@@ -11,36 +11,42 @@ export const ASSESSMENT_VARIANT_FRAMES = Object.freeze({
     Object.freeze({
       id: "main-idea-navigation",
       label: "主旨導航",
-      prefix: "先抓住全文重點，再完成這項任務",
+      instruction: "先排除只談局部細節的選項，再選出最能涵蓋全文的答案。",
+      stem: "全文焦點是：",
     }),
     Object.freeze({
       id: "information-sorting",
       label: "訊息整理",
-      prefix: "整理關鍵訊息後，判斷最合適的答案",
+      instruction: "把關鍵人物、事件與結果整理好，再選出資訊最完整的答案。",
+      stem: "請重新判斷：",
     }),
   ]),
   inference: Object.freeze([
     Object.freeze({
       id: "clue-connection",
       label: "線索串聯",
-      prefix: "把文中線索連起來，再完成這項推論",
+      instruction: "先找兩個能互相支持的線索，再排除超出原文的猜測。",
+      stem: "依這個判準推想：",
     }),
     Object.freeze({
       id: "cross-paragraph-reasoning",
       label: "跨段判讀",
-      prefix: "綜合前後文，不超出證據範圍來判斷",
+      instruction: "比較前後文的原因與結果，選出推論幅度最合適的一項。",
+      stem: "跨段比對後回答：",
     }),
   ]),
   evidence: Object.freeze([
     Object.freeze({
       id: "claim-evidence-match",
       label: "主張配證據",
-      prefix: "先比對主張與原文證據，再選出答案",
+      instruction: "逐一檢查四個選項，找出與原文支持關係最直接的一項。",
+      stem: "文證任務：",
     }),
     Object.freeze({
       id: "evidence-strength",
       label: "證據強度",
-      prefix: "回到原文，判斷哪項證據支持得最完整",
+      instruction: "比較各選項涵蓋的範圍，選出沒有斷章取義的文證。",
+      stem: "支持力比對：",
     }),
   ]),
 });
@@ -85,6 +91,11 @@ function stableIndex(seed, item, itemIndex, length) {
   return score % length;
 }
 
+function rotateOptions(options, offset) {
+  const start = offset % options.length;
+  return [...options.slice(start), ...options.slice(0, start)];
+}
+
 export function createAssessmentVariantSet(items, { seed }) {
   assertSeed(seed);
   if (!Array.isArray(items) || items.length === 0) {
@@ -94,14 +105,33 @@ export function createAssessmentVariantSet(items, { seed }) {
     assertAssessmentItem(item);
     const frames = ASSESSMENT_VARIANT_FRAMES[item.type];
     const frame = frames[stableIndex(seed, item, index, frames.length)];
+    const optionOffset = stableIndex(
+      `${seed}:options`,
+      item,
+      index,
+      item.options.length,
+    );
     return Object.freeze({
       ...item,
       originalPrompt: item.prompt,
-      prompt: `${frame.prefix}｜${item.prompt}`,
+      prompt: `${frame.instruction} ${frame.stem}${item.prompt}`,
+      options: Object.freeze(rotateOptions(item.options, optionOffset)),
       variantId: frame.id,
       variantLabel: frame.label,
     });
   });
+}
+
+export function rotateAssessmentSessionSeed(
+  storage,
+  { createSeed = () => globalThis.crypto.randomUUID() } = {},
+) {
+  if (!storage?.setItem) {
+    throw new TypeError("sessionStorage-compatible storage is required");
+  }
+  const next = assertSeed(createSeed());
+  storage.setItem(SESSION_SEED_KEY, next);
+  return next;
 }
 
 export function getAssessmentSessionSeed(

@@ -127,6 +127,18 @@ test("家長報告先呈現週趨勢、卡關能力與下一步", () => {
   assert.equal(report.rows[0].levelTotalCount, 30);
 });
 
+test("沒有診斷紀錄時明確標示資料不足，不宣稱三項能力穩定", () => {
+  const report = buildChildReport({
+    childId: "child-empty",
+    alias: "小舟",
+    records: [],
+  });
+  assert.equal(report.hasDiagnosticData, false);
+  assert.equal(report.stuckSkillLabel, "");
+  assert.match(report.nextAction, /尚無診斷資料/);
+  assert.doesNotMatch(report.nextAction, /穩定/);
+});
+
 test("CSV 有 UTF-8 BOM，支援單一孩子與全家庭資料", () => {
   const csv = reportRowsToCsv([
     {

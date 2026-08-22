@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   createAbilityMastery,
   recordAbilityEvidence,
+  revisionMilestone,
 } from "../../src/domain/ability-mastery.js";
 
 function results(readingId, correctTypes, revisedTypes = []) {
@@ -27,6 +28,14 @@ test("能力裝備只由首次答對累積，修正成功另計修正力", () =>
   assert.equal(mastery.skills.inference.successes.length, 0);
   assert.equal(mastery.revisionStrength.length, 1);
   assert.deepEqual(mastery.unlockedEquipment, []);
+});
+
+test("修正成功使用獨立命名里程碑，不冒充首次精熟裝備", () => {
+  assert.equal(revisionMilestone(0).next.name, "回讀校準者");
+  assert.equal(revisionMilestone(3).achieved.name, "回讀校準者");
+  assert.equal(revisionMilestone(6).achieved.name, "修正策略家");
+  assert.equal(revisionMilestone(10).achieved.name, "證據重建者");
+  assert.equal(revisionMilestone(10).next, null);
 });
 
 test("同一能力跨至少兩篇、成功三次才解鎖對應裝備", () => {

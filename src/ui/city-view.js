@@ -20,6 +20,7 @@ export function renderCityInvest(
     requiredCorrectCount = 2,
     assessmentTotal = 3,
     nextReading = null,
+    evidenceSubmitted = null,
     saveState,
   },
 ) {
@@ -28,11 +29,17 @@ export function renderCityInvest(
 
   const header = document.createElement("header");
   header.className = "city-header";
+  const hasVerifiedEvidence =
+    evidenceSubmitted === null
+      ? Boolean(evidence) && evidence !== "這次尚未定位文證"
+      : Boolean(evidenceSubmitted);
   const earnedLabel =
     rewardType === "story"
       ? `獲得 ${earnedFellowshipSeals} 枚聚義印`
       : rewardType === "collection"
-        ? "今日主線已完成，文證仍已收藏"
+        ? hasVerifiedEvidence
+          ? "今日主線已完成，這篇文證仍已收藏"
+          : "本篇答題達標，但尚未完成文證定位"
         : `帶回 ${earnedInkBricks} 塊墨磚`;
   header.innerHTML = `
     <p class="chapter-label">知識落城</p>
@@ -54,12 +61,19 @@ export function renderCityInvest(
       <a class="primary-link" href="#/city">查看解鎖後的浮城</a>
     `;
   } else if (rewardType === "collection") {
-    announcement.innerHTML = `
-      <p class="chapter-label">額外閱卷・知識仍會留下</p>
-      <h2>文證已收入你的閱讀事件簿</h2>
-      <p>每個活躍日第一篇達標閱讀推進主線；今天多讀的內容仍會累積能力與城市記憶，不需要為了獎勵停下閱讀。</p>
-      <a class="primary-link" href="#/city">回看我的浮城</a>
-    `;
+    announcement.innerHTML = hasVerifiedEvidence
+      ? `
+        <p class="chapter-label">額外閱卷・知識仍會留下</p>
+        <h2>文證已收入你的閱讀事件簿</h2>
+        <p>每個活躍日第一篇達標閱讀推進主線；今天多讀的內容仍會累積能力與城市記憶，不需要為了獎勵停下閱讀。</p>
+        <a class="primary-link" href="#/city">回看我的浮城</a>
+      `
+      : `
+        <p class="chapter-label">答題已達標・文證尚未定位</p>
+        <h2>這篇還沒有收入閱讀事件簿</h2>
+        <p>答對題目不等於已指出文證。本篇不會推進主線或獲得墨磚；回到文章重新挑戰時，請在文證題先選出支持答案的段落。</p>
+        <a class="primary-link" href="#/read/${readingId}">回到文章定位文證</a>
+      `;
   } else {
     announcement.hidden = true;
   }
@@ -163,7 +177,9 @@ export function renderCityInvest(
     : "先把這篇讀穩，再往下一篇";
   const choiceCopy = document.createElement("p");
   choiceCopy.textContent = assessmentPassed
-    ? `最後答對 ${finalCorrectCount}／${assessmentTotal} 題，已達 ${requiredCorrectCount} 題門檻。可以接著讀，也可以今天先結束。`
+    ? nextReading
+      ? `最後答對 ${finalCorrectCount}／${assessmentTotal} 題，已達 ${requiredCorrectCount} 題門檻。可以接著讀，也可以今天先結束。`
+      : `最後答對 ${finalCorrectCount}／${assessmentTotal} 題，已達 ${requiredCorrectCount} 題門檻。本批目前沒有下一篇新讀卷，可回首頁、選文書架或先休息。`
     : `最後答對 ${finalCorrectCount}／${assessmentTotal} 題，尚未達 ${requiredCorrectCount} 題門檻。作答紀錄已保存。`;
   const choiceActions = document.createElement("div");
   choiceActions.className = "journey-choice__actions";
@@ -173,6 +189,15 @@ export function renderCityInvest(
     nextLink.href = `#/read/${nextReading.id}`;
     nextLink.textContent = `繼續下一篇挑戰：${nextReading.title}`;
     choiceActions.append(nextLink);
+  } else if (assessmentPassed) {
+    const homeLink = document.createElement("a");
+    homeLink.className = "primary-link";
+    homeLink.href = "#/";
+    homeLink.textContent = "回到閱讀首頁";
+    const bookshelfLink = document.createElement("a");
+    bookshelfLink.href = "#/bookshelf";
+    bookshelfLink.textContent = "打開選文書架";
+    choiceActions.append(homeLink, bookshelfLink);
   } else if (!assessmentPassed) {
     const retryLink = document.createElement("a");
     retryLink.className = "primary-link";

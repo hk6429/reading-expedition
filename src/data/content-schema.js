@@ -10,6 +10,28 @@ function assertNonEmptyString(value, field) {
   if (typeof value !== "string" || value.trim() === "") {
     throw new TypeError(`${field} must be a non-empty string`);
   }
+  assertPlainText(value, field);
+}
+
+const HTML_MARKUP = /<\s*\/?\s*[a-z][^>]*>|<!--|<!doctype\b/i;
+
+export function assertPlainText(value, field = "content") {
+  if (typeof value === "string") {
+    if (HTML_MARKUP.test(value)) {
+      throw new TypeError(`${field} must not contain HTML markup`);
+    }
+    return value;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => assertPlainText(item, `${field}[${index}]`));
+    return value;
+  }
+  if (value && typeof value === "object") {
+    for (const [key, item] of Object.entries(value)) {
+      assertPlainText(item, `${field}.${key}`);
+    }
+  }
+  return value;
 }
 
 export function assertCoreReading(value) {

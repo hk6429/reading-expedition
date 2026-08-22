@@ -1,7 +1,8 @@
 import { createClassContribution } from "../../../src/domain/class-contribution.js";
+import { levelReadingsById } from "../../../src/data/level-readings.js";
+import { demoReadingsById } from "../../../src/data/demo-readings.js";
 import {
   createClassCode,
-  createParticipantToken,
   hashClassCredential,
 } from "../auth/class-code.js";
 import { errorResponse, jsonResponse } from "./errors.js";
@@ -129,8 +130,10 @@ function parseAssignmentPayload(value) {
 function parseContributionQuality(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   if (
-    Object.keys(value).sort().join(",") !==
-    "evidenceViewed,firstCorrect,revisedCorrect,transferCompleted"
+    ![
+      "evidenceViewed,firstCorrect,revisedCorrect,transferCompleted",
+      "abilityResults,evidenceViewed,firstCorrect,revisedCorrect,revisionOpportunities,transferCompleted",
+    ].includes(Object.keys(value).sort().join(","))
   ) {
     return null;
   }
@@ -141,12 +144,39 @@ function parseContributionQuality(value) {
     !Number.isInteger(value.revisedCorrect) ||
     value.revisedCorrect < 0 ||
     value.revisedCorrect > 3 ||
+    ("revisionOpportunities" in value &&
+      (!Number.isInteger(value.revisionOpportunities) ||
+        value.revisionOpportunities < 0 ||
+        value.revisionOpportunities > 3)) ||
+    ("abilityResults" in value &&
+      (!value.abilityResults ||
+        typeof value.abilityResults !== "object" ||
+        Array.isArray(value.abilityResults) ||
+        Object.keys(value.abilityResults).sort().join(",") !==
+          "comprehension,evidence,inference" ||
+        Object.values(value.abilityResults).some(
+          (result) =>
+            !result ||
+            Object.keys(result).sort().join(",") !==
+              "firstCorrect,opportunities" ||
+            !Number.isInteger(result.opportunities) ||
+            result.opportunities < 0 ||
+            result.opportunities > 3 ||
+            !Number.isInteger(result.firstCorrect) ||
+            result.firstCorrect < 0 ||
+            result.firstCorrect > result.opportunities,
+        ))) ||
     typeof value.evidenceViewed !== "boolean" ||
     typeof value.transferCompleted !== "boolean"
   ) {
     return null;
   }
-  return Object.freeze({ ...value });
+  return Object.freeze({
+    ...value,
+    revisionOpportunities:
+      value.revisionOpportunities ?? 3 - value.firstCorrect,
+    abilityResults: value.abilityResults ?? null,
+  });
 }
 
 const MISSION_CHOICES = [
@@ -174,13 +204,36 @@ function roundedRate(numerator, denominator) {
 function qualityRates(quality) {
   return {
     firstCorrectRate: roundedRate(quality.firstCorrect, quality.count * 3),
-    revisedCorrectRate: roundedRate(quality.revisedCorrect, quality.count * 3),
+    revisedCorrectRate: roundedRate(
+      quality.revisedCorrect,
+      Number.isFinite(quality.revisionOpportunities)
+        ? quality.revisionOpportunities
+        : quality.count * 3 - quality.firstCorrect,
+    ),
     evidenceViewedRate: roundedRate(quality.evidenceViewed, quality.count),
     transferCompletedRate: roundedRate(
       quality.transferCompleted,
       quality.count,
     ),
   };
+}
+
+function missionProgress(mission, aggregate, minimumSample = 5) {
+  if (mission.type === "category_balance") {
+    return Object.values(aggregate.categoryDistribution ?? {}).filter(
+      (count) => count > 0,
+    ).length;
+  }
+  if (mission.type === "ability_practice") {
+    return Object.values(aggregate.abilityMetrics ?? {}).filter(
+      ({ opportunities = 0 }) => opportunities >= minimumSample,
+    ).length;
+  }
+  return aggregate.weeklyValidReadings;
+}
+
+function missionTarget(type) {
+  return type === "shared_readings" ? 10 : 3;
 }
 
 function emptyMissionContext() {
@@ -191,12 +244,18 @@ function emptyMissionContext() {
     exitParticipants: 0,
     exitCounts: {},
     currentAssignment: null,
+    voteCounts: {},
+    exitParticipants: 0,
+    exitCounts: {},
+    currentAssignment: null,
     quality: {
       count: 0,
       firstCorrect: 0,
       revisedCorrect: 0,
       evidenceViewed: 0,
       transferCompleted: 0,
+      revisionOpportunities: 0,
+      abilityMetrics: {},
     },
   };
 }
@@ -263,16 +322,22 @@ export function createClassroomApi({
             repository.getClassAggregate(classroom.id, weeklyPeriod),
             repository.getClassMissionContext(classroom.id, weeklyPeriod),
           ]);
-          const mission = context.mission ?? {
+          const rawMission = context.mission ?? {
             type: "shared_readings",
             target: 10,
           };
+          const mission = {
+            ...rawMission,
+            target:
+              rawMission.target === 0 ? 0 : missionTarget(rawMission.type),
+          };
+          const progress = missionProgress(mission, aggregate);
           const privacyProtected =
             aggregate.anonymousParticipants < privacyThreshold ||
             aggregate.weeklyAnonymousParticipants < privacyThreshold;
           const remaining = Math.max(
             0,
-            mission.target - aggregate.weeklyValidReadings,
+            mission.target - progress,
           );
           return {
             ...classroom,
@@ -288,7 +353,7 @@ export function createClassroomApi({
               ? null
               : mission.target === 0
                 ? 0
-                : aggregate.weeklyValidReadings,
+                : progress,
             missionRemaining: privacyProtected
               ? null
               : mission.target === 0
@@ -301,6 +366,9 @@ export function createClassroomApi({
             skillDistribution: privacyProtected
               ? null
               : aggregate.skillDistribution,
+            abilityMetrics: privacyProtected
+              ? null
+              : aggregate.abilityMetrics,
             voteDistribution:
               context.voteParticipants >= privacyThreshold
                 ? aggregateDistribution(context.voteCounts, MISSION_CHOICES)
@@ -320,7 +388,28 @@ export function createClassroomApi({
         }),
       );
       return jsonResponse(
-        { classrooms: enriched },
+        {
+          classrooms: enriched,
+          assignmentReadings: [
+            ...Object.values(levelReadingsById),
+            ...Object.values(demoReadingsById).map((reading) => ({
+              ...reading,
+              level: "tower",
+              supportMode:
+                reading.difficulty === "independent"
+                  ? "independent"
+                  : "guided",
+            })),
+          ].map(
+            ({ id, title, level, category, supportMode }) => ({
+              id,
+              title,
+              level,
+              category,
+              supportMode,
+            }),
+          ),
+        },
         { headers: { "cache-control": "no-store" } },
       );
     },
@@ -349,6 +438,40 @@ export function createClassroomApi({
       }
       return jsonResponse(
         { ok: true, revokedAt },
+        { headers: { "cache-control": "no-store" } },
+      );
+    },
+
+    async rotateCode(classroomId) {
+      if (
+        typeof classroomId !== "string" ||
+        !/^[A-Za-z0-9-]{1,80}$/.test(classroomId) ||
+        typeof repository.rotateClassroomCode !== "function"
+      ) {
+        return errorResponse(
+          "classroom_not_found",
+          "找不到指定班級。",
+          404,
+          crypto.randomUUID(),
+        );
+      }
+      const classCode = createClassCode();
+      const rotatedAt = clock().toISOString();
+      const rotated = await repository.rotateClassroomCode(
+        classroomId,
+        await hashClassCredential(classCode),
+        rotatedAt,
+      );
+      if (!rotated) {
+        return errorResponse(
+          "classroom_not_found",
+          "找不到指定班級，或班級已停用。",
+          404,
+          crypto.randomUUID(),
+        );
+      }
+      return jsonResponse(
+        { id: classroomId, classCode, rotatedAt },
         { headers: { "cache-control": "no-store" } },
       );
     },
@@ -384,6 +507,7 @@ export function createClassroomApi({
         classroomId,
         period: isoWeekKey(now),
         ...mission,
+        target: mission.target === 0 ? 0 : missionTarget(mission.type),
         createdBySession: actorId,
         updatedAt: now.toISOString(),
       });
@@ -396,7 +520,12 @@ export function createClassroomApi({
         );
       }
       return jsonResponse(
-        { mission },
+        {
+          mission: {
+            ...mission,
+            target: mission.target === 0 ? 0 : missionTarget(mission.type),
+          },
+        },
         { headers: { "cache-control": "no-store" } },
       );
     },
@@ -427,6 +556,22 @@ export function createClassroomApi({
           crypto.randomUUID(),
         );
       }
+      if (typeof repository.getPublishedReading === "function") {
+        const reading =
+          (await repository.getPublishedReading(assignment.readingId)) ??
+          levelReadingsById[assignment.readingId] ??
+          demoReadingsById[assignment.readingId] ??
+          null;
+        if (!reading) {
+          return errorResponse(
+            "reading_not_found",
+            "指定閱讀不存在或尚未發布。",
+            404,
+            crypto.randomUUID(),
+          );
+        }
+        assignment = Object.freeze({ ...assignment, title: reading.title });
+      }
       const now = clock();
       const saved = await repository.setClassAssignment({
         classroomId,
@@ -450,13 +595,24 @@ export function createClassroomApi({
 
     async join(request) {
       let classCode;
+      let seatToken;
       try {
         const payload = await request.json();
         classCode = payload.classCode;
+        seatToken = payload.seatToken;
       } catch {
         classCode = "";
+        seatToken = "";
       }
       if (typeof classCode !== "string") classCode = "";
+      if (typeof seatToken !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(seatToken)) {
+        return errorResponse(
+          "invalid_class_seat",
+          "匿名席次格式不正確。",
+          400,
+          crypto.randomUUID(),
+        );
+      }
       const classroom = await repository.findClassroomByCodeHash(
         await hashClassCredential(classCode),
       );
@@ -472,7 +628,22 @@ export function createClassroomApi({
           crypto.randomUUID(),
         );
       }
-      const participantToken = createParticipantToken();
+      const participantToken = seatToken;
+      const seatHash = await hashClassCredential(seatToken);
+      const existing =
+        typeof repository.findClassroomTokenBySeatHash === "function"
+          ? await repository.findClassroomTokenBySeatHash(classroom.id, seatHash)
+          : null;
+      if (
+        existing &&
+        !existing.revokedAt &&
+        new Date(existing.expiresAt).getTime() > clock().getTime()
+      ) {
+        return jsonResponse(
+          { participantToken, expiresAt: existing.expiresAt, reusedSeat: true },
+          { status: 200, headers: { "cache-control": "no-store" } },
+        );
+      }
       const expiresAt = new Date(
         Math.min(
           new Date(classroom.expiresAt).getTime(),
@@ -483,6 +654,7 @@ export function createClassroomApi({
         id: crypto.randomUUID(),
         classroomId: classroom.id,
         tokenHash: await hashClassCredential(participantToken),
+        seatHash,
         createdAt: clock().toISOString(),
         expiresAt,
       });
@@ -724,10 +896,15 @@ export function createClassroomApi({
               weeklyPeriod,
             )
           : emptyMissionContext();
-      const mission = context.mission ?? {
+      const rawMission = context.mission ?? {
         type: "shared_readings",
         target: 10,
       };
+      const mission = {
+        ...rawMission,
+        target: rawMission.target === 0 ? 0 : missionTarget(rawMission.type),
+      };
+      const currentMissionProgress = missionProgress(mission, aggregate);
       const landmarkLevel = Math.min(
         5,
         Math.floor(aggregate.validReadings / 10),
@@ -741,7 +918,7 @@ export function createClassroomApi({
       const weeklyMissionTarget = mission.target;
       const weeklyRemainingToGoal = Math.max(
         0,
-        weeklyMissionTarget - aggregate.weeklyValidReadings,
+        weeklyMissionTarget - currentMissionProgress,
       );
       if (
         aggregate.anonymousParticipants < privacyThreshold ||
@@ -759,6 +936,7 @@ export function createClassroomApi({
           voteDistribution: null,
           exitDistribution: null,
           qualityRates: null,
+          abilityMetrics: null,
           landmarkProgressBand: landmarkProgressBand(aggregate.validReadings),
           weeklyProgressBand:
             weeklyMissionTarget === 0
@@ -781,10 +959,11 @@ export function createClassroomApi({
         weeklyRemainingToGoal,
         mission,
         missionProgress:
-          weeklyMissionTarget === 0 ? 0 : aggregate.weeklyValidReadings,
+          weeklyMissionTarget === 0 ? 0 : currentMissionProgress,
         missionRemaining:
           weeklyMissionTarget === 0 ? 0 : weeklyRemainingToGoal,
         currentAssignment: context.currentAssignment,
+        abilityMetrics: aggregate.abilityMetrics,
         voteDistribution:
           context.voteParticipants >= privacyThreshold
             ? aggregateDistribution(context.voteCounts, MISSION_CHOICES)

@@ -148,13 +148,13 @@ export function createReadingRepository(db) {
       const statements = events.map((event) =>
         db
           .prepare(
-            `INSERT INTO anonymous_events
+            `INSERT OR IGNORE INTO anonymous_events
                (id, event_type, occurred_at, content_id, category, difficulty,
                 duration_bucket, anonymous_device_id)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           )
           .bind(
-            crypto.randomUUID(),
+            event.id,
             event.type,
             event.occurredAt,
             event.context.contentId,
@@ -164,7 +164,25 @@ export function createReadingRepository(db) {
             event.context.deviceId,
           ),
       );
-      if (statements.length) await db.batch(statements);
+      if (!statements.length) return { accepted: 0, duplicates: 0 };
+      const results = await db.batch(statements);
+      const accepted = results.reduce(
+        (count, result) => count + Number(result?.meta?.changes ?? 0),
+        0,
+      );
+      return { accepted, duplicates: events.length - accepted };
+    },
+    async countRecentAnonymousEvents(deviceId, cutoffIso) {
+      const row = await db
+        .prepare(
+          `SELECT COUNT(*) AS event_count
+           FROM anonymous_events
+           WHERE anonymous_device_id = ?
+             AND julianday(created_at) >= julianday(?)`,
+        )
+        .bind(deviceId, cutoffIso)
+        .first();
+      return Number(row?.event_count ?? 0);
     },
     async purgeExpiredAnonymousEvents(cutoffIso) {
       if (
@@ -265,17 +283,61 @@ export function createReadingRepository(db) {
       await db
         .prepare(
           `INSERT INTO classroom_tokens
-             (id, classroom_id, token_hash, created_at, expires_at)
-           VALUES (?, ?, ?, ?, ?)`,
+             (id, classroom_id, token_hash, seat_hash, created_at, expires_at)
+           VALUES (?, ?, ?, ?, ?, ?)
+           ON CONFLICT(classroom_id, seat_hash) WHERE seat_hash IS NOT NULL DO UPDATE SET
+             token_hash = excluded.token_hash,
+             created_at = excluded.created_at,
+             expires_at = excluded.expires_at,
+             revoked_at = NULL`,
         )
         .bind(
           record.id,
           record.classroomId,
           record.tokenHash,
+          record.seatHash ?? null,
           record.createdAt,
           record.expiresAt,
         )
         .run();
+    },
+    async findClassroomTokenBySeatHash(classroomId, seatHash) {
+      const row = await db
+        .prepare(
+          `SELECT id, classroom_id, expires_at, revoked_at
+           FROM classroom_tokens
+           WHERE classroom_id = ? AND seat_hash = ?
+           LIMIT 1`,
+        )
+        .bind(classroomId, seatHash)
+        .first();
+      return row
+        ? {
+            id: row.id,
+            classroomId: row.classroom_id,
+            expiresAt: row.expires_at,
+            revokedAt: row.revoked_at,
+          }
+        : null;
+    },
+    async rotateClassroomCode(classroomId, classCodeHash, rotatedAt) {
+      const results = await db.batch([
+        db
+          .prepare(
+            `UPDATE classrooms
+             SET class_code_hash = ?
+             WHERE id = ? AND revoked_at IS NULL`,
+          )
+          .bind(classCodeHash, classroomId),
+        db
+          .prepare(
+            `UPDATE classroom_tokens
+             SET revoked_at = ?
+             WHERE classroom_id = ? AND revoked_at IS NULL`,
+          )
+          .bind(rotatedAt, classroomId),
+      ]);
+      return Number(results[0]?.meta?.changes ?? 0) > 0;
     },
     async findClassroomToken(tokenHash) {
       const row = await db
@@ -303,9 +365,12 @@ export function createReadingRepository(db) {
               (id, classroom_id, participant_id, content_id,
               canonical_content_key, reading_version, category, skill,
               proof_nonce, period, created_at, quality_first_correct,
-              quality_revised_correct, quality_evidence_viewed,
-              quality_transfer_completed)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+              quality_revised_correct, quality_revision_opportunities,
+              quality_evidence_viewed, quality_transfer_completed,
+              comprehension_opportunities, comprehension_first_correct,
+              inference_opportunities, inference_first_correct,
+              evidence_opportunities, evidence_first_correct)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
         .bind(
           crypto.randomUUID(),
@@ -321,8 +386,15 @@ export function createReadingRepository(db) {
           record.createdAt,
           record.quality?.firstCorrect ?? null,
           record.quality?.revisedCorrect ?? null,
+          record.quality?.revisionOpportunities ?? null,
           record.quality ? Number(record.quality.evidenceViewed) : null,
           record.quality ? Number(record.quality.transferCompleted) : null,
+          record.quality?.abilityResults?.comprehension?.opportunities ?? null,
+          record.quality?.abilityResults?.comprehension?.firstCorrect ?? null,
+          record.quality?.abilityResults?.inference?.opportunities ?? null,
+          record.quality?.abilityResults?.inference?.firstCorrect ?? null,
+          record.quality?.abilityResults?.evidence?.opportunities ?? null,
+          record.quality?.abilityResults?.evidence?.firstCorrect ?? null,
         )
         .run();
       return Number(result?.meta?.changes) > 0;
@@ -463,6 +535,10 @@ export function createReadingRepository(db) {
              COUNT(quality_first_correct) AS quality_count,
              COALESCE(SUM(quality_first_correct), 0) AS first_correct,
              COALESCE(SUM(quality_revised_correct), 0) AS revised_correct,
+             COALESCE(SUM(COALESCE(
+               quality_revision_opportunities,
+               3 - quality_first_correct
+             )), 0) AS revision_opportunities,
              COALESCE(SUM(quality_evidence_viewed), 0) AS evidence_viewed,
              COALESCE(SUM(quality_transfer_completed), 0) AS transfer_completed
            FROM classroom_contributions
@@ -506,6 +582,9 @@ export function createReadingRepository(db) {
           count: Number(qualityRow?.quality_count ?? 0),
           firstCorrect: Number(qualityRow?.first_correct ?? 0),
           revisedCorrect: Number(qualityRow?.revised_correct ?? 0),
+          revisionOpportunities: Number(
+            qualityRow?.revision_opportunities ?? 0,
+          ),
           evidenceViewed: Number(qualityRow?.evidence_viewed ?? 0),
           transferCompleted: Number(qualityRow?.transfer_completed ?? 0),
         },
@@ -572,20 +651,34 @@ export function createReadingRepository(db) {
         .prepare(
           `SELECT category, COUNT(*) AS count
            FROM classroom_contributions
-           WHERE classroom_id = ?
+           WHERE classroom_id = ? AND period = ?
            GROUP BY category`,
         )
-        .bind(classroomId)
+        .bind(classroomId, period)
         .all();
       const { results: skillRows = [] } = await db
         .prepare(
           `SELECT skill, COUNT(*) AS count
            FROM classroom_contributions
-           WHERE classroom_id = ?
+           WHERE classroom_id = ? AND period = ?
            GROUP BY skill`,
         )
-        .bind(classroomId)
+        .bind(classroomId, period)
         .all();
+      const abilityRow = await db
+        .prepare(
+          `SELECT
+             COALESCE(SUM(comprehension_opportunities), 0) AS comprehension_opportunities,
+             COALESCE(SUM(comprehension_first_correct), 0) AS comprehension_first_correct,
+             COALESCE(SUM(inference_opportunities), 0) AS inference_opportunities,
+             COALESCE(SUM(inference_first_correct), 0) AS inference_first_correct,
+             COALESCE(SUM(evidence_opportunities), 0) AS evidence_opportunities,
+             COALESCE(SUM(evidence_first_correct), 0) AS evidence_first_correct
+           FROM classroom_contributions
+           WHERE classroom_id = ? AND period = ?`,
+        )
+        .bind(classroomId, period)
+        .first();
       return {
         classroomId,
         validReadings: Number(summary?.valid_readings ?? 0),
@@ -599,6 +692,15 @@ export function createReadingRepository(db) {
         ),
         skillDistribution: Object.fromEntries(
           skillRows.map((row) => [row.skill, Number(row.count)]),
+        ),
+        abilityMetrics: Object.fromEntries(
+          ["comprehension", "inference", "evidence"].map((skill) => [
+            skill,
+            {
+              opportunities: Number(abilityRow?.[`${skill}_opportunities`] ?? 0),
+              firstCorrect: Number(abilityRow?.[`${skill}_first_correct`] ?? 0),
+            },
+          ]),
         ),
       };
     },
@@ -1224,18 +1326,31 @@ export function createReadingRepository(db) {
         stateUpdatedAt: row.state_updated_at,
       }));
     },
+    async findFamilyChildByAliasKey(familyId, aliasKey) {
+      const row = await db
+        .prepare(
+          `SELECT id, alias
+           FROM family_children
+           WHERE family_id = ? AND alias_key = ?
+           LIMIT 1`,
+        )
+        .bind(familyId, aliasKey)
+        .first();
+      return row ? { id: row.id, alias: row.alias } : null;
+    },
     async createFamilyChild(record) {
       await db.batch([
         db
           .prepare(
             `INSERT INTO family_children
-               (id, family_id, alias, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?)`,
+               (id, family_id, alias, alias_key, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?)`,
           )
           .bind(
             record.id,
             record.familyId,
             record.alias,
+            record.aliasKey,
             record.createdAt,
             record.createdAt,
           ),
@@ -1605,6 +1720,66 @@ export function createReadingRepository(db) {
             category: row.category,
           }
         : null;
+    },
+    async createAssessmentStartNonce(record) {
+      await db
+        .prepare(
+          `INSERT INTO assessment_start_nonces
+             (nonce, reading_id, content_key, reading_version, category,
+              issued_at, expires_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          record.nonce,
+          record.readingId,
+          record.contentKey,
+          record.version,
+          record.category,
+          record.issuedAt,
+          record.expiresAt,
+        )
+        .run();
+    },
+    async consumeAssessmentStartNonce(record) {
+      const result = await db
+        .prepare(
+          `UPDATE assessment_start_nonces
+           SET consumed_at = ?
+           WHERE nonce = ?
+             AND reading_id = ?
+             AND content_key = ?
+             AND reading_version = ?
+             AND category = ?
+             AND consumed_at IS NULL
+             AND expires_at > ?`,
+        )
+        .bind(
+          record.consumedAt,
+          record.nonce,
+          record.readingId,
+          record.contentKey,
+          record.version,
+          record.category,
+          record.consumedAt,
+        )
+        .run();
+      return Number(result?.meta?.changes ?? 0) === 1;
+    },
+    async purgeExpiredAssessmentStartNonces(cutoffIso) {
+      if (
+        typeof cutoffIso !== "string" ||
+        !Number.isFinite(Date.parse(cutoffIso))
+      ) {
+        throw new TypeError("assessment nonce cutoff must be an ISO timestamp");
+      }
+      const result = await db
+        .prepare(
+          `DELETE FROM assessment_start_nonces
+           WHERE expires_at <= ?`,
+        )
+        .bind(cutoffIso)
+        .run();
+      return Number(result?.meta?.changes ?? 0);
     },
   });
 }

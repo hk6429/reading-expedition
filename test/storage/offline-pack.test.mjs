@@ -21,3 +21,29 @@ test("離線週包優先保存正文，最多七篇並逐篇回報失敗", async
   assert.deepEqual(result.failed, ["reading-3"]);
   assert.equal(saved.includes("reading-8"), false);
 });
+
+test("單篇下載逾時後繼續保存下一篇並逐篇更新進度", async () => {
+  const progress = [];
+  const result = await downloadOfflinePack(
+    [{ id: "stalled" }, { id: "available" }],
+    {
+      loadReading: async (id) =>
+        id === "stalled"
+          ? new Promise(() => {})
+          : { id, title: "可下載", body: ["正文"] },
+      storeReading: () => true,
+      timeoutMs: 10,
+      onProgress: (value) => progress.push(value),
+    },
+  );
+
+  assert.deepEqual(result, {
+    requested: 2,
+    saved: 1,
+    failed: ["stalled"],
+  });
+  assert.deepEqual(
+    progress.map(({ completed, saved }) => [completed, saved]),
+    [[1, 0], [2, 1]],
+  );
+});

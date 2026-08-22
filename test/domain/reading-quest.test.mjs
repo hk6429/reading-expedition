@@ -16,6 +16,7 @@ import {
   retryCheckpoints,
   sourceRadar,
   sourceRadarSummary,
+  taipeiCalendarDate,
 } from "../../src/domain/reading-quest.js";
 
 function memoryStorage() {
@@ -119,6 +120,15 @@ test("作答歷程保留信心、提示、文證與選項，但不接受自由�
   assert.throws(() => quest.setConfidence("q1", 5), /confidence/);
   assert.throws(() => quest.setAnswer("q1", "我自己寫答案"), /answer/);
   assert.throws(() => quest.chooseTransfer("我的自由文字"), /transfer/);
+  quest.prepareRetry();
+  assert.deepEqual(quest.snapshot().assessment, {
+    confidence: {},
+    hintLevels: {},
+    evidenceParagraphs: {},
+    evidenceViewed: [],
+    answers: {},
+    transferChoice: null,
+  });
 });
 
 test("閱讀地圖與來源雷達把文章資料轉成可掃讀線索", () => {
@@ -183,6 +193,14 @@ test("作答結果以三軸、錯誤代碼與複習節點呈現成長", () => {
     "2026-08-25",
     "2026-08-29",
   ]);
+  assert.equal(
+    taipeiCalendarDate("2026-08-22T16:06:00.000Z"),
+    "2026-08-23",
+  );
+  assert.equal(
+    taipeiCalendarDate("2026-08-23T15:59:59.000Z"),
+    "2026-08-23",
+  );
 });
 
 test("易讀與高對比偏好獨立保存在本機，不寫入學習紀錄", () => {

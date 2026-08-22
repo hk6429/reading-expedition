@@ -7,6 +7,8 @@ const entries = [
   "index.html",
   "styles.css",
   "service-worker.js",
+  "manifest.webmanifest",
+  "_headers",
   "src",
   "assets",
 ];

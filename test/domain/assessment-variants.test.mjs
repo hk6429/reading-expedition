@@ -5,6 +5,7 @@ import {
   ASSESSMENT_VARIANT_FRAMES,
   createAssessmentVariantSet,
   getAssessmentSessionSeed,
+  rotateAssessmentSessionSeed,
 } from "../../src/domain/assessment-variants.js";
 
 const assessment = [
@@ -50,7 +51,12 @@ test("理解、推論與文證各有至少兩個白名單等價任務框架", ()
   ]);
   for (const frames of Object.values(ASSESSMENT_VARIANT_FRAMES)) {
     assert.ok(frames.length >= 2);
-    assert.ok(frames.every(({ id, label, prefix }) => id && label && prefix));
+    assert.ok(
+      frames.every(
+        ({ id, label, instruction, stem }) =>
+          id && label && instruction && stem,
+      ),
+    );
   }
 });
 
@@ -69,7 +75,7 @@ test("同一 session seed 穩定選題，新 seed 可換任務框架", () => {
   );
 });
 
-test("變體只包裝題面，原題識別、選項與評分語義保持不變", () => {
+test("變體實質改寫任務說明並重排選項，但評分語義保持不變", () => {
   const variants = createAssessmentVariantSet(assessment, {
     seed: "session-0",
   });
@@ -78,12 +84,31 @@ test("變體只包裝題面，原題識別、選項與評分語義保持不變",
     assert.equal(variant.id, assessment[index].id);
     assert.equal(variant.type, assessment[index].type);
     assert.equal(variant.originalPrompt, assessment[index].prompt);
-    assert.deepEqual(variant.options, assessment[index].options);
+    assert.deepEqual(
+      [...variant.options].sort(),
+      [...assessment[index].options].sort(),
+    );
     assert.equal(variant.correctAnswer, assessment[index].correctAnswer);
     assert.deepEqual(variant.evidenceSpan, assessment[index].evidenceSpan);
     assert.notEqual(variant.prompt, assessment[index].prompt);
     assert.match(variant.prompt, new RegExp(assessment[index].prompt));
   });
+});
+
+test("重試會輪替 seed，不沿用上一組等值任務", () => {
+  const storage = memoryStorage();
+  storage.setItem(
+    "reading-expedition:assessment-seed",
+    "safe-session-seed-1",
+  );
+  const next = rotateAssessmentSessionSeed(storage, {
+    createSeed: () => "safe-session-seed-2",
+  });
+  assert.equal(next, "safe-session-seed-2");
+  assert.equal(
+    getAssessmentSessionSeed(storage),
+    "safe-session-seed-2",
+  );
 });
 
 test("分頁種子只存 sessionStorage，重用同值並拒絕污染字串", () => {

@@ -12,7 +12,7 @@ test("公開文件清楚說明本機優先與禁收資料", async () => {
   const publicCopy = `${html}\n${readme}`;
 
   assert.match(publicCopy, /保存在這部裝置/);
-  assert.match(publicCopy, /不收姓名、學號、Email、學校或班級真名/);
+  assert.match(publicCopy, /系統無法判定代號是否為真名，請勿輸入姓名、學號、Email、學校或班級真名/);
   assert.match(readme, /npm test/);
   assert.match(readme, /Cloudflare Pages：https:\/\/reading-expedition-2u1\.pages\.dev\//);
   assert.match(readme, /Vercel：https:\/\/reading-expedition\.vercel\.app\//);

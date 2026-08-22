@@ -5,6 +5,7 @@ import {
   compareDifficultyLevels,
   measureReadingLevel,
 } from "./reading-level.js";
+import { assertPlainText } from "../../../src/data/content-schema.js";
 
 const DIFFICULTIES = ["guided", "challenge"];
 
@@ -30,6 +31,11 @@ function readingValidationCode(reading, textType) {
     reading.readingMinutes > 15
   ) {
     return "reading_structure_invalid";
+  }
+  try {
+    assertPlainText(reading, "reading");
+  } catch {
+    return "reading_html_not_allowed";
   }
   const profile = evaluateContentProfile(reading);
   return profile.ok ? null : profile.reasons[0];

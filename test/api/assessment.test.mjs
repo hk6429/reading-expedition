@@ -4,6 +4,23 @@ import test from "node:test";
 import { createApi } from "../../worker/src/api/router.js";
 import { createCompletionProofService } from "../../worker/src/api/assessment.js";
 
+function withAssessmentNonceStore(repository) {
+  const nonces = new Map();
+  return {
+    ...repository,
+    async createAssessmentStartNonce(record) {
+      if (nonces.has(record.nonce)) throw new Error("duplicate nonce");
+      nonces.set(record.nonce, record);
+    },
+    async consumeAssessmentStartNonce(record) {
+      const stored = nonces.get(record.nonce);
+      if (!stored || stored.consumedAt) return false;
+      stored.consumedAt = record.consumedAt;
+      return true;
+    },
+  };
+}
+
 test("submit API 驗證內容版本並回傳文證回饋", async () => {
   const api = createApi({
     repository: {
@@ -81,7 +98,7 @@ test("作答開始時間由伺服器簽章並綁定文章版本", async () => {
     clock,
   });
   const api = createApi({
-    repository: {
+    repository: withAssessmentNonceStore({
       getPublishedDaily: async () => [],
       getAssessmentProofContext: async (readingId, version) => ({
         readingId,
@@ -89,7 +106,7 @@ test("作答開始時間由伺服器簽章並綁定文章版本", async () => {
         contentKey: "water-sharing",
         category: "science",
       }),
-    },
+    }),
     completionProofService,
     clock,
   });
@@ -127,7 +144,7 @@ test("伺服器拒絕不可能完成速度，經過最短時間才簽完成證�
     clock,
     minimumCompletionMs: 30_000,
   });
-  const repository = {
+  const repository = withAssessmentNonceStore({
     getPublishedDaily: async () => [],
     getAssessmentKey: async () => [
       {
@@ -145,7 +162,7 @@ test("伺服器拒絕不可能完成速度，經過最短時間才簽完成證�
       contentKey: "water-sharing",
       category: "science",
     }),
-  };
+  });
   const api = createApi({ repository, completionProofService, clock });
   const sessionResponse = await api.fetch(
     new Request(
@@ -244,7 +261,7 @@ test("作答達標後簽發短效且綁定文章版本與內容鍵的完成證�
     ttlMs: 5 * 60_000,
   });
   const api = createApi({
-    repository: {
+    repository: withAssessmentNonceStore({
       getPublishedDaily: async () => [],
       getAssessmentKey: async () => [
         {
@@ -262,7 +279,7 @@ test("作答達標後簽發短效且綁定文章版本與內容鍵的完成證�
         contentKey: "water-sharing",
         category: "science",
       }),
-    },
+    }),
     completionProofService,
     clock,
   });
@@ -278,7 +295,7 @@ test("作答達標後簽發短效且綁定文章版本與內容鍵的完成證�
   const { assessmentSession } = await sessionResponse.json();
   now = new Date("2026-08-22T10:00:30.000Z");
 
-  const response = await api.fetch(
+  const submitRequest = () =>
     new Request(
       "https://example.test/api/v1/readings/water-sharing-guided-v1/submit",
       {
@@ -290,9 +307,19 @@ test("作答達標後簽發短效且綁定文章版本與內容鍵的完成證�
           assessmentSession,
         }),
       },
-    ),
+    );
+  const responses = await Promise.all([
+    api.fetch(submitRequest()),
+    api.fetch(submitRequest()),
+  ]);
+  assert.deepEqual(
+    responses.map(({ status }) => status).sort(),
+    [200, 409],
   );
+  const response = responses.find(({ status }) => status === 200);
+  const replay = responses.find(({ status }) => status === 409);
   const payload = await response.json();
+  const replayPayload = await replay.json();
   const claims = await completionProofService.verify(payload.completionProof);
 
   assert.equal(response.status, 200);
@@ -308,4 +335,5 @@ test("作答達標後簽發短效且綁定文章版本與內容鍵的完成證�
   assert.match(claims.nonce, /^[A-Za-z0-9_-]{20,}$/);
   assert.equal("answers" in claims, false);
   assert.equal("name" in claims, false);
+  assert.equal(replayPayload.error.code, "assessment_session_replayed");
 });

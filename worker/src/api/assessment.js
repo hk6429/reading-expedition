@@ -361,6 +361,21 @@ export async function submitAssessment(
         skill: provenSkill(answerKey, graded.results),
         startedAt: start.issuedAt,
       });
+      const proofClaims = await completionProofService.verify(completionProof);
+      if (typeof repository.consumeAssessmentStartNonce !== "function") {
+        throw new CompletionProofError("assessment_session_unavailable");
+      }
+      const consumed = await repository.consumeAssessmentStartNonce({
+        nonce: start.nonce,
+        readingId: start.readingId,
+        contentKey: start.contentKey,
+        version: start.version,
+        category: start.category,
+        consumedAt: proofClaims.issuedAt,
+      });
+      if (!consumed) {
+        throw new CompletionProofError("assessment_session_replayed");
+      }
     }
   }
   return {

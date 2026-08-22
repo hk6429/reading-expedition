@@ -103,6 +103,25 @@ test("教師修改必須帶版本，衝突時不靜默覆寫", async () => {
   assert.equal((await updated.json()).package.version, 3);
 });
 
+test("教師校閱欄位拒絕 HTML 標籤", async () => {
+  const api = createReviewApi({ repository: reviewRepository() });
+  const response = await api.update(
+    "water-guided",
+    new Request("https://example.test/api/v1/teacher/review/water-guided", {
+      method: "PATCH",
+      body: JSON.stringify({
+        expectedVersion: 2,
+        title: '<img src=x onerror="alert(1)">',
+      }),
+    }),
+    "teacher-session",
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 400);
+  assert.equal(payload.error.code, "review_html_not_allowed");
+});
+
 test("批次操作不能變更或核准答案", async () => {
   const api = createReviewApi({ repository: reviewRepository() });
   const response = await api.batch(

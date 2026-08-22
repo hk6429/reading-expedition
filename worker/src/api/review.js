@@ -1,4 +1,5 @@
 import { hashSecret } from "../auth/teacher-auth.js";
+import { assertPlainText } from "../../../src/data/content-schema.js";
 import { errorResponse, jsonResponse } from "./errors.js";
 
 const REVIEW_STATUSES = new Set([
@@ -97,6 +98,16 @@ export function createReviewApi({ repository }) {
         return errorResponse(
           "empty_review_edit",
           "沒有可儲存的修改。",
+          400,
+          traceId(),
+        );
+      }
+      try {
+        assertPlainText(changes, "review edit");
+      } catch {
+        return errorResponse(
+          "review_html_not_allowed",
+          "文章與題目欄位只接受純文字，不可包含 HTML。",
           400,
           traceId(),
         );

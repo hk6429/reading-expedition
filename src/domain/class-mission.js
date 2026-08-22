@@ -78,6 +78,12 @@ const QUALITY_RATE_KEYS = Object.freeze([
   "transferCompletedRate",
 ]);
 
+const ABILITY_METRIC_KEYS = Object.freeze([
+  "comprehension",
+  "inference",
+  "evidence",
+]);
+
 function normalizeDistribution(value, keys) {
   if (!value || typeof value !== "object") return {};
   return Object.fromEntries(
@@ -142,7 +148,28 @@ export function normalizeAssignmentReadings(records = []) {
       continue;
     }
     seen.add(readingId);
-    readings.push(Object.freeze({ readingId, title }));
+    const level = ["launch", "voyage", "tower"].includes(record?.level)
+      ? record.level
+      : null;
+    const category = ["world", "science", "humanities"].includes(
+      record?.category,
+    )
+      ? record.category
+      : null;
+    const supportMode = ["guided", "independent"].includes(
+      record?.supportMode,
+    )
+      ? record.supportMode
+      : null;
+    readings.push(
+      Object.freeze({
+        readingId,
+        title,
+        ...(level ? { level } : {}),
+        ...(category ? { category } : {}),
+        ...(supportMode ? { supportMode } : {}),
+      }),
+    );
   }
   return Object.freeze(readings);
 }
@@ -198,8 +225,10 @@ export function buildClassMission(aggregate = {}) {
           aggregate.weeklyMissionTarget > 0
         ? aggregate.weeklyMissionTarget
         : 10;
-  const completed = Number.isInteger(aggregate.weeklyValidReadings)
-    ? Math.max(0, aggregate.weeklyValidReadings)
+  const completed = Number.isInteger(aggregate.missionProgress)
+    ? Math.max(0, aggregate.missionProgress)
+    : Number.isInteger(aggregate.weeklyValidReadings)
+      ? Math.max(0, aggregate.weeklyValidReadings)
     : 0;
   const period = /^\d{4}-W\d{2}$/.test(aggregate.weeklyPeriod ?? "")
     ? aggregate.weeklyPeriod
@@ -262,6 +291,30 @@ export function buildClassMission(aggregate = {}) {
     qualityRates: privacyProtected
       ? null
       : normalizeQualityRates(aggregate.qualityRates),
+    abilityMetrics: privacyProtected
+      ? null
+      : Object.freeze(
+          Object.fromEntries(
+            ABILITY_METRIC_KEYS.map((skill) => {
+              const raw = aggregate.abilityMetrics?.[skill] ?? {};
+              const opportunities = Number.isInteger(raw.opportunities)
+                ? Math.max(0, raw.opportunities)
+                : 0;
+              const firstCorrect = Number.isInteger(raw.firstCorrect)
+                ? Math.max(0, Math.min(opportunities, raw.firstCorrect))
+                : 0;
+              return [
+                skill,
+                Object.freeze({
+                  opportunities,
+                  firstCorrect,
+                  firstCorrectRate:
+                    opportunities > 0 ? firstCorrect / opportunities : null,
+                }),
+              ];
+            }),
+          ),
+        ),
   });
 }
 
@@ -326,4 +379,68 @@ export function interventionForDistribution(distribution = {}) {
       },
     }[weakest],
   );
+}
+
+export function interventionForAbilityMetrics(metrics = {}, minimumSample = 5) {
+  const candidates = ABILITY_METRIC_KEYS.map((skill) => {
+    const opportunities = Number(metrics?.[skill]?.opportunities ?? 0);
+    const firstCorrect = Number(metrics?.[skill]?.firstCorrect ?? 0);
+    return {
+      skill,
+      opportunities: Number.isInteger(opportunities) ? opportunities : 0,
+      firstCorrect: Number.isInteger(firstCorrect) ? firstCorrect : 0,
+      rate: opportunities > 0 ? firstCorrect / opportunities : null,
+    };
+  }).filter(({ opportunities }) => opportunities >= minimumSample);
+  if (candidates.length === 0) {
+    return Object.freeze({
+      skill: null,
+      title: "樣本仍在累積",
+      steps: "本週各能力尚未達最低樣本，不判定弱點；先安排混合練習再觀察。",
+      example: "示例：每種能力至少完成 5 次作答機會後再比較首次正確率。",
+      practice: "練習：各選一題主旨、推論與文證題，使用相同完成標準。",
+      exitCheck: "Exit check：學生能說出本題在練哪一種能力。",
+      opportunities: 0,
+      firstCorrect: 0,
+      rate: null,
+      minimumSample,
+    });
+  }
+  const weakest = candidates.sort(
+    (left, right) =>
+      left.rate - right.rate ||
+      right.opportunities - left.opportunities ||
+      left.skill.localeCompare(right.skill),
+  )[0];
+  const card = {
+    comprehension: {
+      title: "10 分鐘主旨接力",
+      steps: "步驟：讀一段、圈重複詞、找轉折，再用一句話說出主旨。",
+      example: "示例：雖然方案成本較高，但能長期節水；主旨要包含取捨與理由。",
+      practice: "練習：刪除一個只講細節的選項，說明它為何不是主旨。",
+      exitCheck: "Exit check：用 20 字內寫出主旨，並圈出一個支持詞。",
+    },
+    inference: {
+      title: "10 分鐘線索連線",
+      steps: "步驟：找兩個線索、畫出關係、說明推論依據。",
+      example: "示例：人物先沉默再改口，可推論立場動搖，但不能推論他已完全同意。",
+      practice: "練習：為同一組線索比較『可推論』與『過度推論』各一項。",
+      exitCheck: "Exit check：說出一個推論，並指出兩個原文線索。",
+    },
+    evidence: {
+      title: "10 分鐘文證定位",
+      steps: "步驟：看一題、定位原句、比較原句與選項。",
+      example: "示例：選項說『全部』，原文只說『部分』，量詞不一致就不能支持。",
+      practice: "練習：替一個判斷找最直接的一句原文，刪掉無關背景句。",
+      exitCheck: "Exit check：圈出支持判斷的最短文證並口頭解釋。",
+    },
+  }[weakest.skill];
+  return Object.freeze({
+    skill: weakest.skill,
+    ...card,
+    opportunities: weakest.opportunities,
+    firstCorrect: weakest.firstCorrect,
+    rate: weakest.rate,
+    minimumSample,
+  });
 }

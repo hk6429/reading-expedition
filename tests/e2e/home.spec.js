@@ -166,6 +166,40 @@ test("書架看得到庫存中的30個主題，不只當日三題", async ({ pag
   await expect(page.locator(".bookshelf-card")).toHaveCount(30);
 });
 
+test("書架把內容欄位當純文字，不執行文章中的 HTML", async ({ page }) => {
+  const attack = '<img src=x onerror="window.__bookshelfXss=1">';
+  await page.addInitScript(() => {
+    window.__bookshelfXss = 0;
+  });
+  await page.route("**/api/v1/readings?*", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        readings: [{
+          id: "security-guided-v1",
+          contentKey: "security",
+          category: "science",
+          difficulty: "guided",
+          level: "launch",
+          supportMode: "guided",
+          textType: "vernacular",
+          title: attack,
+          hookQuestion: attack,
+          readingMinutes: 5,
+          version: 1,
+        }],
+        pagination: { page: 1, pageSize: 200, total: 1, hasMore: false },
+      }),
+    });
+  });
+
+  await page.goto("/#/bookshelf");
+
+  await expect(page.locator(".bookshelf-card h2").first()).toHaveText(attack);
+  await expect(page.locator(".bookshelf-card img")).toHaveCount(0);
+  expect(await page.evaluate(() => window.__bookshelfXss)).toBe(0);
+});
+
 test("唯一啟航讀卷完成後顯示等待下一批，浮城進度不歸零", async ({
   page,
 }) => {

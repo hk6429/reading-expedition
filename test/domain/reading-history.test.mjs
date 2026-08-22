@@ -5,6 +5,7 @@ import {
   appendVerifiedReading,
   extractEvidenceText,
   hasMainlineRewardForDate,
+  hasMainlineRewardForReading,
 } from "../../src/domain/reading-history.js";
 
 test("從正式文證座標取出學生實際帶回的原文", () => {
@@ -35,6 +36,12 @@ test("同篇跨日重讀會保留兩天事件，不覆寫舊活躍日", () => {
   assert.equal(first.added, true);
   assert.equal(first.event.title, "水源如何分配");
   assert.equal(second.added, true);
+  assert.equal(first.event.mainlineReward, true);
+  assert.equal(second.event.mainlineReward, false);
+  assert.equal(
+    hasMainlineRewardForReading(second.history, "water-sharing-guided-v1"),
+    true,
+  );
   assert.deepEqual(
     second.history.map(({ date }) => date),
     ["2026-07-28", "2026-07-29"],

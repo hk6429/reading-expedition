@@ -39,10 +39,27 @@ const SKILL_LABELS = Object.freeze({
   inference: "推論",
   evidence: "找文證",
 });
+const ASSIGNMENT_ROUTE_LABELS = Object.freeze({
+  guided: "引導路線",
+  independent: "獨立路線",
+  equivalent: "引導／獨立皆可",
+});
+
+function classQuery(hash) {
+  return new URLSearchParams(String(hash).split("?")[1] ?? "");
+}
+
+function createSeatToken() {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes))
+    .replaceAll("+", "-")
+    .replaceAll("/", "_")
+    .replace(/=+$/, "");
+}
 
 function codeFromClassHash(hash) {
-  const query = String(hash).split("?")[1] ?? "";
-  const code = new URLSearchParams(query).get("code")?.toUpperCase() ?? "";
+  const code = classQuery(hash).get("code")?.toUpperCase() ?? "";
   return /^[A-Z2-9]{8}$/.test(code) ? code : "";
 }
 
@@ -74,6 +91,23 @@ export async function renderClassView(
   } = {},
 ) {
   let token = storage.getItem("reading-expedition.class-token");
+  const projectionMode = classQuery(locationHash).get("project") === "1";
+
+  function showUnavailable(message) {
+    root.innerHTML = `
+      <section class="class-shell paper-panel class-unavailable" aria-labelledby="class-unavailable-title">
+        <p class="chapter-label">匿名席次仍保留</p>
+        <h1 id="class-unavailable-title">班級連線暫時中斷</h1>
+        <p>${escapeHtml(message)}</p>
+        <p>班級席次與尚未送出的共建佇列都留在這部裝置，不必重新輸入班級碼。</p>
+        <button type="button" data-retry-class>重新連線</button>
+        <a href="#/">先回個人閱讀</a>
+      </section>
+    `;
+    root.querySelector("[data-retry-class]").addEventListener("click", () => {
+      showLandmark("已重新連上班級。");
+    });
+  }
 
   async function showLandmark(message = "") {
     let response;
@@ -82,20 +116,36 @@ export async function renderClassView(
         headers: { authorization: `Bearer ${token}` },
       });
     } catch {
-      showJoin("目前無法連線班級，請確認網路後再試。");
+      showUnavailable("目前無法連線，請確認網路後再試。");
       return;
     }
     if (!response.ok) {
-      storage.removeItem("reading-expedition.class-token");
-      contributionQueue?.clear();
-      token = null;
-      showJoin("參與權杖已到期，請重新輸入班級碼。");
+      if ([401, 403, 410].includes(response.status)) {
+        storage.removeItem("reading-expedition.class-token");
+        contributionQueue?.clear();
+        token = null;
+        showJoin("參與權杖已到期，請重新輸入班級碼。");
+      } else {
+        showUnavailable(`班級服務回應 ${response.status}，稍後可直接重試。`);
+      }
       return;
     }
     const aggregate = await response.json();
     const mission = buildClassMission(aggregate);
     const role = chooseAnonymousRole(token, mission.period);
     const details = missionTypeDetails(mission.type);
+    const assignment = aggregate.currentAssignment;
+    const assignmentMarkup = assignment
+      ? `
+        <section class="class-mission__current-assignment" aria-labelledby="current-assignment-title">
+          <p class="eyebrow">老師目前指派</p>
+          <h2 id="current-assignment-title">${escapeHtml(assignment.title)}</h2>
+          <p>${escapeHtml(SKILL_LABELS[assignment.ability] ?? assignment.ability)}・${escapeHtml(ASSIGNMENT_ROUTE_LABELS[assignment.route] ?? assignment.route)}・${assignment.dueDate ? `期限 ${escapeHtml(assignment.dueDate)}` : "無期限"}</p>
+          <p>期限只協助安排，不扣分、不倒數、不歸零。</p>
+          <a class="primary-action" href="#/read/${encodeURIComponent(assignment.readingId)}">開啟指派閱讀</a>
+        </section>
+      `
+      : "";
     const safeStatistics = mission.privacyProtected
       ? `<section class="class-mission__privacy" aria-label="細分統計保護中"><h3>共同進度保護中</h3><p>目前人數尚未達 ${mission.participantThreshold} 人；類別、能力與拼圖片段完全隱藏，避免推回個人。</p></section>`
       : `
@@ -115,7 +165,7 @@ export async function renderClassView(
           </section>
         `;
     root.innerHTML = `
-      <section class="class-shell paper-panel">
+      <section class="class-shell paper-panel${projectionMode ? " is-projecting" : ""}">
         <p class="chapter-label">聚義共建・不比個人</p>
         <h1>班級共同地標</h1>
         <div class="landmark-level" aria-label="共同地標等級 ${aggregate.landmarkLevel}">
@@ -131,6 +181,7 @@ export async function renderClassView(
           <p>${mission.remaining > 0 ? `全班本週再完成 ${mission.remaining} 次有效閱讀，就能完成共同任務。` : "共同達標！新的共同航圖正在展開。"}</p>
           ${mission.remaining === 0 ? '<div class="class-mission__celebration" data-mission-complete role="status">共同達標・每一片文證都讓地標亮起</div>' : ""}
         </section>
+        ${assignmentMarkup}
         <section class="class-mission__routes" aria-labelledby="equivalent-routes-heading">
           <h2 id="equivalent-routes-heading">兩條等價路線</h2>
           <div><article><h3>引導路線</h3><p>有段落路標與策略提示；完成標準與獨立路線相同。</p></article><article><h3>獨立路線</h3><p>自己整理文章與線索；完成標準與引導路線相同。</p></article></div>
@@ -157,6 +208,7 @@ export async function renderClassView(
         <p class="class-success">${escapeHtml(message || "你已匿名加入。完成任一篇有效閱讀，就會替全班共同地標增加進度。")}</p>
         <p class="privacy-note">只會同步有效閱讀的類別與能力，不會上傳答案文字。這裡沒有排行榜、個人貢獻、姓名、自由聊天或公開個人頁。</p>
         <a href="#/">回到個人挑戰</a>
+        <a href="${projectionMode ? "#/class" : "#/class?project=1"}" data-project-classroom>${projectionMode ? "離開投影模式" : "開啟 16:9 投影頁"}</a>
         <button class="class-leave" type="button" data-leave-class>離開／更換班級</button>
       </section>
     `;
@@ -297,10 +349,16 @@ export async function renderClassView(
       button.textContent = "正在加入…";
       form.setAttribute("aria-busy", "true");
       try {
+        const seatKey = `reading-expedition.class-seat:${classCode}`;
+        let seatToken = storage.getItem(seatKey);
+        if (!/^[A-Za-z0-9_-]{43}$/.test(seatToken ?? "")) {
+          seatToken = createSeatToken();
+          storage.setItem(seatKey, seatToken);
+        }
         const response = await request("/api/v1/classrooms/join", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ classCode }),
+          body: JSON.stringify({ classCode, seatToken }),
         });
         if (!response.ok) {
           input.setAttribute("aria-invalid", "true");
@@ -315,9 +373,12 @@ export async function renderClassView(
         }
         const payload = await response.json();
         token = payload.participantToken;
-        contributionQueue?.clear();
         storage.setItem("reading-expedition.class-token", token);
-        await showLandmark("你已匿名加入班級。完成一篇閱讀，就能參與共同地標。");
+        await showLandmark(
+          payload.reusedSeat
+            ? "已回到這部裝置原有的匿名席次，不會重複計算參與人數。"
+            : "你已匿名加入班級。完成一篇閱讀，就能參與共同地標。",
+        );
       } catch {
         status.textContent = "目前無法連線，班級碼尚未送出，請確認網路後重試。";
         input.focus();

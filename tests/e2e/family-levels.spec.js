@@ -17,7 +17,7 @@ test("手機可完成一篇短文三題測讀，結果只推薦不鎖級", async
   }
   await page.getByRole("button", { name: "看看建議起點" }).click();
 
-  await expect(page.getByText("建議起點", { exact: true })).toBeVisible();
+  await expect(page.getByText("今天可先嘗試的起點", { exact: true })).toBeVisible();
   await expect(
     page.getByRole("button", { name: /啟航開始|行舟開始|登樓開始/ }),
   ).toHaveCount(3);
@@ -31,13 +31,10 @@ test("手機可完成一篇短文三題測讀，結果只推薦不鎖級", async
 test("家庭護照預設先匿名試讀，家長能看到非個資承諾", async ({
   page,
 }) => {
-  await page.route("**/api/v1/family/passports/current", async (route) => {
+  await page.route("**/api/v1/family/session/status", async (route) => {
     await route.fulfill({
-      status: 401,
       contentType: "application/json",
-      body: JSON.stringify({
-        error: { code: "unauthorized", message: "尚未登入" },
-      }),
+      body: JSON.stringify({ authenticated: false }),
     });
   });
   await page.goto("/#/family");
@@ -46,7 +43,7 @@ test("家庭護照預設先匿名試讀，家長能看到非個資承諾", async
     page.getByRole("heading", { name: "家庭護照", exact: true }),
   ).toBeVisible();
   await expect(page.getByText("不登入也能完整閱讀")).toBeVisible();
-  await expect(page.getByText(/只使用孩子代號/)).toBeVisible();
+  await expect(page.getByText(/系統無法判定代號是否為真名/)).toBeVisible();
   await expect(
     page.getByRole("button", { name: "建立護照並綁定目前進度" }),
   ).toBeVisible();
@@ -59,6 +56,12 @@ test("家庭頁同時提供每位孩子與全家庭 CSV，先顯示週趨勢", a
     { id: "child-a", alias: "小舟", stateVersion: 1 },
     { id: "child-b", alias: "小樓", stateVersion: 1 },
   ];
+  await page.route("**/api/v1/family/session/status", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ authenticated: true }),
+    });
+  });
   await page.route("**/api/v1/family/passports/current", async (route) => {
     await route.fulfill({
       contentType: "application/json",

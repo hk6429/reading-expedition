@@ -4,6 +4,7 @@ import path from "node:path";
 import { validateAssessmentAnswers } from "../worker/src/pipeline/answer-validator.js";
 import { evaluateContentProfile } from "../worker/src/pipeline/content-profile.js";
 import { compareDifficultyLevels } from "../worker/src/pipeline/reading-level.js";
+import { assertPlainText } from "../src/data/content-schema.js";
 import { manualProfileLimits } from "./manual-content-profile.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -125,6 +126,12 @@ for (const file of files) {
     fixture = JSON.parse(fs.readFileSync(file, "utf8"));
   } catch (error) {
     fail(file, `JSON 無法解析：${error.message}`);
+    continue;
+  }
+  try {
+    assertPlainText(fixture, "manual content");
+  } catch {
+    fail(file, "內容欄位不可包含 HTML 標籤");
     continue;
   }
   if (/INVALID|```/.test(JSON.stringify(fixture))) {

@@ -81,6 +81,15 @@ test("引導模式提供段落路標，獨立模式保留點詞解釋", async ({
   ).toHaveAttribute("aria-pressed", "true");
   await page.goto("/#/read/water-sharing-guided-v1");
   await expect(page.locator(".paragraph-scaffold")).toHaveCount(0);
+  await expect(
+    page.locator('[data-learning-feature="paragraph-waypoint"]'),
+  ).toHaveCount(0);
+  await expect(
+    page.locator('[data-learning-feature="structure-map"]'),
+  ).toHaveCount(0);
+  await expect(
+    page.locator('[data-learning-feature="midpoint-check"]'),
+  ).toHaveCount(0);
   const challengeTerm = page
     .locator(".reading-block")
     .filter({ hasText: "分配者" })
@@ -94,6 +103,36 @@ test("引導模式提供段落路標，獨立模式保留點詞解釋", async ({
       exact: true,
     }),
   ).toBeVisible();
+});
+
+test("手動確認讀到文末會同步完成段落地圖與持久化進度", async ({
+  page,
+}) => {
+  await page.goto("/#/read/water-sharing-guided-v1");
+  await page.getByRole("button", { name: "我已讀到文末" }).click();
+
+  await expect(page.getByRole("progressbar", { name: "閱讀進度" })).toHaveAttribute(
+    "aria-valuenow",
+    "100",
+  );
+  await expect(
+    page.locator('[data-learning-feature="completion-map"] li'),
+  ).toHaveCount(4);
+  await expect(
+    page.locator('[data-learning-feature="completion-map"] li').filter({
+      hasText: "已標記",
+    }),
+  ).toHaveCount(4);
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const state = JSON.parse(
+          localStorage.getItem("reading-expedition:v1") ?? "{}",
+        );
+        return state.readingProgress?.["water-sharing-guided-v1"]?.progress;
+      }),
+    )
+    .toBe(1);
 });
 
 test("讀到一半時領航提示出現在學生當下閱讀位置", async ({ page }) => {

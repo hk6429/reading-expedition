@@ -125,3 +125,30 @@ test("衝突事實包與不完整 JSON 不得進入文章", async () => {
     (error) => error.code === "reading_collection_invalid",
   );
 });
+
+test("生成內容含 HTML 標籤時不得進入文章", async () => {
+  const makeReading = (difficulty, size) => ({
+    difficulty,
+    textType: "vernacular",
+    title: '<img src=x onerror="alert(1)">',
+    hookQuestion: "海平面為何改變？",
+    body: [{ id: "p1", text: variedText.repeat(20).slice(0, size) }],
+    glossary: [],
+    readingMinutes: 8,
+  });
+  const provider = {
+    async generate() {
+      return {
+        readings: [
+          makeReading("guided", 360),
+          makeReading("challenge", 480),
+        ],
+      };
+    },
+  };
+
+  await assert.rejects(
+    generateReadings(provider, factPack),
+    (error) => error.code === "reading_html_not_allowed",
+  );
+});

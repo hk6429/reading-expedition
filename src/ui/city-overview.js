@@ -1,7 +1,11 @@
 import { buildingCatalog } from "../data/building-catalog.js";
 import { chapterForActiveDay } from "../data/chapter-catalog.js";
 import { resolveHistoryChapterProgress } from "../domain/active-days.js";
-import { ABILITY_EQUIPMENT } from "../domain/ability-mastery.js";
+import {
+  ABILITY_EQUIPMENT,
+  revisionMilestone,
+} from "../domain/ability-mastery.js";
+import { investInBuilding } from "../domain/city.js";
 import { journeyRewardForActiveDay } from "../domain/journey-progression.js";
 import { createChapterCard } from "./chapter-card.js";
 import {
@@ -74,6 +78,9 @@ function createBuildingOverview(building, state) {
 }
 
 function createAbilityPanel(state) {
+  const revision = revisionMilestone(
+    state.abilityMastery?.revisionStrength?.length ?? 0,
+  );
   const section = document.createElement("section");
   section.className = "ability-panel paper-panel";
   section.setAttribute("aria-labelledby", "ability-heading");
@@ -112,7 +119,12 @@ function createAbilityPanel(state) {
         `;
       }).join("")}
     </div>
-    <p class="revision-strength">回看原文後修正成功：${state.abilityMastery?.revisionStrength?.length ?? 0} 次。這代表願意重新找證據的韌性，但不會取代第一次理解。</p>
+    <section class="revision-strength" aria-label="修正策略成長">
+      <h3>${revision.achieved ? `已獲得「${revision.achieved.name}」` : "修正策略正在累積"}</h3>
+      <p>回看原文後修正成功：${revision.count} 次。這條進度不會取代第一次理解的能力裝備。</p>
+      <div class="ability-track" role="progressbar" aria-label="修正策略里程碑" aria-valuemin="0" aria-valuemax="${revision.progress.target || 1}" aria-valuenow="${revision.progress.completed}"><span style="width:${revision.progress.percent}%"></span></div>
+      <small>${revision.next ? `下一個里程碑「${revision.next.name}」：${revision.next.strategy}` : "三個修正策略里程碑都已收藏；繼續用證據說明每次改變。"}</small>
+    </section>
   `;
   return section;
 }
@@ -141,11 +153,87 @@ function createJourneyPanel(state) {
       }).join("")}
     </div>
     ${
-      progress.nextSeasonUnlocked
-        ? `<div class="next-unlock"><p class="chapter-label">第一航季完成</p><h3>下一航圖已解鎖</h3><p>舊城市、閱讀文證與能力成長完整保留；下一航季開放前，仍可自由閱讀與收藏。</p></div>`
+      progress.firstSeasonComplete
+        ? `<div class="next-unlock"><p class="chapter-label">第一航季完成</p><h3>第二航季規劃中</h3><p>目前沒有新的主線獎勵；舊城市、閱讀文證與能力成長完整保留，仍可自由閱讀與收藏。</p></div>`
         : `<div class="next-unlock"><p class="chapter-label">下一回・${nextReward.title}</p><h3>${nextChapter.title}</h3><p>${nextChapter.story}</p></div>`
     }
   `;
+  return section;
+}
+
+function createInkWorkshop(state, saveState, rerender) {
+  const section = document.createElement("section");
+  section.className = "paper-panel ink-workshop";
+  section.setAttribute("aria-labelledby", "ink-workshop-heading");
+  const title = document.createElement("h2");
+  title.id = "ink-workshop-heading";
+  title.textContent = "使用尚未投入的墨磚";
+  const copy = document.createElement("p");
+  copy.textContent = "選一份還沒落城的文證，再決定要修築哪座地標。每次投入 5 塊墨磚。";
+  const used = new Set(
+    state.city.investments.map(({ readingId, date }) => `${readingId}:${date}`),
+  );
+  const available = Object.entries(state.completedReadings)
+    .filter(([, completion]) => completion.evidenceSubmitted === true)
+    .filter(([readingId, completion]) => !used.has(`${readingId}:${completion.date}`));
+  if (state.city.materials.inkBricks < 5) {
+    const status = document.createElement("p");
+    status.textContent = "目前墨磚不足 5 塊；完成新的文證閱讀後再回來。";
+    section.append(title, copy, status);
+    return section;
+  }
+  if (available.length === 0) {
+    const status = document.createElement("p");
+    status.textContent = "目前沒有待投入的文證；已投入的紀錄仍保存在各地標。";
+    section.append(title, copy, status);
+    return section;
+  }
+  const readingLabel = document.createElement("label");
+  readingLabel.textContent = "選擇文證";
+  const readingSelect = document.createElement("select");
+  for (const [readingId, completion] of available) {
+    const option = document.createElement("option");
+    option.value = readingId;
+    option.textContent = `${completion.date}・${completion.evidence}`;
+    readingSelect.append(option);
+  }
+  readingLabel.append(readingSelect);
+  const buildingLabel = document.createElement("label");
+  buildingLabel.textContent = "選擇地標";
+  const buildingSelect = document.createElement("select");
+  for (const building of buildingCatalog.filter(
+    ({ id }) => (state.city.buildings[id] ?? 0) < 5,
+  )) {
+    const option = document.createElement("option");
+    option.value = building.id;
+    option.textContent = `${building.name}・目前第 ${state.city.buildings[building.id] ?? 0} 階`;
+    buildingSelect.append(option);
+  }
+  buildingLabel.append(buildingSelect);
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "primary-action";
+  button.textContent = "投入 5 塊墨磚";
+  button.disabled = buildingSelect.options.length === 0;
+  button.addEventListener("click", () => {
+    const readingId = readingSelect.value;
+    const completion = state.completedReadings[readingId];
+    investInBuilding(state, {
+      buildingId: buildingSelect.value,
+      readingId,
+      date: completion.date,
+      inkBricks: 5,
+      knowledge: {
+        title: completion.title ?? "已完成的讀卷",
+        category: completion.category ?? "humanities",
+        evidence: completion.evidence,
+        ability: "evidence",
+      },
+    });
+    saveState(state);
+    rerender();
+  });
+  section.append(title, copy, readingLabel, buildingLabel, button);
   return section;
 }
 
@@ -178,7 +266,7 @@ function createReadingLog(history = [], completedReadings = {}) {
 export function renderCityOverview(
   container,
   state,
-  { exportState, restoreState },
+  { saveState, exportState, restoreState },
 ) {
   const progress = resolveHistoryChapterProgress(state.readingHistory);
   const currentChapter = chapterForActiveDay(Math.max(progress.activeDay, 1));
@@ -257,6 +345,13 @@ export function renderCityOverview(
 
   container.append(
     missionDashboard,
+    createInkWorkshop(state, saveState, () =>
+      renderCityOverview(container, state, {
+        saveState,
+        exportState,
+        restoreState,
+      }),
+    ),
     buildings,
     createReadingLog(state.readingHistory, state.completedReadings),
     createAbilityPanel(state),

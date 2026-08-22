@@ -109,7 +109,7 @@ test("作答頁依 session seed 顯示三能力的等價題型標記", async () 
   assert.match(assessment, /getAssessmentSessionSeed\(window\.sessionStorage\)/);
   assert.match(assessment, /createAssessmentVariantSet\(reading\.assessment/);
   assert.match(assessment, /data-learning-feature", "assessment-equivalent-variant"/);
-  assert.match(assessment, /本次題型/);
+  assert.match(assessment, /本次等值任務/);
 });
 
 test("來源雷達明列總數、發布者與資料類型", async () => {

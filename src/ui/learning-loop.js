@@ -11,6 +11,7 @@ import {
   reviewSuggestion,
   sourceRadar,
   sourceRadarSummary,
+  taipeiCalendarDate,
 } from "../domain/reading-quest.js";
 
 const TRANSFER_CHOICES = Object.freeze({
@@ -59,10 +60,10 @@ export function createReadingPreparation(reading, quest) {
   section.innerHTML = `
     <p class="chapter-label">出發前先定方向</p>
     <h2 id="learning-preparation-title">我的閱讀任務</h2>
-    <p>只選一個最接近現在狀態的選項；內容只留在這台裝置，不會上傳自由文字。</p>
-    <fieldset data-learning-feature="pre-reading-forecast"><legend>讀前預測</legend><div class="learning-choice-grid" data-choices="prediction"></div></fieldset>
-    <fieldset data-learning-feature="reading-strategy"><legend>這次要練的閱讀策略</legend><div class="learning-choice-grid" data-choices="strategy"></div></fieldset>
-    <fieldset data-learning-feature="reading-plan"><legend>今天想讀多久</legend><div class="learning-choice-grid" data-choices="plan"></div></fieldset>
+    <p>以下都是選填的「多練一步」；不選也能直接閱讀。內容只留在這台裝置，不會上傳自由文字。</p>
+    <fieldset data-learning-feature="pre-reading-forecast"><legend>讀前想法（選填）</legend><div class="learning-choice-grid" data-choices="prediction"></div></fieldset>
+    <fieldset data-learning-feature="reading-strategy"><legend>這次想練的方法（選填）</legend><div class="learning-choice-grid" data-choices="strategy"></div></fieldset>
+    <fieldset data-learning-feature="reading-plan"><legend>今天想讀多久（選填）</legend><div class="learning-choice-grid" data-choices="plan"></div></fieldset>
     <div class="learning-preparation__tools">
       <button type="button" data-learning-feature="scaffold-fade" aria-pressed="${snapshot.reading.scaffoldsVisible}">${snapshot.reading.scaffoldsVisible ? "淡出段落提示" : "顯示段落提示"}</button>
       <button type="button" data-learning-feature="easy-reading-accessibility" aria-pressed="${display.easyReading}">${display.easyReading ? "關閉易讀模式" : "開啟易讀模式"}</button>
@@ -345,12 +346,16 @@ function hintCopy(type, level) {
 
 export function createAssessmentGuidance(reading, item, quest, onEvidenceChange) {
   const saved = quest.snapshot().assessment;
+  const evidencePrompt =
+    item.type === "evidence"
+      ? "收藏文證：請定位支持答案的段落（不影響答題達標）"
+      : "多練一步（選填）：先定位文證段落";
   const panel = document.createElement("section");
   panel.className = "assessment-guidance";
   panel.innerHTML = `
-    <fieldset data-learning-feature="confidence-scale"><legend>作答前，我有多確定？</legend><div class="confidence-grid"></div></fieldset>
+    <fieldset data-learning-feature="confidence-scale"><legend>作答前，我有多確定？（選填）</legend><div class="confidence-grid"></div></fieldset>
     <div data-learning-feature="hint-ladder"><strong>提示階梯</strong><div class="hint-actions"><button type="button" data-level="1">提示一：想策略</button><button type="button" data-level="2">提示二：回原文</button></div><p aria-live="polite"></p></div>
-    <label data-learning-feature="evidence-first">先定位文證段落，再選答案<select><option value="">選擇段落</option></select></label>
+    <label data-learning-feature="evidence-first">${evidencePrompt}<select><option value="">選擇段落</option></select></label>
     <p data-learning-feature="preserved-answer" class="preserved-answer" role="status">答案與上列選擇只保留在本次閱讀；返回文章後仍可繼續。</p>
   `;
   const confidence = panel.querySelector(".confidence-grid");
@@ -422,11 +427,11 @@ export function createAssessmentReport({
   const report = document.createElement("section");
   report.className = "learning-result-report";
   report.innerHTML = `
-    <div data-learning-feature="three-axis-result"><h3>三軸學習結果</h3><ul></ul></div>
+    <div data-learning-feature="three-axis-result"><h3>三項閱讀表現：找重點、想意思、找證據</h3><ul></ul></div>
     <p data-learning-feature="revision-growth"></p>
     <p data-learning-feature="evidence-viewed"></p>
-    <fieldset data-learning-feature="transfer-task"><legend>把方法帶到下一次</legend><div class="learning-choice-grid"></div></fieldset>
-    <div data-learning-feature="spaced-review"><h3>間隔複習建議</h3><ul></ul></div>
+    <fieldset data-learning-feature="transfer-task"><legend>下次想試的方法（選填；只記意願，不代表已完成）</legend><div class="learning-choice-grid"></div></fieldset>
+    <div data-learning-feature="spaced-review"><h3>下次再練的日期</h3><ul></ul></div>
     <div data-learning-feature="retry-checkpoint" ${outcome.passed ? "hidden" : ""}><h3>重試檢查點</h3><ol></ol></div>
   `;
   const retryList = report.querySelector('[data-learning-feature="retry-checkpoint"] ol');
@@ -469,11 +474,14 @@ export function createAssessmentReport({
     });
     option.querySelector("input").addEventListener("change", () => {
       quest.chooseTransfer(choice);
-      onTransferChange({ transferCompleted: true });
+      onTransferChange({
+        transferCompleted: false,
+        transferIntention: choice,
+      });
     });
     transferGroup.append(option);
   }
-  const today = new Date().toISOString().slice(0, 10);
+  const today = taipeiCalendarDate();
   const reviewList = report.querySelector('[data-learning-feature="spaced-review"] ul');
   for (const [index, date] of reviewSuggestion(today).entries()) {
     const item = document.createElement("li");

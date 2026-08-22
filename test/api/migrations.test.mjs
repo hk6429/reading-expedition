@@ -5,7 +5,7 @@ import test from "node:test";
 const projectRoot = new URL("../../", import.meta.url);
 
 test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭護照、分級排程、稽核事件與班級去重", async () => {
-  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql, familySql, levelScheduleSql, integritySql, missionSql] = await Promise.all([
+  const [contentSql, reviewSql, classSql, textTypeSql, classDedupeSql, strategySql, familySql, levelScheduleSql, integritySql, missionSql, securitySql, classroomFamilySql] = await Promise.all([
     readFile(new URL("migrations/0001_content.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0002_review.sql", projectRoot), "utf8"),
     readFile(new URL("migrations/0003_class_aggregate.sql", projectRoot), "utf8"),
@@ -38,6 +38,17 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭�
     ),
     readFile(
       new URL("migrations/0012_class_missions.sql", projectRoot),
+      "utf8",
+    ),
+    readFile(
+      new URL(
+        "migrations/0013_assessment_nonces_and_event_limits.sql",
+        projectRoot,
+      ),
+      "utf8",
+    ),
+    readFile(
+      new URL("migrations/0014_classroom_family_integrity.sql", projectRoot),
       "utf8",
     ),
   ]);
@@ -107,4 +118,13 @@ test("D1 migration 鎖住來源、發布版本、文體、閱讀策略、家庭�
   );
   assert.match(missionSql, /ADD COLUMN quality_first_correct/);
   assert.match(missionSql, /ADD COLUMN quality_transfer_completed/);
+  assert.match(securitySql, /CREATE TABLE assessment_start_nonces/);
+  assert.match(securitySql, /nonce TEXT PRIMARY KEY/);
+  assert.match(securitySql, /anonymous_device_id, created_at/);
+  assert.match(classroomFamilySql, /classroom_tokens ADD COLUMN seat_hash/);
+  assert.match(classroomFamilySql, /classroom_tokens_seat_idx/);
+  assert.match(classroomFamilySql, /quality_revision_opportunities/);
+  assert.match(classroomFamilySql, /comprehension_opportunities/);
+  assert.match(classroomFamilySql, /family_children ADD COLUMN alias_key/);
+  assert.match(classroomFamilySql, /family_children_alias_key_idx/);
 });

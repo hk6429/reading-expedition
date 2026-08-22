@@ -50,12 +50,21 @@ export function renderHome(
   const supportMode = preferences.supportMode ?? "guided";
   const gamificationProfile = loadGamificationProfile();
   const resolveNextChallenge = (profile) => {
-    const candidates =
+    const categoryCandidates =
       profile.contentCategory === "any"
         ? readings
         : readings.filter(
             ({ category }) => category === profile.contentCategory,
           );
+    const fittingTime = profile.timeBudget
+      ? categoryCandidates.filter(
+          ({ readingMinutes }) =>
+            Number(readingMinutes) <= profile.timeBudget,
+        )
+      : categoryCandidates;
+    const candidates = fittingTime.length > 0
+      ? fittingTime
+      : categoryCandidates;
     return nextUnreadReading(candidates, completedReadings, {
       level: selectedLevel,
       supportMode,
@@ -106,6 +115,10 @@ export function renderHome(
           : "第一次使用？先做五分鐘測讀"
       }</a>
       ${preferences.recommendedLevel ? "" : '<p class="placement-skip-note">也可以先不測讀；目前暫從「啟航」開始，之後隨時能更換。</p>'}
+      <div class="home-hero__actions">
+        <a class="primary-link" href="${nextChallenge ? `#/read/${nextChallenge.id}` : "#/bookshelf"}">${nextChallenge ? `直接開始：${nextChallenge.title}` : "打開選文書架"}</a>
+        <a href="#/rest">今天先休息</a>
+      </div>
     </div>
     <picture class="hero-illustration">
       <source media="(max-width: 700px)" srcset="./assets/scenes/hero-640.webp">
@@ -262,7 +275,7 @@ export function renderHome(
         <p class="chapter-label">本批讀卷・全數收妥</p>
         <h3>這一批已讀完，且在浮城歇一歇</h3>
         <p>老師補上下一批讀卷時，藏卷閣會再亮燈。你的浮城進度與完成紀錄都安穩留著，不會歸零。</p>
-        <a href="#/bookshelf">回藏卷閣重讀</a>
+        <a class="tap-link" href="#/bookshelf">回選文書架重讀</a>
       `
       : `
         <p class="chapter-label">文章庫正在補卷</p>

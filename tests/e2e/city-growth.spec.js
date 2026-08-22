@@ -18,6 +18,9 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
       name: "當水情、需求或節水成果改變，原先的比例也應重新檢討",
     })
     .check();
+  await page
+    .locator('[data-item-id="water-sharing-guided-q3-v1"] select')
+    .selectOption("4");
   await page.getByRole("button", { name: "送出 3 題" }).click();
   await page.getByRole("button", { name: "查看成果與下一步" }).click();
 
@@ -74,5 +77,38 @@ test("完成三層素養題可獲得墨磚並讓城市立即成長", async ({ pa
     comprehension: 1,
     inference: 1,
     evidence: 1,
+  });
+});
+
+test("只答對選項但未定位文證時不發主線獎勵", async ({ page }) => {
+  await page.goto("/#/quiz/water-sharing-guided-v1");
+
+  for (const [answer, action] of [
+    ["基本需要、影響與節水能力", "下一題"],
+    ["不同用途的基本需要與缺水影響可能不同", "下一題"],
+    ["當水情、需求或節水成果改變，原先的比例也應重新檢討", "送出 3 題"],
+  ]) {
+    await page.getByRole("radio", { name: answer }).check();
+    await page.getByRole("button", { name: action }).click();
+  }
+  await page.getByRole("button", { name: "查看成果與下一步" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "這篇還沒有收入閱讀事件簿" }),
+  ).toBeVisible();
+  await expect(page.locator(".building-grid")).toHaveCount(0);
+  const progress = await page.evaluate(() => {
+    const state = JSON.parse(localStorage.getItem("reading-expedition:v1"));
+    return {
+      inkBricks: state.city.materials.inkBricks,
+      history: state.readingHistory,
+      evidenceSubmitted:
+        state.completedReadings["water-sharing-guided-v1"].evidenceSubmitted,
+    };
+  });
+  expect(progress).toEqual({
+    inkBricks: 0,
+    history: [],
+    evidenceSubmitted: false,
   });
 });

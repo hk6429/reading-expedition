@@ -75,14 +75,31 @@ export function createFamilyClient({
     }
   }
 
+  function clearLocal({ clearDevice = false } = {}) {
+    const keys = [
+      CSRF_KEY,
+      ACTIVE_CHILD_KEY,
+      SYNC_STATUS_KEY,
+      FAMILY_TIME_ZONE_KEY,
+    ];
+    if (clearDevice && Number.isInteger(storage.length) && storage.key) {
+      for (let index = 0; index < storage.length; index += 1) {
+        const key = storage.key(index);
+        if (key?.startsWith("reading-expedition")) keys.push(key);
+      }
+    }
+    for (const key of new Set(keys)) storage.removeItem(key);
+  }
+
   async function request(path, {
     method = "GET",
     body,
     csrf = false,
+    csrfTokenOverride = "",
   } = {}) {
     const headers = {};
     if (body !== undefined) headers["content-type"] = "application/json";
-    if (csrf) headers["x-csrf-token"] = csrfToken();
+    if (csrf) headers["x-csrf-token"] = csrfTokenOverride || csrfToken();
     const response = await fetchImpl(path, {
       method,
       headers,
@@ -134,6 +151,11 @@ export function createFamilyClient({
 
     async current() {
       try {
+        const status = await request("/api/v1/family/session/status");
+        if (!status?.authenticated) {
+          clearLocal();
+          return { family: null };
+        }
         return rememberSession(
           await request("/api/v1/family/passports/current"),
         );
@@ -213,6 +235,16 @@ export function createFamilyClient({
       }
     },
 
+    async overwriteActiveChild(state) {
+      const child = activeChild();
+      if (!child) return null;
+      const cloud = await request(
+        `/api/v1/family/children/${child.id}/state`,
+      );
+      setActiveChild({ ...child, stateVersion: cloud.version });
+      return this.syncActiveChild(state);
+    },
+
     async deleteChild(childId) {
       await request(`/api/v1/family/children/${childId}`, {
         method: "DELETE",
@@ -221,15 +253,14 @@ export function createFamilyClient({
       if (activeChild()?.id === childId) setActiveChild(null);
     },
 
-    async logout() {
+    async logout({ clearDevice = false } = {}) {
+      const csrfTokenOverride = csrfToken();
+      clearLocal({ clearDevice });
       await request("/api/v1/family/session", {
         method: "DELETE",
         csrf: true,
+        csrfTokenOverride,
       });
-      storage.removeItem(CSRF_KEY);
-      storage.removeItem(ACTIVE_CHILD_KEY);
-      storage.removeItem(SYNC_STATUS_KEY);
-      storage.removeItem(FAMILY_TIME_ZONE_KEY);
     },
 
     async deleteFamily() {
@@ -237,10 +268,7 @@ export function createFamilyClient({
         method: "DELETE",
         csrf: true,
       });
-      storage.removeItem(CSRF_KEY);
-      storage.removeItem(ACTIVE_CHILD_KEY);
-      storage.removeItem(SYNC_STATUS_KEY);
-      storage.removeItem(FAMILY_TIME_ZONE_KEY);
+      clearLocal();
     },
   });
 }

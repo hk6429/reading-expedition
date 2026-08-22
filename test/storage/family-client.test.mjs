@@ -6,6 +6,10 @@ import { createFamilyClient } from "../../src/storage/family-client.js";
 function memoryStorage() {
   const values = new Map();
   return {
+    get length() {
+      return values.size;
+    },
+    key: (index) => [...values.keys()][index] ?? null,
     getItem: (key) => values.get(key) ?? null,
     setItem: (key, value) => values.set(key, String(value)),
     removeItem: (key) => values.delete(key),
@@ -95,4 +99,45 @@ test("同步衝突會留下可見待處理狀態，不會被當成成功", async
   );
   assert.equal(client.syncStatus().status, "conflict");
   assert.equal(client.syncStatus().errorCode, "version_conflict");
+});
+
+test("保留本機會先取得雲端最新版號，再以該版本明確覆蓋", async () => {
+  const storage = memoryStorage();
+  storage.setItem("reading-expedition:family-csrf", "csrf-1");
+  storage.setItem(
+    "reading-expedition:active-child",
+    JSON.stringify({ id: "child-1", alias: "小舟", stateVersion: 2 }),
+  );
+  const calls = [];
+  const client = createFamilyClient({
+    storage,
+    fetchImpl: async (url, options) => {
+      calls.push([url, options]);
+      if (options.method === "GET") {
+        return Response.json({ childId: "child-1", state: {}, version: 5 });
+      }
+      assert.equal(JSON.parse(options.body).expectedVersion, 5);
+      return Response.json({ childId: "child-1", state: {}, version: 6 });
+    },
+  });
+  await client.overwriteActiveChild({ schemaVersion: 2, deviceId: "local" });
+  assert.equal(calls.length, 2);
+  assert.equal(client.activeChild().stateVersion, 6);
+});
+
+test("共用裝置登出先清除所有本站本機資料，離線失敗也不復原", async () => {
+  const storage = memoryStorage();
+  storage.setItem("reading-expedition:family-csrf", "csrf-1");
+  storage.setItem("reading-expedition:active-child", JSON.stringify({ id: "child-1" }));
+  storage.setItem("reading-expedition.family-goal:child-1", "一起讀 3 次");
+  storage.setItem("reading-expedition.class-token", "secret-seat");
+  const client = createFamilyClient({
+    storage,
+    fetchImpl: async () => {
+      assert.equal(Object.keys(storage.snapshot()).length, 0);
+      throw new TypeError("offline");
+    },
+  });
+  await assert.rejects(() => client.logout({ clearDevice: true }), /offline/);
+  assert.deepEqual(storage.snapshot(), {});
 });

@@ -41,13 +41,20 @@ export function renderBookshelf(
 
   const header = document.createElement("section");
   header.className = "bookshelf-hero paper-panel";
-  header.innerHTML = `
-    <p class="chapter-label">浮城藏卷閣</p>
-    <h1>選文書架</h1>
-    <p>${levelCopy.label}・已完成 ${inventory.completedCount} / ${inventory.totalCount}</p>
-    <p>日期只記錄稿件排程，所有已發布讀卷都會留在這裡，等你照自己的步調翻閱。</p>
-    <a href="#/">返回個人挑戰</a>
-  `;
+  const chapterLabel = document.createElement("p");
+  chapterLabel.className = "chapter-label";
+  chapterLabel.textContent = "浮城藏卷閣";
+  const heading = document.createElement("h1");
+  heading.textContent = "選文書架";
+  const progress = document.createElement("p");
+  progress.textContent = `${levelCopy.label}・已完成 ${inventory.completedCount} / ${inventory.totalCount}`;
+  const description = document.createElement("p");
+  description.textContent =
+    "日期只記錄稿件排程，所有已發布讀卷都會留在這裡，等你照自己的步調翻閱。";
+  const backLink = document.createElement("a");
+  backLink.href = "#/";
+  backLink.textContent = "返回個人挑戰";
+  header.append(chapterLabel, heading, progress, description, backLink);
 
   const controls = document.createElement("div");
   controls.className = "bookshelf-controls";
@@ -102,7 +109,12 @@ export function renderBookshelf(
     download.addEventListener("click", async () => {
       download.disabled = true;
       status.textContent = "正在下載正文，請保留此頁……";
-      const result = await onDownloadOfflinePack(inventory.entries.map(({ reading }) => reading));
+      const result = await onDownloadOfflinePack(
+        inventory.entries.map(({ reading }) => reading),
+        ({ completed, requested, saved }) => {
+          status.textContent = `正在下載第 ${completed}／${requested} 篇，已保存 ${saved} 篇……`;
+        },
+      );
       status.textContent = result.failed.length
         ? `已保存 ${result.saved}／${result.requested} 篇；${result.failed.length} 篇暫時無法下載。`
         : `已保存 ${result.saved} 篇；切換飛航模式後仍可從書架開啟。`;
@@ -134,20 +146,23 @@ export function renderBookshelf(
     article.dataset.search = `${reading.title} ${reading.hookQuestion}`.toLocaleLowerCase("zh-Hant");
     article.dataset.category = reading.category;
     article.dataset.minutes = String(reading.readingMinutes);
-    article.innerHTML = `
-      <div>
-        <span class="reading-status">${
-          completion
-            ? `已完成・${completion.finalCorrectCount === undefined ? "已達標" : `答對 ${completion.finalCorrectCount} 題`}・${completion.date}`
-            : attempt
-              ? `已作答・${attempt.correctCount}／${attempt.totalCount} 題・待再挑戰`
-              : "未讀"
-        }</span>
-        <p class="eyebrow">${reading.category === "world" ? "世界" : reading.category === "science" ? "科學" : "人文"}・${reading.supportMode === "guided" ? "引導" : "獨立"}</p>
-        <h2>${reading.title}</h2>
-        <p>${reading.hookQuestion}</p>
-      </div>
-    `;
+    const content = document.createElement("div");
+    const status = document.createElement("span");
+    status.className = "reading-status";
+    status.textContent = completion
+      ? `已完成・${completion.finalCorrectCount === undefined ? "已達標" : `答對 ${completion.finalCorrectCount} 題`}・${completion.date}`
+      : attempt
+        ? `已作答・${attempt.correctCount}／${attempt.totalCount} 題・待再挑戰`
+        : "未讀";
+    const eyebrow = document.createElement("p");
+    eyebrow.className = "eyebrow";
+    eyebrow.textContent = `${reading.category === "world" ? "世界" : reading.category === "science" ? "科學" : "人文"}・${reading.supportMode === "guided" ? "引導" : "獨立"}`;
+    const title = document.createElement("h2");
+    title.textContent = reading.title;
+    const hookQuestion = document.createElement("p");
+    hookQuestion.textContent = reading.hookQuestion;
+    content.append(status, eyebrow, title, hookQuestion);
+    article.append(content);
     const link = document.createElement("a");
     link.className = "primary-action";
     link.href = `#/read/${reading.id}`;

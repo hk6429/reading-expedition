@@ -31,12 +31,12 @@ test("教師以 UI 三選一設定任務，目標與週次由伺服器決定", a
   assert.equal(response.status, 200);
   assert.deepEqual(payload.mission, {
     type: "category_balance",
-    target: 10,
+    target: 3,
   });
   assert.equal(saved.classroomId, "class-001");
   assert.equal(saved.period, "2026-W34");
   assert.equal(saved.type, "category_balance");
-  assert.equal(saved.target, 10);
+  assert.equal(saved.target, 3);
   assert.equal(saved.createdBySession, "teacher-session-001");
   assert.equal(saved.updatedAt, "2026-08-22T10:00:00.000Z");
 });
@@ -324,11 +324,11 @@ test("landmark 達隱私門檻後回傳任務、指定閱讀與粗粒度群體�
 
   assert.deepEqual(payload.mission, {
     type: "ability_practice",
-    target: 10,
+    target: 3,
   });
-  assert.equal(payload.weeklyMissionTarget, 10);
-  assert.equal(payload.missionProgress, 6);
-  assert.equal(payload.missionRemaining, 4);
+  assert.equal(payload.weeklyMissionTarget, 3);
+  assert.equal(payload.missionProgress, 0);
+  assert.equal(payload.missionRemaining, 3);
   assert.deepEqual(payload.voteDistribution, {
     shared_readings: 2,
     category_balance: 0,
@@ -341,7 +341,7 @@ test("landmark 達隱私門檻後回傳任務、指定閱讀與粗粒度群體�
   });
   assert.deepEqual(payload.qualityRates, {
     firstCorrectRate: 0.67,
-    revisedCorrectRate: 0.17,
+    revisedCorrectRate: 0.5,
     evidenceViewedRate: 0.83,
     transferCompletedRate: 0.67,
   });
@@ -391,19 +391,24 @@ test("教師班級清單附上當週任務、進度與受門檻保護的彙總",
   });
 
   const response = await api.list();
-  const classroom = (await response.json()).classrooms[0];
+  const listPayload = await response.json();
+  const classroom = listPayload.classrooms[0];
 
   assert.equal(classroom.weeklyPeriod, "2026-W34");
   assert.deepEqual(classroom.mission, {
     type: "category_balance",
-    target: 10,
+    target: 3,
   });
   assert.equal(classroom.weeklyValidReadings, 7);
-  assert.equal(classroom.missionProgress, 7);
+  assert.equal(classroom.missionProgress, 3);
   assert.equal(classroom.privacyProtected, false);
   assert.equal(classroom.voteDistribution.category_balance, 6);
   assert.equal(classroom.exitDistribution, null);
   assert.equal(classroom.qualityRates.evidenceViewedRate, 1);
+  assert.deepEqual(
+    [...new Set(listPayload.assignmentReadings.map(({ level }) => level))].sort(),
+    ["launch", "tower", "voyage"],
+  );
 });
 
 test("教師清單未達五人門檻時投票、觀點牆與品質率皆為 null", async () => {
@@ -491,6 +496,35 @@ test("教師設定嚴格結構化指定閱讀且期限不影響任務進度", as
   assert.equal(saved.createdBySession, "teacher-session-001");
   assert.equal(saved.updatedAt, "2026-08-22T10:00:00.000Z");
   assert.equal("target" in saved, false);
+});
+
+test("資料庫尚未補齊時，內建三階已校閱讀卷仍可被教師指派", async () => {
+  let saved = null;
+  const api = createClassroomApi({
+    repository: {
+      getPublishedReading: async () => null,
+      setClassAssignment: async (record) => {
+        saved = record;
+        return true;
+      },
+    },
+  });
+  const response = await api.setAssignment(
+    "class-001",
+    new Request("https://example.test/assignment", {
+      method: "POST",
+      body: JSON.stringify({
+        readingId: "old-photo-launch-v1",
+        title: "客戶端不可竄改標題",
+        ability: "evidence",
+        route: "guided",
+        dueDate: null,
+      }),
+    }),
+    "teacher-session",
+  );
+  assert.equal(response.status, 200);
+  assert.equal(saved.title, "舊照片沒有說完的故事");
 });
 
 test("指定閱讀拒絕錯誤路徑、無效日期與多餘欄位", async () => {

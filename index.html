@@ -3,11 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f1e3" />
     <meta
       name="description"
       content="《萬卷浮城：梁山閱征記》讓國中生依個人進度一次讀懂一篇，達標再挑戰下一篇。"
     />
     <title>萬卷浮城｜梁山閱征記</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/icons/icon-192.png" />
     <link rel="stylesheet" href="./styles.css" />
 </head>
   <body>
@@ -35,7 +38,10 @@
         <p id="family-sync-chip" class="family-sync-chip" role="status" aria-live="polite" hidden></p>
       </header>
       <p id="route-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
-      <main id="main-content">
+      <main id="main-content" tabindex="-1">
+        <p id="app-loading-status" role="status">
+          正在載入閱讀資料；網路較慢時會自動改用本機內容。
+        </p>
         <section class="paper-panel" aria-labelledby="welcome-title">
           <p class="chapter-label">第一回・墨海來潮</p>
           <h1 id="welcome-title">一次一篇，讀懂再往前</h1>
@@ -43,7 +49,7 @@
             系統依個人進度接續文章；答題達標後，再選擇下一篇挑戰或今天先休息。
           </p>
           <p class="privacy-note">
-            不登入也能完整試讀，個人歷程預設只存在這部裝置；選配家庭護照後，才會同步孩子代號、閱讀診斷與浮城進度。系統不收姓名、學號、Email、學校或班級真名。
+            不登入也能完整試讀，個人歷程預設只存在這部裝置；選配家庭護照後，才會同步孩子代號、閱讀診斷與浮城進度。系統無法判定代號是否為真名，請勿輸入姓名、學號、Email、學校或班級真名。
           </p>
         </section>
       </main>
@@ -53,6 +59,13 @@
     </noscript>
     <script>
       {
+        document.querySelector(".skip-link")?.addEventListener("click", (event) => {
+          event.preventDefault();
+          const main = document.getElementById("main-content");
+          main?.focus({ preventScroll: true });
+          main?.scrollIntoView({ behavior: "auto", block: "start" });
+        });
+
         const anonymousStatisticsKey =
           "reading-expedition.anonymous-statistics";
         const counterSelector =

@@ -11,6 +11,13 @@ const PLACEMENT_SKILLS = Object.freeze({
   evidence: ["找證據", "選答案前，先回原文指出直接支持的句子。"],
 });
 
+function scrollBehavior() {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ||
+    document.documentElement.dataset.reducedMotion === "true"
+    ? "auto"
+    : "smooth";
+}
+
 export function renderPlacement(
   container,
   { state, saveState },
@@ -98,16 +105,16 @@ export function renderPlacement(
     result.setAttribute("aria-live", "polite");
     const label = READING_LEVELS[recommendedLevel];
     result.innerHTML = `
-      <p class="chapter-label">建議起點</p>
+      <p class="chapter-label">今天可先嘗試的起點</p>
       <h2 tabindex="-1">${label.label}</h2>
       <p>${label.description}</p>
-      <p>你答對 ${correctCount}／3 題。這不是能力標籤，只是今天比較舒服的起點。</p>
+      <p>你答對 ${correctCount}／3 題。每項只有一題，不能代表已精熟或固定程度；這只是今天比較舒服的起點。</p>
       <ul class="placement-skill-results">
         ${placementReading.assessment
           .map((item) => {
             const correct = data.get(item.id) === item.correctAnswer;
             const [skillLabel, advice] = PLACEMENT_SKILLS[item.type];
-            return `<li class="${correct ? "is-correct" : "needs-practice"}"><strong>${skillLabel}：${correct ? "已掌握" : "先練這一項"}</strong><span>${correct ? "這題能抓到文章線索。" : advice}</span></li>`;
+            return `<li class="${correct ? "is-correct" : "needs-practice"}"><strong>${skillLabel}：${correct ? "這一題有抓到" : "這一題可再練"}</strong><span>${correct ? "這次能抓到文章線索；還要用更多文章才能看出穩定表現。" : advice}</span></li>`;
           })
           .join("")}
       </ul>
@@ -134,7 +141,7 @@ export function renderPlacement(
     form.hidden = true;
     body.hidden = true;
     article.append(result);
-    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    result.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
     result.querySelector("h2")?.focus({ preventScroll: true });
   });
 

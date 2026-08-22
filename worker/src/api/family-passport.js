@@ -44,6 +44,13 @@ function validAlias(value) {
   return alias.length >= 1 && alias.length <= 12 && !alias.includes("@");
 }
 
+function normalizeAliasKey(value) {
+  return String(value ?? "")
+    .normalize("NFKC")
+    .trim()
+    .toLocaleLowerCase("zh-TW");
+}
+
 function validLearningState(state) {
   try {
     assertLearningState(state);
@@ -139,6 +146,13 @@ export function createFamilyPassportApi({
   }
 
   return Object.freeze({
+    async sessionStatus(request) {
+      const authorization = await authorize(request);
+      return jsonResponse(
+        { authenticated: authorization.ok },
+        { headers: { "cache-control": "no-store" } },
+      );
+    },
     async create(request) {
       let payload;
       try {
@@ -262,10 +276,38 @@ export function createFamilyPassportApi({
         id: crypto.randomUUID(),
         familyId,
         alias: payload.alias.trim(),
+        aliasKey: normalizeAliasKey(payload.alias),
         state: payload.state,
         createdAt: clock().toISOString(),
       };
-      await repository.createFamilyChild(record);
+      const duplicateAlias =
+        (await repository.listFamilyChildren(familyId)).some(
+          ({ alias }) => normalizeAliasKey(alias) === record.aliasKey,
+        ) ||
+        (typeof repository.findFamilyChildByAliasKey === "function" &&
+          await repository.findFamilyChildByAliasKey(
+            familyId,
+            record.aliasKey,
+          ));
+      if (duplicateAlias) {
+        return errorResponse(
+          "duplicate_child_alias",
+          "這個孩子代號已存在；空白、全半形與大小寫不同仍視為同一代號。",
+          409,
+        );
+      }
+      try {
+        await repository.createFamilyChild(record);
+      } catch (error) {
+        if (/unique|constraint/i.test(String(error?.message ?? error))) {
+          return errorResponse(
+            "duplicate_child_alias",
+            "這個孩子代號已存在；請換一個容易辨識的代號。",
+            409,
+          );
+        }
+        throw error;
+      }
       return jsonResponse(
         {
           child: {

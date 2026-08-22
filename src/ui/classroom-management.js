@@ -4,7 +4,7 @@ import {
   buildClassAssignment,
   buildClassDeepLink,
   buildClassMission,
-  interventionForDistribution,
+  interventionForAbilityMetrics,
   missionTypeDetails,
   normalizeAssignmentReadings,
   normalizeMissionChoice,
@@ -25,6 +25,16 @@ const ASSIGNMENT_ROUTE_LABELS = Object.freeze({
   guided: "引導路線",
   independent: "獨立路線",
   equivalent: "兩者等價",
+});
+const READING_LEVEL_LABELS = Object.freeze({
+  launch: "啟程",
+  voyage: "遠航",
+  tower: "登樓",
+});
+const READING_CATEGORY_LABELS = Object.freeze({
+  world: "世界議題",
+  science: "自然科學",
+  humanities: "人文故事",
 });
 
 function escapeHtml(value) {
@@ -105,7 +115,7 @@ async function loadAssignmentReadings(request) {
 
 function teacherAssignmentMarkup(classroom, assignmentReadings) {
   if (classroom.revokedAt) return "";
-  const current = classroom.assignment ?? {};
+  const current = classroom.currentAssignment ?? classroom.assignment ?? {};
   const hasOptions = assignmentReadings.length > 0;
   const selectedReading = assignmentReadings.some(
     ({ readingId }) => readingId === current.readingId,
@@ -130,7 +140,18 @@ function teacherAssignmentMarkup(classroom, assignmentReadings) {
         <label>選擇文章
           <select name="readingId" ${hasOptions ? "" : "disabled"} required>
             ${hasOptions
-              ? assignmentReadings.map(({ readingId, title }) => `<option value="${escapeHtml(readingId)}" ${readingId === selectedReading ? "selected" : ""}>${escapeHtml(title)}</option>`).join("")
+              ? assignmentReadings.map(({ readingId, title, level, category, supportMode }) => {
+                  const metadata = [
+                    READING_LEVEL_LABELS[level],
+                    READING_CATEGORY_LABELS[category],
+                    supportMode === "guided"
+                      ? "引導模式"
+                      : supportMode === "independent"
+                        ? "獨立模式"
+                        : null,
+                  ].filter(Boolean).join("・");
+                  return `<option value="${escapeHtml(readingId)}" ${readingId === selectedReading ? "selected" : ""}>${escapeHtml(`${title}${metadata ? `（${metadata}）` : ""}`)}</option>`;
+                }).join("")
               : '<option value="">文章清單暫時無法載入</option>'}
           </select>
         </label>
@@ -157,17 +178,16 @@ function teacherAssignmentMarkup(classroom, assignmentReadings) {
   `;
 }
 
-function teacherMissionMarkup(classroom, assignmentReadings) {
+function teacherMissionMarkup(classroom, assignmentReadings, classCode = "") {
   if (classroom.revokedAt) return "";
   const mission = buildClassMission(classroom);
   const selectedType = mission.type;
   const safeDetails = mission.privacyProtected
     ? `<p class="class-mission__privacy">匿名參與尚未達 ${mission.participantThreshold} 人，能力熱圖與介入建議暫不顯示。</p>`
     : (() => {
-        const intervention = interventionForDistribution(
-          mission.skillDistribution,
+        const intervention = interventionForAbilityMetrics(
+          mission.abilityMetrics,
         );
-        const max = Math.max(1, ...Object.values(mission.skillDistribution));
         const labels = {
           comprehension: "找主旨",
           inference: "推論",
@@ -190,15 +210,30 @@ function teacherMissionMarkup(classroom, assignmentReadings) {
         return `
           <section class="class-mission__teacher-heatmap" aria-labelledby="heatmap-${escapeHtml(classroom.id)}">
             <h4 id="heatmap-${escapeHtml(classroom.id)}">匿名能力熱圖</h4>
-            <p>只顯示班級聚合，不列出個人。</p>
+            <p>依本週各能力的作答機會與首次正確率呈現；未滿 5 次只顯示樣本不足，不判定弱點。</p>
             <ul>${Object.entries(labels)
-              .map(([key, label]) => `<li><span>${label}</span><div role="img" aria-label="${label} ${mission.skillDistribution[key]} 次"><i style="width:${Math.round((mission.skillDistribution[key] / max) * 100)}%"></i></div><strong>${mission.skillDistribution[key]}</strong></li>`)
+              .map(([key, label]) => {
+                const metric = mission.abilityMetrics?.[key] ?? { opportunities: 0, firstCorrectRate: null };
+                const enough = metric.opportunities >= 5;
+                const percent = enough ? Math.round(metric.firstCorrectRate * 100) : 0;
+                return `<li><span>${label}</span><div role="img" aria-label="${label} ${metric.opportunities} 次機會，${enough ? `首次正確率 ${percent}%` : "樣本不足"}"><i style="width:${percent}%"></i></div><strong>${enough ? `${percent}%` : `${metric.opportunities}/5`}</strong></li>`;
+              })
               .join("")}</ul>
           </section>
           <aside class="class-mission__intervention" aria-labelledby="intervention-${escapeHtml(classroom.id)}">
             <p class="eyebrow">10 分鐘介入卡</p>
             <h4 id="intervention-${escapeHtml(classroom.id)}">${intervention.title}</h4>
+            <dl>
+              <div><dt>班級</dt><dd>${escapeHtml(classCode || classroom.id)}</dd></div>
+              <div><dt>週次</dt><dd>${escapeHtml(mission.period)}</dd></div>
+              <div><dt>能力</dt><dd>${intervention.skill ? labels[intervention.skill] : "樣本不足，暫不判定"}</dd></div>
+              <div><dt>樣本</dt><dd>${intervention.opportunities} 次機會（最低 ${intervention.minimumSample}）</dd></div>
+              <div><dt>證據</dt><dd>${intervention.rate === null ? "尚無足夠聚合資料" : `首次答對 ${intervention.firstCorrect}/${intervention.opportunities}（${Math.round(intervention.rate * 100)}%）`}</dd></div>
+            </dl>
             <p>${intervention.steps}</p>
+            <p>${intervention.example}</p>
+            <p>${intervention.practice}</p>
+            <p>${intervention.exitCheck}</p>
             <button type="button" class="class-mission__print-action" data-print-intervention aria-label="列印介入卡">列印介入卡</button>
           </aside>
           ${qualityMarkup}
@@ -246,6 +281,7 @@ function classroomMarkup(classroom, rememberedCode, assignmentReadings) {
               <code>${escapeHtml(code)}</code>
               <button type="button" aria-label="複製班級碼 ${escapeHtml(code)}" data-copy-class-code="${escapeHtml(classroom.id)}">複製班級碼</button>
               <button type="button" aria-label="複製匿名加入連結" data-copy-class-link="${escapeHtml(classroom.id)}">複製加入連結</button>
+              <button type="button" aria-label="安全更換班級碼" data-rotate-class-code="${escapeHtml(classroom.id)}">安全換碼</button>
             </div>
           `
           : revoked
@@ -257,7 +293,7 @@ function classroomMarkup(classroom, rememberedCode, assignmentReadings) {
         <div><dt>有效閱讀</dt><dd>${Number(classroom.validReadings) || 0} 次</dd></div>
         <div><dt>有效期限</dt><dd>${escapeHtml(formatDate(classroom.expiresAt))}</dd></div>
       </dl>
-      ${teacherMissionMarkup(classroom, assignmentReadings)}
+      ${teacherMissionMarkup(classroom, assignmentReadings, code ?? "")}
       ${
         revoked
           ? ""
@@ -321,15 +357,18 @@ export async function renderClassroomManagement(
       return;
     }
     const payload = await response.json();
+    const classrooms = Array.isArray(payload.classrooms)
+      ? payload.classrooms
+      : [];
     const assignmentReadings = normalizeAssignmentReadings([
       ...(Array.isArray(payload.assignmentReadings)
         ? payload.assignmentReadings
         : []),
       ...(await loadAssignmentReadings(request)),
+      ...classrooms.flatMap(({ currentAssignment }) =>
+        currentAssignment ? [currentAssignment] : [],
+      ),
     ]);
-    const classrooms = Array.isArray(payload.classrooms)
-      ? payload.classrooms
-      : [];
     root.innerHTML = `
       <section class="classroom-manager" aria-labelledby="classroom-manager-title">
         <header class="classroom-manager__heading">
@@ -430,6 +469,43 @@ export async function renderClassroomManagement(
           root.querySelector("[data-classroom-message]").textContent =
             "無法自動複製加入連結，請重新建立班級碼後再試。";
         }
+      });
+    });
+
+    root.querySelectorAll("[data-rotate-class-code]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const classroomId = button.dataset.rotateClassCode;
+        if (!window.confirm("確定安全換碼？舊班級碼與既有學生席次會立即失效，指派與班級統計會保留。")) return;
+        button.disabled = true;
+        let rotateResponse;
+        try {
+          rotateResponse = await request(
+            `/api/v1/teacher/classrooms/${classroomId}/code`,
+            {
+              method: "POST",
+              headers: { "x-csrf-token": getCsrfToken() },
+            },
+          );
+        } catch {
+          rotateResponse = null;
+        }
+        if ([401, 403].includes(rotateResponse?.status)) {
+          await onAuthenticationInvalid();
+          return;
+        }
+        if (!rotateResponse?.ok) {
+          button.disabled = false;
+          root.querySelector("[data-classroom-message]").textContent =
+            "班級碼暫時無法更換；舊碼與既有席次維持原狀。";
+          return;
+        }
+        const rotated = await rotateResponse.json();
+        rememberedCodes = { ...rememberedCodes, [classroomId]: rotated.classCode };
+        saveRememberedCodes(storage, rememberedCodes);
+        await load({
+          message: "班級碼已安全更換；請只分享新碼，舊碼與舊席次已失效。",
+          focusTarget: `[data-copy-class-code="${classroomId}"]`,
+        });
       });
     });
 

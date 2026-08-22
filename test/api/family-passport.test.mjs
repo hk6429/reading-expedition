@@ -41,6 +41,11 @@ function createRepository() {
         (child) => child.familyId === familyId,
       );
     },
+    async findFamilyChildByAliasKey(familyId, aliasKey) {
+      return [...children.values()].find(
+        (child) => child.familyId === familyId && child.aliasKey === aliasKey,
+      ) ?? null;
+    },
     async createFamilyChild(record) {
       children.set(record.id, record);
       states.set(record.id, {
@@ -118,6 +123,15 @@ test("建立家庭護照只保存雜湊，回傳可抄寫護照碼與安全 sess
   );
 });
 
+test("匿名檢查家庭 session 回 200 未登入狀態，不以預期 401 污染 console", async () => {
+  const api = createFamilyPassportApi({ repository: createRepository() });
+  const response = await api.sessionStatus(
+    request("/api/v1/family/session/status"),
+  );
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { authenticated: false });
+});
+
 test("護照碼可在另一部裝置登入，但錯誤碼不透露家庭是否存在", async () => {
   const repository = createRepository();
   const api = createFamilyPassportApi({ repository });
@@ -189,6 +203,29 @@ test("同一家庭可建立多位孩子，狀態以家庭與孩子雙重邊界�
   assert.notEqual(firstPayload.child.id, secondPayload.child.id);
   assert.equal(repository.states.get(firstPayload.child.id).state.deviceId, "device-child-a");
   assert.equal(repository.states.get(secondPayload.child.id).state.deviceId, "device-child-b");
+});
+
+test("孩子代號經全半形、空白與大小寫正規化後在家庭內唯一", async () => {
+  const repository = createRepository();
+  const api = createFamilyPassportApi({ repository });
+  const state = createDefaultState("device-alias");
+  const first = await api.createChild(
+    request("/api/v1/family/children", {
+      method: "POST",
+      body: JSON.stringify({ alias: "ＡＢＣ", state }),
+    }),
+    "family-1",
+  );
+  const duplicate = await api.createChild(
+    request("/api/v1/family/children", {
+      method: "POST",
+      body: JSON.stringify({ alias: "abc", state }),
+    }),
+    "family-1",
+  );
+  assert.equal(first.status, 201);
+  assert.equal(duplicate.status, 409);
+  assert.equal((await duplicate.json()).error.code, "duplicate_child_alias");
 });
 
 test("家庭狀態拒收 Email、答案與自由文字等不必要個資", async () => {

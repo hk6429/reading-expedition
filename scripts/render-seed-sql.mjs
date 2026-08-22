@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { assertPlainText } from "../src/data/content-schema.js";
 
 const cliArgs = process.argv.slice(2);
 const outputIndex = cliArgs.indexOf("--output");
@@ -38,6 +39,7 @@ const json = (input) => value(JSON.stringify(input));
 const rows = [];
 
 for (const fixture of fixtures) {
+  assertPlainText(fixture, "seed content");
   rows.push(`INSERT OR IGNORE INTO sources (
   id, name, base_url, license_type, license_version, allowed_usage, status, last_checked_at
 ) VALUES (

@@ -15,11 +15,31 @@ export const READING_LEVELS = Object.freeze({
   }),
   tower: Object.freeze({
     label: "登樓",
-    description: "1,300–1,700 字，跨段整合、觀點比較與文證判斷",
+    description:
+      "白話長篇約 1,300–1,800 字；文言短篇依注釋與跨段判讀設計",
     minCharacters: 1_300,
-    maxCharacters: 1_700,
+    maxCharacters: 1_800,
+    classicalMinCharacters: 180,
+    classicalMaxCharacters: 700,
   }),
 });
+
+export function readingLengthBand(level, textType = "vernacular") {
+  const normalizedLevel = normalizeReadingLevel(level);
+  const config = READING_LEVELS[normalizedLevel];
+  if (textType === "classical" && normalizedLevel === "tower") {
+    return Object.freeze({
+      minCharacters: config.classicalMinCharacters,
+      maxCharacters: config.classicalMaxCharacters,
+      label: "文言短篇",
+    });
+  }
+  return Object.freeze({
+    minCharacters: config.minCharacters,
+    maxCharacters: config.maxCharacters,
+    label: textType === "classical" ? "文言文" : "白話文",
+  });
+}
 
 export function normalizeReadingLevel(value) {
   return LEVEL_ORDER.includes(value) ? value : "launch";

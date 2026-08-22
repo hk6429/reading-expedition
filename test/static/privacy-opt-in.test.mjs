@@ -10,6 +10,7 @@ test("匿名統計必須明確 opt-in，未選擇時不傳事件也不載入計�
   assert.match(app, /getItem\(ANONYMOUS_STATISTICS_KEY\) === "on"/);
   assert.match(html, /getItem\(anonymousStatisticsKey\) !== "on"/);
   assert.match(guide, /anonymousStatisticsEnabled = false/);
+  assert.match(app, /events: \[\{ id, \.\.\.event, occurredAt: createdAt \}\]/);
 });
 
 test("匿名學生首頁不預載跨網域 SSO 腳本", () => {

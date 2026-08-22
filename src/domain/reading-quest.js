@@ -209,6 +209,26 @@ export function reviewSuggestion(dateString) {
   });
 }
 
+export function taipeiCalendarDate(
+  value = new Date(),
+  formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }),
+) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.valueOf())) throw new TypeError("review date is invalid");
+  const parts = Object.fromEntries(
+    formatter
+      .formatToParts(date)
+      .filter(({ type }) => ["year", "month", "day"].includes(type))
+      .map(({ type, value: part }) => [type, part]),
+  );
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
 function parseObject(storage, key, fallback) {
   try {
     const value = JSON.parse(storage.getItem(key));
@@ -398,6 +418,17 @@ export function createReadingQuest(
         throw new TypeError("transfer must be a provided choice");
       }
       session.assessment.transferChoice = value;
+      persist();
+    },
+    prepareRetry() {
+      session.assessment = {
+        confidence: {},
+        hintLevels: {},
+        evidenceParagraphs: {},
+        evidenceViewed: [],
+        answers: {},
+        transferChoice: null,
+      };
       persist();
     },
     setDisplayPreference(name, value) {

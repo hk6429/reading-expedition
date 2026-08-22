@@ -56,6 +56,13 @@ export function createApi({
       }
       if (
         familyPassportApi &&
+        url.pathname === "/api/v1/family/session/status" &&
+        request.method === "GET"
+      ) {
+        return familyPassportApi.sessionStatus(request);
+      }
+      if (
+        familyPassportApi &&
         url.pathname.startsWith("/api/v1/family/")
       ) {
         const requireCsrf = request.method !== "GET";
@@ -222,6 +229,17 @@ export function createApi({
             authorization.sessionId,
           );
         }
+        const classroomRotateMatch =
+          /^\/api\/v1\/teacher\/classrooms\/([a-zA-Z0-9-]+)\/code$/.exec(
+            url.pathname,
+          );
+        if (
+          classroomApi &&
+          classroomRotateMatch &&
+          request.method === "POST"
+        ) {
+          return classroomApi.rotateCode(classroomRotateMatch[1]);
+        }
         const classroomMatch =
           /^\/api\/v1\/teacher\/classrooms\/([a-zA-Z0-9-]+)$/.exec(
             url.pathname,
@@ -286,7 +304,8 @@ export function createApi({
       if (assessmentSessionMatch && request.method === "POST") {
         if (
           !completionProofService ||
-          typeof repository.getAssessmentProofContext !== "function"
+          typeof repository.getAssessmentProofContext !== "function" ||
+          typeof repository.createAssessmentStartNonce !== "function"
         ) {
           return errorResponse(
             "assessment_session_unavailable",
@@ -318,11 +337,22 @@ export function createApi({
             traceId,
           );
         }
+        const assessmentSession =
+          await completionProofService.issueStart(context);
+        const start = await completionProofService.verifyStart(
+          assessmentSession,
+        );
+        await repository.createAssessmentStartNonce({
+          nonce: start.nonce,
+          readingId: start.readingId,
+          contentKey: start.contentKey,
+          version: start.version,
+          category: start.category,
+          issuedAt: start.issuedAt,
+          expiresAt: start.expiresAt,
+        });
         return jsonResponse(
-          {
-            assessmentSession:
-              await completionProofService.issueStart(context),
-          },
+          { assessmentSession },
           {
             status: 201,
             headers: {
@@ -367,12 +397,18 @@ export function createApi({
         } catch (error) {
           if (error instanceof CompletionProofError) {
             const tooFast = error.code === "assessment_too_fast";
+            const replayed = error.code === "assessment_session_replayed";
+            const unavailable = error.code === "assessment_session_unavailable";
             return errorResponse(
-              tooFast ? "assessment_too_fast" : error.code,
+              error.code,
               tooFast
                 ? "完成速度超出可驗證範圍，請回到文章閱讀後再試。"
-                : "作答工作階段無效或已到期。",
-              tooFast ? 429 : 400,
+                : replayed
+                  ? "這個作答工作階段已使用，請重新開始作答。"
+                  : unavailable
+                    ? "目前無法驗證作答工作階段。"
+                    : "作答工作階段無效或已到期。",
+              tooFast ? 429 : replayed ? 409 : unavailable ? 503 : 400,
               traceId,
             );
           }

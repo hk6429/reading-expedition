@@ -104,3 +104,29 @@ export function recordAbilityEvidence(current, record) {
   }
   return next;
 }
+
+const REVISION_MILESTONES = Object.freeze([
+  Object.freeze({ target: 3, name: "回讀校準者", strategy: "先指出原選項卡住的詞，再回原文校準。" }),
+  Object.freeze({ target: 6, name: "修正策略家", strategy: "比較初答與修正答案，說清楚是哪一條證據改變判斷。" }),
+  Object.freeze({ target: 10, name: "證據重建者", strategy: "把錯誤類型、關鍵文證與新判斷整理成可重用方法。" }),
+]);
+
+export function revisionMilestone(count = 0) {
+  const safeCount = Math.max(0, Number(count) || 0);
+  const achieved = [...REVISION_MILESTONES]
+    .reverse()
+    .find(({ target }) => safeCount >= target) ?? null;
+  const next = REVISION_MILESTONES.find(({ target }) => safeCount < target) ?? null;
+  return Object.freeze({
+    count: safeCount,
+    achieved,
+    next,
+    progress: next
+      ? Object.freeze({
+          completed: safeCount,
+          target: next.target,
+          percent: Math.min(100, Math.round((safeCount / next.target) * 100)),
+        })
+      : Object.freeze({ completed: safeCount, target: safeCount, percent: 100 }),
+  });
+}

@@ -8,6 +8,7 @@ import {
   classMissionCelebrationKey,
   chooseAnonymousRole,
   interventionForDistribution,
+  interventionForAbilityMetrics,
   normalizeMissionChoice,
   normalizeAssignmentReadings,
 } from "../../src/domain/class-mission.js";
@@ -223,6 +224,24 @@ test("教師深連結只有班級碼，能力熱圖會導出最需要的十分�
       steps: "找兩個線索、畫出關係、說明推論依據。",
     },
   );
+});
+
+test("能力介入只比較達最低樣本的首次正確率，不把篇數少誤判為弱點", () => {
+  const intervention = interventionForAbilityMetrics({
+    comprehension: { opportunities: 8, firstCorrect: 6 },
+    inference: { opportunities: 7, firstCorrect: 2 },
+    evidence: { opportunities: 2, firstCorrect: 0 },
+  });
+  assert.equal(intervention.skill, "inference");
+  assert.equal(intervention.opportunities, 7);
+  assert.equal(intervention.firstCorrect, 2);
+  assert.match(intervention.exitCheck, /Exit check/);
+
+  const insufficient = interventionForAbilityMetrics({
+    evidence: { opportunities: 4, firstCorrect: 0 },
+  });
+  assert.equal(insufficient.skill, null);
+  assert.match(insufficient.title, /樣本/);
 });
 
 test("匿名合作角色只由權杖與期間決定，不產生個人公開資料", () => {

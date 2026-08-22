@@ -34,6 +34,16 @@ function localDate(timeZone) {
   }).format(new Date());
 }
 
+function safeFilenamePart(value, fallback) {
+  const safe = String(value ?? "")
+    .normalize("NFKC")
+    .trim()
+    .replace(/[\\/:*?"<>|\u0000-\u001f]/g, "-")
+    .replace(/\s+/g, "-")
+    .slice(0, 24);
+  return safe || fallback;
+}
+
 function dateInTimeZone(timeZone) {
   const date = new Intl.DateTimeFormat("en-CA", {
     timeZone,
@@ -57,7 +67,7 @@ function renderAnonymous(
     <h1>家庭護照</h1>
     <p>把孩子的浮城帶到另一支手機或平板，也能在同一個家庭中分開保存每位孩子的進度。</p>
     <ul class="family-privacy-list">
-      <li>只使用孩子代號，不填真名、Email、學校或班級。</li>
+      <li>系統無法判定代號是否為真名，請勿輸入真名、Email、學校或班級。</li>
       <li>建立前可以先匿名試讀；是否綁定，由家長決定。</li>
       <li>家庭護照碼就是跨裝置鑰匙，伺服器只保存雜湊。</li>
     </ul>
@@ -230,7 +240,9 @@ function childCard({
       ? `・${READING_LEVELS[report.level]?.label ?? report.level}已完成 ${report.levelCompletedCount} / ${report.levelTotalCount}`
       : ""
   }・${
-    report.stuckSkillLabel
+    !report.hasDiagnosticData
+      ? "尚無能力診斷資料"
+      : report.stuckSkillLabel
       ? `目前可陪練：${report.stuckSkillLabel}`
       : "三項能力穩定"
   }`;
@@ -254,7 +266,7 @@ function childCard({
   story.append(support.story);
   const goal = document.createElement("fieldset");
   const goalLegend = document.createElement("legend");
-  goalLegend.textContent = "本週家庭共同目標（不比較、不扣進度）";
+  goalLegend.textContent = "本週家庭共同目標（僅存此裝置，不比較、不扣進度）";
   const goalKey = `reading-expedition.family-goal:${child.id}`;
   let selectedGoal = "只陪伴，不設篇數";
   try {
@@ -452,8 +464,11 @@ async function renderAuthenticated(
   logout.type = "button";
   logout.textContent = "登出（保留這部裝置紀錄）";
   logout.addEventListener("click", async () => {
-    await familyClient.logout();
-    reload();
+    try {
+      await familyClient.logout();
+    } finally {
+      reload();
+    }
   });
   const logoutAndClear = document.createElement("button");
   logoutAndClear.type = "button";
@@ -467,11 +482,14 @@ async function renderAuthenticated(
     ) {
       return;
     }
-    await familyClient.logout();
     localStore.restore(
       JSON.stringify(createDefaultState(localState.deviceId)),
     );
-    reload();
+    try {
+      await familyClient.logout({ clearDevice: true });
+    } finally {
+      reload();
+    }
   });
   const deleteFamily = document.createElement("button");
   deleteFamily.type = "button";
@@ -495,12 +513,27 @@ async function renderAuthenticated(
   if (activeChild && ["pending", "error", "conflict"].includes(initialSync.status)) {
     const retry = document.createElement("button");
     retry.type = "button";
-    retry.textContent = "重試同步本機紀錄";
+    retry.textContent = initialSync.status === "conflict"
+      ? "保留本機版本並覆蓋雲端"
+      : "重試同步本機紀錄";
     retry.addEventListener("click", async () => {
       retry.disabled = true;
       status.textContent = "正在重試同步……";
       try {
-        await familyClient.syncActiveChild(localState);
+        if (initialSync.status === "conflict") {
+          if (
+            !window.confirm(
+              "確定保留本機版本並覆蓋目前雲端紀錄？建議先下載本機 JSON 備份。",
+            )
+          ) {
+            retry.disabled = false;
+            status.textContent = "尚未變更任何紀錄。";
+            return;
+          }
+          await familyClient.overwriteActiveChild(localState);
+        } else {
+          await familyClient.syncActiveChild(localState);
+        }
         status.textContent = "雲端同步完成。";
         reload();
       } catch (error) {
@@ -562,7 +595,7 @@ async function renderAuthenticated(
   add.innerHTML = `
     <p class="eyebrow">新增孩子</p>
     <h2>建立另一座獨立浮城</h2>
-    <p>請使用代號，不要填真名。新孩子會從空白浮城開始。</p>
+    <p>系統無法判定代號是否為真名，請勿輸入真名。新孩子會從空白浮城開始。</p>
   `;
   const addForm = document.createElement("form");
   addForm.className = "family-inline-form";
@@ -635,14 +668,14 @@ async function renderAuthenticated(
         },
         onExport: () => {
           downloadText(
-            `萬卷浮城-完整私人報告-${localDate(family.timeZone)}.csv`,
+            `萬卷浮城-私人-${safeFilenamePart(child.alias, "孩子")}-${localDate(family.timeZone)}.csv`,
             reportRowsToCsv(report.rows),
             "text/csv;charset=utf-8",
           );
         },
         onExportAnonymous: () => {
           downloadText(
-            `萬卷浮城-匿名學習報告-${localDate(family.timeZone)}.csv`,
+            `萬卷浮城-匿名-${safeFilenamePart(child.id.slice(0, 8), "孩子")}-${localDate(family.timeZone)}.csv`,
             reportRowsToCsv(report.rows, { anonymize: true }),
             "text/csv;charset=utf-8",
           );
@@ -697,6 +730,15 @@ export async function renderFamilyView(
   `;
   try {
     const { family } = await familyClient.current();
+    if (!family) {
+      renderAnonymous(container, {
+        familyClient,
+        localState,
+        localStore,
+        reload,
+      });
+      return;
+    }
     await renderAuthenticated(container, family, {
       familyClient,
       localState,

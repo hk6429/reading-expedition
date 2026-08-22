@@ -51,5 +51,10 @@ export default {
     const scheduledAt = Number(controller.scheduledTime) || Date.now();
     const cutoffIso = new Date(scheduledAt - 45 * 86_400_000).toISOString();
     ctx.waitUntil(repository.purgeExpiredAnonymousEvents(cutoffIso));
+    ctx.waitUntil(
+      repository.purgeExpiredAssessmentStartNonces(
+        new Date(scheduledAt).toISOString(),
+      ),
+    );
   },
 };

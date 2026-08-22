@@ -114,6 +114,11 @@ test("教師以聚合資料設定共同任務並取得十分鐘介入卡", async
             mission: { type: "shared_readings", target: 10 },
             categoryDistribution: { world: 8, science: 7, humanities: 9 },
             skillDistribution: { comprehension: 10, inference: 4, evidence: 8 },
+            abilityMetrics: {
+              comprehension: { opportunities: 10, firstCorrect: 8 },
+              inference: { opportunities: 8, firstCorrect: 3 },
+              evidence: { opportunities: 9, firstCorrect: 7 },
+            },
           },
         ],
       }),
@@ -156,6 +161,7 @@ test("教師以聚合資料設定共同任務並取得十分鐘介入卡", async
 
 test("G069 教師以結構選項指派文章且期限不產生懲罰", async ({ page }) => {
   let assignmentRequest = null;
+  let currentAssignment = null;
   await page.addInitScript(() => {
     sessionStorage.setItem("reading-expedition.csrf", "csrf-assignment");
   });
@@ -190,6 +196,7 @@ test("G069 教師以結構選項指派文章且期限不產生懲罰", async ({ 
             revokedAt: null,
             anonymousParticipants: 2,
             validReadings: 4,
+            currentAssignment,
           },
         ],
       }),
@@ -202,6 +209,7 @@ test("G069 教師以結構選項指派文章且期限不產生懲罰", async ({ 
         body: route.request().postDataJSON(),
         csrf: route.request().headers()["x-csrf-token"],
       };
+      currentAssignment = assignmentRequest.body;
       await route.fulfill({ status: 201, body: "{}" });
     },
   );
@@ -234,6 +242,12 @@ test("G069 教師以結構選項指派文章且期限不產生懲罰", async ({ 
     },
     csrf: "csrf-assignment",
   });
+  await page.reload();
+  await expect(assignment.getByLabel("選擇文章")).toHaveValue(
+    "forest-path-independent-v1",
+  );
+  await expect(assignment.getByLabel("練習能力")).toHaveValue("inference");
+  await expect(assignment.getByLabel("日期期限")).toHaveValue("2026-09-01");
 });
 
 test("教師建立、複製並停用匿名班級", async ({ page }) => {

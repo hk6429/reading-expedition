@@ -55,7 +55,7 @@
 .learning-choice-grid,
 .confidence-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
   gap: 0.5rem;
 }
 
@@ -148,8 +148,18 @@
 
 .reading-insights {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
   gap: 1rem;
+}
+
+.learning-preparation,
+.reading-insights,
+.reading-insights > div,
+.reading-completion-map,
+.source-panel,
+.glossary-panel {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .reading-insights > div {
@@ -310,8 +320,7 @@
   }
 
   .reading-thumb-bar {
-    position: sticky;
-    bottom: max(0.5rem, env(safe-area-inset-bottom));
+    position: static;
   }
 
   .reading-controls {
