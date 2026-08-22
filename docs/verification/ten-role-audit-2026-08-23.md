@@ -69,15 +69,18 @@
 - `npm run content:validate`：36 主題、72 篇讀卷、216 題全部通過。
 - `npm run build` 與 `git diff --check`：通過。
 - 遠端 D1 部署前備份：`/Users/naichengchen/projects/reading-expedition-backups/2026-08-23-pre-ten-role.sql`（1.5 MB）。
+- 正式 Turso 部署前備份：`/Users/naichengchen/projects/reading-expedition-backups/2026-08-23-pre-ten-role-turso.db`（2.0 MB，另含 metadata 與 WAL）。
 - 遠端資料掃描：內容 HTML 候選 0 筆；27 個既有家庭孩子代號沒有 NFKC 正規化衝突。
-- 遠端 migration `0013`、`0014`：已套用，資料筆數核對無遺失。
+- 正式 Turso 資料掃描：內容 HTML 候選 0 筆；28 個既有家庭孩子代號沒有 NFKC 正規化衝突。
+- 遠端 D1 與正式 Turso 的 migration `0013`、`0014`：皆已套用，資料筆數核對無遺失。
 
 ## 正式站驗收證據
 
 - GitHub `main` 已推送驗收程式版本；Cloudflare Worker 正式版本為 `252f4b75-9549-45c0-abd8-57ad1926fd11`，部署過程零警告。
-- Cloudflare Pages 正式部署：<https://3bf05114.reading-expedition-2u1.pages.dev>；正式別名與該部署網址皆回應 200。
+- Cloudflare Pages 正式部署：<https://3a4afe55.reading-expedition-2u1.pages.dev>；正式別名與該部署網址皆回應 200。
 - 正式站首頁有 CSP、安全 manifest 宣告與 standalone 模式；192／512 圖示皆回應 200。
 - 啟航、行舟、登樓三級正式 API 皆回應 200 且至少提供一篇；未登入家庭狀態回應 200 與 `authenticated: false`。
+- 正式 Worker 與 Pages 代理建立作答工作階段皆回應 201；跨站事件回應 403，錯誤 content type 回應 415。
 - 以全新瀏覽器環境對正式別名執行 50 項核心 Playwright 驗收，桌機與手機的閱讀、作答、文證獎勵、320px／200%、鍵盤、reduced motion、離線與 PWA 路由全數通過。
 
 ## 發布閘門

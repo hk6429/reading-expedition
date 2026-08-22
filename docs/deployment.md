@@ -38,7 +38,7 @@ Preview D1 與正式 D1 必須是不同資料庫；Preview Worker 只能綁 Prev
 
 ## 正式順序
 
-1. 對正式 D1 套用 migration；若 Worker 已設定 Turso secrets，也必須先備份並對正式 Turso 套用相同 migration。第 0011 號新增完成證明與匿名事件索引，第 0012 號新增班級任務、投票、結束單、指派與品質聚合。
+1. 先確認 Worker 是否設定 `TURSO_URL` 與 `TURSO_TOKEN`。正式 D1 一律先匯出 SQL 備份再套用 migration；若 Worker 已設定 Turso secrets，還必須另行匯出 Turso snapshot／WAL，並對正式 Turso 套用完全相同的 migration。部署後須從 Worker 與 Pages 代理各建立一次作答工作階段，確認不是只有 D1 已更新。第 0013 號新增一次性作答 nonce 與匿名事件索引，第 0014 號新增匿名席次、能力機會與家庭代號唯一性。
 2. 部署中央 Cloudflare Worker。
 3. 以人工種子內容完成教師校閱與發布。
 4. 部署 Cloudflare Pages。
