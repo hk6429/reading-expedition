@@ -244,10 +244,6 @@ function emptyMissionContext() {
     exitParticipants: 0,
     exitCounts: {},
     currentAssignment: null,
-    voteCounts: {},
-    exitParticipants: 0,
-    exitCounts: {},
-    currentAssignment: null,
     quality: {
       count: 0,
       firstCorrect: 0,
